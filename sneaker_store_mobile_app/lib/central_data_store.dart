@@ -29,6 +29,9 @@ import 'package:sneaker_store_mobile_app/model/store__branch.dart';
 
 class CentralStore extends ChangeNotifier {
   
+  // TEST FOR GIT
+
+
   //=== var: customerList
   late Customer _customer;
   Customer get customer => _customer;
