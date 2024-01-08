@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 //texting
+//another yggdrasil seed
 public class Checkin {
   [Key]
   public int CheckinId {get;set;}//pk label="Check In"
