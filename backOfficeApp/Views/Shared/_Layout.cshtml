@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--site css-->
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!--Quasar-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet"
+        type="text/css">
+    <link href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+        rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.11.2/dist/quasar.css" rel="stylesheet" type="text/css">
+
+
+</head>
+<body style="background-color: rgb(255, 255, 255);">
+
+
+    <div id="app1">
+    <div class="bg-black text-white q-py-mg q-px-mg">
+      <q-toolbar>
+        <img src="~/asset/image/99Th.png" style="width: 140px;">
+        <q-separator vertical class="q-my-xl" style="margin-left: 10px;" ></q-separator>
+        <q-btn :ripple="{ center: true }" flat dense size="1em" icon="account_circle" label="Logged in" padding="22px 30px" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;"></q-btn>
+      </q-toolbar>
+    </div>    
+                <q-tabs
+                    v-model="tab"
+                    narrow-indicator
+                    dense
+                    align="justify"
+                    horizontal
+                >
+                    <q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="orders"
+  icon="shopping_cart"
+  onclick='window.location="/pos"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ລາຍການຄຳສັ່ງຊື້
+</q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="inventory"
+  icon="inventory"
+  onclick='window.location="/product"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ສິນຄ້າໃນສາງ
+</q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="customers"
+  icon="assignment"
+  onclick='window.location="/customer"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+  "
+>
+  ລູກຄ້າຝາກຂາຍ
+</q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="staff"
+  icon="supervised_user_circle"
+  onclick='window.location="/staff"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ພະນັກງານ
+</q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="suppliers"
+  icon="local_shipping"
+  onclick='window.location="/supplier"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ການຈັດສົ່ງ
+</q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="suppliers"
+  icon="app_settings_alt"
+  onclick='window.location="/supplier"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ການຈັດການແອັບ
+</q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="reports"
+  icon="summarize"
+  onclick='window.location="/report"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ລາຍງານສະຫຼຸບ
+</q-tab>
+
+<q-tab
+  class="text-red-8 text-h7 text-weight-medium  my-custom-tab-class"
+  name="log out"
+  icon="logout"
+  onclick='window.location="/security/Logout"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 14px;
+    padding: 22px;
+    color: #333;
+    background-color: #ececec;
+  "
+>
+  Log Out
+</q-tab>
+
+                </q-tabs>
+            
+                <div style="padding: 22px;">
+                    @RenderBody()
+                </div>
+
+        
+    </div>
+
+
+    <!--site js-->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <!--quasar cdn-->
+    <!-- Add the following at the end of your body tag -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.11.2/dist/quasar.umd.js"></script>
+
+    <!-- chart js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @RenderSection("code", required: false)
+</body>
+
+</html>

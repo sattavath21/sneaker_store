@@ -1,0 +1,191 @@
+
+<div id="app1">
+  <div class="text-h4 text-weight-bold text-white bg-orange-10 q-pa-lg">Customer Information</div>
+  <q-card class="my-card bg-grey-2">
+    <q-card-section class="bg-cyan text-white">
+      <div class="text-h6">Add New Customer</div>
+    </q-card-section>
+    <div class="text-h6 q-pa-lg">General Information</div>
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.firstName" label="First Name"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.lastName" label="Last Name"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.dateOfBirth" label="Date of Birth"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please pick some date']">
+      <template v-slot:append>
+        <q-icon name="event" class="cursor-pointer">
+          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+            <q-date v-close-popup v-model="customer.dateOfBirth">
+              <div class="row items-center justify-end">
+                <q-btn v-close-popup label="Close" color="primary" flat />
+              </div>
+            </q-date>
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+    </q-input>
+    
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.phone" label="Phone" hint="Home phone/mobile phone"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.email" label="Email"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-separator vertical class="q-my-md"></q-separator>
+    <div class="text-h6 q-pa-lg">Customer Address</div>
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerAddress.no" label="No" hint="House No."
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerAddress.street" label="Street" 
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerAddress.city" label="City"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerAddress.zip" label="Zip"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-separator vertical class="q-my-md"></q-separator>
+    <div class="justify-end row">
+            <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onReset"></q-btn>
+        </div>
+    <q-card-actions align="left">
+      <q-btn size="lg" label="Submit" icon="arrow_downward" type="submit" color="primary" class="text-h7 q-mx-sm q-my-lg" @@click="confirm = true"></q-btn>
+      <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="face" color="orange-10" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Add this product?</span>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="orange-10" @@click="addCustomer" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+      <q-btn size="lg" icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/customer"'></q-btn>
+      <q-dialog v-model="completedDialog">
+        <q-card class="bg-indigo-1">
+          <q-card-section>
+            
+            <div class="text-h6">
+              Done!
+              <q-icon name="done">
+              </q-icon>
+            
+            </div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            Customer Information had been added
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Check" color="indigo" v-close-popup onclick='window.location="/customer"'></q-btn>
+            <q-btn flat label="Close" icon="close" color="grey" v-close-popup></q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </q-card-actions>
+  </q-card>
+
+
+</div>
+
+@section code{
+  <script>
+    var option = {
+      //data
+      data() {
+        return {
+          confirm: false,
+          customer: {
+            firstName: "",
+            lastName: "",
+            dateOfBirth: "",
+            phone: "",
+            email: "",
+            customerAddress: {
+              no: "",
+              street: "",
+              city: "",
+              zip: ""
+            }
+          }
+          ,
+          completedDialog: false
+        };
+      }
+      ,
+      //methods
+      methods: {
+        async addCustomer() {
+          try {
+            console.log(this.customer);
+            var date = new Date(this.customer.dateOfBirth)
+            this.customer.dateOfBirth = date.toJSON();
+            var response = await axios.post("/api/AddCustomer", this.customer);
+            this.completedDialog = true;
+            this.$q.notify({
+                            color: 'green-4',
+                            textColor: 'white',
+                            icon: 'cloud_done',
+                            message: 'Submitted'
+                        })
+            console.log(response.data);
+          }
+          catch (error) {
+            console.log(error);
+          }
+
+        }//ef
+        ,
+        onReset() {
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Loading...'
+                    })
+
+                    // simulate delay
+                    setTimeout(() => {
+                        notif({
+                            type: 'positive',
+                            message: 'Reseted',
+                            timeout: 315
+                        })
+                    }, 715)
+                    this.customer.firstName = ""
+                    this.customer.lastName = ""
+                    this.customer.dateOfBirth = ""
+                    this.customer.phone = ""
+                    this.customer.email = ""
+                    this.customer.customerAddress.no = ""
+                    this.customer.customerAddress.street = ""
+                    this.customer.customerAddress.city = ""
+                    this.customer.customerAddress.zip = ""
+                    
+                }
+      }//emethod
+      ,
+      //computed
+      computed: {
+
+      }
+      ,
+      //created
+      created() {
+
+      }
+      ,
+      //mounted
+      mounted() {
+
+      }
+
+    };
+
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+  </script>
+}

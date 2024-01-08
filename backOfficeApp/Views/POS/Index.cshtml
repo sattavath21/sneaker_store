@@ -1,0 +1,371 @@
+<div id="app1">
+  <div class="text-h5 text-weight-bold text-white q-pa-lg"
+     style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */">
+            Order Item</div>
+  <q-form class=" q-pa-lg" style="background-color: #f2f2f2;">
+    <div class="q-ma-sm">
+      <q-input ref="input1" v-model="item.barcode" label="Input Barcode" @@change="item_change">
+      </q-input>
+      <div class="q-ma-sm">
+        <q-input v-model="item.barcode2" label="Scanned Barcode"></q-input>
+
+      </div>
+    </div>
+    <q-separator vertical class="q-my-md"></q-separator>
+    <q-table class="bg-grey-2" title="Order Cart" :rows="saleItem" :columns="columns">
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="index" :props="props">{{ saleItem.indexOf(props.row) + 1 }}</q-td>
+          <q-td key="productName" :props="props">
+            {{ props.row.productName }}
+          </q-td>
+          <q-td key="productBarcode" :props="props">{{ props.row.productBarcode}}</q-td>
+          <q-td key="qty" :props="props">
+            {{ props.row.qty }}
+            <q-popup-edit v-model.number="props.row.qty" buttons v-slot="scope">
+              <q-input type="number" v-model.number="scope.value" dense autofocus @@keyup.enter="scope.set" />
+            </q-popup-edit>
+          </q-td>
+          <q-td key="productUnit" :props="props">
+            {{ props.row.productUnit }}
+          </q-td>
+          <q-td key="productCost" :props="props">
+            {{ props.row.productCost }}
+          </q-td>
+          <q-td key="productPrice" :props="props">
+            {{ props.row.productPrice }}
+          </q-td>
+          <q-td key="productMake" :props="props">
+            {{ props.row.productMake }}
+          </q-td>
+
+          <q-td key="actions" :props="props">
+            <q-btn class="q-ma-sm" color="red-6" @@click="confirm = true"  icon="close"></q-btn>
+            <q-dialog v-model="confirm" persistent>
+              <q-card>
+                <q-card-section class="row items-center">
+                  <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                  <span class="q-ml-sm">Delete this order?</span>
+                </q-card-section>
+
+                <q-card-actions align="center">
+                  <q-btn class="q-ma-sm" color="red-6" @@click="deleteOrder(props.row)" label="Yes"></q-btn>
+                  <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
+    <q-separator vertical class="q-my-xl"></q-separator>
+    <div class="q-mb-sm" align="right">
+      <q-select class="q-px-sm" color="grey-10" label="Customer" transition-show="flip-up"
+        transition-hide="flip-down" v-model="selectedCustomerDrop" :options="customerDrop" style="width: 250px"
+        option-value="customerDrop.firstName" option-label="firstName"></q-select>
+    </div>
+    <div align="right">
+      <q-select class="q-px-sm" color="grey-10" label="Discount" transition-show="flip-up"
+        transition-hide="flip-down" v-model="selectedDiscountDrop" :options="discountDrop" style="width: 250px"
+        option-value="discountDrop.appliesTo" option-label="appliesTo"></q-select>
+    </div>
+    <q-separator horizontal class="q-my-lg"></q-separator>
+    <q-card-actions align="right">
+      <q-btn label="Submit" size="lg" icon="arrow_downward" color="primary" class="text-h7 q-mx-sm q-my-lg"
+        @@click="confirm2 = true"></q-btn>
+      <q-dialog v-model="confirm2" persistent transition-show="scale" transition-hide="scale">
+        <q-card class="bg-teal-8 text-white" style="width: 800px; max-width: 100vw;">
+          <q-card-section>
+            <q-icon name="receipt_long" color="white" size="60px"></q-icon>
+            </q-card-section>
+            <q-card-section align="left" class="bg-teal-6">
+            <h6 class="text-bold q-ma-md">Customer name : {{this.selectedCustomerDrop.firstName}} {{this.selectedCustomerDrop.lastName}}</h6>
+            </q-card-section>
+            <q-card-section align="right" class="bg-teal-4 q-pt-none q-pa-sm">
+            <h6 v-for="item in saleItem">{{item.productName}} : {{item.qty}} x  {{item.productPrice}} THB =  {{item.qty*item.productPrice}} ฿</h6>
+            <q-separator horizontal class="q-my-sm"></q-separator>
+            <h6>Subtotal : {{sumSubTotal}} ฿</h6>
+            <h6>Discount : {{this.selectedDiscountDrop.discountPercentage*100}} %</h6>
+            <h6>Total : {{sumTotal}} ฿</h6>
+            </q-card-section>
+
+          <q-card-actions align="right" class="bg-white text-teal">
+            <q-btn class="q-mb-lg q-mt-lg q-mr-sm" size="lg" icon="arrow_downward" color="teal" @@click="confirm3 = true" label="checkOut"
+              v-close-popup></q-btn>
+            <q-btn class="q-mb-lg q-mt-lg q-mr-md" size="lg" icon="close" label="Cancel" color="grey" v-close-popup></q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-dialog v-model="confirm3" persistent>
+            <q-card style="width: 520px; max-width: 30vw;">
+              <q-card-section align="center" class="bg-teal-6" class="row items-center">
+                <div align="left" class="q-pa-sm">
+                <q-icon align="center" name="verified" color="white" size="60px"></q-icon>
+                </div>
+                
+                <h4 class="text-bold text-h4 text-teal-12">Proceed?</h4>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="teal" @@click="checkOut" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+    </q-card-actions>
+  </q-form>
+</div>
+
+@section code{
+  <script>
+    var option = {
+      //data
+      data() {
+        return {
+          confirm: false,
+          confirm2: false,
+          confirm3: false,
+          selectedDiscountDrop: [],
+          discountDrop: [],
+          selectedCustomerDrop: [],
+          customerDrop: [],
+          item: {
+            barcode: '',
+            barcode2: ''
+          },
+          saleItem: []
+          ,
+          columns: [
+            {
+              name: 'index',
+              field: 'index',
+              align: 'left',
+              sortable: true,
+              label: 'No'
+            },
+            {
+              name: 'productName',
+              label: 'Product Name',
+              field: 'productName',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'productBarcode',
+              label: 'Barcode',
+              field: 'productBarcode',
+              sortable: true,
+              align: 'center'
+            },
+            {
+              name: 'qty',
+              label: 'Qty',
+              field: 'qty',
+              sortable: true,
+              align: 'center'
+            },
+            {
+              name: 'productUnit',
+              label: 'Product Unit',
+              field: 'productUnit',
+              sortable: true,
+              align: 'center'
+            },
+            {
+              name: 'productCost',
+              label: 'Product Cost',
+              field: 'productCost',
+              sortable: true,
+              align: 'center'
+            },
+            {
+              name: 'productPrice',
+              label: 'Product Price',
+              field: 'productPrice',
+              sortable: true,
+              align: 'center'
+            },
+            {
+              name: 'productMake',
+              label: 'Product Make',
+              field: 'productMake',
+              sortable: true,
+              align: 'center'
+            },
+            {
+              name: 'actions',
+              label: 'Actions',
+              field: 'actions',
+              align: 'center'
+            }
+          ],
+          completedDialog: false
+        };
+      }
+      ,
+      //methods
+      methods: {
+        async item_change() {
+          this.item.barcode2 = this.item.barcode;
+          console.log(this.item.barcode);
+          //data is object notation
+          try {
+            var url = '/api/GetProductByBarcode?barcode=' + this.item.barcode;
+            var res = await axios.get(url);
+            this.item.barcode = '';
+            console.log(res.data);
+            console.log(typeof res.data);
+          }
+          catch (error) {
+            console.log(error);
+          }
+          if (res.data.status != -1) {
+
+            var index = this.saleItem.findIndex(item => item.productId === res.data.result.productId);
+            console.log("index", index);
+
+            if (index !== -1) {
+              this.saleItem[index].qty += 1;
+              this.item.barcode = '';
+              this.$refs.input1.$el.focus();
+            }
+            else {
+              var store = this.saleItem.push(res.data.result);
+              var data1 = JSON.stringify(store);
+              window.localStorage.setItem('global', data1);
+              var result = window.localStorage.getItem('global');
+              var newObject = JSON.parse(result);
+              console.log("newObject", newObject);
+
+            }
+          }
+          else {
+            this.$q.notify({
+              type: 'warning',
+              message: 'Not found'
+            })
+          }
+        },
+        async deleteOrder(item) {
+          console.log(item);
+          this.saleItem = this.saleItem.filter(x => x.productId != item.productId);
+          this.confirm = false;
+          this.$q.notify({
+            type: 'negative',
+            color: "red-8",
+            message: 'Order had been deleted'
+          })
+        }//ef
+        ,
+        async checkOut() {
+          if (this.saleItem.length === 0) {
+            this.$q.notify({
+              type: 'negative',
+              color: "yellow-8",
+              message: 'No items in the cart'
+            })
+            return;
+          }
+
+          //restructure orderitem
+          var reOrderItem = this.saleItem.map(x => {
+            return {
+              productId: x.productId,
+              saleQty: x.qty,
+              discountId: this.selectedDiscountDrop.discountId
+            }
+          });
+          console.log("reOrderItem", reOrderItem);
+          //create sale structure
+          var sale = {
+            date: new Date(),
+            customerId: this.selectedCustomerDrop.customerId,
+            //take only productId, saleQty and discountId
+            saleItems: reOrderItem
+          };
+          console.log("sale", sale);
+
+          var url = "/api/AddSale";
+          try {
+            var res = await axios.post(url, sale);
+            this.saleItem = [],
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Order completed'
+              })
+            console.log(res.data);
+          }
+          catch (error) {
+            console.log(error);
+          }
+        }//ef
+
+      }//emethod
+      ,
+      //computed
+      computed: {
+        sumSubTotal() {
+          let sumSubTotal = 0; // initialize sum variable to 0
+
+          for (let i = 0; i < this.saleItem.length; i++) {
+            sumSubTotal += this.saleItem[i].qty * this.saleItem[i].productPrice; // add current element to sum
+          }
+          console.log("saleItem", this.saleItem);
+          return sumSubTotal;
+        },
+        sumTotal() {
+          let sumTotal = 0; // initialize sum variable to 0
+
+          for (let i = 0; i < this.saleItem.length; i++) {
+            sumTotal += this.saleItem[i].qty * this.saleItem[i].productPrice; // add current element to sum
+          }
+          console.log("saleItem", this.saleItem);
+          if (this.selectedDiscountDrop.discountPercentage == null) {
+            return sumTotal;
+          }
+          else {
+            sumTotal -= (sumTotal * this.selectedDiscountDrop.discountPercentage);
+            return sumTotal;
+          }
+        }
+      }
+      ,
+      //created
+      async created() {
+        try {
+          var res3 = await axios.get("/api/GetDiscount");
+          this.discountDrop = res3.data;
+          console.log(this.discountDrop);
+        }
+        catch (error) {
+          console.log(error);
+        }
+        try {
+          var res4 = await axios.get("/api/GetCustomers");
+          this.customerDrop = res4.data;
+          console.log(this.customerDrop);
+        }
+        catch (error) {
+          console.log(error);
+        }
+      }
+      ,
+      //mounted
+      mounted() {
+        this.$refs.input1.$el.focus();
+        this.selectedDiscountDrop.discountPercentage = null;
+      }
+
+    };
+
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+  </script>
+}

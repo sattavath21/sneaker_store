@@ -1,0 +1,95 @@
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+<div id="app1">
+    <div class="row bg-teal-1 ">
+        <div class="col-4 "></div>
+        <div class="col-3 bg-white q-ma-xl">
+            <q-form ref="form" class="q-px-lg q-pb-lg " @@submit.prevent="login">
+                <div align="center" class="text-h5 text-weight-bold text-white bg-cyan-14 q-pa-md q-mb-lg q-mx-lg">SIGN
+                    IN</div>
+                <div align="center" class="q-pb-md">
+                    <q-icon name="account_box" size="6em" color="grey-8"></q-icon>
+                </div>
+                <q-input v-model="signin.email" rounded standout="bg-cyan-10 text-white" label="Email" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
+                    <div align="right" class="q-py-md">
+                        <q-icon name="account_circle" size="2em" color="grey-7"></q-icon>
+                    </div>
+                </q-input>
+                
+                <q-input v-model="signin.password" :type="isPwd ? 'password' : 'text'" rounded standout="bg-cyan-10 text-white" label="Password" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
+                    <template v-slot:append>
+                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                        @@click="isPwd = !isPwd"></q-icon>
+                    </template>
+                </q-input>
+                
+                <q-btn ripple="{ center: true }" rounded class="text-blue-1 bg-cyan-14 q-pa-sm" type="submit"
+                    label="Login" icon="login" style="width: 332px">
+                </q-btn>
+            </q-form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+@section code{
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    isPwd: true,
+                    //your data go here
+
+                    signin: {
+                        email: 'root@localhost.com',
+                        password: '1234',
+                        returnUrl: '@ViewBag.ReturnUrl'
+                    }
+
+                };
+            }
+            ,
+            //methods
+            methods: {
+                async login() {
+                    //data is object notation
+                    try {
+                        var res = await axios.post('/security/login', this.signin);
+                        var result = res.data;
+                        if (result.code == 1) {
+                            window.location.href = result.path;
+                        }
+                        
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+
+
+                }
+            }
+            ,
+            //computed
+            computed: {
+
+            }
+            ,
+            //created
+            created() {
+                console.log(this.signin.returnUrl);
+            }
+            ,
+            //mounted
+            mounted() {
+
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}
