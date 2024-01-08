@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-
+//texting
 public class Checkin {
   [Key]
   public int CheckinId {get;set;}//pk label="Check In"
