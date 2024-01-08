@@ -1,0 +1,312 @@
+<div id="app1">
+    <div class="text-h4 text-weight-bold text-white bg-grey-9 q-pa-lg">Product Information</div>
+    <q-card class="my-card bg-grey-2 ">
+        <q-card-section class="bg-cyan text-white">
+            <div class="text-h6">Add New Product</div>
+        </q-card-section>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <div class="text-h6 q-pa-lg">Product Information</div>
+        <div class="q-ma-sm">
+            <q-input ref="input1" v-model="barcodeScan" label="Input Barcode" @@change="item_change">
+            </q-input>
+            <div class="q-ma-sm">
+                <q-input v-model="checkInItem.product.barcode" label="Scanned Barcode"></q-input>
+
+            </div>
+        </div>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="checkInItem.product.productName" label="Product Name" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input type="textarea" class="q-px-sm" filled v-model="checkInItem.product.productDescription"
+            label="Product Description"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-select class="q-px-sm" color="grey-10" bg-color="grey-5" filled label="Product Type"
+            transition-show="jump-up" transition-hide="jump-up" v-model="selectedProductTypeDrop"
+            :options="productTypeDrop" style="width: 250px" option-value="productTypeDrop.productType"
+            option-label="productType"></q-select>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-select class="q-px-sm" color="grey-10" bg-color="grey-5" filled label="Product Unit"
+            transition-show="jump-up" transition-hide="jump-up" v-model="selectedProductUnitDrop"
+            :options="productUnitDrop" style="width: 250px" option-value="productTypeDrop.productUnit"
+            option-label="productUnit"></q-select>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="checkInItem.product.productPrice" label="Product Price"
+            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="checkInItem.product.productCost" label="Product Cost"
+            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-select class="q-px-sm" color="grey-10" bg-color="grey-5" filled label="Product Make"
+            transition-show="jump-up" transition-hide="jump-up" v-model="selectedProductMakeDrop"
+            :options="productMakeDrop" style="width: 250px" option-value="productTypeDrop.productMake"
+            option-label="productMake"></q-select>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="checkInItem.product.productModelno" label="Product Model No" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <div class="text-h6 q-pa-lg">Supplier</div>
+        <q-select class="q-px-sm" color="green-10" bg-color="green-4" filled label="Supplier" transition-show="jump-up"
+            transition-hide="jump-up" v-model="selectedSupplierDrop" :options="supplierDrop" style="width: 250px"
+            option-value="supplierDrop.supplier.supplierAddress.supplierName" option-label="supplierName"></q-select>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <div class="text-h6 q-pa-lg">Check In Information</div>
+        <q-input class="q-px-sm" filled v-model="checkInItem.checkInQty" label="Check In QTY" hint="Number only"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="checkInItem.checkin.creditTerm" label="Credit Term" hint="Number only"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="checkInItem.checkin.checkInDate" label="Check In Date" hint="Date only"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please pick date']">
+            <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-close-popup v-model="checkInItem.checkin.checkInDate">
+                            <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                        </q-date>
+                    </q-popup-proxy>
+                </q-icon>
+            </template>
+        </q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-select class="q-px-sm" color="brown-10" bg-color="brown-4" label="Staff" transition-show="jump-up"
+            transition-hide="jump-up" filled v-model="selectedStaffDrop" :options="staffDrop" style="width: 250px"
+            option-value="staffDrop.firstName" option-label="firstName"></q-select>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <div class="justify-end row">
+            <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onReset" size="lg"></q-btn>
+        </div>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-card-actions align="left">
+            <q-btn label="Submit" icon="arrow_downward" type="submit" color="primary" class="text-h7 q-mx-sm q-my-lg"
+                size="lg" @@click="confirm = true"></q-btn>
+            <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Add this product?</span>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="grey-9" @@click="addProduct" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+            <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" size="lg"
+                onclick='window.location="/product"'></q-btn>
+            <q-dialog v-model="completedDialog">
+                <q-card class="bg-indigo-1">
+                    <q-card-section>
+
+                        <div class="text-h6">
+                            Done!
+                            <q-icon name="done">
+                            </q-icon>
+
+                        </div>
+                    </q-card-section>
+
+                    <q-card-section class="q-pt-none">
+                        New product Information had been added
+                    </q-card-section>
+                    <q-card-actions align="right">
+                        <q-btn flat label="Check" color="indigo" v-close-popup
+                            onclick='window.location="/product"'></q-btn>
+                        <q-btn flat label="Close" icon="close" color="grey" v-close-popup></q-btn>
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </q-card-actions>
+    </q-card>
+
+
+</div>
+
+@section code{
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    confirm: false,
+                    selectedProductTypeDrop: [],
+                    selectedProductUnitDrop: [],
+                    selectedProductMakeDrop: [],
+                    selectedSupplierDrop: [],
+                    selectedStaffDrop: [],
+                    productTypeDrop: [],
+                    productUnitDrop: [],
+                    productMakeDrop: [],
+                    supplierDrop: [],
+                    staffDrop: [],
+                    barcodeScan: '',
+                    checkInItem: {
+                        product: {
+                            barcode: "",
+                            productName: "",
+                            productDescription: "",
+                            productType: "",
+                            productUnit: "",
+                            productPrice: null,
+                            productCost: null,
+                            productMake: "",
+                            productModelno: "",
+                            supplierId: null
+                        },
+                        checkInQty: null,
+                        checkin: {
+                            creditTerm: 30,
+                            checkInDate: "",
+                            staffId: null
+                        }
+                    },
+                    completedDialog: false
+                };
+            }
+            ,
+            //methods
+            methods: {
+                async item_change() {
+                    this.checkInItem.product.barcode = this.barcodeScan;
+                    console.log(this.checkInItem.product.barcode);
+                    //data is object notation
+                    try {
+                        var url = '/api/GetProductByBarcodeAdd?barcode=' + this.checkInItem.product.barcode;
+                        var res = await axios.get(url);
+                        this.barcodeScan = '';
+                        if (res.data) {
+                            this.$q.notify({
+                                type: 'warning',
+                                message: 'This barcode already in stock'
+                            })
+                        }
+                        else {
+                            this.$q.notify({
+                                type: 'positive',
+                                message: 'This barcode can be add'
+                            })
+                        }
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+
+                }
+                ,
+                async addProduct() {
+                    try {
+                        console.log(this.checkInItem);
+                        var date = new Date(this.checkInItem.checkin.checkInDate)
+                        this.checkInItem.checkin.checkInDate = date.toJSON();
+                        this.checkInItem.product.productType = this.selectedProductTypeDrop.productType;
+                        this.checkInItem.product.productUnit = this.selectedProductUnitDrop.productUnit;
+                        this.checkInItem.product.productMake = this.selectedProductMakeDrop.productMake;
+                        this.checkInItem.product.supplierId = this.selectedSupplierDrop.supplierId;
+                        this.checkInItem.checkin.staffId = this.selectedStaffDrop.staffId;
+                        var response = await axios.post("/api/AddCheckInItem", this.checkInItem);
+                        this.completedDialog = true;
+                        console.log(response.data);
+                        this.$q.notify({
+                            color: 'green-4',
+                            textColor: 'white',
+                            icon: 'cloud_done',
+                            message: 'Submitted'
+                        })
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+
+                }//ef
+                ,
+                onReset() {
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Loading...'
+                    })
+
+                    // simulate delay
+                    setTimeout(() => {
+                        notif({
+                            type: 'positive',
+                            message: 'Reseted',
+                            timeout: 315
+                        })
+                    }, 715)
+                    this.checkInItem.product.barcode = ""
+                    this.checkInItem.product.productName = ""
+                    this.checkInItem.product.productDescription = ""
+                    this.selectedProductTypeDrop = ""
+                    this.selectedProductUnitDrop = ""
+                    this.checkInItem.product.productPrice = null
+                    this.checkInItem.product.productCost = null
+                    this.selectedProductMakeDrop = ""
+                    this.checkInItem.product.productModelno = ""
+                    this.selectedSupplierDrop = ""
+                    this.selectedStaffDrop = ""
+                    this.checkInItem.checkInQty = null
+                    this.checkInItem.checkin.creditTerm = 30
+                    this.checkInItem.checkin.checkInDate = ""
+
+
+
+
+                }
+
+
+            }//emethod
+            ,
+            //computed
+            computed: {
+
+            }
+            ,
+            //created
+            async created() {
+                try {
+                    var res = await axios.get("/api/GetStaff");
+                    this.staffDrop = res.data;
+                    console.log(this.staffDrop);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                try {
+                    var res2 = await axios.get("/api/GetSuppliers");
+                    this.supplierDrop = res2.data;
+                    console.log(this.supplierDrop);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+                try {
+                    var res3 = await axios.get("/api/GetProductInfor");
+                    this.productTypeDrop = res3.data;
+                    this.productMakeDrop = res3.data;
+                    this.productUnitDrop = res3.data;
+                    console.log(this.productTypeDrop);
+                    console.log(this.productMakeDrop);
+                    console.log(this.productUnitDrop);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            ,
+            //mounted
+            mounted() {
+                this.$refs.input1.$el.focus()
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}

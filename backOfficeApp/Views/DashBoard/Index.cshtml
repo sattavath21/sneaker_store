@@ -1,0 +1,54 @@
+<div id="app1">
+
+
+</div>
+
+@section code{
+  <script>
+    var option = {
+      //data
+      data() {
+        return {
+
+        };
+      }
+      ,
+      //methods
+      methods: {
+
+
+      }
+      ,
+      //computed
+      computed: {
+
+      }
+      ,
+      //created
+      async created() {
+        try {
+          var response = await axios.get("/api/GetCheckInItem");
+          this.originalProducts = response.data;
+          this.products = response.data;
+          console.log(this.products);
+        }
+        catch (error) {
+          console.log(error);
+        }
+        
+
+      }//ecreated
+      ,
+      //mounted
+      mounted() {
+
+      }
+
+    };
+
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+  </script>
+
+}

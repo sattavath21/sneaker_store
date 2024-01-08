@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--site css-->
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <!--Quasar-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet"
+        type="text/css">
+    <link href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+        rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/quasar@2.11.2/dist/quasar.css" rel="stylesheet" type="text/css">
+
+
+</head>
+<body class="bg-blue-grey-13">
+
+
+    <div id="app1">
+        <div class="bg-cyan text-white q-py-mg q-px-mg">
+      <q-toolbar>
+        <img src="~/asset/image/logo.png" align="left" style="width: 160px;"></img>
+        
+      </q-toolbar>
+    </div>
+    
+                @RenderBody()
+        <img src="~/asset/image/cog.png" align="right" style="width: 129px;"></img>
+        
+    </div>
+
+
+    <!--site js-->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <!--quasar cdn-->
+    <!-- Add the following at the end of your body tag -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quasar@2.11.2/dist/quasar.umd.js"></script>
+
+    <!-- chart js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @RenderSection("code", required: false)
+</body>
+
+</html>

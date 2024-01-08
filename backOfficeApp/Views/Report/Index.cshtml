@@ -1,0 +1,274 @@
+<div id="app1">
+    <div class="text-h5 text-weight-bold text-white q-pa-lg"
+     style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */">
+            Sale Analytic Report</div>
+    <q-form class=" bg-white q-pa-lg">
+        <div class="row">
+            <div class="col-6">
+                <q-card class="my-card q-ma-lg">
+                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Sale Distribution by
+                        Product Name (Value)</div>
+                    <q-card-section class=" q-ma-sm">
+                        <div class="chart-container" style="position: relative; height:300px; width:300px">
+                            <canvas id="chart3"></canvas>
+                        </div>
+                    </q-card-section>
+                    <div align="center">
+                    <h5 class="text-bold text-light-blue-10">Total sale for this month: {{sumTotal}}</h5>
+                    </div>
+                    <q-card-actions align="right">
+                        <q-btn label="export" @@click="export3" color="primary" />
+                    </q-card-actions>
+                </q-card>
+
+            </div>
+            <div class="col-6">
+                <q-card class="my-card q-ma-lg">
+                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Sale Distribution by
+                        Product Type (Value)</div>
+                    <q-card-section class=" q-ma-sm">
+                        <div class="chart-container" style="position: relative; height:300px; width:300px">
+                            <canvas id="chart1"></canvas>
+                        </div>
+                    </q-card-section>
+                    <q-card-actions align="right">
+                        <q-btn label="export" @@click="export1" color="primary" />
+                    </q-card-actions>
+                </q-card>
+
+            </div>
+            <div class="col-6">
+                <q-card class="my-card q-ma-lg">
+
+                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Quantity Distribution by
+                        Product Name (Amount)</div>
+                    <q-card-section class=" q-ma-sm">
+                        <div class="chart-container" style="position: relative; height:300px; width:300px">
+                            <canvas id="chart2"></canvas>
+                        </div>
+                    </q-card-section>
+                    <div align="center">
+                    <h5 class="text-bold text-light-blue-10">Total sale amount for this month: {{sumQty}}</h5>
+                    </div>
+
+                    <q-card-actions align="right">
+                        <q-btn label="export" @@click="export2" color="primary" />
+                    </q-card-actions>
+                </q-card>
+
+            </div>
+            <div class="col-6">
+                <q-card class="my-card q-ma-lg">
+                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Sale Distribution by
+                        Customer (Value)</div>
+                    <q-card-section class=" q-ma-sm">
+                        <div class="chart-container" style="position: relative; height:300px; width:300px">
+                            <canvas id="chart4"></canvas>
+                        </div>
+                    </q-card-section>
+
+
+                    <q-card-actions align="right">
+                        <q-btn label="export" @@click="export4" color="primary" />
+                    </q-card-actions>
+                </q-card>
+
+            </div>
+        </div>
+    </q-form>
+
+</div>
+
+@section code{
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    //your data go here
+                    sale: [],
+                    sale1: [],
+                    sale2: [],
+                    sale3: [],
+                    sale4: []
+                };
+            },
+            //methods
+            methods: {
+                export1() {
+                    downloadCsv(this.sale1, 'sale1.csv');
+
+                }//ef
+                ,
+                export2() {
+                    downloadCsv(this.sale2, 'sale2.csv');
+                }//ef
+                ,
+                export3() {
+                    downloadCsv(this.sale3, 'sale3.csv');
+                }//ef
+                ,export4() {
+                    downloadCsv(this.sale4, 'sale4.csv');
+                }//ef
+
+            }//emethod
+            ,
+            //computed
+            computed: {
+                sumTotal() {
+                    let sum = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.sale1.length; i++) {
+                        sum += this.sale1 [i].sale; // add current element to sum
+                    }
+                    console.log("Sumsale", this.sale1);
+                    return sum;
+                },
+                sumQty() {
+                    let sumqty = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.sale2.length; i++) {
+                        sumqty += this.sale2 [i].saleQty; // add current element to sum
+                    }
+                    console.log("saleQty", this.sale2);
+                    return sumqty;
+                }
+
+
+            }
+            ,
+            //created
+            async created() {
+                try {
+                    var res3 = await axios.get("/api/SaleItems");
+                    this.sale = res3.data;
+                    console.log("Begin",this.sale);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            ,
+            //mounted
+            async mounted() {
+                var option = {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+
+                    }
+                };
+                //data is object notation
+                try {
+                    var res = await axios.get('/api/report1');
+                    var data = res.data;
+                    this.sale1 = data;
+                    var labels = data.map(x => {
+                        return x.name;
+                    });
+                    var values = data.map(x => {
+                        return x.sale;
+                    });
+
+                    var set1 = {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            borderWidth: 1
+                        }]
+                    };
+
+                    var res = await axios.get('/api/report2');
+                    data = res.data;
+                    this.sale2 = data;
+                    var labels = data.map(x => {
+                        return x.name;
+                    });
+                    var values = data.map(x => {
+                        return x.saleQty;
+                    });
+
+                    var set2 = {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            borderWidth: 1
+                        }]
+                    };
+
+                    var res = await axios.get('/api/report3');
+                    data = res.data;
+                    this.sale3 = data;
+                    var labels = data.map(x => {
+                        return x.name;
+                    });
+                    var values = data.map(x => {
+                        return x.sale;
+                    });
+
+                    var set3 = {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            borderWidth: 1
+                        }]
+                    };
+
+                    var res = await axios.get('/api/report4');
+                    data = res.data;
+                    this.sale4 = data;
+                    var labels = data.map(x => {
+                        return x.name;
+                    });
+                    var values = data.map(x => {
+                        return x.sale;
+                    });
+
+                    var set4 = {
+                        labels: labels,
+                        datasets: [{
+                            data: values,
+                            borderWidth: 1
+                        }]
+                    };
+
+
+                    var pieChart1 = new Chart('chart1', {
+                        type: 'doughnut',
+                        data: set1,
+                        option
+                    });
+
+                    var pieChart2 = new Chart('chart2', {
+                        type: 'doughnut',
+                        data: set2,
+                        option
+                    });
+
+                    var pieChart3 = new Chart('chart3', {
+                        type: 'pie',
+                        data: set3,
+                        option
+                    });
+
+                    var pieChart4 = new Chart('chart4', {
+                        type: 'pie',
+                        data: set4,
+                        option
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}
