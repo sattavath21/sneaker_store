@@ -79,7 +79,7 @@ class RecentPage extends StatelessWidget {
                                       'Ready to Ship',
                                       style: app_text_style.latoStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 14,
+                                        fontSize: 10,
                                       ),
                                     ),
                                   ],
@@ -109,7 +109,7 @@ class RecentPage extends StatelessWidget {
                                       Container(
                                         margin: EdgeInsets.fromLTRB(0, 0, 6, 4),
                                         child: Image.asset(
-                                          '/pic/fire.gif',
+                                          'assets/pic/fire.gif',
                                           height: 20,
                                           width: 20,
                                         ),
@@ -118,7 +118,7 @@ class RecentPage extends StatelessWidget {
                                         '${product.amount_sold} Sold',
                                         style: app_text_style.latoStyle(
                                           fontWeight: FontWeight.normal,
-                                          fontSize: 14,
+                                          fontSize: 10,
                                         ),
                                       ),
                                     ],

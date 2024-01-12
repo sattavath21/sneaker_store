@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, must_be_immutable, use_key_in_widget_constructors
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 // import 'package:mid_exam_doc_management/central_data_store.dart';
 // import 'package:mid_exam_doc_management/screens/MultiSectionForm.dart';
@@ -96,14 +97,13 @@ class _HomePageState extends State<HomePage> {
           height: 200, // Adjust this height as needed
           child: GridView.builder(
             controller: _scrollController, // Assign the ScrollController here
-
             physics: AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 0.0,
-              mainAxisSpacing: 25.0,
+              mainAxisSpacing: 0.0,
             ),
             itemCount: store1.brandList.length,
             itemBuilder: (context, index) {
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                     child: MaterialButton(
                       minWidth: 60,
-                      height: 80,
+                      height: 60,
                       colorBrightness: Brightness.light,
                       color: Colors.white70,
                       shape: CircleBorder(),
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                       child: Text(
                         store1.brandList[index].brand_name,
                         style: TextStyle(fontSize: 11),
@@ -158,9 +158,9 @@ class _HomePageState extends State<HomePage> {
           child: SizedBox(
               width: 190,
               child: CategoryHeader(
-                  header: "RECENTLY VIEWED", nextPage: RecentPage())),
+                  header: "RECENTLY VIEWED".tr(), nextPage: RecentPage())),
         )),
-        SizedBox(height: 330, child: ListView.builder(
+        SizedBox(height: 354, child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: store1.recentProductList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
         ,
         Padding(padding: EdgeInsets.only(top: 16),  
         child: SizedBox(
-          width: 200,
+          width: 354,
           child: Center(
             child: TextButton(
                 style: TextButton.styleFrom(
@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                         
                     Text(
-                      "READY TO SHIP",
+                      "READY TO SHIP".tr(),
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage> {
         ),)
         ,
         //TODO: Logically incoorect, change to show product with specific filter in the future
-        SizedBox(height: 330, child: ListView.builder(
+        SizedBox(height: 354, child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: store1.recentProductList.length,
           itemBuilder: (BuildContext context, int index) {
@@ -234,10 +234,10 @@ class _HomePageState extends State<HomePage> {
           child: SizedBox(
               width: 190,
               child: CategoryHeader(
-                  header: "MOST POPULAR", nextPage: MostPopularPage())),
+                  header: "MOST POPULAR".tr(), nextPage: MostPopularPage())),
         )),
         // TODO: Logically incorrect
-        SizedBox(height: 330, child: ListView.builder(
+        SizedBox(height: 354, child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: store1.recentProductList.length,
           itemBuilder: (BuildContext context, int index) {

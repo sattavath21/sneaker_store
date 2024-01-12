@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 //===> class: ExplorePage
 import 'package:flutter/material.dart';
@@ -88,10 +89,19 @@ class ExplorePage extends StatelessWidget {
                   16.0, // Set the endIndent to control the space on the right (optional)
             ),
           ),
-          Text(
-            '${store1.productLists.length} Results',
-            style: app_text_style.latoStyle(fontWeight: FontWeight.w400),
-          ),
+          RichText(
+            
+            text: TextSpan(
+              style: app_text_style.latoStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10, // Adjust the font size
+                                    ),
+    children: <TextSpan>[
+      TextSpan(text: "${store1.productLists.length} "),
+      TextSpan(text: 'Results'.tr()),
+    ],
+  ), ),
+        
           FilterButton(),
           Wrap(
             children: List.generate(
@@ -131,10 +141,10 @@ class ExplorePage extends StatelessWidget {
                                     width:
                                         4), // Adjust the spacing between icon and text
                                 Text(
-                                  'Ready to Ship',
+                                  'Ready to Ship'.tr(),
                                   style: app_text_style.latoStyle(
                                     fontWeight: FontWeight.normal,
-                                    fontSize: 14, // Adjust the font size
+                                    fontSize: 10, // Adjust the font size
                                   ),
                                 ),
                               ],
@@ -169,7 +179,7 @@ class ExplorePage extends StatelessWidget {
                                   Container(
                                     margin: EdgeInsets.fromLTRB(0, 0, 6, 4),
                                     child: Image.asset(
-                                      '/pic/fire.gif', // Replace with the actual path to your local image
+                                      'assets/pic/fire.gif', // Replace with the actual path to your local image
                                       height:
                                           20, // Adjust the height of the image
                                       width:
@@ -177,13 +187,18 @@ class ExplorePage extends StatelessWidget {
                                       // You should place your local image in the 'assets' folder and update the path accordingly
                                     ),
                                   ),
-                                  Text(
-                                    '${product.amount_sold} Sold',
+                                
+                                  RichText(text: TextSpan(
                                     style: app_text_style.latoStyle(
                                       fontWeight: FontWeight.normal,
-                                      fontSize: 14, // Adjust the font size
+                                      fontSize: 10, // Adjust the font size
                                     ),
-                                  ),
+    children: <TextSpan>[
+      TextSpan(text: "${product.amount_sold} "),
+      TextSpan(text: "Sold".tr()),
+    ],
+  ), ),
+  
                                 ],
                               ),
                             ),
@@ -202,7 +217,7 @@ class ExplorePage extends StatelessWidget {
                         ), // Adjust the vertical spacing between image and ListTile
                         // Display collection name using ListTile
                         ListTile(
-                          title: Text('STARTING FROM',
+                          title: Text('STARTING FROM'.tr(),
                               style: app_text_style.latoStyle(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.grey)),
@@ -338,7 +353,7 @@ class _FilterButtonState extends State<FilterButton> {
                           },
                         ),
                       ),
-                      child: Text('Clear'),
+                      child: Text('Clear'.tr()),
                     ),
                   ),
                   SizedBox(width: 16), // Adjust the spacing between buttons
@@ -366,7 +381,7 @@ class _FilterButtonState extends State<FilterButton> {
                           },
                         ),
                       ),
-                      child: Text('Show Results'),
+                      child: Text('Show Results'.tr()),
                     ),
                   ),
                 ],

@@ -19,7 +19,7 @@ class ProfilePage extends StatelessWidget {
       physics: AlwaysScrollableScrollPhysics(),
       child: Column(children: [
         const SizedBox(
-          height: 20,
+          height: 60,
         ),
         ListTile(
           leading: CircleAvatar(
@@ -40,12 +40,13 @@ class ProfilePage extends StatelessWidget {
                   Icon(
                     Icons.warning_amber_rounded,
                     color: Colors.amber,
+                    size: 16,
                   ),
                   SizedBox(
                     width: 8,
                   ),
                   Text("Unverified",
-                      style: TextStyle(fontSize: 14, color: Colors.amber))
+                      style: TextStyle(fontSize: 12, color: Colors.amber))
                 ],
               )
             ],
@@ -60,7 +61,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               );
             },
-            icon: Icon(Icons.edit_rounded),
+            icon: Icon(Icons.keyboard_arrow_right_rounded),
             color: Colors.black,
           ),
         ),
