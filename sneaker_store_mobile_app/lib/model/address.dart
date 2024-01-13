@@ -1,64 +1,64 @@
 import 'dart:convert';
 
 class Address {
-  final String seller_name;
-  final String seller_tel_number;
+  final String sellerName;
+  final String sellerTelNumber;
   final String province;
   final String city;
   final String village;
-  final String address_detail;
-  final String post_code;
+  final String addressDetail;
+  final String postCode;
   Address({
-    required this.seller_name,
-    required this.seller_tel_number,
+    required this.sellerName,
+    required this.sellerTelNumber,
     required this.province,
     required this.city,
     required this.village,
-    required this.address_detail,
-    required this.post_code,
+    required this.addressDetail,
+    required this.postCode,
   });
 
   Address copyWith({
-    String? seller_name,
-    String? seller_tel_number,
+    String? sellerName,
+    String? sellerTelNumber,
     String? province,
     String? city,
     String? village,
-    String? address_detail,
-    String? post_code,
+    String? addressDetail,
+    String? postCode,
   }) {
     return Address(
-      seller_name: seller_name ?? this.seller_name,
-      seller_tel_number: seller_tel_number ?? this.seller_tel_number,
+      sellerName: sellerName ?? this.sellerName,
+      sellerTelNumber: sellerTelNumber ?? this.sellerTelNumber,
       province: province ?? this.province,
       city: city ?? this.city,
       village: village ?? this.village,
-      address_detail: address_detail ?? this.address_detail,
-      post_code: post_code ?? this.post_code,
+      addressDetail: addressDetail ?? this.addressDetail,
+      postCode: postCode ?? this.postCode,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'seller_name': seller_name,
-      'seller_tel_number': seller_tel_number,
+      'sellerName': sellerName,
+      'sellerTelNumber': sellerTelNumber,
       'province': province,
       'city': city,
       'village': village,
-      'address_detail': address_detail,
-      'post_code': post_code,
+      'addressDetail': addressDetail,
+      'postCode': postCode,
     };
   }
 
   factory Address.fromMap(Map<String, dynamic> map) {
     return Address(
-      seller_name: map['seller_name'] as String,
-      seller_tel_number: map['seller_tel_number'] as String,
+      sellerName: map['sellerName'] as String,
+      sellerTelNumber: map['sellerTelNumber'] as String,
       province: map['province'] as String,
       city: map['city'] as String,
       village: map['village'] as String,
-      address_detail: map['address_detail'] as String,
-      post_code: map['post_code'] as String,
+      addressDetail: map['addressDetail'] as String,
+      postCode: map['postCode'] as String,
     );
   }
 
@@ -68,7 +68,7 @@ class Address {
 
   @override
   String toString() {
-    return 'Address(seller_name: $seller_name, seller_tel_number: $seller_tel_number, province: $province, city: $city, village: $village, address_detail: $address_detail, post_code: $post_code)';
+    return 'Address(sellerName: $sellerName, sellerTelNumber: $sellerTelNumber, province: $province, city: $city, village: $village, addressDetail: $addressDetail, postCode: $postCode)';
   }
 
   @override
@@ -76,23 +76,23 @@ class Address {
     if (identical(this, other)) return true;
   
     return 
-      other.seller_name == seller_name &&
-      other.seller_tel_number == seller_tel_number &&
+      other.sellerName == sellerName &&
+      other.sellerTelNumber == sellerTelNumber &&
       other.province == province &&
       other.city == city &&
       other.village == village &&
-      other.address_detail == address_detail &&
-      other.post_code == post_code;
+      other.addressDetail == addressDetail &&
+      other.postCode == postCode;
   }
 
   @override
   int get hashCode {
-    return seller_name.hashCode ^
-      seller_tel_number.hashCode ^
+    return sellerName.hashCode ^
+      sellerTelNumber.hashCode ^
       province.hashCode ^
       city.hashCode ^
       village.hashCode ^
-      address_detail.hashCode ^
-      post_code.hashCode;
+      addressDetail.hashCode ^
+      postCode.hashCode;
   }
 }

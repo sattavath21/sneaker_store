@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white70,
                       shape: CircleBorder(),
                       child: Image(
-                        image: NetworkImage(store1.brandList[index].brand_logo),
+                        image: NetworkImage(store1.brandList[index].brandLogo),
                         color: Colors.black,
                         width: 40,
                         height: 40,
@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                       child: Text(
-                        store1.brandList[index].brand_name,
+                        store1.brandList[index].brandName,
                         style: TextStyle(fontSize: 11),
                       ))
                 ],
@@ -165,11 +165,11 @@ class _HomePageState extends State<HomePage> {
           itemCount: store1.recentProductList.length,
           itemBuilder: (BuildContext context, int index) {
             return ProductOverview(
-                productSizes: store1.recentProductList[index].product_with_sizes,
+                productSizes: store1.recentProductList[index].productWithSizes,
                 productImageUrl: store1.recentProductList[index]
-                    .product_images[0].product_image_url,
-                storePrice: store1.recentProductList[index].store_price,
-                amountSold: store1.recentProductList[index].amount_sold,
+                    .productImages[0].productImageUrl,
+                storePrice: store1.recentProductList[index].storePrice,
+                amountSold: store1.recentProductList[index].amountSold,
                 productName: store1.recentProductList[index].name);
           },
         ),)
@@ -220,11 +220,11 @@ class _HomePageState extends State<HomePage> {
           itemCount: store1.recentProductList.length,
           itemBuilder: (BuildContext context, int index) {
             return ProductOverview(
-                productSizes: store1.recentProductList[index].product_with_sizes,
+                productSizes: store1.recentProductList[index].productWithSizes,
                 productImageUrl: store1.recentProductList[index]
-                    .product_images[0].product_image_url,
-                storePrice: store1.recentProductList[index].store_price,
-                amountSold: store1.recentProductList[index].amount_sold,
+                    .productImages[0].productImageUrl,
+                storePrice: store1.recentProductList[index].storePrice,
+                amountSold: store1.recentProductList[index].amountSold,
                 productName: store1.recentProductList[index].name);
           },
         ),),
@@ -242,11 +242,11 @@ class _HomePageState extends State<HomePage> {
           itemCount: store1.recentProductList.length,
           itemBuilder: (BuildContext context, int index) {
             return ProductOverview(
-                productSizes: store1.recentProductList[index].product_with_sizes,
+                productSizes: store1.recentProductList[index].productWithSizes,
                 productImageUrl: store1.recentProductList[index]
-                    .product_images[0].product_image_url,
-                storePrice: store1.recentProductList[index].store_price,
-                amountSold: store1.recentProductList[index].amount_sold,
+                    .productImages[0].productImageUrl,
+                storePrice: store1.recentProductList[index].storePrice,
+                amountSold: store1.recentProductList[index].amountSold,
                 productName: store1.recentProductList[index].name);
           },
         ),),

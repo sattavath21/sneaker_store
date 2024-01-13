@@ -18,9 +18,9 @@ class FilterBrandPage extends StatelessWidget {
     // Filter products based on the selected brand name
     List<Product> filteredProducts = store1.productLists.where((product) {
       print(
-          'Product Brand Name: ${product.product_collection.brand.brand_name}');
+          'Product Brand Name: ${product.productCollection.brand.brandName}');
       print('Selected Brand Name: $selectedName');
-      return product.product_collection.brand.brand_name.toLowerCase() ==
+      return product.productCollection.brand.brandName.toLowerCase() ==
           selectedName.toLowerCase();
     }).toList();
 
@@ -66,7 +66,7 @@ class FilterBrandPage extends StatelessWidget {
                                 .start, // Align children to the start (left)
                             children: [
                               Visibility(
-                                visible: product.product_with_sizes != null,
+                                visible: product.productWithSizes != null,
                                 child: Container(
                                   margin: EdgeInsets.fromLTRB(10, 16, 0, 0),
                                   child: Row(
@@ -94,14 +94,14 @@ class FilterBrandPage extends StatelessWidget {
                               ),
                               // Display collection image (you may need to update this)
                               Image.network(
-                                product.product_images[0].product_image_url,
+                                product.productImages[0].productImageUrl,
                                 height: 160,
                                 width: 200,
                                 fit: BoxFit.contain,
                               ),
                               // Container for the grey box
                               Visibility(
-                                visible: product.amount_sold > 600,
+                                visible: product.amountSold > 600,
                                 child: Container(
                                   margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
                                   width: 250, // Adjust the width of the grey box
@@ -129,7 +129,7 @@ class FilterBrandPage extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          '${product.amount_sold} Sold',
+                                          '${product.amountSold} Sold',
                                           style: app_text_style.latoStyle(
                                             fontWeight: FontWeight.normal,
                                             fontSize: 14, // Adjust the font size
@@ -157,7 +157,7 @@ class FilterBrandPage extends StatelessWidget {
                                     style: app_text_style.latoStyle(
                                         fontWeight: FontWeight.normal,
                                         color: Colors.grey)),
-                                subtitle: Text('${product.store_price} LAK',
+                                subtitle: Text('${product.storePrice} LAK',
                                     style: app_text_style.latoStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14)),

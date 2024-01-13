@@ -1,59 +1,59 @@
 import 'dart:convert';
 
-import 'shipping__method.dart';
+import 'shipping_method.dart';
 
 class Discount {
-  final int min_spend;
+  final int minSpend;
   final String start;
   final int duration;
   final int amount;
-  final Shipping_method shipping_method;
+  final ShippingMethod shippingMethod;
   final String description;
   Discount({
-    required this.min_spend,
+    required this.minSpend,
     required this.start,
     required this.duration,
     required this.amount,
-    required this.shipping_method,
+    required this.shippingMethod,
     required this.description,
   });
 
   Discount copyWith({
-    int? min_spend,
+    int? minSpend,
     String? start,
     int? duration,
     int? amount,
-    Shipping_method? shipping_method,
+    ShippingMethod? shippingMethod,
     String? description,
   }) {
     return Discount(
-      min_spend: min_spend ?? this.min_spend,
+      minSpend: minSpend ?? this.minSpend,
       start: start ?? this.start,
       duration: duration ?? this.duration,
       amount: amount ?? this.amount,
-      shipping_method: shipping_method ?? this.shipping_method,
+      shippingMethod: shippingMethod ?? this.shippingMethod,
       description: description ?? this.description,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'min_spend': min_spend,
+      'minSpend': minSpend,
       'start': start,
       'duration': duration,
       'amount': amount,
-      'shipping_method': shipping_method.toMap(),
+      'shippingMethod': shippingMethod.toMap(),
       'description': description,
     };
   }
 
   factory Discount.fromMap(Map<String, dynamic> map) {
     return Discount(
-      min_spend: map['min_spend'].toInt() as int,
+      minSpend: map['minSpend'].toInt() as int,
       start: map['start'] as String,
       duration: map['duration'].toInt() as int,
       amount: map['amount'].toInt() as int,
-      shipping_method: Shipping_method.fromMap(map['shipping_method'] as Map<String,dynamic>),
+      shippingMethod: ShippingMethod.fromMap(map['shippingMethod'] as Map<String,dynamic>),
       description: map['description'] as String,
     );
   }
@@ -64,7 +64,7 @@ class Discount {
 
   @override
   String toString() {
-    return 'Discount(min_spend: $min_spend, start: $start, duration: $duration, amount: $amount, shipping_method: $shipping_method, description: $description)';
+    return 'Discount(minSpend: $minSpend, start: $start, duration: $duration, amount: $amount, shippingMethod: $shippingMethod, description: $description)';
   }
 
   @override
@@ -72,21 +72,21 @@ class Discount {
     if (identical(this, other)) return true;
   
     return 
-      other.min_spend == min_spend &&
+      other.minSpend == minSpend &&
       other.start == start &&
       other.duration == duration &&
       other.amount == amount &&
-      other.shipping_method == shipping_method &&
+      other.shippingMethod == shippingMethod &&
       other.description == description;
   }
 
   @override
   int get hashCode {
-    return min_spend.hashCode ^
+    return minSpend.hashCode ^
       start.hashCode ^
       duration.hashCode ^
       amount.hashCode ^
-      shipping_method.hashCode ^
+      shippingMethod.hashCode ^
       description.hashCode;
   }
 }

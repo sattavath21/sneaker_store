@@ -62,7 +62,7 @@ class ProfileListTile extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
                   child: Text(subtitle.tr(),
-                      style: TextStyle(fontSize: 13, color: Colors.black54)),
+                      style: TextStyle(fontSize: 12, color: Colors.black54)),
                 ),
               ),
             )

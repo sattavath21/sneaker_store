@@ -45,7 +45,7 @@ class ExplorePage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) => FilterBrandPage(
-                          selectedName: brand.brand_name,
+                          selectedName: brand.brandName,
                         ),
                       ),
                     );
@@ -64,7 +64,7 @@ class ExplorePage extends StatelessWidget {
 
                         // Display collection name
                         Text(
-                          brand.brand_name,
+                          brand.brandName,
                           style: app_text_style.latoStyle(),
                         ),
                         SizedBox(
@@ -125,7 +125,7 @@ class ExplorePage extends StatelessWidget {
                           .start, // Align children to the start (left)
                       children: [
                         Visibility(
-                          visible: product.product_with_sizes != null,
+                          visible: product.productWithSizes != null,
                           child: Container(
                             margin: EdgeInsets.fromLTRB(10, 16, 0, 0),
                             child: Row(
@@ -153,14 +153,14 @@ class ExplorePage extends StatelessWidget {
                         ),
                         // Display collection image (you may need to update this)
                         Image.network(
-                          product.product_images[0].product_image_url,
+                          product.productImages[0].productImageUrl,
                           height: 160,
                           width: 200,
                           fit: BoxFit.contain,
                         ),
                         // Container for the grey box
                         Visibility(
-                          visible: product.amount_sold > 600,
+                          visible: product.amountSold > 600,
                           child: Container(
                             margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
                             width: 250, // Adjust the width of the grey box
@@ -194,7 +194,7 @@ class ExplorePage extends StatelessWidget {
                                       fontSize: 10, // Adjust the font size
                                     ),
     children: <TextSpan>[
-      TextSpan(text: "${product.amount_sold} "),
+      TextSpan(text: "${product.amountSold} "),
       TextSpan(text: "Sold".tr()),
     ],
   ), ),
@@ -221,7 +221,7 @@ class ExplorePage extends StatelessWidget {
                               style: app_text_style.latoStyle(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.grey)),
-                          subtitle: Text('${product.store_price} LAK',
+                          subtitle: Text('${product.storePrice} LAK',
                               style: app_text_style.latoStyle(
                                   fontWeight: FontWeight.bold, fontSize: 14)),
                         ),

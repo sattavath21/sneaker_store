@@ -17,7 +17,9 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: AlwaysScrollableScrollPhysics(),
-      child: Column(children: [
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
         const SizedBox(
           height: 60,
         ),

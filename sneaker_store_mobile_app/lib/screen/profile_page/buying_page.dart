@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
 import 'package:sneaker_store_mobile_app/model/bill.dart';
-import 'package:sneaker_store_mobile_app/model/bill__item.dart';
+import 'package:sneaker_store_mobile_app/model/bill_item.dart';
 
 class BuyingPage extends StatefulWidget {
   @override
@@ -125,7 +125,7 @@ class BuyingPageBodyContent extends StatelessWidget {
     // Filter bills based on the order status
     List<Bill> filteredBills = store1.billList
         .where((bill) =>
-            bill.order_status.status_name.toLowerCase() == status.toLowerCase())
+            bill.orderStatus.statusName.toLowerCase() == status.toLowerCase())
         .toList();
 
     // Container for background color of the body content
@@ -169,9 +169,9 @@ class OrderBodyCard extends StatelessWidget {
             Padding(
                 padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
                 child: Wrap(
-                    children: List.generate(bill.bill_items.length, (index) {
-                  Bill_item billItem = bill.bill_items[index];
-                  bool isLastItem = index == bill.bill_items.length - 1; // Check if it's the last item
+                    children: List.generate(bill.billItems.length, (index) {
+                  BillItem billItem = bill.billItems[index];
+                  bool isLastItem = index == bill.billItems.length - 1; // Check if it's the last item
 
                   return Column(
                     children: [
@@ -184,13 +184,13 @@ Row(
                           children: [
                             Image.network(
                               billItem
-                                  .product.product_images[0].product_image_url,
+                                  .product.productImages[0].productImageUrl,
                               height: 100,
                               width: 100,
                               fit: BoxFit.contain,
                             ),
                             Text(
-                              "${billItem.shoe_size.size_type} ${billItem.shoe_size.size_number}",
+                              "${billItem.shoeSize.sizeType} ${billItem.shoeSize.sizeNumber}",
                             ),
                           ],
                         ),
@@ -213,13 +213,13 @@ Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    billItem.product_condition
-                                        .condition_name,
-                                    style: TextStyle(color: billItem.product_condition.condition_name == "Brand new" ?
+                                    billItem.productCondition
+                                        .conditionName,
+                                    style: TextStyle(color: billItem.productCondition.conditionName == "Brand new" ?
                                      Colors.green: Colors.black54),
                                   ),
                                   SizedBox(width: 30),
-                                  Text("\u0E3F ${billItem.product.store_price}")
+                                  Text("\u0E3F ${billItem.product.storePrice}")
                                 ],
                               ),
                             )
@@ -256,7 +256,7 @@ Row(
                     style: TextStyle(color: Colors.black45),
                   ),
                   Text(
-                    bill.order_date,
+                    bill.orderDate,
                     style: TextStyle(color: Colors.black45),
                   ),
                 ],

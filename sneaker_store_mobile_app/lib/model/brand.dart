@@ -1,34 +1,34 @@
 import 'dart:convert';
 
 class Brand {
-  final String brand_name;
-  final String brand_logo;
+  final String brandName;
+  final String brandLogo;
   Brand({
-    required this.brand_name,
-    required this.brand_logo,
+    required this.brandName,
+    required this.brandLogo,
   });
 
   Brand copyWith({
-    String? brand_name,
-    String? brand_logo,
+    String? brandName,
+    String? brandLogo,
   }) {
     return Brand(
-      brand_name: brand_name ?? this.brand_name,
-      brand_logo: brand_logo ?? this.brand_logo,
+      brandName: brandName ?? this.brandName,
+      brandLogo: brandLogo ?? this.brandLogo,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'brand_name': brand_name,
-      'brand_logo': brand_logo,
+      'brandName': brandName,
+      'brandLogo': brandLogo,
     };
   }
 
   factory Brand.fromMap(Map<String, dynamic> map) {
     return Brand(
-      brand_name: map['brand_name'] as String,
-      brand_logo: map['brand_logo'] as String,
+      brandName: map['brandName'] as String,
+      brandLogo: map['brandLogo'] as String,
     );
   }
 
@@ -37,17 +37,17 @@ class Brand {
   factory Brand.fromJson(String source) => Brand.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Brand(brand_name: $brand_name, brand_logo: $brand_logo)';
+  String toString() => 'Brand(brandName: $brandName, brandLogo: $brandLogo)';
 
   @override
   bool operator ==(covariant Brand other) {
     if (identical(this, other)) return true;
   
     return 
-      other.brand_name == brand_name &&
-      other.brand_logo == brand_logo;
+      other.brandName == brandName &&
+      other.brandLogo == brandLogo;
   }
 
   @override
-  int get hashCode => brand_name.hashCode ^ brand_logo.hashCode;
+  int get hashCode => brandName.hashCode ^ brandLogo.hashCode;
 }

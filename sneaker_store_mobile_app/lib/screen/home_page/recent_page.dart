@@ -63,7 +63,7 @@ class RecentPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Visibility(
-                              visible: product.product_with_sizes != null,
+                              visible: product.productWithSizes != null,
                               child: Container(
                                 margin: EdgeInsets.fromLTRB(10, 16, 0, 0),
                                 child: Row(
@@ -87,13 +87,13 @@ class RecentPage extends StatelessWidget {
                               ),
                             ),
                             Image.network(
-                              product.product_images[0].product_image_url,
+                              product.productImages[0].productImageUrl,
                               height: 160,
                               width: 200,
                               fit: BoxFit.contain,
                             ),
                             Visibility(
-                              visible: product.amount_sold > 600,
+                              visible: product.amountSold > 600,
                               child: Container(
                                 margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
                                 width: 250,
@@ -115,7 +115,7 @@ class RecentPage extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        '${product.amount_sold} Sold',
+                                        '${product.amountSold} Sold',
                                         style: app_text_style.latoStyle(
                                           fontWeight: FontWeight.normal,
                                           fontSize: 10,
@@ -140,7 +140,7 @@ class RecentPage extends StatelessWidget {
                               title: Text('STARTING FROM',
                                   style: app_text_style.latoStyle(
                                       fontWeight: FontWeight.normal, color: Colors.grey)),
-                              subtitle: Text('${product.store_price} LAK',
+                              subtitle: Text('${product.storePrice} LAK',
                                   style: app_text_style.latoStyle(
                                       fontWeight: FontWeight.bold, fontSize: 14)),
                             ),

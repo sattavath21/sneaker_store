@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
-import 'package:sneaker_store_mobile_app/model/product__selling.dart';
+import 'package:sneaker_store_mobile_app/model/product_selling.dart';
 
 class SellingPage extends StatefulWidget {
   @override
@@ -119,9 +119,9 @@ class SellingPageBodyContent extends StatelessWidget {
     //place this ref inside build()
     var store1 = Provider.of<CentralStore>(context);
     // Filter bills based on the order status
-    List<Product_selling> filteredProductSelling = store1.customer.product_sellings!
+    List<ProductSelling> filteredProductSelling = store1.customer.productSellings!
         .where((productSelling) =>
-            productSelling.order_status.status_name.toLowerCase() == status.toLowerCase())
+            productSelling.orderStatus.statusName.toLowerCase() == status.toLowerCase())
         .toList();
 
     // Container for background color of the body content
@@ -149,7 +149,7 @@ class OrderBodyCard extends StatelessWidget {
     required this.productSelling,
   });
 
-  final Product_selling productSelling;
+  final ProductSelling productSelling;
 
   @override
   Widget build(BuildContext context) {
@@ -176,13 +176,13 @@ Row(
                         child: Column(
                           children: [
                             Image.network(
-                              productSelling.product.product_images[0].product_image_url,
+                              productSelling.product.productImages[0].productImageUrl,
                               height: 100,
                               width: 100,
                               fit: BoxFit.contain,
                             ),
                             Text(
-                              "${productSelling.shoe_size.size_type} ${productSelling.shoe_size.size_number}",
+                              "${productSelling.shoeSize.sizeType} ${productSelling.shoeSize.sizeNumber}",
                             ),
                           ],
                         ),
@@ -205,12 +205,12 @@ Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    productSelling.product_condition
-                                        .condition_name,
+                                    productSelling.productCondition
+                                        .conditionName,
                                     style: TextStyle(color: Colors.green),
                                   ),
                                   SizedBox(width: 30),
-                                  Text("\u0E3F ${productSelling.customer_placed_price}")
+                                  Text("\u0E3F ${productSelling.customerPlacedPrice}")
                                 ],
                               ),
                             )
@@ -235,7 +235,7 @@ Row(
                     style: TextStyle(color: Colors.black45),
                   ),
                   Text(
-                    productSelling.product_live_date,
+                    productSelling.productLiveDate,
                     style: TextStyle(color: Colors.black45),
                   ),
                 ],
