@@ -1,224 +1,226 @@
 {
-    "order_date": "27/01/2001",
-    "status_date": "228/01/2001",
-    "order_status": {
-        "status_name": "Pending"
+    "orderDate": "27/01/2001",
+    "statusDate": "228/01/2001",
+    "orderStatus": {
+        "statusName": "Pending"
     },
     "discount": {
-        "min_spend": 4000,
+        "minSpend": 4000,
         "start": "03/12/2023",
         "duration": 2,
         "amount": 20,
-        "shipping_method": {
-            "method_name": "In-store Pickup"
+        "shippingMethod": {
+            "methodName": "In-store Pickup"
         },
         "description": "new year happiness"
     },
-    "delivery_receipt_pics": [
+    "deliveryReceiptPics": [
         {
-            "pic_string": "pic String"
+            "picString": "pic String"
         }
     ],
-    "store_branch": {
+    "storeBranch": {
         "province": "Savannakhet"
     },
     "customer": {
-        "first_name": "andy",
-        "last_name": "o",
+        "firstName": "andy",
+        "lastName": "o",
         "age": "10",
-        "vacation_mode": false,
-        "email_subscribtion": true,
-        "default_address": 0,
-        "customer_addresses": [
+        "birthday":"19/01/2001",
+        "email":"huangguifu21@gmail.com",
+        "vacationMode": false,
+        "emailSubscribtion": true,
+        "defaultAddress": 0,
+        "customerAddresses": [
             {
                 "address": {
-                    "seller_name": "Andy O",
-                    "seller_tel_number": "4654654654",
+                    "sellerName": "Andy O",
+                    "sellerTelNumber": "4654654654",
                     "province": "ນະຄອນຫຼວງວຽງຈັນ",
                     "city": "ຈັນທະບູລີ",
                     "village": "ໂພນຕ້ອງສະຫວາດ",
-                    "address_detail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC",
-                    "post_code": "464651"
+                    "addressDetail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC",
+                    "postCode": "464651"
                 }
             }
         ],
-        "customer_bank_accounts": [
+        "customerBankAccounts": [
             {
                 "bank": {
-                    "bank_name": "BCEL Bank"
+                    "bankName": "BCEL Bank"
                 },
-                "account_name": "ທ້າວຄຳດີ ຈອມສາຍສາງເພັດ",
-                "account_number": "54984987934984",
-                "account_qr": "Picture of QR"
+                "accountName": "ທ້າວຄຳດີ ຈອມສາຍສາງເພັດ",
+                "accountNumber": "54984987934984",
+                "accountQr": "Picture of QR"
             }
         ],
-        "customer_wishlists": [
+        "customerWishlists": [
             {
-                "shoe_size": {
-                                "size_type": "EU",
-                                "size_number": 38.5
+                "shoeSize": {
+                                "sizeType": "EU",
+                                "sizeNumber": 38.5
                             },
                             
                 "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "store_price": 7400,
-                    "lowest_selling_price": 6500,
+                    "storePrice": 7400,
+                    "lowestSellingPrice": 6500,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
-                    "release_date": "13/05/2023",
-                    "amount_sold": 1494,
-                    "product_with_sizes": [
+                    "releaseDate": "13/05/2023",
+                    "amountSold": 1494,
+                    "productWithSizes": [
                         {
-                            "inventory_qty": 20,
-                            "shoe_size": {
-                                "size_type": "EU",
-                                "size_number": 38.5
+                            "inventoryQty": 20,
+                            "shoeSize": {
+                                "sizeType": "EU",
+                                "sizeNumber": 38.5
                             }
                         }
                     ],
-                    "product_collection": {
-                        "collection_name": "Jordan 1",
+                    "productCollection": {
+                        "collectionName": "Jordan 1",
                         "brand": {
-                            "brand_name": "Jordan",
-                            "brand_logo": "asdadasdsadasdasd"
+                            "brandName": "Jordan",
+                            "brandLogo": "asdadasdsadasdasd"
                         }
                     },
-                    "product_cat": {
-                        "cat_name": "Sneakers"
+                    "productCat": {
+                        "catName": "Sneakers"
                     },
-                    "product_images": [
+                    "productImages": [
                         {
-                            "product_image_url": "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+                            "productImageUrl": "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
                         }
                     ]
                 }
             }
         ],
-        "product_sellings": [
+        "productSellings": [
             {
-                "product_live_date": "27/01/2001",
-                "order_status": {
-                    "status_name": "Pending"
+                "productLiveDate": "27/01/2001",
+                "orderStatus": {
+                    "statusName": "Pending"
                 },
-                "customer_placed_price": 2000,
+                "customerPlacedPrice": 2000,
                 "qty": 10,
-                "shoe_size": {
-                    "size_type": "EU",
-                    "size_number": 38.5
+                "shoeSize": {
+                    "sizeType": "EU",
+                    "sizeNumber": 38.5
                 },
-                "product_condition": {
-                    "condition_name": "Brand New"
+                "productCondition": {
+                    "conditionName": "Brand New"
                 },
-                "product_defect": true,
-                "box_defect": true,
-                "customer_product_images": [
+                "productDefect": true,
+                "boxDefect": true,
+                "customerProductImages": [
                     {
-                        "product_image": "**Store it in Binary Large Object format**"
+                        "productImage": "**Store it in Binary Large Object format**"
                     }
                 ],
-                "customer_defect_images": [
+                "customerDefectImages": [
                     {
-                        "defect_image": "**Store it in Binary Large Object format**"
+                        "defectImage": "**Store it in Binary Large Object format**"
                     }
                 ],
                 "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "store_price": 7400,
-                    "lowest_selling_price": 6500,
+                    "storePrice": 7400,
+                    "lowestSellingPrice": 6500,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
-                    "release_date": "13/05/2023",
-                    "amount_sold": 1494,
-                    "product_with_sizes": [
+                    "releaseDate": "13/05/2023",
+                    "amountSold": 1494,
+                    "productWithSizes": [
                         {
-                            "inventory_qty": 20,
-                            "shoe_size": {
-                                "size_type": "EU",
-                                "size_number": 38.5
+                            "inventoryQty": 20,
+                            "shoeSize": {
+                                "sizeType": "EU",
+                                "sizeNumber": 38.5
                             }
                         }
                     ],
-                    "product_collection": {
-                        "collection_name": "Jordan 1",
+                    "productCollection": {
+                        "collectionName": "Jordan 1",
                         "brand": {
-                            "brand_name": "Jordan",
-                            "brand_logo": "asdadasdsadasdasd"
+                            "brandName": "Jordan",
+                            "brandLogo": "asdadasdsadasdasd"
                         }
                     },
-                    "product_cat": {
-                        "cat_name": "Sneakers"
+                    "productCat": {
+                        "catName": "Sneakers"
                     },
-                    "product_images": [
+                    "productImages": [
                         {
-                            "product_image_url": "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+                            "productImageUrl": "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
                         }
                     ]
                 }
             }
         ]
     },
-    "delivery_branch": {
-        "delivery_service": {
-            "delivery_company_name": "Anousith Express"
+    "deliveryBranch": {
+        "deliveryService": {
+            "deliveryCompanyName": "Anousith Express"
         },
-        "branch_name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
-        "branch_tel_numbers": [
+        "branchName": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
+        "branchTelNumbers": [
             {
-                "tel_number": "020-95960461"
+                "telNumber": "020-95960461"
             }
         ],
-        "branch_availability": "open",
-        "branch_address": {
+        "branchAvailability": "open",
+        "branchAddress": {
             "province": "ນະຄອນຫຼວງວຽງຈັນ",
             "city": "ຈັນທະບູລີ",
             "village": "ໂພນຕ້ອງສະຫວາດ",
-            "address_detail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC"
+            "addressDetail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC"
         },
-        "branch_googlemap_position": "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+        "branchGooglemapPosition": "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
     },
-    "shipping_method": {
-        "method_name": "In-store Pickup"
+    "shippingMethod": {
+        "methodName": "In-store Pickup"
     },
-    "bill_items": [
+    "billItems": [
         {
             "qty": 10,
-            "shoe_size": {
-                "size_type": "EU",
-                "size_number": 38.5
+            "shoeSize": {
+                "sizeType": "EU",
+                "sizeNumber": 38.5
             },
-            "product_condition": {
-                "condition_name": "Brand New"
+            "productCondition": {
+                "conditionName": "Brand New"
             },
             "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "store_price": 7400,
-                    "lowest_selling_price": 6500,
+                    "storePrice": 7400,
+                    "lowestSellingPrice": 6500,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
-                    "release_date": "13/05/2023",
-                    "amount_sold": 1494,
-                    "product_with_sizes": [
+                    "releaseDate": "13/05/2023",
+                    "amountSold": 1494,
+                    "productWithSizes": [
                         {
-                            "inventory_qty": 20,
-                            "shoe_size": {
-                                "size_type": "EU",
-                                "size_number": 38.5
+                            "inventoryQty": 20,
+                            "shoeSize": {
+                                "sizeType": "EU",
+                                "sizeNumber": 38.5
                             }
                         }
                     ],
-                    "product_collection": {
-                        "collection_name": "Jordan 1",
+                    "productCollection": {
+                        "collectionName": "Jordan 1",
                         "brand": {
-                            "brand_name": "Jordan",
-                            "brand_logo": "asdadasdsadasdasd"
+                            "brandName": "Jordan",
+                            "brandLogo": "asdadasdsadasdasd"
                         }
                     },
-                    "product_cat": {
-                        "cat_name": "Sneakers"
+                    "productCat": {
+                        "catName": "Sneakers"
                     },
-                    "product_images": [
+                    "productImages": [
                         {
-                            "product_image_url": "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+                            "productImageUrl": "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
                         }
                     ]
                 }

@@ -1,89 +1,100 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-
-import 'customer__addresse.dart';
-import 'customer__bank__account.dart';
-import 'customer__wishlist.dart';
-import 'product__selling.dart';
+import 'package:sneaker_store_mobile_app/model/customer_addresse.dart';
+import 'package:sneaker_store_mobile_app/model/customer_bank_account.dart';
+import 'package:sneaker_store_mobile_app/model/customer_wishlist.dart';
+import 'package:sneaker_store_mobile_app/model/product_selling.dart';
 
 class Customer {
-  final String first_name;
-  final String last_name;
+  final String firstName;
+  final String lastName;
   final String age;
-  bool vacation_mode = false;
-  bool email_subscribtion = true;
-  int default_address = 0;
-  final List<Customer_addresse>? customer_addresses;
-  final List<Customer_bank_account> customer_bank_accounts;
-  final List<Customer_wishlist>? customer_wishlists;
-  final List<Product_selling>? product_sellings;
+  final String birthday;
+  final String email;
+  final bool vacationMode;
+  final bool emailSubscribtion;
+  final int defaultAddress;
+  final List<CustomerAddresse> customerAddresses;
+  final List<CustomerBankAccount> customerBankAccounts;
+  final List<CustomerWishlist> customerWishlists;
+  final List<ProductSelling> productSellings;
   Customer({
-    required this.first_name,
-    required this.last_name,
+    required this.firstName,
+    required this.lastName,
     required this.age,
-    required this.vacation_mode,
-    required this.email_subscribtion,
-    required this.default_address,
-    this.customer_addresses,
-    required this.customer_bank_accounts,
-    this.customer_wishlists,
-    this.product_sellings,
+    required this.birthday,
+    required this.email,
+    required this.vacationMode,
+    required this.emailSubscribtion,
+    required this.defaultAddress,
+    required this.customerAddresses,
+    required this.customerBankAccounts,
+    required this.customerWishlists,
+    required this.productSellings,
   });
 
   Customer copyWith({
-    String? first_name,
-    String? last_name,
+    String? firstName,
+    String? lastName,
     String? age,
-    bool? vacation_mode,
-    bool? email_subscribtion,
-    int? default_address,
-    List<Customer_addresse>? customer_addresses,
-    List<Customer_bank_account>? customer_bank_accounts,
-    List<Customer_wishlist>? customer_wishlists,
-    List<Product_selling>? product_sellings,
+    String? birthday,
+    String? email,
+    bool? vacationMode,
+    bool? emailSubscribtion,
+    int? defaultAddress,
+    List<CustomerAddresse>? customerAddresses,
+    List<CustomerBankAccount>? customerBankAccounts,
+    List<CustomerWishlist>? customerWishlists,
+    List<ProductSelling>? productSellings,
   }) {
     return Customer(
-      first_name: first_name ?? this.first_name,
-      last_name: last_name ?? this.last_name,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
       age: age ?? this.age,
-      vacation_mode: vacation_mode ?? this.vacation_mode,
-      email_subscribtion: email_subscribtion ?? this.email_subscribtion,
-      default_address: default_address ?? this.default_address,
-      customer_addresses: customer_addresses ?? this.customer_addresses,
-      customer_bank_accounts: customer_bank_accounts ?? this.customer_bank_accounts,
-      customer_wishlists: customer_wishlists ?? this.customer_wishlists,
-      product_sellings: product_sellings ?? this.product_sellings,
+      birthday: birthday ?? this.birthday,
+      email: email ?? this.email,
+      vacationMode: vacationMode ?? this.vacationMode,
+      emailSubscribtion: emailSubscribtion ?? this.emailSubscribtion,
+      defaultAddress: defaultAddress ?? this.defaultAddress,
+      customerAddresses: customerAddresses ?? this.customerAddresses,
+      customerBankAccounts: customerBankAccounts ?? this.customerBankAccounts,
+      customerWishlists: customerWishlists ?? this.customerWishlists,
+      productSellings: productSellings ?? this.productSellings,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'first_name': first_name,
-      'last_name': last_name,
+      'firstName': firstName,
+      'lastName': lastName,
       'age': age,
-      'vacation_mode': vacation_mode,
-      'email_subscribtion': email_subscribtion,
-      'default_address': default_address,
-      'customer_addresses': customer_addresses?.map((x) => x.toMap()).toList(),
-      'customer_bank_accounts': customer_bank_accounts.map((x) => x.toMap()).toList(),
-      'customer_wishlists': customer_wishlists?.map((x) => x.toMap()).toList(),
-      'product_sellings': product_sellings?.map((x) => x.toMap()).toList(),
+      'birthday': birthday,
+      'email': email,
+      'vacationMode': vacationMode,
+      'emailSubscribtion': emailSubscribtion,
+      'defaultAddress': defaultAddress,
+      'customerAddresses': customerAddresses.map((x) => x.toMap()).toList(),
+      'customerBankAccounts': customerBankAccounts.map((x) => x.toMap()).toList(),
+      'customerWishlists': customerWishlists.map((x) => x.toMap()).toList(),
+      'productSellings': productSellings.map((x) => x.toMap()).toList(),
     };
   }
 
   factory Customer.fromMap(Map<String, dynamic> map) {
     return Customer(
-      first_name: map['first_name'] as String,
-      last_name: map['last_name'] as String,
+      firstName: map['firstName'] as String,
+      lastName: map['lastName'] as String,
       age: map['age'] as String,
-      vacation_mode: map['vacation_mode'] as bool,
-      email_subscribtion: map['email_subscribtion'] as bool,
-      default_address: map['default_address'].toInt() as int,
-      customer_addresses: List<Customer_addresse>.from((map['customer_addresses'] as List<int>).map<Customer_addresse>((x) => Customer_addresse.fromMap(x as Map<String,dynamic>),),),
-      customer_bank_accounts: List<Customer_bank_account>.from((map['customer_bank_accounts'] as List<int>).map<Customer_bank_account>((x) => Customer_bank_account.fromMap(x as Map<String,dynamic>),),),
-      customer_wishlists: List<Customer_wishlist>.from((map['customer_wishlists'] as List<int>).map<Customer_wishlist>((x) => Customer_wishlist.fromMap(x as Map<String,dynamic>),),),
-      product_sellings: List<Product_selling>.from((map['product_sellings'] as List<int>).map<Product_selling>((x) => Product_selling.fromMap(x as Map<String,dynamic>),),),
+      birthday: map['birthday'] as String,
+      email: map['email'] as String,
+      vacationMode: map['vacationMode'] as bool,
+      emailSubscribtion: map['emailSubscribtion'] as bool,
+      defaultAddress: map['defaultAddress'].toInt() as int,
+      customerAddresses: List<CustomerAddresse>.from((map['customerAddresses'] as List<int>).map<CustomerAddresse>((x) => CustomerAddresse.fromMap(x as Map<String,dynamic>),),),
+      customerBankAccounts: List<CustomerBankAccount>.from((map['customerBankAccounts'] as List<int>).map<CustomerBankAccount>((x) => CustomerBankAccount.fromMap(x as Map<String,dynamic>),),),
+      customerWishlists: List<CustomerWishlist>.from((map['customerWishlists'] as List<int>).map<CustomerWishlist>((x) => CustomerWishlist.fromMap(x as Map<String,dynamic>),),),
+      productSellings: List<ProductSelling>.from((map['productSellings'] as List<int>).map<ProductSelling>((x) => ProductSelling.fromMap(x as Map<String,dynamic>),),),
     );
   }
 
@@ -93,7 +104,7 @@ class Customer {
 
   @override
   String toString() {
-    return 'Customer(first_name: $first_name, last_name: $last_name, age: $age, vacation_mode: $vacation_mode, email_subscribtion: $email_subscribtion, default_address: $default_address, customer_addresses: $customer_addresses, customer_bank_accounts: $customer_bank_accounts, customer_wishlists: $customer_wishlists, product_sellings: $product_sellings)';
+    return 'Customer(firstName: $firstName, lastName: $lastName, age: $age, birthday: $birthday, email: $email, vacationMode: $vacationMode, emailSubscribtion: $emailSubscribtion, defaultAddress: $defaultAddress, customerAddresses: $customerAddresses, customerBankAccounts: $customerBankAccounts, customerWishlists: $customerWishlists, productSellings: $productSellings)';
   }
 
   @override
@@ -101,29 +112,34 @@ class Customer {
     if (identical(this, other)) return true;
   
     return 
-      other.first_name == first_name &&
-      other.last_name == last_name &&
+      other.firstName == firstName &&
+      other.lastName == lastName &&
       other.age == age &&
-      other.vacation_mode == vacation_mode &&
-      other.email_subscribtion == email_subscribtion &&
-      other.default_address == default_address &&
-      listEquals(other.customer_addresses, customer_addresses) &&
-      listEquals(other.customer_bank_accounts, customer_bank_accounts) &&
-      listEquals(other.customer_wishlists, customer_wishlists) &&
-      listEquals(other.product_sellings, product_sellings);
+      other.birthday == birthday &&
+      other.email == email &&
+      other.vacationMode == vacationMode &&
+      other.emailSubscribtion == emailSubscribtion &&
+      other.defaultAddress == defaultAddress &&
+      listEquals(other.customerAddresses, customerAddresses) &&
+      listEquals(other.customerBankAccounts, customerBankAccounts) &&
+      listEquals(other.customerWishlists, customerWishlists) &&
+      listEquals(other.productSellings, productSellings);
   }
 
   @override
   int get hashCode {
-    return first_name.hashCode ^
-      last_name.hashCode ^
+    return firstName.hashCode ^
+      lastName.hashCode ^
       age.hashCode ^
-      vacation_mode.hashCode ^
-      email_subscribtion.hashCode ^
-      default_address.hashCode ^
-      customer_addresses.hashCode ^
-      customer_bank_accounts.hashCode ^
-      customer_wishlists.hashCode ^
-      product_sellings.hashCode;
+      birthday.hashCode ^
+      email.hashCode ^
+      vacationMode.hashCode ^
+      emailSubscribtion.hashCode ^
+      defaultAddress.hashCode ^
+      customerAddresses.hashCode ^
+      customerBankAccounts.hashCode ^
+      customerWishlists.hashCode ^
+      productSellings.hashCode;
   }
 }
+

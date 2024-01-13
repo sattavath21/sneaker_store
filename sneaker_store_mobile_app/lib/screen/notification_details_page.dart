@@ -31,7 +31,7 @@ class NotificationDetailsPage extends StatelessWidget {
                 children: [
                   Image.network(
                     imageUrl,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                     height: 260.0, // Adjust the height as needed
                   ),
                   ListTile(

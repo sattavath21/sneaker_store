@@ -33,7 +33,7 @@ main() async {
 } //ef
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -70,9 +70,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
         Provider.of<CentralStore>(context, listen: false).initializeProductList();
-
         Provider.of<CentralStore>(context, listen: false).initializeCustomer();
-
     Provider.of<CentralStore>(context, listen: false).initializeBillList();
     Provider.of<CentralStore>(context, listen: false).initializeRecentProductList();
   }
@@ -93,11 +91,11 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: _showAppBar[_pageIndex]
           ? AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           foregroundColor: Colors.black,
           shadowColor: Colors.transparent,
           title: CupertinoSearchTextField(
-            placeholder: "Search for product or brand",
+            placeholder: "Search for product or brand".tr(),
             prefixIcon: Icon(Icons.search_rounded, color: Colors.black54, size: 20,),
             style: TextStyle(
               fontSize: 12,
@@ -107,7 +105,8 @@ class _MyAppState extends State<MyApp> {
         ,
         body: _pageOptions.elementAt(_pageIndex),
 
-        bottomNavigationBar: BottomNavigationBar(
+        bottomNavigationBar: 
+        BottomNavigationBar(
           currentIndex: _pageIndex,
           selectedItemColor: Colors.black87,
           onTap: _onItemTapped,
@@ -116,26 +115,27 @@ class _MyAppState extends State<MyApp> {
           showUnselectedLabels: false,
           unselectedLabelStyle: app_text_style.latoStyle(),
           selectedLabelStyle: app_text_style.latoStyle(),
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: 'HOME',
-            ),
+  icon: Icon(Icons.home_rounded),
+  label: 'HOME'.tr(),
+),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.trending_up_rounded),
             //   label: 'TREND',
             // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search_rounded),
-              label: 'EXPLORE',
+              label: 'EXPLORE'.tr(),
+              
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.notifications_rounded),
-              label: 'NOTIFICATION',
+              label: 'NOTIFICATION'.tr(),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_rounded),
-              label: 'PROFILE',
+              label: 'PROFILE'.tr(),
             ),
           ],
         ),
@@ -168,5 +168,12 @@ ThemeData myAppTheme = ThemeData(
     ),
 
     ),
-    textTheme: GoogleFonts.latoTextTheme(),
+    textTheme: GoogleFonts.latoTextTheme().copyWith(
+      displaySmall: TextStyle(color: Colors.black),
+      displayMedium: TextStyle(color: Colors.black),
+      displayLarge: TextStyle(color: Colors.black),
+      bodySmall: TextStyle(color: Colors.black),
+      bodyMedium: TextStyle(color: Colors.black),
+      bodyLarge: TextStyle(color: Colors.black),
+    ),
 );

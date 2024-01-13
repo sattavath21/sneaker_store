@@ -1,28 +1,28 @@
 import 'dart:convert';
 
 class Bank {
-  final String bank_name;
+  final String bankName;
   Bank({
-    required this.bank_name,
+    required this.bankName,
   });
 
   Bank copyWith({
-    String? bank_name,
+    String? bankName,
   }) {
     return Bank(
-      bank_name: bank_name ?? this.bank_name,
+      bankName: bankName ?? this.bankName,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'bank_name': bank_name,
+      'bankName': bankName,
     };
   }
 
   factory Bank.fromMap(Map<String, dynamic> map) {
     return Bank(
-      bank_name: map['bank_name'] as String,
+      bankName: map['bankName'] as String,
     );
   }
 
@@ -31,16 +31,16 @@ class Bank {
   factory Bank.fromJson(String source) => Bank.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Bank(bank_name: $bank_name)';
+  String toString() => 'Bank(bankName: $bankName)';
 
   @override
   bool operator ==(covariant Bank other) {
     if (identical(this, other)) return true;
   
     return 
-      other.bank_name == bank_name;
+      other.bankName == bankName;
   }
 
   @override
-  int get hashCode => bank_name.hashCode;
+  int get hashCode => bankName.hashCode;
 }

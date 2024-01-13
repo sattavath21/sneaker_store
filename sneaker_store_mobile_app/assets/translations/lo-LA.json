@@ -1,3 +1,32 @@
 {
-    "hi":"ສະບາຍດີ"
+    "hi":"ສະບາຍດີ",
+    "hello":"ສະບາຍດີ",
+    "RECENTLY VIEWED":"ເບິ່ງລ່າສຸດ",
+    "READY TO SHIP":"ພ້ອມສົ່ງ",
+    "MOST POPULAR":"ເປັນທີ່ນິຍົມ",
+    "HOME":"ໜ້າຫຼັກ",
+    "Search for product or brand":"ຄົ້ນຫາຜະລິດຕະພັນ ຫຼືແບຣນ",
+    "EXPLORE":"ຄົ້ນຫາ",
+    "NOTIFICATION": "ການແຈ້ງເຕືອນ",
+    "PROFILE":"ໂປຣໄຟລ໌",
+    "Results":"ຜົນລັບ",
+    "STARTING FROM":"ລາຄາເລີ່ມຕົ້ນ",
+    "Ready to Ship":"ພ້ອມສົ່ງ",
+    "Sold":"ຂາຍແລ້ວ",
+    "Show Results":"ເບິ່ງຜົນລັບ",
+    "Clear":"ລ້າງ",
+
+   "Buying":"ລາຍການຊື້",
+    "Order Tracking":"ຕິດຕາມຄຳສັ່ງຊື້",
+    "Selling":"ລາຍການຂາຍ",
+    "Selling Request Tracking":"ຕິດຕາມຄຳຂໍການຂາຍ",
+    "Wishlist":"ສິນຄ້າທີ່ຢາກໄດ້",
+     "Saved Items for listing updates & price drop alerts":"ລາຍການທີ່ບັນທຶກໄວ້ສຳຫຼັບການອັບເດດລາຍການ ແລະການແຈ້ງເຕືອນລົດລາຄາ",
+
+     "Setting":"ການຕັ້ງຄ່າ",
+      "Shipping Branch, Payment, Language":"ສາຂາຈັດສົ່ງ, ການຊຳລະເງິນ, ພາສາ",
+
+    "Log out":"ອອກຈາກລະບົບ",
+     "Log out from the application":"ອອກຈາກລະບົບຂອງແອັບ"
+
 }

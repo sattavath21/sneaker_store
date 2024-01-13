@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ProfileListTile extends StatelessWidget {
@@ -51,7 +52,7 @@ class ProfileListTile extends StatelessWidget {
             Positioned.fill(
               child: Align(
                 alignment: Alignment.topLeft,
-                child: Text(name,
+                child: Text(name.tr(),
                     style: TextStyle(fontSize: 15, color: Colors.black)),
               ),
             ),
@@ -60,8 +61,8 @@ class ProfileListTile extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4),
-                  child: Text(subtitle,
-                      style: TextStyle(fontSize: 13, color: Colors.black54)),
+                  child: Text(subtitle.tr(),
+                      style: TextStyle(fontSize: 12, color: Colors.black54)),
                 ),
               ),
             )

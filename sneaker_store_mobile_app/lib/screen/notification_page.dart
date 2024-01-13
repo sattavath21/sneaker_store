@@ -37,7 +37,7 @@ class _NotificationPageState extends State<NotificationPage> {
           'Something happened now',
 
       'image':
-          'https://scontent.fvte5-1.fna.fbcdn.net/v/t39.30808-6/283324987_5675194289235303_8549065928926690561_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=3635dc&_nc_ohc=c2ilnJq4Kc0AX_etDJ-&_nc_ht=scontent.fvte5-1.fna&oh=00_AfCaxQyO-hEDCDDpqcaUuKXDtE4zT9rML4Krgx2P5CyeHA&oe=6588A88B',
+          'https://www.wordstream.com/wp-content/uploads/2021/07/sales20promotion20examples20buy20one20get20one20free20papa20johns20pizza_0.png',
       'time': DateTime.now().subtract(Duration(minutes: 30)), // 30 minutes ago
       'clicked': true, // Initial state is clicked
       'description': 'Description for the third notification',
