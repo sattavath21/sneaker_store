@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vw/iDPq03+J7AeThNU0+UfY5NqjKu6JJPgI53ipdoIGCmnrdfyJ8zuMH9Lw0ElTV8+Xe8rMpWgH6VU4AutvP+A==",
+  "dgSpecHash": "dSFdvAR2bFpQdt//DTSDXFivgL+WoaRTJ9FNUX3I8jJY3y739Kx4q9MysFHGqHdGWjjSxrliNYVu2hqxoEvr3A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\USER\\Desktop\\backOfficeApp\\projectApp.csproj",
+  "projectFilePath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\projectApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\dinktopdf\\1.0.8\\dinktopdf.1.0.8.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\epplus\\6.1.1\\epplus.6.1.1.nupkg.sha512",

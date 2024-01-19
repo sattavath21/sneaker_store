@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-public class CustomerAddress {
+public class Customeraddress {
   [Key]
-  public int CustomerAddressId {get;set;}//pk label="Customer_ Address"
-  public String No {get;set;}//label="No"
-  public String Street {get;set;}//label="Street"
-  public String City {get;set;}//label="City"
-  public String Zip {get;set;}//label="Zip"
+  public int CustomeraddressId {get;set;}//pk label="Customer Addresses"
+  public int AddressId {get;set;}//fk="Address"
+  public Address Address {get;set;} //np
+  public int CustomerId {get;set;}//fk="Customer"
+  public Customer Customer {get;set;} //np
 
 }//ec
 
