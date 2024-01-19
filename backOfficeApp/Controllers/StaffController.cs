@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 public class StaffController : Controller
 {
     private readonly ILogger<StaffController> _logger;
-    private ProjectappDbContext _db;
+    private BackofficeappDbContext _db;
 
-    public StaffController(ILogger<StaffController> logger,ProjectappDbContext db)
+    public StaffController(ILogger<StaffController> logger,BackofficeappDbContext db)
     {
         _logger = logger;
         _db = db;

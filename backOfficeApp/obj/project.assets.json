@@ -6485,11 +6485,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\projectApp.csproj",
-      "projectName": "projectApp",
-      "projectPath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\projectApp.csproj",
+      "projectUniqueName": "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\backOfficeApp.csproj",
+      "projectName": "backOfficeApp",
+      "projectPath": "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\backOfficeApp.csproj",
       "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\obj\\",
+      "outputPath": "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config"

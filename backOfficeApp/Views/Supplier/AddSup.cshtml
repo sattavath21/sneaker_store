@@ -1,165 +1,153 @@
 <div id="app1">
     <div class="text-h4 text-weight-bold text-white bg-green q-pa-lg">Supplier Information</div>
-  <q-card class="my-card bg-grey-2">
-    <q-card-section class="bg-cyan text-white">
-      <div class="text-h6">Add New Supplier</div>
-    </q-card-section>
-    <div class="text-h6 q-pa-lg">General Information</div>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierName" label="Name"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierPhone" label="Phone" hint="Home phone/mobile phone"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierEmail" label="Email"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <div class="text-h6 q-pa-lg">Supplier Address</div>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierAddress.no" label="No" hint="Address No."
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierAddress.street" label="Street" 
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierAddress.amphur" label="Amphur"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierAddress.province" label="Province"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="supplier.supplierAddress.postalCode" label="Postal Code"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <div class="justify-end row">
+    <q-card class="my-card bg-grey-2">
+        <q-card-section class="bg-cyan text-white">
+            <div class="text-h6">Add New Supplier</div>
+        </q-card-section>
+        <div class="text-h6 q-pa-lg">General Information</div>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchName" label="Branch Name"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchTelNumbers[0].telNumber"
+            label="Branch Tel Number" hint="Tel Number" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchAvailability" label="Branch Availability"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <div class="text-h6 q-pa-lg">Branch Address</div>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchAddress.province" label="Province"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchAddress.city" label="City"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchAddress.village" label="Village"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchAddress.addressDetail"
+            label="Address Detail" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchGooglemapPosition"
+            label="Branch Googlemap Position" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <div class="justify-end row">
             <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onReset" size="lg"></q-btn>
         </div>
-    <q-card-actions align="left">
-      <q-btn label="Submit" icon="arrow_downward" type="submit" color="primary" class="text-h7 q-mx-sm q-my-lg" @@click="confirm = true" size="lg"></q-btn>
-      <q-dialog v-model="confirm" persistent>
-                        <q-card>
-                            <q-card-section class="row items-center">
-                                <q-avatar icon="groups" color="green" text-color="white"></q-avatar>
-                                <span class="q-ml-sm">Add this supplier?</span>
-                            </q-card-section>
-
-                            <q-card-actions align="center">
-                                <q-btn class="q-ma-sm" color="green" @@click="addSupplier"
-                                    label="Yes" v-close-popup></q-btn>
-                                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-                            </q-card-actions>
-                        </q-card>
-                    </q-dialog>
-      <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/supplier"' size="lg"></q-btn>
-      <q-dialog v-model="completedDialog">
-        <q-card class="bg-indigo-1">
-          <q-card-section>
-            
-            <div class="text-h6">
-              Done!
-              <q-icon name="done">
-              </q-icon>
-            
-            </div>
-          </q-card-section>
-
-          <q-card-section class="q-pt-none">
-            Supplier Information had been added
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn flat label="Check" color="indigo" v-close-popup onclick='window.location="/supplier"'></q-btn>
-            <q-btn flat label="Close" icon="close" color="grey" v-close-popup></q-btn>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-    </q-card-actions>
-  </q-card>
-
-
+        <q-card-actions align="left">
+            <q-btn label="Submit" icon="arrow_downward" type="submit" color="primary"
+                class="text-h7 q-mx-sm q-my-lg" @@click="confirm = true" size="lg"></q-btn>
+            <q-dialog v-model="confirm" persistent>
+                <q-card>
+                    <q-card-section class="row items-center">
+                        <q-avatar icon="groups" color="green" text-color="white"></q-avatar>
+                        <span class="q-ml-sm">Add this supplier?</span>
+                    </q-card-section>
+                    <q-card-actions align="center">
+                        <q-btn class="q-ma-sm" color="green" @@click="addDeliveryBranches" label="Yes" v-close-popup></q-btn>
+                        <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+            <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/supplier"'
+                size="lg"></q-btn>
+            <q-dialog v-model="completedDialog">
+                <q-card class="bg-indigo-1">
+                    <q-card-section>
+                        <div class="text-h6">
+                            Done!
+                            <q-icon name="done"></q-icon>
+                        </div>
+                    </q-card-section>
+                    <q-card-section class="q-pt-none">
+                        Supplier Information had been added
+                    </q-card-section>
+                    <q-card-actions align="right">
+                        <q-btn flat label="Check" color="indigo" onclick='window.location="/supplier"'></q-btn>
+                        <q-btn flat label="Close" icon="close" color="grey" v-close-popup></q-btn>
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </q-card-actions>
+    </q-card>
 </div>
+
+
 
 @section code{
     <script>
-        var option = {
-            //data
-            data() {
-                return {
-                    confirm: false,
-                    supplier: {
-                                supplierName: "",
-                                supplierPhone: "",
-                                supplierEmail: "",
-                                supplierAddress: {
-                                    no: null,
-                                    street: "",
-                                    amphur: "",
-                                    province: "",
-                                    postalCode: ""
-                                }
-                            }
-                            ,
-                            completedDialog: false
-                };
-            }
-            ,
-            //methods
-            methods: {
-                async addSupplier() {
-                    try {
-                        console.log(this.supplier);
-                        var response = await axios.post("/api/AddSuppliers", this.supplier);
-                        this.completedDialog = true;
-                        console.log(response.data);
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
-
-                }//ef
-                ,
-                onReset() {
-                    const notif = this.$q.notify({
-                        type: 'ongoing',
-                        message: 'Loading...'
-                    })
-
-                    // simulate delay
-                    setTimeout(() => {
-                        notif({
-                            type: 'positive',
-                            message: 'Reseted',
-                            timeout: 315
-                        })
-                    }, 715)
-                    this.supplier.supplierName = ""
-                    this.supplier.supplierEmail = ""
-                    this.supplier.supplierPhone = ""
-                    this.supplier.supplierAddress.no = null
-                    this.supplier.supplierAddress.street = ""
-                    this.supplier.supplierAddress.amphur = ""
-                    this.supplier.supplierAddress.province = ""
-                    this.supplier.supplierAddress.postalCode = ""
+    var option = {
+        // data
+        data() {
+            return {
+                confirm: false,
+                deliveryBranch: {
+                    deliveryService: {
+                        deliveryCompanyName: "Anousith Express"
+                    },
+                    branchName: "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
+                    branchTelNumbers: [
+                        {
+                            telNumber: "020-95960461"
+                        }
+                    ],
+                    branchAvailability: "open",
+                    branchAddress: {
+                        province: "ນະຄອນຫຼວງວຽງຈັນ",
+                        city: "ຈັນທະບູລີ",
+                        village: "ໂພນຕ້ອງສະຫວາດ",
+                        addressDetail: "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC"
+                    },
+                    branchGooglemapPosition: "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+                },
+                completedDialog: false
+            };
+        },
+        // methods
+        methods: {
+            async addDeliveryBranches() {
+                try {
+                    console.log(this.deliveryBranch);
+                    var response = await axios.post("/api/AddDeliveryBranches", this.deliveryBranch);
+                    this.completedDialog = true;
+                    console.log(response.data);
+                } catch (error) {
+                    console.log(error);
                 }
+            },
+            onReset() {
+    const notif = this.$q.notify({
+        type: 'ongoing',
+        message: 'Loading...'
+    });
 
-            }//emethod
-            ,
-            //computed
-            computed: {
+    // simulate delay
+    setTimeout(() => {
+        notif({
+            type: 'positive',
+            message: 'Reseted',
+            timeout: 315
+        });
+    }, 715);
 
-            }
-            ,
-            //created
-            created() {
+    this.deliveryBranch.branchName = "";
+    this.deliveryBranch.branchTelNumbers[0].telNumber = "";
+    this.deliveryBranch.branchAvailability = "";
+    this.deliveryBranch.branchAddress.province = "";
+    this.deliveryBranch.branchAddress.city = "";
+    this.deliveryBranch.branchAddress.village = "";
+    this.deliveryBranch.branchAddress.addressDetail = "";
+    this.deliveryBranch.branchGooglemapPosition = "";
+}
 
-            }
-            ,
-            //mounted
-            mounted() {
+            // other methods...
+        },
+        // computed
+        computed: {},
+        // created
+        created() {},
+        // mounted
+        mounted() {}
+    };
 
-            }
-
-        };
-
-        const app = Vue.createApp(option);
-        app.use(Quasar)
-        app.mount('#app1')
-    </script>
+    const app = Vue.createApp(option);
+    app.use(Quasar);
+    app.mount('#app1');
+</script>
 }

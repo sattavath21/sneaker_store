@@ -14,7 +14,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_TCP_PORT: 3306
-      MYSQL_DATABASE: projectApp
+      MYSQL_DATABASE: backOfficeApp
       MYSQL_ROOT_PASSWORD: "root"
     volumes:
       - ./db:/data/db

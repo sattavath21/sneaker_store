@@ -21,7 +21,7 @@ builder.Services
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddIdentity<AppUser, AppRole>()
-             .AddEntityFrameworkStores<ProjectappDbContext>()
+             .AddEntityFrameworkStores<BackofficeappDbContext>()
              .AddDefaultTokenProviders()
              .AddDefaultUI();
 
@@ -64,7 +64,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 
-builder.Services.AddDbContextPool<ProjectappDbContext>(
+builder.Services.AddDbContextPool<BackofficeappDbContext>(
     dbContextOptions => dbContextOptions
         .UseMySql(
             builder.Configuration.GetConnectionString("MySQLConnection"),
@@ -114,7 +114,7 @@ using (var serviceScope = app.Services.CreateScope())
 {
 
     var provider = serviceScope.ServiceProvider;
-    var _db = provider.GetRequiredService<ProjectappDbContext>();
+    var _db = provider.GetRequiredService<BackofficeappDbContext>();
     try
     {
         _db.Database.Migrate();
@@ -138,7 +138,7 @@ using (var serviceScope = app.Services.CreateScope())
 {
 
     var provider = serviceScope.ServiceProvider;
-    var _db = provider.GetRequiredService<ProjectappDbContext>();
+    var _db = provider.GetRequiredService<BackofficeappDbContext>();
     try
     {
         _db.Database.Migrate();

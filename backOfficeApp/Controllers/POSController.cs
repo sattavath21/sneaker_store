@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 public class POSController : Controller
 {
     private readonly ILogger<POSController> _logger;
-    private ProjectappDbContext _db;
+    private BackofficeappDbContext _db;
 
-    public POSController(ILogger<POSController> logger, ProjectappDbContext db)
+    public POSController(ILogger<POSController> logger, BackofficeappDbContext db)
     {
         _logger = logger;
         _db = db;

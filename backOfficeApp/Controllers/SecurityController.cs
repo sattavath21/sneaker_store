@@ -1,27 +1,25 @@
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
 public class SecurityController : Controller
 {
     private readonly SignInManager<AppUser> _signInManager;
     private readonly UserManager<AppUser> _userManager;
-    private ProjectappDbContext _db;
+    private readonly BackofficeappDbContext _db;
     private readonly ILogger<SecurityController> _msg;
-
     public SecurityController(
                 ILogger<SecurityController> msg,
                  SignInManager<AppUser> signInManager,
                                         UserManager<AppUser> userManager,
-                                        ProjectappDbContext db)
+                                        BackofficeappDbContext db)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _db = db;
         _msg = msg;
     }//ef
-    //function overloading
-    public IActionResult Login()
+public IActionResult Login()
     {
         return View();
     }
@@ -78,9 +76,13 @@ public class SecurityController : Controller
     public async Task<IActionResult> LogOut()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "POS");
+        return RedirectToAction("Index", "Home");
 
     }//ef
-    #endregion
+#endregion
+
+
+
+
 
 }//ec

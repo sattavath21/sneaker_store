@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 public class DashBoardController : Controller
 {
     private readonly ILogger<DashBoardController> _logger;
-    private ProjectappDbContext _db;
+    private BackofficeappDbContext _db;
 
-    public DashBoardController(ILogger<DashBoardController> logger, ProjectappDbContext db)
+    public DashBoardController(ILogger<DashBoardController> logger, BackofficeappDbContext db)
     {
         _logger = logger;
         _db = db;
