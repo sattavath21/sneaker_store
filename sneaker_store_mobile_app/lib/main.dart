@@ -136,7 +136,7 @@ class _MyAppState extends State<MyApp> {
             BottomNavigationBarItem(
               icon: Icon(Icons.person_rounded),
               label: 'PROFILE'.tr(),
-            ),
+          ),
           ],
         ),
       ),
