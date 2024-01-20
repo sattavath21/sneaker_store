@@ -7,11 +7,11 @@ import 'package:sneaker_store_mobile_app/model/customer_wishlist.dart';
 import 'package:sneaker_store_mobile_app/model/product_selling.dart';
 
 class Customer {
-  final String firstName;
-  final String lastName;
-  final String age;
-  final String birthday;
-  final String email;
+  String firstName;
+  String lastName;
+  String age;
+  String birthday;
+  String email;
   final bool vacationMode;
   final bool emailSubscribtion;
   final int defaultAddress;

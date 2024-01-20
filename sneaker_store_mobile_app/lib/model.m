@@ -63,8 +63,9 @@
                             
                 "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "storePrice": 7400,
-                    "lowestSellingPrice": 6500,
+                    "startingPrice":5000,
+                    "retailPrice": 7400,
+                    "lastSalePrice": 5200,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
                     "releaseDate": "13/05/2023",
@@ -125,8 +126,9 @@
                 ],
                 "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "storePrice": 7400,
-                    "lowestSellingPrice": 6500,
+                    "startingPrice":5000,
+                    "retailPrice": 7400,
+                    "lastSalePrice": 5200,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
                     "releaseDate": "13/05/2023",
@@ -193,8 +195,9 @@
             },
             "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "storePrice": 7400,
-                    "lowestSellingPrice": 6500,
+                    "startingPrice":5000,
+                    "retailPrice": 7400,
+                    "lastSalePrice": 5200,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
                     "releaseDate": "13/05/2023",

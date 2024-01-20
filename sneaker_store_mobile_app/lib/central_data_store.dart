@@ -28,7 +28,15 @@ import 'package:sneaker_store_mobile_app/model/shoe_size.dart';
 import 'package:sneaker_store_mobile_app/model/store_branch.dart';
 
 class CentralStore extends ChangeNotifier {
-  
+  //=== var: popupShown
+  bool _popupShown = false;
+  bool get popupShown => _popupShown;
+  void setPopupshown(bool popupShown) {
+    _popupShown = popupShown;
+    notifyListeners();
+  } //ef
+//======
+
   // TEST FOR GIT
   // TEST FOR GITHUN
 
@@ -40,69 +48,136 @@ class CentralStore extends ChangeNotifier {
     notifyListeners();
   } //ef
 
-  void initializeCustomer() {
-    _customer = Customer(firstName: "Sattavath", lastName: "Phitsavath", age: "22", vacationMode: false, email: "huangguifu21@gmail.com", birthday: "19/01/2001",  emailSubscribtion: true, defaultAddress: 0, customerAddresses: [
-    CustomerAddresse(address: Address(sellerName: "Construction store (Sattavath Phitsavath)", sellerTelNumber: "0933860614", province: "Savannakhet", city: "Kaisone Phomvihane", village: "Phonesaiy Village", addressDetail: "South street 191", postCode: "10001")),
-    CustomerAddresse(address: Address(sellerName: "My Home (Sattavath Phitsavath)", sellerTelNumber: "0933860614", province: "Pakse", city: "Poupha City", village: "Somewhere Village", addressDetail: "North street 898", postCode: "20001")),
-  ], customerBankAccounts: [
-    CustomerBankAccount(bank: Bank(bankName: "SCB"), accountName: "Sattavath Phitsavath", accountNumber: "9115649876346", accountQr: "The Pic QR"),
-    CustomerBankAccount(bank: Bank(bankName: "BCEL"), accountName: "ສັດຕະວັດ ພິດສະຫວາດ", accountNumber: "54649847321698", accountQr: "The Pic QR")
-  ], customerWishlists: [
-    CustomerWishlist(shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5), product: productLists[2]),
-    CustomerWishlist(shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 37.5),product: productLists[5]),
-    CustomerWishlist(shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 38.5),product: productLists[1]),
-    CustomerWishlist(shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),product: productLists[8]),
+  void setCustomerFirstname(String val) {
+    _customer.firstName = val;
+  }
 
-  ], productSellings: [
-    ProductSelling(
-      qty: 3,
-      shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
-      productLiveDate: "20/03/2020", 
-      orderStatus: OrderStatus(statusName: "Pending"), 
-      customerPlacedPrice: 4900, 
-      product: productLists[0], 
-      productCondition: ProductCondition(conditionName: "Brand new"), productDefect: false, boxDefect: false, customerProductImages: [
-      CustomerProductImage(productImage: "The Customer self-shot product image")
-    ], customerDefectImages: [
-      CustomerDefectImage(defectImage: "The customr self-shot images")
-    ]),
-    ProductSelling(
-      qty: 10,
-      shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
-      productLiveDate: "16/05/2020", 
-      orderStatus: OrderStatus(statusName: "Active Ask"), 
-      customerPlacedPrice: 12000, 
-      product: productLists[1], 
-      productCondition: ProductCondition(conditionName: "Brand new"), productDefect: false, boxDefect: false, customerProductImages: [
-      CustomerProductImage(productImage: "The Customer self-shot product image")
-    ], customerDefectImages: [
-      CustomerDefectImage(defectImage: "The customr self-shot images")
-    ]),
-    ProductSelling(
-      qty: 1,
-      shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
-      productLiveDate: "15/12/2020", 
-      orderStatus: OrderStatus(statusName: "Pending"), 
-      customerPlacedPrice: 6000, 
-      product: productLists[2], 
-      productCondition: ProductCondition(conditionName: "Brand new"), productDefect: false, boxDefect: false, customerProductImages: [
-      CustomerProductImage(productImage: "The Customer self-shot product image")
-    ], customerDefectImages: [
-      CustomerDefectImage(defectImage: "The customr self-shot images")
-    ]),
-    ProductSelling(
-      qty: 2,
-      shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
-      productLiveDate: "12/10/2020", 
-      orderStatus: OrderStatus(statusName: "Shipment"), 
-      customerPlacedPrice: 12000, 
-      product: productLists[3], 
-      productCondition: ProductCondition(conditionName: "Brand new"), productDefect: false, boxDefect: false, customerProductImages: [
-      CustomerProductImage(productImage: "The Customer self-shot product image")
-    ], customerDefectImages: [
-      CustomerDefectImage(defectImage: "The customr self-shot images")
-    ])
-  ]);
+  void initializeCustomer() {
+    _customer = Customer(
+        firstName: "Sattavath",
+        lastName: "Phitsavath",
+        age: "22",
+        vacationMode: false,
+        email: "huangguifu21@gmail.com",
+        birthday: "19/01/2001",
+        emailSubscribtion: true,
+        defaultAddress: 0,
+        customerAddresses: [
+          CustomerAddresse(
+              address: Address(
+                  sellerName: "Construction store (Sattavath Phitsavath)",
+                  sellerTelNumber: "0933860614",
+                  province: "Savannakhet",
+                  city: "Kaisone Phomvihane",
+                  village: "Phonesaiy Village",
+                  addressDetail: "South street 191",
+                  postCode: "10001")),
+          CustomerAddresse(
+              address: Address(
+                  sellerName: "My Home (Sattavath Phitsavath)",
+                  sellerTelNumber: "0933860614",
+                  province: "Pakse",
+                  city: "Poupha City",
+                  village: "Somewhere Village",
+                  addressDetail: "North street 898",
+                  postCode: "20001")),
+        ],
+        customerBankAccounts: [
+          CustomerBankAccount(
+              bank: Bank(bankName: "SCB"),
+              accountName: "Sattavath Phitsavath",
+              accountNumber: "9115649876346",
+              accountQr: "The Pic QR"),
+          CustomerBankAccount(
+              bank: Bank(bankName: "BCEL"),
+              accountName: "ສັດຕະວັດ ພິດສະຫວາດ",
+              accountNumber: "54649847321698",
+              accountQr: "The Pic QR")
+        ],
+        customerWishlists: [
+          CustomerWishlist(
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
+              product: productLists[2]),
+          CustomerWishlist(
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 37.5),
+              product: productLists[5]),
+          CustomerWishlist(
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 38.5),
+              product: productLists[1]),
+          CustomerWishlist(
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
+              product: productLists[8]),
+        ],
+        productSellings: [
+          ProductSelling(
+              qty: 3,
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
+              productLiveDate: "20/03/2020",
+              orderStatus: OrderStatus(statusName: "Pending"),
+              customerPlacedPrice: 4900,
+              product: productLists[0],
+              productCondition: ProductCondition(conditionName: "Brand new"),
+              productDefect: false,
+              boxDefect: false,
+              customerProductImages: [
+                CustomerProductImage(
+                    productImage: "The Customer self-shot product image")
+              ],
+              customerDefectImages: [
+                CustomerDefectImage(defectImage: "The customr self-shot images")
+              ]),
+          ProductSelling(
+              qty: 10,
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
+              productLiveDate: "16/05/2020",
+              orderStatus: OrderStatus(statusName: "Active Ask"),
+              customerPlacedPrice: 12000,
+              product: productLists[1],
+              productCondition: ProductCondition(conditionName: "Brand new"),
+              productDefect: false,
+              boxDefect: false,
+              customerProductImages: [
+                CustomerProductImage(
+                    productImage: "The Customer self-shot product image")
+              ],
+              customerDefectImages: [
+                CustomerDefectImage(defectImage: "The customr self-shot images")
+              ]),
+          ProductSelling(
+              qty: 1,
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
+              productLiveDate: "15/12/2020",
+              orderStatus: OrderStatus(statusName: "Pending"),
+              customerPlacedPrice: 6000,
+              product: productLists[2],
+              productCondition: ProductCondition(conditionName: "Brand new"),
+              productDefect: false,
+              boxDefect: false,
+              customerProductImages: [
+                CustomerProductImage(
+                    productImage: "The Customer self-shot product image")
+              ],
+              customerDefectImages: [
+                CustomerDefectImage(defectImage: "The customr self-shot images")
+              ]),
+          ProductSelling(
+              qty: 2,
+              shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
+              productLiveDate: "12/10/2020",
+              orderStatus: OrderStatus(statusName: "Shipment"),
+              customerPlacedPrice: 12000,
+              product: productLists[3],
+              productCondition: ProductCondition(conditionName: "Brand new"),
+              productDefect: false,
+              boxDefect: false,
+              customerProductImages: [
+                CustomerProductImage(
+                    productImage: "The Customer self-shot product image")
+              ],
+              customerDefectImages: [
+                CustomerDefectImage(defectImage: "The customr self-shot images")
+              ])
+        ]);
   }
 //======
 
@@ -159,9 +234,7 @@ class CentralStore extends ChangeNotifier {
 //======
 
   //=== var: recentProductList
-  List<Product> _recentProductList = [
-  
-  ];
+  List<Product> _recentProductList = [];
   List<Product> get recentProductList => _recentProductList;
   void setRecentproductlist(List<Product> recentProductList) {
     _recentProductList = recentProductList;
@@ -172,7 +245,7 @@ class CentralStore extends ChangeNotifier {
     _recentProductList.add(product);
   }
 
-  void initializeRecentProductList(){
+  void initializeRecentProductList() {
     _recentProductList = [
       productLists[0],
       productLists[1],
@@ -191,7 +264,7 @@ class CentralStore extends ChangeNotifier {
     Brand(
         brandName: "Gucci",
         brandLogo:
-            "https://www.freeiconspng.com/thumbs/gucci-logo/gg-hd-transparent-logo-15.png"),
+            "https://i.pinimg.com/originals/31/32/d7/3132d7cc02cdd9ceacd7bceb0738828d.png"),
     Brand(
         brandName: "Jordan",
         brandLogo:
@@ -253,21 +326,31 @@ class CentralStore extends ChangeNotifier {
   List<Product> MostPopularProductList = [
     Product(
         name: "Nike Air Force 1 Low '07",
-        storePrice: 1899,
+        retailPrice: 1899,
         SKU: "CW2288-111",
         colorway: "---",
         releaseDate: "28/07/2023",
         amountSold: 2184,
         productWithSizes: [
-           ProductWithSize(inventoryQty: 11, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 34.5),
+          ProductWithSize(
+            inventoryQty: 11,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 34.5),
           ),
-          ProductWithSize(inventoryQty: 21, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 24.5),
+          ProductWithSize(
+            inventoryQty: 21,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 24.5),
           ),
-          ProductWithSize(inventoryQty: 31, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 35),
+          ProductWithSize(
+            inventoryQty: 31,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 35),
           ),
-          ProductWithSize(inventoryQty: 23, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 35.5),
+          ProductWithSize(
+            inventoryQty: 23,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 35.5),
           ),
-          ProductWithSize(inventoryQty: 22, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 36),
+          ProductWithSize(
+            inventoryQty: 22,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36),
           ),
         ],
         productCollection: ProductCollection(
@@ -282,23 +365,33 @@ class CentralStore extends ChangeNotifier {
               productImageUrl:
                   "https://d2cva83hdk3bwc.cloudfront.net/nike-air-force-11e2yp-1.jpg"),
         ]),
-        Product(
+    Product(
         name: "Adidas Samba OG Black White Gum",
-        storePrice: 2999,
+        retailPrice: 2999,
         SKU: "B75807-BZ0058",
         colorway: "Black White Gum",
         releaseDate: "---",
         amountSold: 538,
         productWithSizes: [
-          ProductWithSize(inventoryQty: 11, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 34.5),
+          ProductWithSize(
+            inventoryQty: 11,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 34.5),
           ),
-          ProductWithSize(inventoryQty: 21, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 24.5),
+          ProductWithSize(
+            inventoryQty: 21,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 24.5),
           ),
-          ProductWithSize(inventoryQty: 31, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 35),
+          ProductWithSize(
+            inventoryQty: 31,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 35),
           ),
-          ProductWithSize(inventoryQty: 23, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 35.5),
+          ProductWithSize(
+            inventoryQty: 23,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 35.5),
           ),
-          ProductWithSize(inventoryQty: 22, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 36),
+          ProductWithSize(
+            inventoryQty: 22,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36),
           ),
         ],
         productCollection: ProductCollection(
@@ -319,23 +412,33 @@ class CentralStore extends ChangeNotifier {
               productImageUrl:
                   "https://d2cva83hdk3bwc.cloudfront.net/adidas-samba-og-black-white-gum-3.jpg"),
         ]),
-        Product(
+    Product(
         name: "New Balance 530 White Silver Navy",
-        storePrice: 1990,
+        retailPrice: 1990,
         SKU: "MR530SG",
         colorway: "White Silver Navy",
         releaseDate: "---",
         amountSold: 8093,
         productWithSizes: [
-           ProductWithSize(inventoryQty: 11, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 34.5),
+          ProductWithSize(
+            inventoryQty: 11,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 34.5),
           ),
-          ProductWithSize(inventoryQty: 21, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 24.5),
+          ProductWithSize(
+            inventoryQty: 21,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 24.5),
           ),
-          ProductWithSize(inventoryQty: 31, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 35),
+          ProductWithSize(
+            inventoryQty: 31,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 35),
           ),
-          ProductWithSize(inventoryQty: 23, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 35.5),
+          ProductWithSize(
+            inventoryQty: 23,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 35.5),
           ),
-          ProductWithSize(inventoryQty: 22, shoeSize: ShoeSize( sizeType: "EU", sizeNumber: 36),
+          ProductWithSize(
+            inventoryQty: 22,
+            shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36),
           ),
         ],
         productCollection: ProductCollection(
@@ -363,7 +466,7 @@ class CentralStore extends ChangeNotifier {
     notifyListeners();
   } //ef
 
-  void appendMostPopularProductList(Product product){
+  void appendMostPopularProductList(Product product) {
     MostPopularProductList.add(product);
   }
 //======
@@ -380,7 +483,7 @@ class CentralStore extends ChangeNotifier {
     ProductList = [
       Product(
           name: "New Balance 530 White Silver Navy",
-          storePrice: 1990,
+          retailPrice: 1990,
           SKU: "MR530SG",
           colorway: "White Silver Navy",
           releaseDate: "---",
@@ -412,8 +515,8 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Nike Air Force 1 Low '07",
-          storePrice: 1899,
-          lowestSellingPrice: 1000,
+          retailPrice: 1899,
+          lastSalePrice: 1000,
           SKU: "CW2288-111",
           colorway: "---",
           releaseDate: "28/07/2023",
@@ -439,8 +542,8 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Adidas Samba OG Black White Gum",
-          storePrice: 2999,
-          lowestSellingPrice: 2000,
+          retailPrice: 2999,
+          lastSalePrice: 2000,
           SKU: "B75807-BZ0058",
           colorway: "Black White Gum",
           releaseDate: "---",
@@ -472,7 +575,7 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Puma X Juun.J Plexus Black",
-          storePrice: 5000,
+          retailPrice: 5000,
           SKU: "391697-01",
           colorway: "---",
           releaseDate: "07/04/2023",
@@ -494,7 +597,7 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Gucci X Disney Mickey Mouse (W)",
-          storePrice: 9900,
+          retailPrice: 9900,
           SKU: "602129-AYO70-9591",
           colorway: "Ivory/Orange/Multicolor",
           releaseDate: "---",
@@ -518,8 +621,8 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Golden Goose Yeah Leather Sneakers Gold Laminated (W)",
-          storePrice: 16700,
-          lowestSellingPrice: 10000,
+          retailPrice: 16700,
+          lastSalePrice: 10000,
           SKU: "GWF00130-F002196-65121",
           colorway: "Gold Laminated",
           releaseDate: "---",
@@ -541,7 +644,7 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Converse X Ader Error Chuck 70 High White",
-          storePrice: 6590,
+          retailPrice: 6590,
           SKU: "A05351C",
           colorway: "---",
           releaseDate: "28/07/2023",
@@ -563,7 +666,7 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Jordan 1 Retro Low OG Black Dark Powder Blue (UNC)",
-          storePrice: 4800,
+          retailPrice: 4800,
           SKU: "CZ0790-104",
           colorway: "White/Dark Powder Blue",
           releaseDate: "25/07/2022",
@@ -591,8 +694,8 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Jordan 3 Retro White Cement Reimagined",
-          storePrice: 7500,
-          lowestSellingPrice: 6000,
+          retailPrice: 7500,
+          lastSalePrice: 6000,
           SKU: "DN3707-100",
           colorway: "SUMMIT WHITE/FIRE RED/BLACK/CEMENT GREY",
           releaseDate: "11/03/2023",
@@ -618,7 +721,7 @@ class CentralStore extends ChangeNotifier {
           ]),
       Product(
           name: "Nike Air Force 1 Low '07",
-          storePrice: 1899,
+          retailPrice: 1899,
           SKU: "CW2288-111",
           colorway: "---",
           releaseDate: "28/07/2023",
@@ -683,8 +786,7 @@ class CentralStore extends ChangeNotifier {
             BillItem(
                 qty: 20,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
-                productCondition:
-                    ProductCondition(conditionName: "Brand new"),
+                productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[0])
           ]),
 
@@ -717,14 +819,12 @@ class CentralStore extends ChangeNotifier {
             BillItem(
                 qty: 4,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
-                productCondition:
-                    ProductCondition(conditionName: "Brand new"),
+                productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[1]),
-                BillItem(
+            BillItem(
                 qty: 2,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 40.5),
-                productCondition:
-                    ProductCondition(conditionName: "Brand new"),
+                productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[2])
           ]),
       Bill(
@@ -756,14 +856,12 @@ class CentralStore extends ChangeNotifier {
             BillItem(
                 qty: 20,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
-                productCondition:
-                    ProductCondition(conditionName: "Brand new"),
+                productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[5]),
             BillItem(
                 qty: 20,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 40),
-                productCondition:
-                    ProductCondition(conditionName: "Defect"),
+                productCondition: ProductCondition(conditionName: "Defect"),
                 product: ProductList[6]),
           ]),
 

@@ -219,7 +219,7 @@ Row(
                                      Colors.green: Colors.black54),
                                   ),
                                   SizedBox(width: 30),
-                                  Text("\u0E3F ${billItem.product.storePrice}")
+                                  Text("\u0E3F ${billItem.product.retailPrice}")
                                 ],
                               ),
                             )

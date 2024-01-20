@@ -125,7 +125,7 @@ class WishlistPageContent extends StatelessWidget {
                               ),
                               TextBahtCurrency(
                                 price: customerWishlist
-                                    .product.lowestSellingPrice,
+                                    .product.startingPrice,
                                 textColor: Colors.green,
                               ),
                             ],
@@ -136,7 +136,7 @@ class WishlistPageContent extends StatelessWidget {
                               Text("Store Price",
                                   style: TextStyle(color: Colors.black54)),
                               TextBahtCurrency(
-                                price: customerWishlist.product.storePrice,
+                                price: customerWishlist.product.retailPrice,
                                 textColor: Colors.black,
                               ),
                             ],

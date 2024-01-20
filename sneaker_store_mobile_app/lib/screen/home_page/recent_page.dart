@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
 import 'package:sneaker_store_mobile_app/model/product.dart';
-import 'package:sneaker_store_mobile_app/screen/collection_detail_page.dart';
-import 'package:sneaker_store_mobile_app/screen/filter_page.dart';
+import 'package:sneaker_store_mobile_app/screen/explore_page/product_detail_page.dart';
+import 'package:sneaker_store_mobile_app/screen/home_page/filter_page.dart';
 import 'package:sneaker_store_mobile_app/styles/app_text_styles.dart';
 
 class RecentPage extends StatelessWidget {
@@ -140,7 +140,7 @@ class RecentPage extends StatelessWidget {
                               title: Text('STARTING FROM',
                                   style: app_text_style.latoStyle(
                                       fontWeight: FontWeight.normal, color: Colors.grey)),
-                              subtitle: Text('${product.storePrice} LAK',
+                              subtitle: Text('${product.retailPrice} LAK',
                                   style: app_text_style.latoStyle(
                                       fontWeight: FontWeight.bold, fontSize: 14)),
                             ),

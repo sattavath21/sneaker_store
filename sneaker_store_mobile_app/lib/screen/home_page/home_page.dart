@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, must_be_immutable, use_key_in_widget_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,8 @@ import 'package:sneaker_store_mobile_app/component/product_overview.dart';
 import 'package:sneaker_store_mobile_app/component/category_header.dart';
 import 'package:sneaker_store_mobile_app/model/product.dart';
 import 'package:sneaker_store_mobile_app/model/bill.dart';
-import 'package:sneaker_store_mobile_app/screen/filter_page.dart';
+import 'package:sneaker_store_mobile_app/screen/explore_page/filter_brand_page.dart';
+import 'package:sneaker_store_mobile_app/screen/home_page/filter_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_page/most_poppular_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_page/recent_page.dart';
 
@@ -80,7 +82,9 @@ class _HomePageState extends State<HomePage> {
                   .map((item) => Container(
                         child: Center(
                             child: Image.network(
+                              
                           item,
+                          
                           fit: BoxFit.cover,
                           width: MediaQuery.of(context).size.width,
                           height: 250,
@@ -95,7 +99,8 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(
           height: 200, // Adjust this height as needed
-          child: GridView.builder(
+          child: 
+          GridView.builder(
             controller: _scrollController, // Assign the ScrollController here
             physics: AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -108,24 +113,46 @@ class _HomePageState extends State<HomePage> {
             itemCount: store1.brandList.length,
             itemBuilder: (context, index) {
               return Column(
+                
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: MaterialButton(
+                    child: 
+                    MaterialButton(
                       minWidth: 60,
                       height: 60,
                       colorBrightness: Brightness.light,
                       color: Colors.white70,
                       shape: CircleBorder(),
-                      child: Image(
-                        image: NetworkImage(store1.brandList[index].brandLogo),
-                        color: Colors.black,
-                        width: 40,
-                        height: 40,
-                        fit: BoxFit.contain,
-                      ),
+                      child: CachedNetworkImage(
+              imageUrl: store1.brandList[index].brandLogo,
+              color: Colors.black,
+              placeholder: (context, url) => CircularProgressIndicator(
+                strokeWidth: 0.0,
+                
+              ), // You can customize the placeholder
+              errorWidget: (context, url, error) => Icon(Icons.error),
+              width: 40,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
+                      // Image(
+                      //   image: NetworkImage(store1.brandList[index].brandLogo),
+                      //   color: Colors.black,
+                      //   width: 40,
+                      //   height: 40,
+                      //   fit: BoxFit.contain,
+                      // ),
                       onPressed: () {
                         // do something
+
+                        //move to new creen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FilterBrandPage(selectedName: store1.brandList[index].brandName),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -160,74 +187,68 @@ class _HomePageState extends State<HomePage> {
               child: CategoryHeader(
                   header: "RECENTLY VIEWED".tr(), nextPage: RecentPage())),
         )),
-        SizedBox(height: 354, child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: store1.recentProductList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ProductOverview(
-                productSizes: store1.recentProductList[index].productWithSizes,
-                productImageUrl: store1.recentProductList[index]
-                    .productImages[0].productImageUrl,
-                storePrice: store1.recentProductList[index].storePrice,
-                amountSold: store1.recentProductList[index].amountSold,
-                productName: store1.recentProductList[index].name);
-          },
-        ),)
-        ,
-        Padding(padding: EdgeInsets.only(top: 16),  
-        child: SizedBox(
-          width: 354,
-          child: Center(
-            child: TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.transparent),
-                onPressed: () {
-                  //move to new creen
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FilterPage(),
-                    ),
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                                Icon(
-                                  Icons.bolt, // Use the lightning bolt icon
-                                  color:
-                                      Colors.green, // Adjust the color as needed
-                                  size: 20, // Adjust the size of the icon
-                                ),
-                        
-                    Text(
-                      "READY TO SHIP".tr(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    const Icon(Icons.arrow_forward_rounded)
-                  ],
-                )),
+        SizedBox(
+          height: 354,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: store1.recentProductList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ProductOverview(
+                product:store1.recentProductList[index],);
+            },
           ),
-        ),)
-        ,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 16),
+          child: SizedBox(
+            width: 354,
+            child: Center(
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.transparent),
+                  onPressed: () {
+                    //move to new creen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FilterPage(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.bolt, // Use the lightning bolt icon
+                        color: Colors.green, // Adjust the color as needed
+                        size: 20, // Adjust the size of the icon
+                      ),
+                      Text(
+                        "READY TO SHIP".tr(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      const Icon(Icons.arrow_forward_rounded)
+                    ],
+                  )),
+            ),
+          ),
+        ),
         //TODO: Logically incoorect, change to show product with specific filter in the future
-        SizedBox(height: 354, child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: store1.recentProductList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ProductOverview(
-                productSizes: store1.recentProductList[index].productWithSizes,
-                productImageUrl: store1.recentProductList[index]
-                    .productImages[0].productImageUrl,
-                storePrice: store1.recentProductList[index].storePrice,
-                amountSold: store1.recentProductList[index].amountSold,
-                productName: store1.recentProductList[index].name);
-          },
-        ),),
+        SizedBox(
+          height: 354,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: store1.recentProductList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ProductOverview(
+                 product:store1.recentProductList[index]);
+            },
+          ),
+        ),
         Center(
             child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 25, 0, 20),
@@ -237,19 +258,17 @@ class _HomePageState extends State<HomePage> {
                   header: "MOST POPULAR".tr(), nextPage: MostPopularPage())),
         )),
         // TODO: Logically incorrect
-        SizedBox(height: 354, child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: store1.recentProductList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ProductOverview(
-                productSizes: store1.recentProductList[index].productWithSizes,
-                productImageUrl: store1.recentProductList[index]
-                    .productImages[0].productImageUrl,
-                storePrice: store1.recentProductList[index].storePrice,
-                amountSold: store1.recentProductList[index].amountSold,
-                productName: store1.recentProductList[index].name);
-          },
-        ),),
+        SizedBox(
+          height: 354,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: store1.recentProductList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ProductOverview(
+                  product:store1.recentProductList[index]);
+            },
+          ),
+        ),
       ]),
     );
   }
