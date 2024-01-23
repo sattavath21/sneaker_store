@@ -2,7 +2,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:sneaker_store_mobile_app/model/product.dart';
-import 'package:sneaker_store_mobile_app/screen/explore_page/product_detail_page.dart';
+import 'package:sneaker_store_mobile_app/screen/explore_section/product_detail_page.dart';
 import 'package:sneaker_store_mobile_app/styles/app_text_styles.dart';
 
 class ProductOverview extends StatelessWidget {

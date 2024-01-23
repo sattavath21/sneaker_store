@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
-import 'package:sneaker_store_mobile_app/screen/explore_page/buy_product_page.dart';
-import 'package:sneaker_store_mobile_app/screen/home_page/home_page.dart';
-import 'package:sneaker_store_mobile_app/screen/notification_page/explore_page.dart';
-import 'package:sneaker_store_mobile_app/screen/notification_page/notification_page.dart';
-import 'package:sneaker_store_mobile_app/screen/profile_page/profile_page.dart';
+import 'package:sneaker_store_mobile_app/screen/explore_section/buy_product_page.dart';
+import 'package:sneaker_store_mobile_app/screen/home_section/home_page.dart';
+import 'package:sneaker_store_mobile_app/screen/notification_section/explore_page.dart';
+import 'package:sneaker_store_mobile_app/screen/notification_section/notification_page.dart';
+import 'package:sneaker_store_mobile_app/screen/profile_section/profile_page.dart';
 import 'package:sneaker_store_mobile_app/styles/app_text_styles.dart';
 
 
@@ -61,7 +61,6 @@ class _MyAppState extends State<MyApp> {
     // Add more as needed
   ];
 
-  bool isDark = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -93,7 +92,8 @@ class _MyAppState extends State<MyApp> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BuyProductPage(),
+                        // TODO: Most of the pop-up shows specific product, Change to 'BuyProductPage' later and pass on a Product object.
+                        builder: (context) => ExplorePage(),
                       ),
                     );
                   },
@@ -148,7 +148,8 @@ class _MyAppState extends State<MyApp> {
 
           prefs.setBool('has_shown_popup', false);
         }),
-        backgroundColor: _pageIndex == 3 ? Colors.black12 : Colors.white,
+
+        backgroundColor: Colors.white,
         appBar: _showAppBar[_pageIndex]
             ? AppBar(
               scrolledUnderElevation: 0.0,
