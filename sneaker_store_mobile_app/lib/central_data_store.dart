@@ -6,12 +6,12 @@ import 'package:sneaker_store_mobile_app/model/bill_item.dart';
 import 'package:sneaker_store_mobile_app/model/branch_address.dart';
 import 'package:sneaker_store_mobile_app/model/branch_tel_number.dart';
 import 'package:sneaker_store_mobile_app/model/brand.dart';
-import 'package:sneaker_store_mobile_app/model/customer.dart';
-import 'package:sneaker_store_mobile_app/model/customer_addresse.dart';
-import 'package:sneaker_store_mobile_app/model/customer_bank_account.dart';
-import 'package:sneaker_store_mobile_app/model/customer_defect_image.dart';
-import 'package:sneaker_store_mobile_app/model/customer_product_image.dart';
-import 'package:sneaker_store_mobile_app/model/customer_wishlist.dart';
+import 'package:sneaker_store_mobile_app/model/user.dart';
+import 'package:sneaker_store_mobile_app/model/user_addresse.dart';
+import 'package:sneaker_store_mobile_app/model/user_bank_account.dart';
+import 'package:sneaker_store_mobile_app/model/user_defect_image.dart';
+import 'package:sneaker_store_mobile_app/model/user_product_image.dart';
+import 'package:sneaker_store_mobile_app/model/user_wishlist.dart';
 import 'package:sneaker_store_mobile_app/model/delivery_branch.dart';
 import 'package:sneaker_store_mobile_app/model/delivery_receipt_pic.dart';
 import 'package:sneaker_store_mobile_app/model/delivery_service.dart';
@@ -21,7 +21,7 @@ import 'package:sneaker_store_mobile_app/model/product_cat.dart';
 import 'package:sneaker_store_mobile_app/model/product_collection.dart';
 import 'package:sneaker_store_mobile_app/model/product_condition.dart';
 import 'package:sneaker_store_mobile_app/model/product_image.dart';
-import 'package:sneaker_store_mobile_app/model/product_selling.dart';
+import 'package:sneaker_store_mobile_app/model/user_with_product_selling.dart';
 import 'package:sneaker_store_mobile_app/model/product_with_size.dart';
 import 'package:sneaker_store_mobile_app/model/shipping_method.dart';
 import 'package:sneaker_store_mobile_app/model/shoe_size.dart';
@@ -40,20 +40,20 @@ class CentralStore extends ChangeNotifier {
   // TEST FOR GIT
   // TEST FOR GITHUN
 
-  //=== var: customerList
-  late Customer _customer;
-  Customer get customer => _customer;
-  void setCustomerlist(Customer customer) {
-    _customer = customer;
+  //=== var: userList
+  late User _user;
+  User get user => _user;
+  void setUserlist(User user) {
+    _user = user;
     notifyListeners();
   } //ef
 
-  void setCustomerFirstname(String val) {
-    _customer.firstName = val;
+  void setUserFirstname(String val) {
+    _user.firstName = val;
   }
 
-  void initializeCustomer() {
-    _customer = Customer(
+  void initializeUser() {
+    _user = User(
         firstName: "Sattavath",
         lastName: "Phitsavath",
         age: "22",
@@ -62,8 +62,8 @@ class CentralStore extends ChangeNotifier {
         birthday: "19/01/2001",
         emailSubscribtion: true,
         defaultAddress: 0,
-        customerAddresses: [
-          CustomerAddresse(
+        userAddresses: [
+          UserAddresse(
               address: Address(
                   sellerName: "Construction store (Sattavath Phitsavath)",
                   sellerTelNumber: "0933860614",
@@ -72,7 +72,7 @@ class CentralStore extends ChangeNotifier {
                   village: "Phonesaiy Village",
                   addressDetail: "South street 191",
                   postCode: "10001")),
-          CustomerAddresse(
+          UserAddresse(
               address: Address(
                   sellerName: "My Home (Sattavath Phitsavath)",
                   sellerTelNumber: "0933860614",
@@ -82,100 +82,96 @@ class CentralStore extends ChangeNotifier {
                   addressDetail: "North street 898",
                   postCode: "20001")),
         ],
-        customerBankAccounts: [
-          CustomerBankAccount(
+        userBankAccounts: [
+          UserBankAccount(
               bank: Bank(bankName: "SCB"),
               accountName: "Sattavath Phitsavath",
               accountNumber: "9115649876346",
               accountQr: "The Pic QR"),
-          CustomerBankAccount(
+          UserBankAccount(
               bank: Bank(bankName: "BCEL"),
               accountName: "ສັດຕະວັດ ພິດສະຫວາດ",
               accountNumber: "54649847321698",
               accountQr: "The Pic QR")
         ],
-        customerWishlists: [
-          CustomerWishlist(
+        userWishlists: [
+          UserWishlist(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
               product: productLists[2]),
-          CustomerWishlist(
+          UserWishlist(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 37.5),
               product: productLists[5]),
-          CustomerWishlist(
+          UserWishlist(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 38.5),
               product: productLists[1]),
-          CustomerWishlist(
+          UserWishlist(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
               product: productLists[8]),
         ],
-        productSellings: [
-          ProductSelling(
-              qty: 3,
+        userWithProductSellings: [
+          UserWithProductSelling(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
               productLiveDate: "20/03/2020",
               orderStatus: OrderStatus(statusName: "Pending"),
-              customerPlacedPrice: 4900,
+              userPlacedPrice: 4900,
               product: productLists[0],
               productCondition: ProductCondition(conditionName: "Brand new"),
               productDefect: false,
               boxDefect: false,
-              customerProductImages: [
-                CustomerProductImage(
-                    productImage: "The Customer self-shot product image")
+              userProductImages: [
+                UserProductImage(
+                    productImage: "The User self-shot product image")
               ],
-              customerDefectImages: [
-                CustomerDefectImage(defectImage: "The customr self-shot images")
+              userDefectImages: [
+                UserDefectImage(defectImage: "The customr self-shot images")
               ]),
-          ProductSelling(
-              qty: 10,
+          UserWithProductSelling(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
               productLiveDate: "16/05/2020",
               orderStatus: OrderStatus(statusName: "Active Ask"),
-              customerPlacedPrice: 12000,
+              userPlacedPrice: 12000,
               product: productLists[1],
               productCondition: ProductCondition(conditionName: "Brand new"),
               productDefect: false,
               boxDefect: false,
-              customerProductImages: [
-                CustomerProductImage(
-                    productImage: "The Customer self-shot product image")
+              userProductImages: [
+                UserProductImage(
+                    productImage: "The User self-shot product image")
               ],
-              customerDefectImages: [
-                CustomerDefectImage(defectImage: "The customr self-shot images")
+              userDefectImages: [
+                UserDefectImage(defectImage: "The customr self-shot images")
               ]),
-          ProductSelling(
-              qty: 1,
+          UserWithProductSelling(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
               productLiveDate: "15/12/2020",
               orderStatus: OrderStatus(statusName: "Pending"),
-              customerPlacedPrice: 6000,
+              userPlacedPrice: 6000,
               product: productLists[2],
               productCondition: ProductCondition(conditionName: "Brand new"),
               productDefect: false,
               boxDefect: false,
-              customerProductImages: [
-                CustomerProductImage(
-                    productImage: "The Customer self-shot product image")
+              userProductImages: [
+                UserProductImage(
+                    productImage: "The User self-shot product image")
               ],
-              customerDefectImages: [
-                CustomerDefectImage(defectImage: "The customr self-shot images")
+              userDefectImages: [
+                UserDefectImage(defectImage: "The customr self-shot images")
               ]),
-          ProductSelling(
-              qty: 2,
+          UserWithProductSelling(
               shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 36.5),
               productLiveDate: "12/10/2020",
               orderStatus: OrderStatus(statusName: "Shipment"),
-              customerPlacedPrice: 12000,
+              userPlacedPrice: 12000,
               product: productLists[3],
               productCondition: ProductCondition(conditionName: "Brand new"),
               productDefect: false,
               boxDefect: false,
-              customerProductImages: [
-                CustomerProductImage(
-                    productImage: "The Customer self-shot product image")
+              userProductImages: [
+                UserProductImage(
+                    productImage: "The User self-shot product image")
               ],
-              customerDefectImages: [
-                CustomerDefectImage(defectImage: "The customr self-shot images")
+              userDefectImages: [
+                UserDefectImage(defectImage: "The customr self-shot images")
               ])
         ]);
   }
@@ -766,7 +762,7 @@ class CentralStore extends ChangeNotifier {
             DeliveryReceiptPic(picString: "url_ofThePic"),
           ],
           storeBranch: StoreBranch(province: "Savannakhet"),
-          customer: _customer,
+          user: _user,
           deliveryBranch: DeliveryBranch(
               deliveryService: DeliveryService(deliveryCompanyName: "TFT"),
               branchName: "saiyasone luangnamta",
@@ -784,7 +780,8 @@ class CentralStore extends ChangeNotifier {
           shippingMethod: ShippingMethod(methodName: "In-store pick up"),
           billItems: [
             BillItem(
-                qty: 20,
+              user: _user,
+
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
                 productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[0])
@@ -799,7 +796,7 @@ class CentralStore extends ChangeNotifier {
             DeliveryReceiptPic(picString: "url_ofThePic"),
           ],
           storeBranch: StoreBranch(province: "Savannakhet"),
-          customer: _customer,
+          user: _user,
           deliveryBranch: DeliveryBranch(
               deliveryService: DeliveryService(deliveryCompanyName: "TFT"),
               branchName: "saiyasone luangnamta",
@@ -817,12 +814,13 @@ class CentralStore extends ChangeNotifier {
           shippingMethod: ShippingMethod(methodName: "In-store pick up"),
           billItems: [
             BillItem(
-                qty: 4,
+                            user: _user,
+
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
                 productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[1]),
             BillItem(
-                qty: 2,
+              user: _user,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 40.5),
                 productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[2])
@@ -836,7 +834,7 @@ class CentralStore extends ChangeNotifier {
             DeliveryReceiptPic(picString: "url_ofThePic"),
           ],
           storeBranch: StoreBranch(province: "Savannakhet"),
-          customer: _customer,
+          user: _user,
           deliveryBranch: DeliveryBranch(
               deliveryService: DeliveryService(deliveryCompanyName: "TFT"),
               branchName: "saiyasone luangnamta",
@@ -854,12 +852,12 @@ class CentralStore extends ChangeNotifier {
           shippingMethod: ShippingMethod(methodName: "In-store pick up"),
           billItems: [
             BillItem(
-                qty: 20,
+              user: _user,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 39.5),
                 productCondition: ProductCondition(conditionName: "Brand new"),
                 product: ProductList[5]),
             BillItem(
-                qty: 20,
+              user: _user,
                 shoeSize: ShoeSize(sizeType: "EU", sizeNumber: 40),
                 productCondition: ProductCondition(conditionName: "Defect"),
                 product: ProductList[6]),

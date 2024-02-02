@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'address.dart';
 
-class CustomerAddresse {
+class UserAddresse {
   final Address address;
-  CustomerAddresse({
+  UserAddresse({
     required this.address,
   });
 
-  CustomerAddresse copyWith({
+  UserAddresse copyWith({
     Address? address,
   }) {
-    return CustomerAddresse(
+    return UserAddresse(
       address: address ?? this.address,
     );
   }
@@ -22,21 +22,21 @@ class CustomerAddresse {
     };
   }
 
-  factory CustomerAddresse.fromMap(Map<String, dynamic> map) {
-    return CustomerAddresse(
+  factory UserAddresse.fromMap(Map<String, dynamic> map) {
+    return UserAddresse(
       address: Address.fromMap(map['address'] as Map<String,dynamic>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CustomerAddresse.fromJson(String source) => CustomerAddresse.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserAddresse.fromJson(String source) => UserAddresse.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'CustomerAddresse(address: $address)';
+  String toString() => 'UserAddresse(address: $address)';
 
   @override
-  bool operator ==(covariant CustomerAddresse other) {
+  bool operator ==(covariant UserAddresse other) {
     if (identical(this, other)) return true;
   
     return 

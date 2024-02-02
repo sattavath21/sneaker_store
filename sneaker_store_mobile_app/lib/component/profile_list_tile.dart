@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:sneaker_store_mobile_app/utils/route_util.dart';
 
 class ProfileListTile extends StatelessWidget {
   final IconData iconData;
@@ -13,7 +14,7 @@ class ProfileListTile extends StatelessWidget {
       required this.name,
       required this.subtitle,
       required this.nextPage});
-
+  
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -25,12 +26,9 @@ class ProfileListTile extends StatelessWidget {
             builder: (_) => nextPage,
           );
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => nextPage,
-            ),
-          );
+
+          Navigator.of(context).push(RouteUtil.routeSlideTransition(nextPage, true));
+
         }
       },
       splashColor: Colors.black12, // Change splashColor to the desired color
@@ -68,6 +66,8 @@ class ProfileListTile extends StatelessWidget {
             )
           ],
         ),
+        trailing: Icon(Icons.keyboard_arrow_right_rounded, color: name.toLowerCase() != "log out" ?
+        Colors.black87 : Colors.white,),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
-import 'package:sneaker_store_mobile_app/screen/explore_section/buy_product_page.dart';
+import 'package:sneaker_store_mobile_app/screen/explore_section/buy_product_size_selection_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_section/home_page.dart';
 import 'package:sneaker_store_mobile_app/screen/notification_section/explore_page.dart';
 import 'package:sneaker_store_mobile_app/screen/notification_section/notification_page.dart';
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        // TODO: Most of the pop-up shows specific product, Change to 'BuyProductPage' later and pass on a Product object.
+                        // TODO: Most of the pop-up shows specific product, Change to 'BuyProductSizeSelectionPage' later and pass on a Product object.
                         builder: (context) => ExplorePage(),
                       ),
                     );
@@ -124,7 +124,7 @@ class _MyAppState extends State<MyApp> {
     });
 
     Provider.of<CentralStore>(context, listen: false).initializeProductList();
-    Provider.of<CentralStore>(context, listen: false).initializeCustomer();
+    Provider.of<CentralStore>(context, listen: false).initializeUser();
     Provider.of<CentralStore>(context, listen: false).initializeBillList();
     Provider.of<CentralStore>(context, listen: false)
         .initializeRecentProductList();
@@ -213,6 +213,7 @@ ThemeData myAppTheme = ThemeData(
     primarySwatch: Colors.blue,
     accentColor: Colors.black,
     cardColor: Colors.white,
+    
     backgroundColor: Colors.white,
     errorColor: Colors.red,
     brightness: Brightness.dark,

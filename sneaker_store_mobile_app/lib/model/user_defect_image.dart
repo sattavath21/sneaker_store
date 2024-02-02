@@ -1,15 +1,15 @@
 import 'dart:convert';
 
-class CustomerDefectImage {
+class UserDefectImage {
   final String defectImage;
-  CustomerDefectImage({
+  UserDefectImage({
     required this.defectImage,
   });
 
-  CustomerDefectImage copyWith({
+  UserDefectImage copyWith({
     String? defectImage,
   }) {
-    return CustomerDefectImage(
+    return UserDefectImage(
       defectImage: defectImage ?? this.defectImage,
     );
   }
@@ -20,21 +20,21 @@ class CustomerDefectImage {
     };
   }
 
-  factory CustomerDefectImage.fromMap(Map<String, dynamic> map) {
-    return CustomerDefectImage(
+  factory UserDefectImage.fromMap(Map<String, dynamic> map) {
+    return UserDefectImage(
       defectImage: map['defectImage'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CustomerDefectImage.fromJson(String source) => CustomerDefectImage.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserDefectImage.fromJson(String source) => UserDefectImage.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'CustomerDefectImage(defectImage: $defectImage)';
+  String toString() => 'UserDefectImage(defectImage: $defectImage)';
 
   @override
-  bool operator ==(covariant CustomerDefectImage other) {
+  bool operator ==(covariant UserDefectImage other) {
     if (identical(this, other)) return true;
   
     return 

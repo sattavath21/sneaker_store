@@ -3,19 +3,19 @@ import 'dart:convert';
 import 'product.dart';
 import 'shoe_size.dart';
 
-class CustomerWishlist {
+class UserWishlist {
   final ShoeSize shoeSize;
   final Product product;
-  CustomerWishlist({
+  UserWishlist({
     required this.shoeSize,
     required this.product,
   });
 
-  CustomerWishlist copyWith({
+  UserWishlist copyWith({
     ShoeSize? shoeSize,
     Product? product,
   }) {
-    return CustomerWishlist(
+    return UserWishlist(
       shoeSize: shoeSize ?? this.shoeSize,
       product: product ?? this.product,
     );
@@ -28,8 +28,8 @@ class CustomerWishlist {
     };
   }
 
-  factory CustomerWishlist.fromMap(Map<String, dynamic> map) {
-    return CustomerWishlist(
+  factory UserWishlist.fromMap(Map<String, dynamic> map) {
+    return UserWishlist(
       shoeSize: ShoeSize.fromMap(map['shoeSize'] as Map<String,dynamic>),
       product: Product.fromMap(map['product'] as Map<String,dynamic>),
     );
@@ -37,13 +37,13 @@ class CustomerWishlist {
 
   String toJson() => json.encode(toMap());
 
-  factory CustomerWishlist.fromJson(String source) => CustomerWishlist.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserWishlist.fromJson(String source) => UserWishlist.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'CustomerWishlist(shoeSize: $shoeSize, product: $product)';
+  String toString() => 'UserWishlist(shoeSize: $shoeSize, product: $product)';
 
   @override
-  bool operator ==(covariant CustomerWishlist other) {
+  bool operator ==(covariant UserWishlist other) {
     if (identical(this, other)) return true;
   
     return 

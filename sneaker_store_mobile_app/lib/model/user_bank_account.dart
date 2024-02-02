@@ -2,25 +2,25 @@ import 'dart:convert';
 
 import 'bank.dart';
 
-class CustomerBankAccount {
+class UserBankAccount {
   final Bank bank;
   final String accountName;
   final String accountNumber;
-  String? accountQr;
-  CustomerBankAccount({
+  final String accountQr;
+  UserBankAccount({
     required this.bank,
     required this.accountName,
     required this.accountNumber,
-    this.accountQr,
+    required this.accountQr,
   });
 
-  CustomerBankAccount copyWith({
+  UserBankAccount copyWith({
     Bank? bank,
     String? accountName,
     String? accountNumber,
     String? accountQr,
   }) {
-    return CustomerBankAccount(
+    return UserBankAccount(
       bank: bank ?? this.bank,
       accountName: accountName ?? this.accountName,
       accountNumber: accountNumber ?? this.accountNumber,
@@ -37,8 +37,8 @@ class CustomerBankAccount {
     };
   }
 
-  factory CustomerBankAccount.fromMap(Map<String, dynamic> map) {
-    return CustomerBankAccount(
+  factory UserBankAccount.fromMap(Map<String, dynamic> map) {
+    return UserBankAccount(
       bank: Bank.fromMap(map['bank'] as Map<String,dynamic>),
       accountName: map['accountName'] as String,
       accountNumber: map['accountNumber'] as String,
@@ -48,15 +48,15 @@ class CustomerBankAccount {
 
   String toJson() => json.encode(toMap());
 
-  factory CustomerBankAccount.fromJson(String source) => CustomerBankAccount.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserBankAccount.fromJson(String source) => UserBankAccount.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'CustomerBankAccount(bank: $bank, accountName: $accountName, accountNumber: $accountNumber, accountQr: $accountQr)';
+    return 'UserBankAccount(bank: $bank, accountName: $accountName, accountNumber: $accountNumber, accountQr: $accountQr)';
   }
 
   @override
-  bool operator ==(covariant CustomerBankAccount other) {
+  bool operator ==(covariant UserBankAccount other) {
     if (identical(this, other)) return true;
   
     return 
