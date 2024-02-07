@@ -8,7 +8,7 @@ class RouteUtil {
         Offset begin = slideRight ? Offset(1.0, 0.0) : Offset(0.0, 1.0);
         const end = Offset.zero;
         const curve = Curves.easeInOut;
-
+        print("page slide called");
         var tween = Tween(begin: begin, end: end).chain(
           CurveTween(curve: curve),
         );

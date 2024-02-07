@@ -172,7 +172,7 @@ Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        flex: 2,
+                      flex: 2,
                         child: Column(
                           children: [
                             Image.network(

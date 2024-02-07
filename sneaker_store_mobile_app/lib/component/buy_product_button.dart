@@ -28,8 +28,8 @@ class BuyProductButton extends StatelessWidget {
         );
       case "pre-order":
         return Icon(Icons.flight_rounded, color: Colors.white,size: 20,);
-      case "ready to ship":
-        return Icon(Icons.bolt_rounded, color: Colors.white,size: 20,);
+      case "ship-ready":
+        return Icon(Icons.warehouse_rounded, color: Colors.white,size: 18,);
       default:
         return Icon(Icons.error,size: 20,);
     }
@@ -41,7 +41,7 @@ class BuyProductButton extends StatelessWidget {
         return "5-10 DAYS";
       case "pre-order":
         return "1-2 WEEKS";
-      case "ready to ship":
+      case "ship-ready":
         return "3-5 DAYS";
       default:
         return "ERROR";

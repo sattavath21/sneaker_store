@@ -18,12 +18,13 @@ class FilterBrandPage extends StatelessWidget {
     var store1 = Provider.of<CentralStore>(context);
     // Filter products based on the selected brand name
     List<Product> filteredProducts = store1.productLists.where((product) {
-      print(
-          'Product Brand Name: ${product.productCollection.brand.brandName}');
-      print('Selected Brand Name: $selectedName');
+  
       return product.productCollection.brand.brandName.toLowerCase() ==
           selectedName.toLowerCase();
     }).toList();
+
+       
+      print('Selected Brand Name: $selectedName');
 
     return Scaffold(
         appBar: AppBar(

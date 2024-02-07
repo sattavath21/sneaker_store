@@ -8,8 +8,9 @@ import 'package:sneaker_store_mobile_app/styles/app_text_styles.dart';
 class ProductConditionSelectionPage extends StatelessWidget {
   final Product product;
   final Icon productStatusIcon;
+  final double selectedSize;
   ProductConditionSelectionPage(
-      {required this.product, required this.productStatusIcon});
+      {required this.product, required this.productStatusIcon, required this.selectedSize});
 
   Route _createRoute(Widget destinationPage) {
     return PageRouteBuilder(
@@ -44,6 +45,41 @@ class ProductConditionSelectionPage extends StatelessWidget {
                 child: Stack(
                   children: [
                     SelectedProductHeader(product: product),
+                    Container(
+      color: Colors.white,
+      child: ListTile(
+        leading:
+            Image.network(product.productImages[0].productImageUrl),
+        title: Text(
+          product.name,
+          style: app_text_style.latoStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        subtitle: RichText(
+          text: TextSpan(
+              style: app_text_style.latoStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Colors.black54,
+                height: 2
+              ),
+              children: <TextSpan>[
+                TextSpan(text: 'SKU: '),
+                TextSpan(text: product.SKU),
+                TextSpan(text: '\nSize: ${selectedSize}', style: app_text_style.latoStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Colors.black54,
+                height: 1
+              ))
+              ]),
+        ),
+      ),
+    )
+    ,
                     Positioned(
                       top: MediaQuery.sizeOf(context).height * 0.01,
                       left: MediaQuery.sizeOf(context).width * 0.01,

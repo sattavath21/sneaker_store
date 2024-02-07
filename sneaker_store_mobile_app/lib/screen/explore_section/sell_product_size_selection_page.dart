@@ -45,8 +45,8 @@ Route _createRoute(Widget destinationPage) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("SellProductSizeSelectionPage"),
-      ),
+ centerTitle: true,
+        title: Text("Sell", style: app_text_style.latoStyle(fontSize: 18),),      ),
       body: Container(
         color: Color.fromARGB(255, 246, 246, 246),
         child: Column(
@@ -65,7 +65,7 @@ Route _createRoute(Widget destinationPage) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Size',
+                          'Select size',
                           style: app_text_style.latoStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -133,8 +133,6 @@ Route _createRoute(Widget destinationPage) {
                       ),
                     ),
 
-                    // Pre-order button
-                    SizedBox(height: 16.0),
                   ],
                 ),
               ),

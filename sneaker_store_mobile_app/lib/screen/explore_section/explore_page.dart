@@ -10,6 +10,7 @@ import 'package:sneaker_store_mobile_app/screen/explore_section/filter_brand_pag
 import 'package:sneaker_store_mobile_app/screen/explore_section/product_detail_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_section/filter_page.dart';
 import 'package:sneaker_store_mobile_app/styles/app_text_styles.dart';
+import 'package:sneaker_store_mobile_app/utils/route_util.dart';
 
 class ExplorePage extends StatelessWidget {
   final List<String> imageUrls = [
@@ -45,12 +46,12 @@ class ExplorePage extends StatelessWidget {
                     // Navigate to another page with details about the selected collection
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => FilterBrandPage(
+                      RouteUtil.routeSlideTransition(FilterBrandPage(
                           selectedName: brand.brandName,
-                        ),
-                      ),
+                        ), false)
+                   
                     );
+                    
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 4,

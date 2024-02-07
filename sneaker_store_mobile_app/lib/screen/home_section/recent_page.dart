@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
+import 'package:sneaker_store_mobile_app/component/product_overview.dart';
 import 'package:sneaker_store_mobile_app/model/product.dart';
 import 'package:sneaker_store_mobile_app/screen/explore_section/product_detail_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_section/filter_page.dart';
@@ -15,6 +16,7 @@ class RecentPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         centerTitle: true,
         title: Text(
           "Recently Viewed",
@@ -47,107 +49,8 @@ class RecentPage extends StatelessWidget {
                   store1.recentProductList.length,
                   (index) {
                     Product product = store1.recentProductList[index];
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to another page with details about the selected collection
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FilterPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width / 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Visibility(
-                              visible: product.productWithSizes != null,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(10, 16, 0, 0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.bolt,
-                                      color: Colors.green,
-                                      size: 20,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      'Ready to Ship',
-                                      style: app_text_style.latoStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Image.network(
-                              product.productImages[0].productImageUrl,
-                              height: 160,
-                              width: 200,
-                              fit: BoxFit.contain,
-                            ),
-                            Visibility(
-                              visible: product.amountSold > 600,
-                              child: Container(
-                                margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                                width: 250,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: Color.fromARGB(255, 233, 231, 231),
-                                ),
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.fromLTRB(0, 0, 6, 4),
-                                        child: Image.asset(
-                                          'assets/pic/fire.gif',
-                                          height: 20,
-                                          width: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${product.amountSold} Sold',
-                                        style: app_text_style.latoStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(14, 6, 0, 0),
-                              child: Text(
-                                product.name,
-                                style: app_text_style.latoStyle(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text('STARTING FROM',
-                                  style: app_text_style.latoStyle(
-                                      fontWeight: FontWeight.normal, color: Colors.grey)),
-                              subtitle: Text('${product.retailPrice} LAK',
-                                  style: app_text_style.latoStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 14)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    return                 ProductOverview(product:product);
+
                   },
                 ),
               ),

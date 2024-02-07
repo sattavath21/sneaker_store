@@ -85,7 +85,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.notifications_none),
+            icon: Icon(Icons.favorite_border_rounded),
             onPressed: () {
               // Show the notification bottom sheet
               showNotificationBottomSheet(context);
@@ -106,22 +106,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        backgroundColor: Color.fromARGB(
-                            255, 218, 234, 219), // Circle background color
-                        radius:
-                            10, // Adjust the radius to control the size of the circle
-                        child: Icon(
-                          Icons.bolt, // Use the lightning bolt icon
-                          color: Colors.green, // Adjust the color of the icon
-                          size: 15, // Adjust the size of the icon
-                        ),
+                      Icon(
+                        Icons.warehouse_rounded, // Use the lightning bolt icon
+                        color: Colors.green, // Adjust the color of the icon
+                        size: 18, // Adjust the size of the icon
                       ),
 
                       SizedBox(
                           width: 8), // Adjust the spacing between icon and text
                       Text(
-                        'Ready to Ship',
+                        'In stock - Ship-ready',
                         style: app_text_style.latoStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 14, // Adjust the font size
@@ -228,7 +222,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Colors.black, // Background color for the Sell button
+                      Color.fromARGB(255, 155, 163, 193), // Background color for the Sell button
                   fixedSize: Size((screenWidth / 2) - 16,
                       50), // Adjust width and height as needed
                   shape: RoundedRectangleBorder(
@@ -237,7 +231,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                 ),
                 child: Text(
-                  'Sell',
+                  'SELL',
                   style: app_text_style.latoStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 14,
@@ -263,7 +257,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                 ),
                 child: Text(
-                  'Buy',
+                  'BUY',
                   style: app_text_style.latoStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 14,
@@ -290,7 +284,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Column(
                 children: [
                   Text(
-                    'Notify Me',
+                    'Add to wishlist',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -348,7 +342,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 },
                 style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
+                      MaterialStateProperty.all<Color>(Colors.red),
                   foregroundColor:
                       MaterialStateProperty.all<Color>(Colors.white),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -366,12 +360,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.notifications_none, // Replace with the desired icon
+                      Icons.favorite_border_rounded, // Replace with the desired icon
                       color: Colors.white,
                     ),
                     SizedBox(width: 8), // Adjust spacing as needed
                     Text(
-                      'Notify Me',
+                      'Add to my wishlist',
                       style: TextStyle(color: Colors.white),
                     ),
                   ],

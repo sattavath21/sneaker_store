@@ -55,17 +55,19 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                       child: BuyProductButton(
                         backgroundColor: Colors.green,
-                        text: "Ready to ship",
+                        text: "Ship-ready",
                         onPressed: () {
                           Navigator.of(context)
                               .push(_createRoute(ProductConditionSelectionPage(
                             product: product,
+                            selectedSize: shoeSize,
                             productStatusIcon: Icon(
-                              Icons.bolt, // Use the lightning bolt icon
+                              Icons.warehouse_rounded, // Use the lightning  icon
                               color:
                                   Colors.green, // Adjust the color of the icon
                               size: 15, // Adjust the size of the icon
                             ),
+                            
                           )));
                         },
                       ),
@@ -82,6 +84,7 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                             Navigator.of(context).push(
                                 _createRoute(ProductConditionSelectionPage(
                               product: product,
+                              selectedSize: shoeSize,
                               productStatusIcon: Icon(
                                 Icons.groups_2_rounded,
                                 color: Colors.black,
@@ -144,7 +147,7 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                             textAlign: TextAlign.center,
                           )),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        padding: EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: BuyProductButton(
                             backgroundColor: Colors.orange,
                             text: "Pre-order",
@@ -154,35 +157,49 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                             }),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                        child: TextButton(
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.resolveWith(
-                              (states) => RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(color: Colors.black),
-                              ),
-                            ),
-                          ),
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.notification_add_rounded,
-                                color: Colors.black,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'Notify me when the sneaker is available',
-                                style: app_text_style.latoStyle(fontSize: 14),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        
+                        child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.65,
+                          child: ElevatedButton(
+                                          onPressed: () {
+                          Navigator.pop(context, 'OK');                
+                          },
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<Color>(Colors.red),
+                                            foregroundColor:
+                                                MaterialStateProperty.all<Color>(Colors.white),
+                                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                            padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                              EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                              
+                                            ),
+                                            fixedSize:
+                                                MaterialStateProperty.all<Size>(Size.fromHeight(50.0)),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.favorite_border_rounded, // Replace with the desired icon
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(width: 8), // Adjust spacing as needed
+                                              Text(
+                                                'Add sneaker to my wishlist',
+                                                style: TextStyle(color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                        )
+
+                        ,
                       ),
                     ]),
               ));
@@ -196,10 +213,13 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("BuyProductSizeSelectionPage"),
+        centerTitle: true,
+        title: Text("Buy", style: app_text_style.latoStyle(fontSize: 18),),
       ),
       body: Container(
+        decoration: BoxDecoration(
         color: Color.fromARGB(255, 246, 246, 246),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -212,18 +232,13 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Size',
-                          style: app_text_style.latoStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      'Select Size',
+                      style: app_text_style.latoStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Colors.black,
+                      ),
                     ),
                     // Available prices
                     SizedBox(height: 16.0),
@@ -286,16 +301,15 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: CircleAvatar(
-                                          backgroundColor: Color.fromARGB(255, 218,
-                                              234, 219), // Circle background color
+                                          backgroundColor: Color.fromARGB(255, 244, 244, 244), // Circle background color
                                           radius:
                                               6, // Adjust the radius to control the size of the circle
                                           child: Icon(
                                             Icons
-                                                .bolt, // Use the lightning bolt icon
+                                                .warehouse_rounded, // Use the lightning  icon
                                             color: Colors
                                                 .green, // Adjust the color of the icon
-                                            size: 10, // Adjust the size of the icon
+                                            size: 8, // Adjust the size of the icon
                                           ),
                                         ),
                                       ),
@@ -309,8 +323,6 @@ class BuyProductSizeSelectionPage extends StatelessWidget {
                       ),
                     ),
 
-                    // Pre-order button
-                    SizedBox(height: 16.0),
                   ],
                 ),
               ),

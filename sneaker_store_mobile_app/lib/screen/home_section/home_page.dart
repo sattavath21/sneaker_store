@@ -20,6 +20,7 @@ import 'package:sneaker_store_mobile_app/screen/explore_section/filter_brand_pag
 import 'package:sneaker_store_mobile_app/screen/home_section/filter_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_section/most_poppular_page.dart';
 import 'package:sneaker_store_mobile_app/screen/home_section/recent_page.dart';
+import 'package:sneaker_store_mobile_app/utils/route_util.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -211,21 +212,22 @@ class _HomePageState extends State<HomePage> {
                     //move to new creen
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => FilterPage(),
-                      ),
+                      RouteUtil.routeSlideTransition(FilterPage(), false)
                     );
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.bolt, // Use the lightning bolt icon
-                        color: Colors.green, // Adjust the color as needed
-                        size: 20, // Adjust the size of the icon
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Icon(
+                          Icons.warehouse_rounded, // Use the lightning bolt icon
+                          color: Colors.green, // Adjust the color as needed
+                          size: 20, // Adjust the size of the icon
+                        ),
                       ),
                       Text(
-                        "READY TO SHIP".tr(),
+                        "IN STOCK - SHIP-READY".tr(),
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
