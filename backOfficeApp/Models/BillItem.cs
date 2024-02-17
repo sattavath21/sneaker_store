@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 public class BillItem {
   [Key]
   public int BillItemId {get;set;}//pk label="Bill_ Items"
-  public int Qty {get;set;}//label="Qty"
   public int ShoeSizeId {get;set;}//fk="ShoeSize"
   public ShoeSize ShoeSize {get;set;} //np
   public int ProductConditionId {get;set;}//fk="ProductCondition"
