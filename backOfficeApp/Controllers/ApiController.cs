@@ -107,67 +107,65 @@ public class ApiController : ControllerBase
 // }
 
 
-// [HttpGet]
-// public IActionResult GetProducts()
-// {
-//     var ProductsList = _db.Product
-//     .Include(db => db.ProductWithSizes)
-//         .ThenInclude(pws => pws.ShoeSize)
-//     .Include(db => db.ProductCollection.Brand)  // Include Brand explicitly
-//     .Include(db => db.ProductCat)
-//     .Include(db => db.ProductImages)
-//     .ToList();
+[HttpGet]
+public IActionResult GetProducts()
+{
+    var ProductsList = _db.Product
+    .Include(db => db.ProductWithSizes)
+        .ThenInclude(pws => pws.ShoeSize)
+    .Include(db => db.ProductCollection.Brand)  // Include Brand explicitly
+    .Include(db => db.ProductImage)
+    .ToList();
 
 
-//     if (ProductsList == null || ProductsList.Count == 0)
-//     {
-//         return NotFound();
-//     }
+    if (ProductsList == null || ProductsList.Count == 0)
+    {
+        return NotFound();
+    }
 
-//     return Ok(ProductsList);
-// }
+    return Ok(ProductsList);
+}
 
-// [HttpPost]
-// public IActionResult DeleteProduct(Product p)
-// {
-//     try
-//     {
-//         var productToDelete = _db.Product
-//             .Include(db => db.ProductWithSizes)
-//                 .ThenInclude(pws => pws.ShoeSize) // Include ShoeSize for cascading delete
-//             .Include(db => db.ProductCollection)
-//                 .ThenInclude(pws => pws.Brand) // Include ShoeSize for cascading delete
-//             .Include(db => db.ProductCat)
-//             .Include(db => db.ProductImages)
-//             .FirstOrDefault(x => x.ProductId == p.ProductId);
+[HttpPost]
+public IActionResult DeleteProduct(Product p)
+{
+    try
+    {
+        var productToDelete = _db.Product
+            .Include(db => db.ProductWithSizes)
+                .ThenInclude(pws => pws.ShoeSize) // Include ShoeSize for cascading delete
+            .Include(db => db.ProductCollection)
+                .ThenInclude(pws => pws.Brand) // Include ShoeSize for cascading delete
+            .Include(db => db.ProductImage)
+            .FirstOrDefault(x => x.ProductId == p.ProductId);
 
-//         if (productToDelete == null)
-//         {
-//             return NotFound("Product not found");
-//         }
+        if (productToDelete == null)
+        {
+            return NotFound("Product not found");
+        }
 
-//         // Remove the product from the database
-//         _db.Product.Remove(productToDelete);
-//         _db.SaveChanges();
+        // Remove the product from the database
+        _db.Product.Remove(productToDelete);
+        _db.SaveChanges();
 
-//         return Ok(new { message = "Product deleted successfully" });
-//     }
-//     catch (Exception ex)
-//     {
-//         // Log the exception for debugging purposes
-//         Console.Error.WriteLine(ex);
-//         return StatusCode(500, "Internal Server Error");
-//     }
-// }
+        return Ok(new { message = "Product deleted successfully" });
+    }
+    catch (Exception ex)
+    {
+        // Log the exception for debugging purposes
+        Console.Error.WriteLine(ex);
+        return StatusCode(500, "Internal Server Error");
+    }
+}
 
-// [HttpPost]
-//     public IActionResult EditProduct(Product p)
-//     {
-//         //update product
-//         _db.Product.Update(p);
-//         _db.SaveChanges();
-//         return Ok(p);
-//     }//ef
+[HttpPost]
+    public IActionResult EditProduct(Product p)
+    {
+        //update product
+        _db.Product.Update(p);
+        _db.SaveChanges();
+        return Ok(p);
+    }//ef
 
      [HttpPost]
 public IActionResult AddProduct(Product product)

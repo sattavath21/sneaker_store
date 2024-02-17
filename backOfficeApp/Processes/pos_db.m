@@ -65,6 +65,7 @@
                 "condition_Name": "Brand New"
             },
             "Product": {
+                "Barcode":"asdasdasdasd",
                 "Product_Name": "Jordan 4 Retro Thunder (2023)",
                 "Retail_Price": 5000,
                 "Selling_Price": 5200,
