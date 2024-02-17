@@ -1,5 +1,6 @@
 //===> class: CategoryHeader
 import 'package:flutter/material.dart';
+import 'package:sneaker_store_mobile_app/utils/route_util.dart';
 
 class CategoryHeader extends StatelessWidget{
     final String header;
@@ -20,11 +21,8 @@ class CategoryHeader extends StatelessWidget{
         ),
         onPressed: () {
           //move to new creen
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => nextPage,
-              ),
+          Navigator.push(context,
+              RouteUtil.routeSlideTransition(nextPage, false)
           );
         },
         child: Row(

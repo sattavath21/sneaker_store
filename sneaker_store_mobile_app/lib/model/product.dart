@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-
-import 'product_cat.dart';
-import 'product_collection.dart';
-import 'product_image.dart';
-import 'product_with_size.dart';
+import 'package:sneaker_store_mobile_app/model/product_cat.dart';
+import 'package:sneaker_store_mobile_app/model/product_collection.dart';
+import 'package:sneaker_store_mobile_app/model/product_image.dart';
+import 'package:sneaker_store_mobile_app/model/product_with_size.dart';
 
 class Product {
   final String name;
-  final int storePrice;
-  int? lowestSellingPrice;
+  int? startingPrice;
+  final int retailPrice;
+  int? lastSalePrice;
   final String SKU;
   final String colorway;
   final String releaseDate;
@@ -21,8 +21,9 @@ class Product {
   final List<ProductImage> productImages;
   Product({
     required this.name,
-    required this.storePrice,
-    this.lowestSellingPrice,
+    this.startingPrice,
+    required this.retailPrice,
+  this.lastSalePrice,
     required this.SKU,
     required this.colorway,
     required this.releaseDate,
@@ -35,8 +36,9 @@ class Product {
 
   Product copyWith({
     String? name,
-    int? storePrice,
-    int? lowestSellingPrice,
+    int? startingPrice,
+    int? retailPrice,
+    int? lastSalePrice,
     String? SKU,
     String? colorway,
     String? releaseDate,
@@ -48,8 +50,9 @@ class Product {
   }) {
     return Product(
       name: name ?? this.name,
-      storePrice: storePrice ?? this.storePrice,
-      lowestSellingPrice: lowestSellingPrice ?? this.lowestSellingPrice,
+      startingPrice: startingPrice ?? this.startingPrice,
+      retailPrice: retailPrice ?? this.retailPrice,
+      lastSalePrice: lastSalePrice ?? this.lastSalePrice,
       SKU: SKU ?? this.SKU,
       colorway: colorway ?? this.colorway,
       releaseDate: releaseDate ?? this.releaseDate,
@@ -64,8 +67,9 @@ class Product {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'name': name,
-      'storePrice': storePrice,
-      'lowestSellingPrice': lowestSellingPrice,
+      'startingPrice': startingPrice,
+      'retailPrice': retailPrice,
+      'lastSalePrice': lastSalePrice,
       'SKU': SKU,
       'colorway': colorway,
       'releaseDate': releaseDate,
@@ -80,8 +84,9 @@ class Product {
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
       name: map['name'] as String,
-      storePrice: map['storePrice'].toInt() as int,
-      lowestSellingPrice: map['lowestSellingPrice'].toInt() as int,
+      startingPrice: map['startingPrice'].toInt() as int,
+      retailPrice: map['retailPrice'].toInt() as int,
+      lastSalePrice: map['lastSalePrice'].toInt() as int,
       SKU: map['SKU'] as String,
       colorway: map['colorway'] as String,
       releaseDate: map['releaseDate'] as String,
@@ -99,7 +104,7 @@ class Product {
 
   @override
   String toString() {
-    return 'Product(name: $name, storePrice: $storePrice, lowestSellingPrice: $lowestSellingPrice, SKU: $SKU, colorway: $colorway, releaseDate: $releaseDate, amountSold: $amountSold, productWithSizes: $productWithSizes, productCollection: $productCollection, productCat: $productCat, productImages: $productImages)';
+    return 'Product(name: $name, startingPrice: $startingPrice, retailPrice: $retailPrice, lastSalePrice: $lastSalePrice, SKU: $SKU, colorway: $colorway, releaseDate: $releaseDate, amountSold: $amountSold, productWithSizes: $productWithSizes, productCollection: $productCollection, productCat: $productCat, productImages: $productImages)';
   }
 
   @override
@@ -108,8 +113,9 @@ class Product {
   
     return 
       other.name == name &&
-      other.storePrice == storePrice &&
-      other.lowestSellingPrice == lowestSellingPrice &&
+      other.startingPrice == startingPrice &&
+      other.retailPrice == retailPrice &&
+      other.lastSalePrice == lastSalePrice &&
       other.SKU == SKU &&
       other.colorway == colorway &&
       other.releaseDate == releaseDate &&
@@ -123,8 +129,9 @@ class Product {
   @override
   int get hashCode {
     return name.hashCode ^
-      storePrice.hashCode ^
-      lowestSellingPrice.hashCode ^
+      startingPrice.hashCode ^
+      retailPrice.hashCode ^
+      lastSalePrice.hashCode ^
       SKU.hashCode ^
       colorway.hashCode ^
       releaseDate.hashCode ^

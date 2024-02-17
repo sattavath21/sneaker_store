@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
 import 'package:sneaker_store_mobile_app/component/text_currency_format.dart';
-import 'package:sneaker_store_mobile_app/model/customer_wishlist.dart';
+import 'package:sneaker_store_mobile_app/model/user_wishlist.dart';
 
 class WishlistPage extends StatelessWidget {
   @override
@@ -45,9 +45,9 @@ class WishlistPageContent extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
             child: Wrap(
                 children: List.generate(
-                    store1.customer.customerWishlists!.length, (index) {
-              CustomerWishlist customerWishlist =
-                  store1.customer.customerWishlists![index];
+                    store1.user.userWishlists!.length, (index) {
+              UserWishlist userWishlist =
+                  store1.user.userWishlists![index];
               return Card(
                   elevation: 2,
                   shape: RoundedRectangleBorder(
@@ -65,7 +65,7 @@ class WishlistPageContent extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Image.network(
-                                    customerWishlist.product.productImages[0]
+                                    userWishlist.product.productImages[0]
                                         .productImageUrl,
                                     height: 100,
                                     width: 100,
@@ -85,7 +85,7 @@ class WishlistPageContent extends StatelessWidget {
                                             padding:
                                                 EdgeInsets.fromLTRB(4, 4, 4, 4),
                                             child: Text(
-                                                customerWishlist.product.name)),
+                                                userWishlist.product.name)),
                                       ),
                                     ),
                                     Positioned.fill(
@@ -94,7 +94,7 @@ class WishlistPageContent extends StatelessWidget {
                                         child: Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(
-                                            "${customerWishlist.shoeSize.sizeType} ${customerWishlist.shoeSize.sizeNumber}",
+                                            "${userWishlist.shoeSize.sizeType} ${userWishlist.shoeSize.sizeNumber}",
                                             style: TextStyle(
                                                 color: Colors.black54),
                                           ),
@@ -124,8 +124,8 @@ class WishlistPageContent extends StatelessWidget {
                                 style: TextStyle(color: Colors.black54),
                               ),
                               TextBahtCurrency(
-                                price: customerWishlist
-                                    .product.lowestSellingPrice,
+                                price: userWishlist
+                                    .product.startingPrice,
                                 textColor: Colors.green,
                               ),
                             ],
@@ -136,7 +136,7 @@ class WishlistPageContent extends StatelessWidget {
                               Text("Store Price",
                                   style: TextStyle(color: Colors.black54)),
                               TextBahtCurrency(
-                                price: customerWishlist.product.storePrice,
+                                price: userWishlist.product.retailPrice,
                                 textColor: Colors.black,
                               ),
                             ],

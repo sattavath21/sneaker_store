@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sneaker_store_mobile_app/screen/notification_details_page.dart';
+import 'package:sneaker_store_mobile_app/screen/notification_section/notification_details_page.dart';
 
 class NotificationPage extends StatefulWidget {
   @override

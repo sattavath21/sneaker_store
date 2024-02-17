@@ -63,8 +63,9 @@
                             
                 "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "storePrice": 7400,
-                    "lowestSellingPrice": 6500,
+                    "startingPrice":5000,
+                    "retailPrice": 7400,
+                    "lastSalePrice": 5200,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
                     "releaseDate": "13/05/2023",
@@ -96,6 +97,8 @@
                 }
             }
         ],
+
+
         "productSellings": [
             {
                 "productLiveDate": "27/01/2001",
@@ -103,7 +106,6 @@
                     "statusName": "Pending"
                 },
                 "customerPlacedPrice": 2000,
-                "qty": 10,
                 "shoeSize": {
                     "sizeType": "EU",
                     "sizeNumber": 38.5
@@ -125,8 +127,9 @@
                 ],
                 "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "storePrice": 7400,
-                    "lowestSellingPrice": 6500,
+                    "startingPrice":5000,
+                    "retailPrice": 7400,
+                    "lastSalePrice": 5200,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
                     "releaseDate": "13/05/2023",
@@ -159,6 +162,8 @@
             }
         ]
     },
+
+
     "deliveryBranch": {
         "deliveryService": {
             "deliveryCompanyName": "Anousith Express"
@@ -178,9 +183,11 @@
         },
         "branchGooglemapPosition": "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
     },
+
     "shippingMethod": {
         "methodName": "In-store Pickup"
     },
+
     "billItems": [
         {
             "qty": 10,
@@ -193,8 +200,9 @@
             },
             "product": {
                     "name": "Jordan 4 Retro Thunder (2023)",
-                    "storePrice": 7400,
-                    "lowestSellingPrice": 6500,
+                    "startingPrice": 5000,
+                    "retailPrice": 7400,
+                    "lastSalePrice": 5200,
                     "SKU": "DH6927-017",
                     "colorway": "BLACK/TOUR YELLOW",
                     "releaseDate": "13/05/2023",

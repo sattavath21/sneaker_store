@@ -3,11 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 class app_text_style {
   
-   static TextStyle latoStyle ({double fontSize = 12, FontWeight fontWeight = FontWeight.normal, Color color = Colors.black}){
+   static TextStyle latoStyle ({double fontSize = 12, FontWeight fontWeight = FontWeight.normal, Color color = Colors.black, double height = 1.0}){
     return GoogleFonts.lato(
       fontSize: fontSize, 
       fontWeight: fontWeight,
-      color: color
+      color: color,
+      height: height
       );
    }
 

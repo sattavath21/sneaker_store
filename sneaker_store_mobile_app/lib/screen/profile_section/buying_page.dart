@@ -2,23 +2,25 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
-import 'package:sneaker_store_mobile_app/model/product_selling.dart';
+import 'package:sneaker_store_mobile_app/model/bill.dart';
+import 'package:sneaker_store_mobile_app/model/bill_item.dart';
 
-class SellingPage extends StatefulWidget {
+class BuyingPage extends StatefulWidget {
   @override
-  _SellingPageState createState() => _SellingPageState();
+  _BuyingPageState createState() => _BuyingPageState();
 }
 
-class _SellingPageState extends State<SellingPage> {
+class _BuyingPageState extends State<BuyingPage> {
   PageController listViewController = PageController();
 
   List<String> headerItems = [
-    "Active Ask",
     "Pending",
-    "Shipment",
-    "In Progress",
+    "Processing",
+    "Shipping",
+    "To Recieve",
     "Completed",
     "Canceled",
+    "Return Refund"
   ];
 
   int selectedPageIndex = 0; // Track the selected index
@@ -31,7 +33,7 @@ class _SellingPageState extends State<SellingPage> {
           child: Padding(
             padding: EdgeInsets.only(right: 50),
             child: Text(
-              "Selling",
+              "Buying",
               style: TextStyle(color: Colors.black),
             ),
           ),
@@ -96,18 +98,20 @@ class _SellingPageState extends State<SellingPage> {
               ),
             ),
           ),
-
                   Expanded(
-            child: SellingPageBodyContent(status: headerItems[selectedPageIndex]),
+            child: BuyingPageBodyContent(status: headerItems[selectedPageIndex]),
           ),
         ],
       ),
     );
   }
+
 }
 
-class SellingPageBodyContent extends StatelessWidget {
-  const SellingPageBodyContent({
+
+
+class BuyingPageBodyContent extends StatelessWidget {
+  const BuyingPageBodyContent({
     super.key,
     required this.status,
   });
@@ -119,9 +123,9 @@ class SellingPageBodyContent extends StatelessWidget {
     //place this ref inside build()
     var store1 = Provider.of<CentralStore>(context);
     // Filter bills based on the order status
-    List<ProductSelling> filteredProductSelling = store1.customer.productSellings!
-        .where((productSelling) =>
-            productSelling.orderStatus.statusName.toLowerCase() == status.toLowerCase())
+    List<Bill> filteredBills = store1.billList
+        .where((bill) =>
+            bill.orderStatus.statusName.toLowerCase() == status.toLowerCase())
         .toList();
 
     // Container for background color of the body content
@@ -132,10 +136,10 @@ class SellingPageBodyContent extends StatelessWidget {
             child: Column(children: [
           // For space for the body
           Padding(
-            padding: EdgeInsets.fromLTRB(12, 10, 12, 20),
+            padding: EdgeInsets.fromLTRB(8, 10, 8, 20),
             child: Wrap(
-                children: List.generate(filteredProductSelling.length, (index) {
-              return OrderBodyCard(productSelling: filteredProductSelling[index]);
+                children: List.generate(filteredBills.length, (index) {
+              return OrderBodyCard(bill: filteredBills[index]);
             })),
           )
         ])));
@@ -146,17 +150,15 @@ class SellingPageBodyContent extends StatelessWidget {
 class OrderBodyCard extends StatelessWidget {
   const OrderBodyCard({
     super.key,
-    required this.productSelling,
+    required this.bill,
   });
 
-  final ProductSelling productSelling;
+  final Bill bill;
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Card(
+    return Card(
       elevation: 2,
-
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
         ),
@@ -166,7 +168,12 @@ class OrderBodyCard extends StatelessWidget {
           children: [
             Padding(
                 padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
-                child: Column(
+                child: Wrap(
+                    children: List.generate(bill.billItems.length, (index) {
+                  BillItem billItem = bill.billItems[index];
+                  bool isLastItem = index == bill.billItems.length - 1; // Check if it's the last item
+
+                  return Column(
                     children: [
 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -176,13 +183,14 @@ Row(
                         child: Column(
                           children: [
                             Image.network(
-                              productSelling.product.productImages[0].productImageUrl,
+                              billItem
+                                  .product.productImages[0].productImageUrl,
                               height: 100,
                               width: 100,
                               fit: BoxFit.contain,
                             ),
                             Text(
-                              "${productSelling.shoeSize.sizeType} ${productSelling.shoeSize.sizeNumber}",
+                              "${billItem.shoeSize.sizeType} ${billItem.shoeSize.sizeNumber}",
                             ),
                           ],
                         ),
@@ -194,23 +202,22 @@ Row(
                           children: [
                             Padding(
                               padding: EdgeInsets.all(4),
-                              child: Text(productSelling.product.name)),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text("Qty: ${productSelling.qty}"),
-                            ),
+                              child: Text(billItem.product.name)),
+               
                             Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    productSelling.productCondition
-                                        .conditionName,
-                                    style: TextStyle(color: Colors.green),
+                                    billItem.productCondition
+                                        .conditionName
+                                        ,
+                                    style: TextStyle(color: billItem.productCondition.conditionName == "Brand new" ?
+                                     Colors.green: Colors.black54),
                                   ),
                                   SizedBox(width: 30),
-                                  Text("\u0E3F ${productSelling.customerPlacedPrice}")
+                                  Text("\u0E3F ${billItem.product.retailPrice}")
                                 ],
                               ),
                             )
@@ -219,7 +226,19 @@ Row(
                       )
                     ],
                   ),
-                              Divider(
+                  Visibility(
+                    visible: !isLastItem,
+                    child: Divider(
+              color: Colors.black12,
+              thickness: 1,
+              indent: 150,
+              endIndent: 15,
+            ),)
+                    ],
+                  )
+                  ;
+                }))),
+            Divider(
               color: Colors.black12,
               thickness: 1,
               indent: 15,
@@ -235,17 +254,13 @@ Row(
                     style: TextStyle(color: Colors.black45),
                   ),
                   Text(
-                    productSelling.productLiveDate,
+                    bill.orderDate,
                     style: TextStyle(color: Colors.black45),
                   ),
                 ],
               ),
             )
-                    ],
-                  )),
-
           ],
         ));
   }
 }
-

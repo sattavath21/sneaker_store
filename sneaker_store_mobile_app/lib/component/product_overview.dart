@@ -2,22 +2,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:sneaker_store_mobile_app/model/product.dart';
-import 'package:sneaker_store_mobile_app/screen/collection_detail_page.dart';
+import 'package:sneaker_store_mobile_app/screen/explore_section/product_detail_page.dart';
 import 'package:sneaker_store_mobile_app/styles/app_text_styles.dart';
+import 'package:sneaker_store_mobile_app/utils/route_util.dart';
 
 class ProductOverview extends StatelessWidget {
-  final productSizes;
-  final productImageUrl;
-  final storePrice;
-  final amountSold;
-  final productName;
+  final Product product;
 
   ProductOverview({
-    required this.productSizes,
-    required this.productImageUrl,
-    required this.storePrice,
-    required this.amountSold,
-    required this.productName,
+    required this.product,
   });
 
   @override
@@ -25,17 +18,12 @@ class ProductOverview extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CollectionDetailPage(
-              productSizes: productSizes,
-              productImageUrl: productImageUrl,
-              storePrice: storePrice,
-              amountSold: amountSold,
-              productName: productName,
-            ),
-          ),
-        );
+            context,
+            RouteUtil.routeSlideTransition(
+                ProductDetailPage(
+                  product: product,
+                ),
+                true));
       },
       child: Container(
         width: MediaQuery.of(context).size.width / 2,
@@ -44,21 +32,21 @@ class ProductOverview extends StatelessWidget {
               CrossAxisAlignment.start, // Align children to the start (left)
           children: [
             Visibility(
-              visible: productSizes != null,
+              visible: product.productWithSizes != null,
               child: Container(
                 margin: EdgeInsets.fromLTRB(10, 16, 0, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Icon(
-                      Icons.bolt, // Use the lightning bolt icon
+                      Icons.warehouse_rounded, 
                       color: Colors.green, // Adjust the color as needed
-                      size: 20, // Adjust the size of the icon
+                      size: 16, // Adjust the size of the icon
                     ),
                     SizedBox(
                         width: 4), // Adjust the spacing between icon and text
                     Text(
-                      'Ready to Ship'.tr(),
+                      'In stock - Ship-ready'.tr(),
                       style: app_text_style.latoStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 10, // Adjust the font size
@@ -70,7 +58,7 @@ class ProductOverview extends StatelessWidget {
             ),
             // Display collection image (you may need to update this)
             Image.network(
-              productImageUrl,
+              product.productImages[0].productImageUrl,
               height: 160,
               width: 200,
               fit: BoxFit.contain,
@@ -79,13 +67,16 @@ class ProductOverview extends StatelessWidget {
             SizedBox(
               height: 40,
               child: Visibility(
-                visible: amountSold > 600,
+                visible: product.amountSold > 600,
                 child: Container(
                   margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
                   width: 250, // Adjust the width of the grey box
                   height: 25, // Adjust the height of the grey box
-                  color: Color.fromARGB(
-                      255, 233, 231, 231), // Change the color as needed
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(
+                      255, 233, 231, 231),  
+                      borderRadius: BorderRadius.circular(6)
+                  ),
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -100,17 +91,19 @@ class ProductOverview extends StatelessWidget {
                             // You should place your local image in the 'assets' folder and update the path accordingly
                           ),
                         ),
-                      
-                        RichText(text: TextSpan(
-                                    style: app_text_style.latoStyle(
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 10, // Adjust the font size
-                                    ),
-    children: <TextSpan>[
-      TextSpan(text: "${amountSold} "),
-      TextSpan(text: "Sold".tr()),
-    ],
-  ), )
+
+                        RichText(
+                          text: TextSpan(
+                            style: app_text_style.latoStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 10, // Adjust the font size
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(text: "${product.amountSold} "),
+                              TextSpan(text: "Sold".tr()),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -120,23 +113,22 @@ class ProductOverview extends StatelessWidget {
             SizedBox(
               height: 46,
               child: Padding(
-              padding: const EdgeInsets.fromLTRB(14, 6, 0, 0),
-              child: Text(
-                productName,
-                style: app_text_style.latoStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 14, // Adjust the font size
+                padding: const EdgeInsets.fromLTRB(14, 6, 0, 0),
+                child: Text(
+                  product.name,
+                  style: app_text_style.latoStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14, // Adjust the font size
+                  ),
                 ),
               ),
-            ),
-            )
-            , // Adjust the vertical spacing between image and ListTile
+            ), // Adjust the vertical spacing between image and ListTile
             // Display collection name using ListTile
             ListTile(
               title: Text('STARTING FROM'.tr(),
                   style: app_text_style.latoStyle(
                       fontWeight: FontWeight.normal, color: Colors.grey)),
-              subtitle: Text('\u0E3F${storePrice}',
+              subtitle: Text('\u0E3F${product.retailPrice}',
                   style: app_text_style.latoStyle(
                       fontWeight: FontWeight.bold, fontSize: 14)),
             ),

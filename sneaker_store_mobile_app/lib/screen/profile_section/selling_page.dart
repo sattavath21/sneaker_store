@@ -2,25 +2,23 @@ import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sneaker_store_mobile_app/central_data_store.dart';
-import 'package:sneaker_store_mobile_app/model/bill.dart';
-import 'package:sneaker_store_mobile_app/model/bill_item.dart';
+import 'package:sneaker_store_mobile_app/model/user_with_product_selling.dart';
 
-class BuyingPage extends StatefulWidget {
+class SellingPage extends StatefulWidget {
   @override
-  _BuyingPageState createState() => _BuyingPageState();
+  _SellingPageState createState() => _SellingPageState();
 }
 
-class _BuyingPageState extends State<BuyingPage> {
+class _SellingPageState extends State<SellingPage> {
   PageController listViewController = PageController();
 
   List<String> headerItems = [
+    "Active Ask",
     "Pending",
-    "Processing",
-    "Shipping",
-    "To Recieve",
+    "Shipment",
+    "In Progress",
     "Completed",
     "Canceled",
-    "Return Refund"
   ];
 
   int selectedPageIndex = 0; // Track the selected index
@@ -33,7 +31,7 @@ class _BuyingPageState extends State<BuyingPage> {
           child: Padding(
             padding: EdgeInsets.only(right: 50),
             child: Text(
-              "Buying",
+              "Selling",
               style: TextStyle(color: Colors.black),
             ),
           ),
@@ -98,20 +96,18 @@ class _BuyingPageState extends State<BuyingPage> {
               ),
             ),
           ),
+
                   Expanded(
-            child: BuyingPageBodyContent(status: headerItems[selectedPageIndex]),
+            child: SellingPageBodyContent(status: headerItems[selectedPageIndex]),
           ),
         ],
       ),
     );
   }
-
 }
 
-
-
-class BuyingPageBodyContent extends StatelessWidget {
-  const BuyingPageBodyContent({
+class SellingPageBodyContent extends StatelessWidget {
+  const SellingPageBodyContent({
     super.key,
     required this.status,
   });
@@ -123,9 +119,9 @@ class BuyingPageBodyContent extends StatelessWidget {
     //place this ref inside build()
     var store1 = Provider.of<CentralStore>(context);
     // Filter bills based on the order status
-    List<Bill> filteredBills = store1.billList
-        .where((bill) =>
-            bill.orderStatus.statusName.toLowerCase() == status.toLowerCase())
+    List<UserWithProductSelling> filteredProductSelling = store1.user.userWithProductSellings!
+        .where((productSelling) =>
+            productSelling.orderStatus.statusName.toLowerCase() == status.toLowerCase())
         .toList();
 
     // Container for background color of the body content
@@ -136,10 +132,10 @@ class BuyingPageBodyContent extends StatelessWidget {
             child: Column(children: [
           // For space for the body
           Padding(
-            padding: EdgeInsets.fromLTRB(8, 10, 8, 20),
+            padding: EdgeInsets.fromLTRB(12, 10, 12, 20),
             child: Wrap(
-                children: List.generate(filteredBills.length, (index) {
-              return OrderBodyCard(bill: filteredBills[index]);
+                children: List.generate(filteredProductSelling.length, (index) {
+              return OrderBodyCard(customerWithProductSelling: filteredProductSelling[index]);
             })),
           )
         ])));
@@ -150,15 +146,17 @@ class BuyingPageBodyContent extends StatelessWidget {
 class OrderBodyCard extends StatelessWidget {
   const OrderBodyCard({
     super.key,
-    required this.bill,
+    required this.customerWithProductSelling,
   });
 
-  final Bill bill;
+  final UserWithProductSelling customerWithProductSelling;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return 
+    Card(
       elevation: 2,
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4.0),
         ),
@@ -168,29 +166,23 @@ class OrderBodyCard extends StatelessWidget {
           children: [
             Padding(
                 padding: EdgeInsets.fromLTRB(12, 10, 12, 10),
-                child: Wrap(
-                    children: List.generate(bill.billItems.length, (index) {
-                  BillItem billItem = bill.billItems[index];
-                  bool isLastItem = index == bill.billItems.length - 1; // Check if it's the last item
-
-                  return Column(
+                child: Column(
                     children: [
 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        flex: 2,
+                      flex: 2,
                         child: Column(
                           children: [
                             Image.network(
-                              billItem
-                                  .product.productImages[0].productImageUrl,
+                              customerWithProductSelling.product.productImages[0].productImageUrl,
                               height: 100,
                               width: 100,
                               fit: BoxFit.contain,
                             ),
                             Text(
-                              "${billItem.shoeSize.sizeType} ${billItem.shoeSize.sizeNumber}",
+                              "${customerWithProductSelling.shoeSize.sizeType} ${customerWithProductSelling.shoeSize.sizeNumber}",
                             ),
                           ],
                         ),
@@ -202,24 +194,20 @@ Row(
                           children: [
                             Padding(
                               padding: EdgeInsets.all(4),
-                              child: Text(billItem.product.name)),
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text("Qty: ${billItem.qty}"),
-                            ),
+                              child: Text(customerWithProductSelling.product.name)),
+                         
                             Padding(
                               padding: const EdgeInsets.all(4.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    billItem.productCondition
+                                    customerWithProductSelling.productCondition
                                         .conditionName,
-                                    style: TextStyle(color: billItem.productCondition.conditionName == "Brand new" ?
-                                     Colors.green: Colors.black54),
+                                    style: TextStyle(color: Colors.green),
                                   ),
                                   SizedBox(width: 30),
-                                  Text("\u0E3F ${billItem.product.storePrice}")
+                                  Text("\u0E3F ${customerWithProductSelling.userPlacedPrice}")
                                 ],
                               ),
                             )
@@ -228,19 +216,7 @@ Row(
                       )
                     ],
                   ),
-                  Visibility(
-                    visible: !isLastItem,
-                    child: Divider(
-              color: Colors.black12,
-              thickness: 1,
-              indent: 150,
-              endIndent: 15,
-            ),)
-                    ],
-                  )
-                  ;
-                }))),
-            Divider(
+                              Divider(
               color: Colors.black12,
               thickness: 1,
               indent: 15,
@@ -256,13 +232,17 @@ Row(
                     style: TextStyle(color: Colors.black45),
                   ),
                   Text(
-                    bill.orderDate,
+                    customerWithProductSelling.productLiveDate,
                     style: TextStyle(color: Colors.black45),
                   ),
                 ],
               ),
             )
+                    ],
+                  )),
+
           ],
         ));
   }
 }
+
