@@ -72,7 +72,7 @@
 //             Duration = 30,
 //             Amount = 10,
 //             ShippingMethod = inStoreMethod,
-//             Description = "Valentime Discount"
+//             Description = "Christmas Discount"
 //         };
 
 //           Discount discount3 = new Discount{
@@ -107,7 +107,7 @@
 
 
 //     Bill bill = new Bill{
-//         OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)).ToString("dd/MM/yyyy"),
+//         OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
 //         OrderStatus = paidStatus,
 //         ShippingMethod = inStoreMethod,
 //         CustomerTransferPicPath = "SomeWhereInAssets",
