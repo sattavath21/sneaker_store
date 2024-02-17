@@ -41,10 +41,10 @@
           </q-dialog>
         </q-td>
         <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
-        <q-td key="name" :props="props">
-          {{ props.row.name }}
-          <q-popup-edit v-model="props.row.name">
-            <q-input v-model="props.row.name" dense autofocus counter></q-input>
+        <q-td key="productName" :props="props">
+          {{ props.row.productName }}
+          <q-popup-edit v-model="props.row.productName">
+            <q-input v-model="props.row.productName" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -52,9 +52,9 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="storePrice" :props="props">{{ props.row.storePrice}}
-          <q-popup-edit v-model="props.row.storePrice">
-            <q-input v-model="props.row.storePrice" dense autofocus counter></q-input>
+        <q-td key="retailPrice" :props="props">{{ props.row.retailPrice}}
+          <q-popup-edit v-model="props.row.retailPrice">
+            <q-input v-model="props.row.retailPrice" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -62,7 +62,16 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="lowestSellingPrice" :props="props">{{ props.row.lowestSellingPrice}}</q-td>
+        <q-td key="sellingPrice" :props="props">{{ props.row.sellingPrice}}
+          <q-popup-edit v-model="props.row.sellingPrice">
+            <q-input v-model="props.row.sellingPrice" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
         <q-td key="sku" :props="props">{{ props.row.sku}}
           <q-popup-edit v-model="props.row.sku">
             <q-input v-model="props.row.sku" dense autofocus counter></q-input>
@@ -84,12 +93,12 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="releaseDate" :props="props">
-          <q-input filled v-model="props.row.releaseDate" mask="date" style="width: 165px;">
+        <q-td key="releasedate" :props="props">
+          <q-input filled v-model="props.row.releasedate" mask="date" style="width: 165px;">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="props.row.releaseDate" landscape color="red">
+                  <q-date v-model="props.row.releasedate" landscape color="red">
                     <div class="row items-center justify-end">
                       <q-btn v-close-popup label="Change" color="red" flat @@click="editProduct(props.row)"></q-btn>
                       <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
@@ -104,7 +113,7 @@
 
 
 
-        <q-td key="amountSold" :props="props">{{ props.row.amountSold}}</q-td>
+        <q-td key="amountsold" :props="props">{{ props.row.amountsold}}</q-td>
         <q-td key="inventoryQty" :props="props">{{ props.row.productWithSizes && props.row.productWithSizes.length > 0 ?
           props.row.productWithSizes[0].inventoryQty : '' }}
           <q-popup-edit v-model="props.row.productWithSizes[0].inventoryQty">
@@ -178,33 +187,10 @@
           </q-popup-edit>
 
         </q-td>
-        <q-td key="brandLogo" :props="props">
-          {{ props.row.productCollection ? props.row.productCollection.brand.brandLogo : '' }}
-          <q-popup-edit v-model="props.row.productCollection.brand.brandLogo">
-            <q-input v-model="props.row.productCollection.brand.brandLogo" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="catName" :props="props">
-          {{ props.row.productCat.catName }}
-          <q-popup-edit v-model="props.row.productCat.catName">
-            <q-input v-model="props.row.productCat.catName" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="productImageUrl" :props="props">
-          {{ props.row.productImages && props.row.productImages.length > 0 ?
-          props.row.productImages[0].productImageUrl : '' }}
-          <q-popup-edit v-model="props.row.productImages[0].productImageUrl">
-            <q-input v-model="props.row.productImages[0].productImageUrl" dense autofocus counter></q-input>
+        <q-td key="productImagePath" :props="props">
+          {{ props.row.productImage.productImagePath }}
+          <q-popup-edit v-model="props.row.productImage.productImagePath">
+            <q-input v-model="props.row.productImage.productImagePath" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -251,25 +237,25 @@
               label: 'No'
             },
             {
-              name: 'name',
+              name: 'productName',
               label: 'Product Name',
-              field: 'name',
+              field: 'productName',
               sortable: true,
               align: 'center',
 
             },
             {
-              name: 'storePrice',
-              label: 'Store Price',
-              field: 'storePrice',
+              name: 'retailPrice',
+              label: 'Retail Price',
+              field: 'retailPrice',
               sortable: true,
               align: 'center',
 
             },
             {
-              name: 'lowestSellingPrice',
-              label: 'Lowest Selling Price',
-              field: 'lowestSellingPrice',
+              name: 'sellingPrice',
+              label: 'Selling Price',
+              field: 'sellingPrice',
               sortable: true,
               align: 'center',
 
@@ -291,17 +277,17 @@
 
             },
             {
-              name: 'releaseDate',
+              name: 'releasedate',
               label: 'Release Date',
-              field: 'releaseDate',
+              field: 'releasedate',
               sortable: true,
               align: 'center',
 
             },
             {
-              name: 'amountSold',
+              name: 'amountsold',
               label: 'Amount Sold',
-              field: 'amountSold',
+              field: 'amountsold',
               sortable: true,
               align: 'center',
 
@@ -344,25 +330,9 @@
 
             },
             {
-              name: 'brandLogo',
-              label: 'Brand Logo',
-              field: 'productCollection.brand.brandLogo',
-              sortable: true,
-              align: 'center',
-
-            },
-            {
-              name: 'catName',
-              label: 'Product Cat',
-              field: 'productCat.catName',
-              sortable: true,
-              align: 'center',
-
-            },
-            {
-              name: 'productImageUrl',
-              label: 'Product Images',
-              field: 'productImages[0].productImageUrl',
+              name: 'productImagePath',
+              label: 'Product Image',
+              field: 'productImage.productImagePath',
               sortable: true,
               align: 'center',
 
@@ -375,7 +345,13 @@
       methods: {
         async editProduct(item) {
           try {
-            item.releaseDate = new Date(item.releaseDate).toISOString();
+            // Assuming item.releasedate is a valid date string
+            item.releasedate = new Date(item.releasedate);
+            item.releasedate.setDate(item.releasedate.getDate() + 1);
+
+            // Convert the date to ISO string format
+            item.releasedate = item.releasedate.toISOString();
+
 
             const response = await axios.post("api/EditProduct", item);
 
@@ -431,7 +407,7 @@
               const searchTextLower = this.searchText.toLowerCase();
 
               return (
-                product.name.toLowerCase().includes(searchTextLower) ||
+                product.productName.toLowerCase().includes(searchTextLower) ||
                 product.sku.toLowerCase().includes(searchTextLower) ||
                 product.colorway.toLowerCase().includes(searchTextLower) ||
                 (
@@ -448,9 +424,7 @@
                   String(product.productWithSizes[0].shoeSize.sizeNumber).toLowerCase().includes(searchTextLower)
                 ) ||
                 product.productCollection.collectionName.toLowerCase().includes(searchTextLower) ||
-                product.productCollection.brand.brandName.toLowerCase().includes(searchTextLower) ||
-                product.productCollection.brand.brandLogo.toLowerCase().includes(searchTextLower) ||
-                product.productCat.catName.toLowerCase().includes(searchTextLower)
+                product.productCollection.brand.brandName.toLowerCase().includes(searchTextLower)
               );
             });
 
