@@ -1,14 +1,12 @@
 {
-    "Order_Date": "27/01/2001",
+    "Order_Date": "2023/12/03",
     "Order_Status": {
         "Status_Name": "Pending"
     },
     "Shipping_Method": {
         "Method_Name": "In-store Pickup"
     },
-    "Customer_Transfer_Pics": {
-        "Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n"
-    },
+    "Customer_Transfer_Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
     "Discount": {
         "Min_Spend": 4000,
         "Start": "2023/12/03",

@@ -301,11 +301,6 @@ public IActionResult AddProduct(Product product)
 // }
 
 
-
-
-
-
-
      #endregion
 
 }//ec

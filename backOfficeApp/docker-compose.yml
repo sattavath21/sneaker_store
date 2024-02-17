@@ -1,9 +1,7 @@
 version: "3"
-name: posApp
+name: pos_app
 networks:
   net5:
-
-
 services:
 
   db:

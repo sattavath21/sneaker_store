@@ -13,13 +13,6 @@ create table `ShippingMethod` (
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `CustomerTransferPic` (
- CustomerTransferPicId int(11) not null,
- PicPath varchar(255)  default null,
- primary key (CustomerTransferPicId)    
-) engine=InnoDB default charset=utf8mb4;
-
-
 create table `ShippingMethod` (
  ShippingMethodId int(11) not null,
  MethodName varchar(255)  default null,
@@ -216,10 +209,10 @@ create table `BillItem` (
 
 create table `Bill` (
  BillId int(11) not null,
- OrderDate varchar(255)  default null,
+ OrderDate datetime not null,
  OrderStatusId int(11) not null,
  ShippingMethodId int(11) not null,
- CustomerTransferPicId int(11) not null,
+ CustomerTransferPicPath varchar(255)  default null,
  DiscountId int(11) not null,
  DeliveryBranchId int(11) not null,
  StaffId int(11) not null,
@@ -227,14 +220,12 @@ create table `Bill` (
  primary key (BillId),
  KEY IX_Bill_OrderStatusId (OrderStatusId),
  KEY IX_Bill_ShippingMethodId (ShippingMethodId),
- KEY IX_Bill_CustomerTransferPicId (CustomerTransferPicId),
  KEY IX_Bill_DiscountId (DiscountId),
  KEY IX_Bill_DeliveryBranchId (DeliveryBranchId),
  KEY IX_Bill_StaffId (StaffId),
  KEY IX_Bill_CustomerId (CustomerId),
  CONSTRAINT FK_Bill_OrderStatus_OrderStatusId FOREIGN KEY (OrderStatusId) REFERENCES `OrderStatus` (OrderStatusId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_ShippingMethod_ShippingMethodId FOREIGN KEY (ShippingMethodId) REFERENCES `ShippingMethod` (ShippingMethodId) ON DELETE CASCADE,
- CONSTRAINT FK_Bill_CustomerTransferPic_CustomerTransferPicId FOREIGN KEY (CustomerTransferPicId) REFERENCES `CustomerTransferPic` (CustomerTransferPicId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Discount_DiscountId FOREIGN KEY (DiscountId) REFERENCES `Discount` (DiscountId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_DeliveryBranch_DeliveryBranchId FOREIGN KEY (DeliveryBranchId) REFERENCES `DeliveryBranch` (DeliveryBranchId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Staff_StaffId FOREIGN KEY (StaffId) REFERENCES `Staff` (StaffId) ON DELETE CASCADE,
