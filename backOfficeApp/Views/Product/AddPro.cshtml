@@ -1,80 +1,73 @@
 <div id="app1">
     <div class="text-h4 text-weight-bold text-white bg-grey-9 q-pa-lg">Product Information</div>
-    <q-card class="my-card bg-grey-2 ">
+    <q-card class="my-card bg-grey-2">
         <q-card-section class="bg-cyan text-white">
             <div class="text-h6">Add New Product</div>
         </q-card-section>
         <q-separator vertical class="q-my-md"></q-separator>
         <div class="text-h6 q-pa-lg">Product Information</div>
-        <div class="q-ma-sm">
-            <q-input ref="input1" v-model="barcodeScan" label="Input Barcode" @@change="item_change">
-            </q-input>
-            <div class="q-ma-sm">
-                <q-input v-model="checkInItem.product.barcode" label="Scanned Barcode"></q-input>
 
-            </div>
-        </div>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="checkInItem.product.productName" label="Product Name" lazy-rules
+        <q-input class="q-px-sm" filled v-model="product.name" label="Product Name" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
-        <q-input type="textarea" class="q-px-sm" filled v-model="checkInItem.product.productDescription"
-            label="Product Description"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-select class="q-px-sm" color="grey-10" bg-color="grey-5" filled label="Product Type"
-            transition-show="jump-up" transition-hide="jump-up" v-model="selectedProductTypeDrop"
-            :options="productTypeDrop" style="width: 250px" option-value="productTypeDrop.productType"
-            option-label="productType"></q-select>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-select class="q-px-sm" color="grey-10" bg-color="grey-5" filled label="Product Unit"
-            transition-show="jump-up" transition-hide="jump-up" v-model="selectedProductUnitDrop"
-            :options="productUnitDrop" style="width: 250px" option-value="productTypeDrop.productUnit"
-            option-label="productUnit"></q-select>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="checkInItem.product.productPrice" label="Product Price"
-            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="checkInItem.product.productCost" label="Product Cost"
-            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-select class="q-px-sm" color="grey-10" bg-color="grey-5" filled label="Product Make"
-            transition-show="jump-up" transition-hide="jump-up" v-model="selectedProductMakeDrop"
-            :options="productMakeDrop" style="width: 250px" option-value="productTypeDrop.productMake"
-            option-label="productMake"></q-select>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="checkInItem.product.productModelno" label="Product Model No" lazy-rules
+
+        <q-input class="q-px-sm" filled v-model="product.storePrice" label="Store Price" hint="Number only" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
-        <div class="text-h6 q-pa-lg">Supplier</div>
-        <q-select class="q-px-sm" color="green-10" bg-color="green-4" filled label="Supplier" transition-show="jump-up"
-            transition-hide="jump-up" v-model="selectedSupplierDrop" :options="supplierDrop" style="width: 250px"
-            option-value="supplierDrop.supplier.supplierAddress.supplierName" option-label="supplierName"></q-select>
+
+        <q-input class="q-px-sm" filled v-model="product.sku" label="SKU" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
-        <div class="text-h6 q-pa-lg">Check In Information</div>
-        <q-input class="q-px-sm" filled v-model="checkInItem.checkInQty" label="Check In QTY" hint="Number only"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+
+        <q-input class="q-px-sm" filled v-model="product.colorway" label="Colorway" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="checkInItem.checkin.creditTerm" label="Credit Term" hint="Number only"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="checkInItem.checkin.checkInDate" label="Check In Date" hint="Date only"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please pick date']">
+
+        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 300px;">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-close-popup v-model="checkInItem.checkin.checkInDate">
+                        <q-date v-model="product.releaseDate" landscape color="red">
                             <div class="row items-center justify-end">
-                                <q-btn v-close-popup label="Close" color="primary" flat />
+                                <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
                             </div>
                         </q-date>
                     </q-popup-proxy>
                 </q-icon>
             </template>
         </q-input>
+
         <q-separator vertical class="q-my-md"></q-separator>
-        <q-select class="q-px-sm" color="brown-10" bg-color="brown-4" label="Staff" transition-show="jump-up"
-            transition-hide="jump-up" filled v-model="selectedStaffDrop" :options="staffDrop" style="width: 250px"
-            option-value="staffDrop.firstName" option-label="firstName"></q-select>
+
+        <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].inventoryQty" label="Inventory Quantity"
+            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].shoeSize.sizeType" label="Size Type"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].shoeSize.sizeNumber" label="Size Number"
+            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+
+        <q-input class="q-px-sm" filled v-model="product.productCollection.collectionName" label="Collection Name"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+
+        <q-input class="q-px-sm" filled v-model="product.productCollection.brand.brandName" label="Brand Name"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+
+        <q-input class="q-px-sm" filled v-model="product.productCollection.brand.brandLogo" label="Brand Logo"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm" filled v-model="product.productCat.catName" label="Product Cat Name" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+
+        <q-input class="q-px-sm" filled v-model="product.productImages[0].productImageUrl" label="Product Image URLs"
+            hint="Enter the URL" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
+        </q-input>
+
         <q-separator vertical class="q-my-md"></q-separator>
         <div class="justify-end row">
             <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onReset" size="lg"></q-btn>
@@ -84,19 +77,18 @@
             <q-btn label="Submit" icon="arrow_downward" type="submit" color="primary" class="text-h7 q-mx-sm q-my-lg"
                 size="lg" @@click="confirm = true"></q-btn>
             <q-dialog v-model="confirm" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-                <span class="q-ml-sm">Add this product?</span>
-              </q-card-section>
+                <q-card>
+                    <q-card-section class="row items-center">
+                        <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                        <span class="q-ml-sm">Add this product?</span>
+                    </q-card-section>
 
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="grey-9" @@click="addProduct" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
+                    <q-card-actions align="center">
+                        <q-btn class="q-ma-sm" color="grey-9" @@click="addProduct" label="Yes" v-close-popup></q-btn>
+                        <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
             <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" size="lg"
                 onclick='window.location="/product"'></q-btn>
             <q-dialog v-model="completedDialog">
@@ -124,139 +116,178 @@
         </q-card-actions>
     </q-card>
 
-
+    <div class="bg-grey-9 q-pa-sm" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></div>
 </div>
 
-@section code{
+@section code {
     <script>
         var option = {
             //data
             data() {
                 return {
                     confirm: false,
-                    selectedProductTypeDrop: [],
-                    selectedProductUnitDrop: [],
-                    selectedProductMakeDrop: [],
-                    selectedSupplierDrop: [],
-                    selectedStaffDrop: [],
-                    productTypeDrop: [],
-                    productUnitDrop: [],
-                    productMakeDrop: [],
-                    supplierDrop: [],
-                    staffDrop: [],
-                    barcodeScan: '',
-                    checkInItem: {
-                        product: {
-                            barcode: "",
-                            productName: "",
-                            productDescription: "",
-                            productType: "",
-                            productUnit: "",
-                            productPrice: null,
-                            productCost: null,
-                            productMake: "",
-                            productModelno: "",
-                            supplierId: null
+                    product: {
+                        name: "Jordan 4 Retro Thunder (2023)",
+                        storePrice: 7400,
+                        lowestSellingPrice: 6500,
+                        sku: "DH6927-017",
+                        colorway: "BLACK/TOUR YELLOW",
+                        releaseDate: "2023/05/13",
+                        amountSold: 1494,
+                        productWithSizes: [
+                            {
+                                inventoryQty: 20,
+                                shoeSize: {
+                                    sizeType: "EU",
+                                    sizeNumber: 38.5
+                                }
+                            }
+                        ],
+                        productCollection: {
+                            collectionName: "Jordan 1",
+                            brand: {
+                                brandName: "Jordan",
+                                brandLogo: "asdadasdsadasdasd"
+                            }
                         },
-                        checkInQty: null,
-                        checkin: {
-                            creditTerm: 30,
-                            checkInDate: "",
-                            staffId: null
-                        }
+                        productCat: {
+                            catName: "Sneakers"
+                        },
+                        productImages: [
+                            {
+                                productImageUrl: "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+                            }
+                        ]
                     },
-                    completedDialog: false
+                    completedDialog: false,
                 };
             }
             ,
             //methods
             methods: {
-                async item_change() {
-                    this.checkInItem.product.barcode = this.barcodeScan;
-                    console.log(this.checkInItem.product.barcode);
-                    //data is object notation
-                    try {
-                        var url = '/api/GetProductByBarcodeAdd?barcode=' + this.checkInItem.product.barcode;
-                        var res = await axios.get(url);
-                        this.barcodeScan = '';
-                        if (res.data) {
-                            this.$q.notify({
-                                type: 'warning',
-                                message: 'This barcode already in stock'
-                            })
-                        }
-                        else {
-                            this.$q.notify({
-                                type: 'positive',
-                                message: 'This barcode can be add'
-                            })
-                        }
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
+                formatReleaseDate(dateString) {
+                    const date = new Date(dateString);
 
+                    // Add one day to the date
+                    date.setDate(date.getDate() + 1);
+
+                    // Set time to midnight
+                    date.setHours(0, 0, 0, 0);
+
+                    // Convert to ISO string and extract the date part
+                    const formattedDate = date.toISOString().split('T')[0];
+
+                    return formattedDate;
                 }
+
                 ,
                 async addProduct() {
                     try {
-                        console.log(this.checkInItem);
-                        var date = new Date(this.checkInItem.checkin.checkInDate)
-                        this.checkInItem.checkin.checkInDate = date.toJSON();
-                        this.checkInItem.product.productType = this.selectedProductTypeDrop.productType;
-                        this.checkInItem.product.productUnit = this.selectedProductUnitDrop.productUnit;
-                        this.checkInItem.product.productMake = this.selectedProductMakeDrop.productMake;
-                        this.checkInItem.product.supplierId = this.selectedSupplierDrop.supplierId;
-                        this.checkInItem.checkin.staffId = this.selectedStaffDrop.staffId;
-                        var response = await axios.post("/api/AddCheckInItem", this.checkInItem);
-                        this.completedDialog = true;
-                        console.log(response.data);
-                        this.$q.notify({
-                            color: 'green-4',
-                            textColor: 'white',
-                            icon: 'cloud_done',
-                            message: 'Submitted'
-                        })
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
+                        console.log("Product Object:", this.product);
+                        // Make the API call
+                        this.product.releaseDate = this.formatReleaseDate(this.product.releaseDate);
+                        console.log("Formatted Release Date:", this.formatReleaseDate(this.product.releaseDate));
+                        var response = await axios.post("/api/AddProduct", this.product);
 
-                }//ef
+                        // Handle the response or perform any necessary logic
+                        if (response.status === 200) {
+                            // Additional logic after successful product addition
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Product added successfully!'
+                            });
+
+                            // Clear form fields and reset data after successful addition
+                            this.onReset();
+
+                            // Show the completed dialog
+                            this.completedDialog = true;
+                        } else {
+                            // Log detailed error information
+                            console.error(response);
+
+                            // Handle the case where the API call was not successful
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Error adding product. Please check the console for details.'
+                            });
+                        }
+                    } catch (error) {
+                        // Log detailed error information
+                        console.error(error);
+
+                        // Hide loading indicator in case of an error
+                        this.$q.loading.hide();
+
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error adding product. Please check the console for details.'
+                        });
+                    }
+                }
+
                 ,
                 onReset() {
+                    // Show an ongoing notification
                     const notif = this.$q.notify({
                         type: 'ongoing',
-                        message: 'Loading...'
-                    })
+                        message: 'Resetting...'
+                    });
 
-                    // simulate delay
+                    // Simulate delay for 715 milliseconds
                     setTimeout(() => {
                         notif({
                             type: 'positive',
-                            message: 'Reseted',
+                            message: 'Reset complete',
                             timeout: 315
-                        })
-                    }, 715)
-                    this.checkInItem.product.barcode = ""
-                    this.checkInItem.product.productName = ""
-                    this.checkInItem.product.productDescription = ""
-                    this.selectedProductTypeDrop = ""
-                    this.selectedProductUnitDrop = ""
-                    this.checkInItem.product.productPrice = null
-                    this.checkInItem.product.productCost = null
-                    this.selectedProductMakeDrop = ""
-                    this.checkInItem.product.productModelno = ""
-                    this.selectedSupplierDrop = ""
-                    this.selectedStaffDrop = ""
-                    this.checkInItem.checkInQty = null
-                    this.checkInItem.checkin.creditTerm = 30
-                    this.checkInItem.checkin.checkInDate = ""
+                        });
 
+                        // Reset the form fields and data
+                        this.product = {
+                            name: "",
+                            storePrice: null,
+                            lowestSellingPrice: null,
+                            sku: "",
+                            colorway: "",
+                            releaseDate: "",
+                            amountSold: null,
+                            productWithSizes: [
+                                {
+                                    inventoryQty: null,
+                                    shoeSize: {
+                                        sizeType: "",
+                                        sizeNumber: null
+                                    }
+                                }
+                            ],
+                            productCollection: {
+                                collectionName: "",
+                                brand: {
+                                    brandName: "",
+                                    brandLogo: ""
+                                }
+                            },
+                            productCat: {
+                                catName: ""
+                            },
+                            productImages: [
+                                {
+                                    productImageUrl: ""
+                                }
+                            ]
+                        };
 
-
-
+                        // Clear the input field for image URL
+                        this.imageUrlToAdd = "";
+                    }, 715);
                 }
+
 
 
             }//emethod
@@ -267,40 +298,13 @@
             }
             ,
             //created
-            async created() {
-                try {
-                    var res = await axios.get("/api/GetStaff");
-                    this.staffDrop = res.data;
-                    console.log(this.staffDrop);
-                }
-                catch (error) {
-                    console.log(error);
-                }
-                try {
-                    var res2 = await axios.get("/api/GetSuppliers");
-                    this.supplierDrop = res2.data;
-                    console.log(this.supplierDrop);
-                }
-                catch (error) {
-                    console.log(error);
-                }
-                try {
-                    var res3 = await axios.get("/api/GetProductInfor");
-                    this.productTypeDrop = res3.data;
-                    this.productMakeDrop = res3.data;
-                    this.productUnitDrop = res3.data;
-                    console.log(this.productTypeDrop);
-                    console.log(this.productMakeDrop);
-                    console.log(this.productUnitDrop);
-                }
-                catch (error) {
-                    console.log(error);
-                }
+            created() {
+
             }
             ,
             //mounted
             mounted() {
-                this.$refs.input1.$el.focus()
+
             }
 
         };

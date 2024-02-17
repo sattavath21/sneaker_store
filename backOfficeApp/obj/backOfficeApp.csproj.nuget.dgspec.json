@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\backOfficeApp.csproj": {}
+    "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\backOfficeApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\backOfficeApp.csproj": {
+    "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\backOfficeApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\backOfficeApp.csproj",
+        "projectUniqueName": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\backOfficeApp.csproj",
         "projectName": "backOfficeApp",
-        "projectPath": "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\backOfficeApp.csproj",
+        "projectPath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\backOfficeApp.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USER\\Desktop\\test\\backOfficeApp\\obj\\",
+        "outputPath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config"

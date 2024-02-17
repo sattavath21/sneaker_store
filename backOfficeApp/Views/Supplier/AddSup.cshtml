@@ -1,10 +1,15 @@
 <div id="app1">
-    <div class="text-h4 text-weight-bold text-white bg-green q-pa-lg">Supplier Information</div>
+    <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */">
+            Location Information</div>
     <q-card class="my-card bg-grey-2">
-        <q-card-section class="bg-cyan text-white">
-            <div class="text-h6">Add New Supplier</div>
+        <q-card-section class="bg-grey text-white">
+            <div class="text-h6">Add New Branch</div>
         </q-card-section>
         <div class="text-h6 q-pa-lg">General Information</div>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.deliveryService.deliveryCompanyName" label="Delivery Company Name"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-input class="q-px-sm q-mb-sm" filled v-model="deliveryBranch.branchName" label="Branch Name"
             lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-sm"></q-separator>
@@ -30,8 +35,8 @@
         <div class="justify-end row">
             <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onReset" size="lg"></q-btn>
         </div>
-        <q-card-actions align="left">
-            <q-btn label="Submit" icon="arrow_downward" type="submit" color="primary"
+        <q-card-actions align="center">
+            <q-btn label="Submit" icon="arrow_downward" type="submit" color="green"
                 class="text-h7 q-mx-sm q-my-lg" @@click="confirm = true" size="lg"></q-btn>
             <q-dialog v-model="confirm" persistent>
                 <q-card>
@@ -66,6 +71,7 @@
             </q-dialog>
         </q-card-actions>
     </q-card>
+    <div class="bg-grey-9 q-pa-sm" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></div>
 </div>
 
 

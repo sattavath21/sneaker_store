@@ -1,11 +1,10 @@
 <div id="app1">
 
-  <div class="text-h5 text-weight-bold text-white q-pa-lg"
-     style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+  <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
-            Product Information</div>
-  <q-table class="bg-grey-2" title="Product Information" :rows="checkProducts" :columns="columns">
+    Product Information</div>
+  <q-table class="bg-grey-2" title="Product Information" :rows="products" :columns="columns">
 
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Product Details <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
@@ -23,105 +22,9 @@
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
-        <q-td key="index" :props="props">{{ checkProducts.indexOf(props.row) + 1 }}</q-td>
-        <q-td key="product.productName" :props="props">
-          {{ props.row.product.productName }}
-          <q-popup-edit v-model="props.row.product.productName">
-            <q-input v-model="props.row.product.productName" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="product.barcode" :props="props">{{ props.row.product.barcode}}</q-td>
-        <q-td key="checkInQty" :props="props">{{ props.row.checkInQty}}</q-td>
-        <q-td key="checkin.checkInDate" :props="props">{{ new Date(props.row.checkin.checkInDate).toLocaleDateString()
-          }}</q-td>
-        <q-td key="product.productDescription" :props="props">
-          {{ props.row.product.productDescription }}
-          <q-popup-edit v-model="props.row.product.productDescription">
-            <q-input v-model="props.row.product.productDescription" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="checkin.staff.firstName" :props="props">{{ props.row.checkin.staff.firstName}}</q-td>
-        <q-td key="product.productUnit" :props="props">
-          {{ props.row.product.productUnit }}
-          <q-popup-edit v-model="props.row.product.productUnit">
-            <q-input v-model="props.row.product.productUnit" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="product.supplier.supplierName" :props="props">{{ props.row.product.supplier.supplierName}}</q-td>
-        <q-td key="checkin.creditTerm" :props="props">{{ props.row.checkin.creditTerm}}</q-td>
-        <q-td key="product.productCost" :props="props">
-          {{ props.row.product.productCost }}
-          <q-popup-edit v-model="props.row.product.productCost">
-            <q-input v-model="props.row.product.productCost" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="product.productPrice" :props="props">
-          {{ props.row.product.productPrice }}
-          <q-popup-edit v-model="props.row.product.productPrice">
-            <q-input v-model="props.row.product.productPrice" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="product.productMake" :props="props">
-          {{ props.row.product.productMake }}
-          <q-popup-edit v-model="props.row.product.productMake">
-            <q-input v-model="props.row.product.productMake" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="product.productModelno" :props="props">
-          {{ props.row.product.productModelno }}
-          <q-popup-edit v-model="props.row.product.productModelno">
-            <q-input v-model="props.row.product.productModelno" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="product.productType" :props="props">
-          {{ props.row.product.productType }}
-          <q-popup-edit v-model="props.row.product.productType">
-            <q-input v-model="props.row.product.productType" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editCheckProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-
         <q-td key="actions" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="backspace"></q-btn>
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+            size="15px"></q-btn>
           <q-dialog v-model="confirm" persistent>
             <q-card>
               <q-card-section class="row items-center">
@@ -137,174 +40,210 @@
             </q-card>
           </q-dialog>
         </q-td>
+        <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
+        <q-td key="name" :props="props">
+          {{ props.row.name }}
+          <q-popup-edit v-model="props.row.name">
+            <q-input v-model="props.row.name" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="storePrice" :props="props">{{ props.row.storePrice}}
+          <q-popup-edit v-model="props.row.storePrice">
+            <q-input v-model="props.row.storePrice" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="lowestSellingPrice" :props="props">{{ props.row.lowestSellingPrice}}</q-td>
+        <q-td key="sku" :props="props">{{ props.row.sku}}
+          <q-popup-edit v-model="props.row.sku">
+            <q-input v-model="props.row.sku" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="colorway" :props="props">
+          {{ props.row.colorway }}
+          <q-popup-edit v-model="props.row.colorway">
+            <q-input v-model="props.row.colorway" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="releaseDate" :props="props">
+          <q-input filled v-model="props.row.releaseDate" mask="date" style="width: 165px;">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="props.row.releaseDate" landscape color="red">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Change" color="red" flat @@click="editProduct(props.row)"></q-btn>
+                      <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </q-td>
+
+
+
+
+        <q-td key="amountSold" :props="props">{{ props.row.amountSold}}</q-td>
+        <q-td key="inventoryQty" :props="props">{{ props.row.productWithSizes && props.row.productWithSizes.length > 0 ?
+          props.row.productWithSizes[0].inventoryQty : '' }}
+          <q-popup-edit v-model="props.row.productWithSizes[0].inventoryQty">
+            <q-input v-model="props.row.productWithSizes[0].inventoryQty" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="sizeType" :props="props">
+          {{
+          props.row.productWithSizes &&
+          props.row.productWithSizes.length > 0 &&
+          props.row.productWithSizes[0].shoeSize &&
+          props.row.productWithSizes[0].shoeSize.sizeType !== null
+          ? props.row.productWithSizes[0].shoeSize.sizeType
+          : 'N/A'
+          }}
+          <q-popup-edit v-model="props.row.productWithSizes[0].shoeSize.sizeType">
+            <q-input v-model="props.row.productWithSizes[0].shoeSize.sizeType" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+
+        <q-td key="sizeNumber" :props="props">
+          {{
+          props.row.productWithSizes &&
+          props.row.productWithSizes.length > 0 &&
+          props.row.productWithSizes[0].shoeSize &&
+          props.row.productWithSizes[0].shoeSize.sizeNumber !== null
+          ? props.row.productWithSizes[0].shoeSize.sizeNumber
+          : 'N/A'
+          }}
+          <q-popup-edit v-model="props.row.productWithSizes[0].shoeSize.sizeNumber">
+            <q-input v-model="props.row.productWithSizes[0].shoeSize.sizeNumber" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+
+
+        <q-td key="collectionName" :props="props">
+          {{ props.row.productCollection.collectionName }}
+          <q-popup-edit v-model="props.row.productCollection.collectionName">
+            <q-input v-model="props.row.productCollection.collectionName" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="brandName" :props="props">
+          {{ props.row.productCollection ? props.row.productCollection.brand.brandName : '' }}
+          <q-popup-edit v-model="props.row.productCollection.brand.brandName">
+            <q-input v-model="props.row.productCollection.brand.brandName" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+
+        </q-td>
+        <q-td key="brandLogo" :props="props">
+          {{ props.row.productCollection ? props.row.productCollection.brand.brandLogo : '' }}
+          <q-popup-edit v-model="props.row.productCollection.brand.brandLogo">
+            <q-input v-model="props.row.productCollection.brand.brandLogo" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="catName" :props="props">
+          {{ props.row.productCat.catName }}
+          <q-popup-edit v-model="props.row.productCat.catName">
+            <q-input v-model="props.row.productCat.catName" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="productImageUrl" :props="props">
+          {{ props.row.productImages && props.row.productImages.length > 0 ?
+          props.row.productImages[0].productImageUrl : '' }}
+          <q-popup-edit v-model="props.row.productImages[0].productImageUrl">
+            <q-input v-model="props.row.productImages[0].productImageUrl" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
       </q-tr>
     </template>
   </q-table>
 
-  <div class="bg-grey-9 q-pa-sm"></div>
-  <q-form class=" bg-white q-pa-lg">
-    <div class="q-ma-sm">
-      <q-input ref="input1" v-model="item.barcode" label="Input Barcode" @@change="item_change">
-      </q-input>
-      <div class="q-ma-sm">
-        <q-input v-model="item.barcode2" label="Scanned Barcode"></q-input>
+  <div class="bg-grey-9 q-pa-sm" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></div>
 
-      </div>
-    </div>
 
-    <q-separator vertical class="q-my-xl"></q-separator>
-    <q-table class="bg-grey-2" title="Check In Qty Update List" :rows="scanProducts" :columns="columns2">
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="index" :props="props">{{ scanProducts.indexOf(props.row) + 1 }}</q-td>
-          <q-td key="productName" :props="props">
-            {{ props.row.productName }}
-          </q-td>
-          <q-td key="checkInQty" :props="props">
-            {{ props.row.checkInQty }}
-            <q-popup-edit v-model.number="props.row.checkInQty" buttons v-slot="scope">
-              <q-input type="number" v-model.number="scope.value" dense autofocus @@keyup.enter="scope.set" />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="checkinDate" :props="props">
-            {{ new Date(props.row.checkinDate).toLocaleDateString() }}
-          </q-td>
-          <q-td key="checkinCredit" :props="props">
-            {{ props.row.checkinCredit }}
-          </q-td>
-          <q-td key="productCost" :props="props">
-            {{ props.row.productCost }}
-          </q-td>
-          <q-td key="productPrice" :props="props">
-            {{ props.row.productPrice }}
-          </q-td>
-          <q-td key="productMake" :props="props">
-            {{ props.row.productMake }}
-          </q-td>
-          <q-td key="productUnit" :props="props">
-            {{ props.row.productUnit }}
-          </q-td>
+  <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 50px;" color="green" icon="add_box"
+    label="Add Product" size="md" onclick='window.location="/Product/AddPro"'></q-btn>
 
-          <q-td key="actions" :props="props">
-            <q-btn color="blue-grey-6" @@click="confirm2 = true" icon="system_update_alt"
-              label="Update"></q-btn>
-            <q-btn class="q-ma-sm" color="red-6" @@click="deleteAddQtyRow(props.row)" icon="close"></q-btn>
-            <q-dialog v-model="confirm2" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-                <span class="q-ml-sm">Update products Qty?</span>
-              </q-card-section>
-
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="blue-grey-6" @@click="editCheckInItem(props.row)" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-          </q-td>
-        </q-tr>
-      </template>
-    </q-table>
-  </q-form>
-
-  <q-btn class="q-my-lg" color="primary" icon="add_box" label="Add Product" size="lg"
-    onclick='window.location="/Product/AddPro"'></q-btn>
 
 </div>
 
-@section code{
+@section code {
   <script>
     var option = {
       //data
       data() {
         return {
-          item: {
-            barcode: '',
-            barcode2: ''
-          },
+          products: [],
           originalProducts: [],
           confirm: false,
           confirm2: false,
           searchText: "",
-          scanProducts: [],
-          columns2: [
-            {
-              name: 'index',
-              field: 'index',
-              align: 'left',
-              sortable: true,
-              label: 'No'
-            },
-            {
-              name: 'productName',
-              label: 'Product Name',
-              field: 'productName',
-              sortable: true,
-              align: 'center',
-
-            },
-            {
-              name: 'checkInQty',
-              label: 'Quantity On Hand',
-              field: 'checkInQty',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'checkinDate',
-              label: 'Check In Date',
-              field: 'checkinDate',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'checkinCredit',
-              label: 'Credit',
-              field: 'checkinCredit',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'productCost',
-              label: 'Product Cost',
-              field: 'productCost',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'productPrice',
-              label: 'Product Price',
-              field: 'productPrice',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'productMake',
-              label: 'Product Make',
-              field: 'productMake',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'productUnit',
-              label: 'Product Unit',
-              field: 'productUnit',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'actions',
-              label: 'Actions',
-              field: 'actions',
-              align: 'center'
-            }
-          ],
-          checkProducts: []
-          ,
           columns: [
             {
+              name: 'actions',
+              label: 'Actions',
+              field: 'actions',
+              align: 'center'
+            },
+            {
               name: 'index',
               field: 'index',
               align: 'left',
@@ -312,238 +251,214 @@
               label: 'No'
             },
             {
-              name: 'product.productName',
+              name: 'name',
               label: 'Product Name',
-              field: 'product.productName',
+              field: 'name',
               sortable: true,
               align: 'center',
 
             },
             {
-              name: 'product.barcode',
-              label: 'Barcode',
-              field: 'product.barcode',
+              name: 'storePrice',
+              label: 'Store Price',
+              field: 'storePrice',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'checkInQty',
-              label: 'Check In Qty',
-              field: 'checkInQty',
+              name: 'lowestSellingPrice',
+              label: 'Lowest Selling Price',
+              field: 'lowestSellingPrice',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'checkin.checkInDate',
-              label: 'Check In Date',
-              field: 'checkin.checkInDate',
+              name: 'sku',
+              label: 'SKU',
+              field: 'sku',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'product.productDescription',
-              label: 'Product Description',
-              field: 'product.productDescription',
+              name: 'colorway',
+              label: 'Colorway',
+              field: 'colorway',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'checkin.staff.firstName',
-              label: 'Staff',
-              field: 'checkin.staff.firstName',
+              name: 'releaseDate',
+              label: 'Release Date',
+              field: 'releaseDate',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'product.productUnit',
-              label: 'Product Unit',
-              field: 'product.productUnit',
+              name: 'amountSold',
+              label: 'Amount Sold',
+              field: 'amountSold',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'product.supplier.supplierName',
-              label: 'Supplier Name',
-              field: 'product.supplier.supplierName',
+              name: 'inventoryQty',
+              label: 'Inventory Qty',
+              field: 'productWithSizes[0].inventoryQty',
               sortable: true,
-              align: 'center'
+              align: 'center',
             },
             {
-              name: 'checkin.creditTerm',
-              label: 'Credit Term ',
-              field: 'checkin.creditTerm',
+              name: 'sizeType',
+              label: 'Size Type',
+              field: 'productWithSizes[0].shoeSize.sizeType',
               sortable: true,
-              align: 'center'
+              align: 'center',
             },
             {
-              name: 'product.productCost',
-              label: 'Product Cost',
-              field: 'product.productCost',
+              name: 'sizeNumber',
+              label: 'Size Number',
+              field: 'productWithSizes[0].shoeSize.sizeNumber',
               sortable: true,
-              align: 'center'
+              align: 'center',
             },
             {
-              name: 'product.productPrice',
-              label: 'Product Price',
-              field: 'product.productPrice',
+              name: 'collectionName',
+              label: 'Product Collection',
+              field: 'productCollection.collectionName',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'product.productMake',
-              label: 'Product Make',
-              field: 'product.productMake',
+              name: 'brandName',
+              label: 'Brand Name',
+              field: 'productCollection.brand.brandName',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'product.productModelno',
-              label: 'Product Model No',
-              field: 'product.productModelno',
+              name: 'brandLogo',
+              label: 'Brand Logo',
+              field: 'productCollection.brand.brandLogo',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'product.productType',
-              label: 'Product Type',
-              field: 'product.productType',
+              name: 'catName',
+              label: 'Product Cat',
+              field: 'productCat.catName',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'actions',
-              label: 'Actions',
-              field: 'actions',
-              align: 'center'
-            }
+              name: 'productImageUrl',
+              label: 'Product Images',
+              field: 'productImages[0].productImageUrl',
+              sortable: true,
+              align: 'center',
+
+            },
           ]
         };
       }
       ,
       //methods
       methods: {
-        async item_change() {
-          this.item.barcode2 = this.item.barcode;
-          console.log(this.item.barcode);
-          //data is object notation
+        async editProduct(item) {
           try {
-            var url = '/api/ProductByBarcode?barcode=' + this.item.barcode;
-            var res = await axios.get(url);
-            this.item.barcode = '';
-            console.log(res.data);
-            console.log(typeof res.data);
-          }
-          catch (error) {
-            console.log(error);
-          }
-          if (res.data.status != -1) {
+            item.releaseDate = new Date(item.releaseDate).toISOString();
 
-            var index = this.scanProducts.findIndex(item => item.productId === res.data.result.productId);
-            console.log("index", index);
+            const response = await axios.post("api/EditProduct", item);
 
-            if (index !== -1) {
-              this.scanProducts[index].checkInQty += 1;
-              this.item.barcode = '';
-              this.$refs.input1.$el.focus();
+            console.log("Request data:", item);
+            console.log("Response data:", response.data);
+
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+            } else {
+              console.error("Unexpected response status:", response.status);
             }
-            else {
-              var store = this.scanProducts.push(res.data.result);
-              var data1 = JSON.stringify(store);
-              window.localStorage.setItem('global', data1);
-              var result = window.localStorage.getItem('global');
-              var newObject = JSON.parse(result);
-              console.log("newObject", newObject);
+          } catch (error) {
+            console.error("Error during request:", error);
 
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
             }
           }
-          else {
-            this.$q.notify({
-              type: 'warning',
-              message: 'Not found'
-            })
-          }
-
-        },
-        async editCheckProduct(item) {
-          var product = { ...item.product };
-          delete product.supplier;
-          console.log(product);
-
-          var url = "api/EditProduct";
-          try {
-            console.log(item);
-            var result = await axios.post(url, product);
-            console.log(result.data);
-          }
-          catch (error) {
-            console.log(error);
-          }
-
-        }//ef
-        ,
-        async editCheckInItem(item) {
-
-          var url = "api/EditCheckInItem";
-          try {
-            console.log(item);
-            var result = await axios.post(url, item);
-            console.log(result.data);
-            this.scanProducts = [],
-              this.$q.notify({
-                color: 'green-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Update completed'
-              })
-            try {
-              var response = await axios.get("/api/GetCheckInItem");
-              this.originalProducts = response.data;
-              this.checkProducts = response.data;
-              console.log(this.checkProducts);
-            }
-            catch (error) {
-              console.log(error);
-            }
-          }
-          catch (error) {
-            console.log(error);
-          }
-
-        }//ef
+        }
         ,
         async deleteProduct(item) {
           console.log(item);
           var url = "/api/DeleteProduct";
-          var del = item
-          var result = await axios.post(url, del);
-          this.checkProducts = this.checkProducts.filter(x => x.product.productId != item.product.productId);
-          this.$q.notify({
-            type: 'negative',
-            color: "red-8",
-            message: 'Product had been deleted'
-          })
-        }//ef
-        ,
-        async deleteAddQtyRow(item) {
-          console.log(item);
-          this.scanProducts = this.scanProducts.filter(x => x.productId != item.productId);
-        }//ef
+          var del = item;
+
+          try {
+            // Send the delete request
+            await axios.post(url, del);
+
+            // Use the correct property name in the filter callback
+            this.products = this.products.filter(x => x.productId !== item.productId);
+
+            // Set a flag in local storage indicating successful delete
+            localStorage.setItem('deleteSuccess', 'true');
+
+            // Refresh the page
+            window.location.reload();
+          } catch (error) {
+            console.error('Error deleting delivery branch:', error);
+
+            // Notify the user about the error
+            this.$q.notify({
+              type: 'negative',
+              color: 'red-8',
+              message: 'Error deleting delivery branch'
+            });
+          }
+        }
         ,
         searchProduct() {
           if (this.searchText !== "") {
-            this.checkProducts = this.originalProducts.filter(x => x.product.productName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              x.checkin.staff.firstName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              x.product.productMake.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              x.product.productUnit.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              x.product.productType.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              x.product.productModelno.toLowerCase().includes(this.searchText.toLowerCase()) ||
-              x.product.supplier.supplierName.toLowerCase().includes(this.searchText.toLowerCase())
-            )
+            this.products = this.originalProducts.filter(product => {
+              const searchTextLower = this.searchText.toLowerCase();
+
+              return (
+                product.name.toLowerCase().includes(searchTextLower) ||
+                product.sku.toLowerCase().includes(searchTextLower) ||
+                product.colorway.toLowerCase().includes(searchTextLower) ||
+                (
+                  product.productWithSizes.length > 0 &&
+                  product.productWithSizes[0].shoeSize &&
+                  product.productWithSizes[0].shoeSize.sizeType &&
+                  product.productWithSizes[0].shoeSize.sizeType.toLowerCase().includes(searchTextLower)
+                ) ||
+                (
+                  product.productWithSizes.length > 0 &&
+                  product.productWithSizes[0].shoeSize &&
+                  product.productWithSizes[0].shoeSize.sizeNumber !== null &&
+                  product.productWithSizes[0].shoeSize.sizeNumber !== undefined &&
+                  String(product.productWithSizes[0].shoeSize.sizeNumber).toLowerCase().includes(searchTextLower)
+                ) ||
+                product.productCollection.collectionName.toLowerCase().includes(searchTextLower) ||
+                product.productCollection.brand.brandName.toLowerCase().includes(searchTextLower) ||
+                product.productCollection.brand.brandLogo.toLowerCase().includes(searchTextLower) ||
+                product.productCat.catName.toLowerCase().includes(searchTextLower)
+              );
+            });
+
             console.log(this.searchText);
           }
           else {
-            console.log(this.checkProducts);
-            this.checkProducts = [...this.originalProducts]
+            console.log(this.products);
+            this.products = [...this.originalProducts]
             const notif = this.$q.notify({
               type: 'ongoing',
               message: 'Loading...'
@@ -574,7 +489,7 @@
               timeout: 300
             })
           }, 600)
-          this.checkProducts = [...this.originalProducts]
+          this.products = [...this.originalProducts]
           this.searchText = ""
         }
 
@@ -588,10 +503,10 @@
       //created
       async created() {
         try {
-          var response = await axios.get("/api/GetCheckInItem");
+          var response = await axios.get("/api/GetProducts");
           this.originalProducts = response.data;
-          this.checkProducts = response.data;
-          console.log(this.checkProducts);
+          this.products = response.data;
+          console.log(this.products);
         }
         catch (error) {
           console.log(error);
@@ -602,7 +517,7 @@
       ,
       //mounted
       mounted() {
-        this.$refs.input1.$el.focus()
+
       }
 
     };

@@ -1,144 +1,170 @@
 <div id="app1">
-  <div class="text-h5 text-weight-bold text-white q-pa-lg"
-     style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+  <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
-            Order Item</div>
+    Order Item</div>
   <q-form class=" q-pa-lg" style="background-color: #f2f2f2;">
-    <div class="q-ma-sm">
-      <q-input ref="input1" v-model="item.barcode" label="Input Barcode" @@change="item_change">
-      </q-input>
-      <div class="q-ma-sm">
-        <q-input v-model="item.barcode2" label="Scanned Barcode"></q-input>
-
-      </div>
-    </div>
-    <q-separator vertical class="q-my-md"></q-separator>
-    <q-table class="bg-grey-2" title="Order Cart" :rows="saleItem" :columns="columns">
+    <q-table class="bg-grey-2" title="Order Cart" :rows="orderItems" :columns="columns">
       <template v-slot:body="props">
         <q-tr :props="props">
-          <q-td key="index" :props="props">{{ saleItem.indexOf(props.row) + 1 }}</q-td>
-          <q-td key="productName" :props="props">
-            {{ props.row.productName }}
+          <q-td key="actions" :props="props">
+            <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+              size="15px"></q-btn>
+            <q-dialog v-model="confirm" persistent>
+              <q-card>
+                <q-card-section class="row items-center">
+                  <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                  <span class="q-ml-sm">Are you sure you want to cencel this order?</span>
+                </q-card-section>
+
+                <q-card-actions align="center">
+                  <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
+                    v-close-popup></q-btn>
+                  <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
           </q-td>
-          <q-td key="productBarcode" :props="props">{{ props.row.productBarcode}}</q-td>
+          <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
+          <q-td key="orderDate" :props="props">
+            {{ formatDate(props.row.orderDate) }}
+            <q-icon name="event" />
+          </q-td>
+
+          <q-td key="statusDate" :props="props">
+            {{ formatDate(props.row.statusDate) }}
+            <q-icon name="event" />
+          </q-td>
+          <q-td key="statusName" :props="props">
+  <q-select filled bottom-slots v-model="props.row.orderStatus.statusName" :options="statusDrop" label="Order Status"
+    color="grey-10" style="width: 240px" option-value="statusDrop.statusName" option-label="statusName">
+    <template v-slot:after>
+      <q-btn :icon="getButtonIcon(props.row.orderStatus.statusName)" :color="getButtonColor(props.row.orderStatus.statusName)" @@click="showConfirmationDialog(props.row)" />
+
+      <!-- Confirmation Dialog -->
+      <q-dialog v-model="confirmDialog">
+        <q-card>
+          <q-card-section>
+            <p>Are you sure you want to change the status?</p>
+          </q-card-section>
+
+          <q-card-actions align="center">
+            <div style="margin-right: 8px;">
+              <q-btn label="Cancel" color="grey" @@click="confirmDialog = false" />
+            </div>
+            <div>
+              <q-btn label="Confirm" color="primary" @@click="confirmChange(props.row)" />
+            </div>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </template>
+  </q-select>
+</q-td>
+
+
+
+
+
+          <q-td key="minSpend" :props="props">
+            {{ props.row.discount.minSpend }}
+          </q-td>
+          <q-td key="start" :props="props">
+            {{ formatDate(props.row.discount.start) }}
+          </q-td>
+          <q-td key="duration" :props="props">
+            {{ props.row.discount.duration }}
+          </q-td>
+          <q-td key="amount" :props="props">
+            {{ props.row.discount.amount }}
+          </q-td>
+          <q-td key="description" :props="props">
+            {{ props.row.discount.description }}
+          </q-td>
+          <q-td key="picString" :props="props">
+            {{ props.row.deliveryReceiptPics[0].picString }}
+          </q-td>
+          <q-td key="province" :props="props">
+            {{ props.row.storeBranch.province }}
+          </q-td>
+          <q-td key="fullName" :props="props">
+            {{ props.row.customer.firstName + ' ' + props.row.customer.lastName }}
+          </q-td>
+          <q-td key="email" :props="props">
+            {{ props.row.customer.email }}
+          </q-td>
+          <q-td key="branchName" :props="props">
+            {{ props.row.deliveryBranch.branchName }}
+          </q-td>
+          <q-td key="deliveryCompanyName" :props="props">
+            {{ props.row.deliveryBranch.deliveryService.deliveryCompanyName }}
+          </q-td>
+          <q-td key="methodName" :props="props">
+            {{ props.row.shippingMethod.methodName }}
+          </q-td>
+          <q-td key="name" :props="props">
+            {{ props.row.billItems[0].product.name }}
+          </q-td>
+          <q-td key="collectionName" :props="props">
+            {{ props.row.billItems[0].product.productCollection.collectionName }}
+          </q-td>
+          <q-td key="colorway" :props="props">
+            {{ props.row.billItems[0].product.colorway }}
+          </q-td>
+          <q-td key="sizeType" :props="props">
+            {{ props.row.billItems[0].shoeSize.sizeType }}
+          </q-td>
+          <q-td key="sizeNumber" :props="props">
+            {{ props.row.billItems[0].shoeSize.sizeNumber }}
+          </q-td>
+          <q-td key="qty" :props="props">
+            {{ props.row.billItems[0].qty }}
+          </q-td>
+          <q-td key="conditionName" :props="props">
+            {{ props.row.billItems[0].productCondition.conditionName }}
+          </q-td>
+
           <q-td key="qty" :props="props">
             {{ props.row.qty }}
             <q-popup-edit v-model.number="props.row.qty" buttons v-slot="scope">
               <q-input type="number" v-model.number="scope.value" dense autofocus @@keyup.enter="scope.set" />
             </q-popup-edit>
           </q-td>
-          <q-td key="productUnit" :props="props">
-            {{ props.row.productUnit }}
-          </q-td>
-          <q-td key="productCost" :props="props">
-            {{ props.row.productCost }}
-          </q-td>
-          <q-td key="productPrice" :props="props">
-            {{ props.row.productPrice }}
-          </q-td>
-          <q-td key="productMake" :props="props">
-            {{ props.row.productMake }}
-          </q-td>
 
-          <q-td key="actions" :props="props">
-            <q-btn class="q-ma-sm" color="red-6" @@click="confirm = true"  icon="close"></q-btn>
-            <q-dialog v-model="confirm" persistent>
-              <q-card>
-                <q-card-section class="row items-center">
-                  <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-                  <span class="q-ml-sm">Delete this order?</span>
-                </q-card-section>
 
-                <q-card-actions align="center">
-                  <q-btn class="q-ma-sm" color="red-6" @@click="deleteOrder(props.row)" label="Yes"></q-btn>
-                  <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-                </q-card-actions>
-              </q-card>
-            </q-dialog>
-          </q-td>
         </q-tr>
       </template>
     </q-table>
-    <q-separator vertical class="q-my-xl"></q-separator>
-    <div class="q-mb-sm" align="right">
-      <q-select class="q-px-sm" color="grey-10" label="Customer" transition-show="flip-up"
-        transition-hide="flip-down" v-model="selectedCustomerDrop" :options="customerDrop" style="width: 250px"
-        option-value="customerDrop.firstName" option-label="firstName"></q-select>
-    </div>
-    <div align="right">
-      <q-select class="q-px-sm" color="grey-10" label="Discount" transition-show="flip-up"
-        transition-hide="flip-down" v-model="selectedDiscountDrop" :options="discountDrop" style="width: 250px"
-        option-value="discountDrop.appliesTo" option-label="appliesTo"></q-select>
-    </div>
-    <q-separator horizontal class="q-my-lg"></q-separator>
+    <div class="bg-grey-9 q-pa-sm" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></div>
     <q-card-actions align="right">
       <q-btn label="Submit" size="lg" icon="arrow_downward" color="primary" class="text-h7 q-mx-sm q-my-lg"
         @@click="confirm2 = true"></q-btn>
-      <q-dialog v-model="confirm2" persistent transition-show="scale" transition-hide="scale">
-        <q-card class="bg-teal-8 text-white" style="width: 800px; max-width: 100vw;">
-          <q-card-section>
-            <q-icon name="receipt_long" color="white" size="60px"></q-icon>
-            </q-card-section>
-            <q-card-section align="left" class="bg-teal-6">
-            <h6 class="text-bold q-ma-md">Customer name : {{this.selectedCustomerDrop.firstName}} {{this.selectedCustomerDrop.lastName}}</h6>
-            </q-card-section>
-            <q-card-section align="right" class="bg-teal-4 q-pt-none q-pa-sm">
-            <h6 v-for="item in saleItem">{{item.productName}} : {{item.qty}} x  {{item.productPrice}} THB =  {{item.qty*item.productPrice}} ฿</h6>
-            <q-separator horizontal class="q-my-sm"></q-separator>
-            <h6>Subtotal : {{sumSubTotal}} ฿</h6>
-            <h6>Discount : {{this.selectedDiscountDrop.discountPercentage*100}} %</h6>
-            <h6>Total : {{sumTotal}} ฿</h6>
-            </q-card-section>
 
-          <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn class="q-mb-lg q-mt-lg q-mr-sm" size="lg" icon="arrow_downward" color="teal" @@click="confirm3 = true" label="checkOut"
-              v-close-popup></q-btn>
-            <q-btn class="q-mb-lg q-mt-lg q-mr-md" size="lg" icon="close" label="Cancel" color="grey" v-close-popup></q-btn>
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-      <q-dialog v-model="confirm3" persistent>
-            <q-card style="width: 520px; max-width: 30vw;">
-              <q-card-section align="center" class="bg-teal-6" class="row items-center">
-                <div align="left" class="q-pa-sm">
-                <q-icon align="center" name="verified" color="white" size="60px"></q-icon>
-                </div>
-                
-                <h4 class="text-bold text-h4 text-teal-12">Proceed?</h4>
-              </q-card-section>
-
-              <q-card-actions align="center">
-                <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="teal" @@click="checkOut" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey" v-close-popup />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
     </q-card-actions>
   </q-form>
 </div>
 
-@section code{
+@section code {
   <script>
     var option = {
       //data
       data() {
         return {
+          confirmDialog: false,
           confirm: false,
           confirm2: false,
           confirm3: false,
-          selectedDiscountDrop: [],
-          discountDrop: [],
-          selectedCustomerDrop: [],
-          customerDrop: [],
-          item: {
-            barcode: '',
-            barcode2: ''
-          },
-          saleItem: []
+          statusDrop: [],
+          selectedStatusDrop: [],
+          orderItems: []
           ,
           columns: [
+            {
+              name: 'actions',
+              label: 'Actions',
+              field: 'actions',
+              align: 'center'
+            },
             {
               name: 'index',
               field: 'index',
@@ -147,61 +173,184 @@
               label: 'No'
             },
             {
-              name: 'productName',
-              label: 'Product Name',
-              field: 'productName',
+              name: 'orderDate',
+              label: 'Order Date',
+              field: 'orderDate',
               sortable: true,
               align: 'center',
 
             },
             {
-              name: 'productBarcode',
-              label: 'Barcode',
-              field: 'productBarcode',
+              name: 'statusDate',
+              label: 'Status Date',
+              field: 'statusDate',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
+            },
+            {
+              name: 'statusName',
+              label: 'Status',
+              field: 'orderStatus.statusName',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'minSpend',
+              label: 'Minimum spend',
+              field: 'discount.minSpend',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'start',
+              label: 'Start',
+              field: 'discount.start',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'duration',
+              label: 'Duration',
+              field: 'discount.duration',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'amount',
+              label: 'Amount',
+              field: 'discount.amount',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'description',
+              label: 'Description',
+              field: 'discount.description',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'picString',
+              label: 'Picture',
+              field: 'deliveryReceiptPics[0].picString',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'province',
+              label: 'Province',
+              field: 'storeBranch.province',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'fullName',
+              label: 'Customer',
+              sortable: true,
+              align: 'center',
+              formatter: (value, row) => {
+                return row.customer.firstName + ' ' + row.customer.lastName;
+              }
+            }
+            ,
+            {
+              name: 'email',
+              label: 'Email',
+              field: 'customer.email',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'branchName',
+              label: 'Branch Name',
+              field: 'deliveryBranch.branchName',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'deliveryCompanyName',
+              label: 'Delivery Company Name',
+              field: 'deliveryBranch.deliveryService.deliveryCompanyName',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'methodName',
+              label: 'Shipping Method',
+              field: 'shippingMethod.methodName',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'name',
+              label: 'Product',
+              field: 'billItems[0].product.name',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'collectionName',
+              label: 'Collection',
+              field: 'billItems[0].productCollection.collectionName',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'colorway',
+              label: 'Colorway',
+              field: 'billItems[0].product.colorway',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'sizeType',
+              label: 'Size Type',
+              field: 'billItems[0].shoeSize.sizeType',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'sizeNumber',
+              label: 'Size Number',
+              field: 'billItems[0].shoeSize.sizeNumber',
+              sortable: true,
+              align: 'center',
+
             },
             {
               name: 'qty',
-              label: 'Qty',
-              field: 'qty',
+              label: 'Quantity Ordered',
+              field: 'billItems[0].qty',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
             {
-              name: 'productUnit',
-              label: 'Product Unit',
-              field: 'productUnit',
+              name: 'conditionName',
+              label: 'Product Condition',
+              field: 'billItems[0].productCondition.conditionName',
               sortable: true,
-              align: 'center'
+              align: 'center',
+
             },
-            {
-              name: 'productCost',
-              label: 'Product Cost',
-              field: 'productCost',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'productPrice',
-              label: 'Product Price',
-              field: 'productPrice',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'productMake',
-              label: 'Product Make',
-              field: 'productMake',
-              sortable: true,
-              align: 'center'
-            },
-            {
-              name: 'actions',
-              label: 'Actions',
-              field: 'actions',
-              align: 'center'
-            }
+
           ],
           completedDialog: false
         };
@@ -209,157 +358,114 @@
       ,
       //methods
       methods: {
-        async item_change() {
-          this.item.barcode2 = this.item.barcode;
-          console.log(this.item.barcode);
-          //data is object notation
-          try {
-            var url = '/api/GetProductByBarcode?barcode=' + this.item.barcode;
-            var res = await axios.get(url);
-            this.item.barcode = '';
-            console.log(res.data);
-            console.log(typeof res.data);
-          }
-          catch (error) {
-            console.log(error);
-          }
-          if (res.data.status != -1) {
+        formatDate(dateString) {
+          // Parse the date string
+          const date = new Date(dateString);
 
-            var index = this.saleItem.findIndex(item => item.productId === res.data.result.productId);
-            console.log("index", index);
+          // Format the date as needed (e.g., "MM/DD/YYYY")
+          const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 
-            if (index !== -1) {
-              this.saleItem[index].qty += 1;
-              this.item.barcode = '';
-              this.$refs.input1.$el.focus();
-            }
-            else {
-              var store = this.saleItem.push(res.data.result);
-              var data1 = JSON.stringify(store);
-              window.localStorage.setItem('global', data1);
-              var result = window.localStorage.getItem('global');
-              var newObject = JSON.parse(result);
-              console.log("newObject", newObject);
-
-            }
-          }
-          else {
-            this.$q.notify({
-              type: 'warning',
-              message: 'Not found'
-            })
-          }
+          return formattedDate;
         },
-        async deleteOrder(item) {
-          console.log(item);
-          this.saleItem = this.saleItem.filter(x => x.productId != item.productId);
-          this.confirm = false;
-          this.$q.notify({
-            type: 'negative',
-            color: "red-8",
-            message: 'Order had been deleted'
-          })
-        }//ef
-        ,
-        async checkOut() {
-          if (this.saleItem.length === 0) {
-            this.$q.notify({
-              type: 'negative',
-              color: "yellow-8",
-              message: 'No items in the cart'
-            })
-            return;
-          }
+        getButtonIcon(statusName) {
+    // Define your logic to determine the icon based on the status name
+    // For example:
+    switch (statusName) {
+      case 'Pending':
+        return 'hourglass_empty';
+      case 'Processing':
+        return 'autorenew';
+      case 'Shipped':
+        return 'local_shipping';
+      case 'Delivered':
+        return 'check_circle';
+      case 'Returned':
+        return 'undo';
+      case 'Refunded':
+        return 'monetization_on';
+      case 'Canceled':
+        return 'cancel';
+      case 'Completed':
+        return 'done_all';
+      default:
+        return 'edit'; // Default icon if status is not recognized
+    }
+  },
+  getButtonColor(statusName) {
+    // Define your logic to determine the color based on the status name
+    // For example:
+    switch (statusName) {
+      case 'Pending':
+        return 'orange'; // Set color to orange for pending status
+      case 'Processing':
+        return 'blue'; // Set color to blue for processing status
+      case 'Shipped':
+        return 'green'; // Set color to green for shipped status
+      case 'Delivered':
+        return 'teal'; // Set color to teal for delivered status
+      case 'Returned':
+        return 'red'; // Set color to red for returned status
+      case 'Refunded':
+        return 'purple'; // Set color to purple for refunded status
+      case 'Canceled':
+        return 'grey'; // Set color to grey for canceled status
+      case 'Completed':
+        return 'green'; // Set color to green for completed status
+      default:
+        return 'primary'; // Set default color if status is not recognized
+    }
+  },
+        showConfirmationDialog(row) {
+    // Show the confirmation dialog
+    this.confirmDialog = true;
+  },
+        async confirmChange(row) {
+  try {
+    const data = {
+      billId: row.BillId,
+      orderStatusId: row.orderStatusId // Assuming `orderStatusId` represents the ID of the selected status
+    };
+    const response = await axios.post("api/ChangeOrderStatus", data);
+    // Handle response...
+  } catch (error) {
+    // Handle error...
+  }
+}
 
-          //restructure orderitem
-          var reOrderItem = this.saleItem.map(x => {
-            return {
-              productId: x.productId,
-              saleQty: x.qty,
-              discountId: this.selectedDiscountDrop.discountId
-            }
-          });
-          console.log("reOrderItem", reOrderItem);
-          //create sale structure
-          var sale = {
-            date: new Date(),
-            customerId: this.selectedCustomerDrop.customerId,
-            //take only productId, saleQty and discountId
-            saleItems: reOrderItem
-          };
-          console.log("sale", sale);
 
-          var url = "/api/AddSale";
-          try {
-            var res = await axios.post(url, sale);
-            this.saleItem = [],
-              this.$q.notify({
-                color: 'green-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Order completed'
-              })
-            console.log(res.data);
-          }
-          catch (error) {
-            console.log(error);
-          }
-        }//ef
 
       }//emethod
       ,
       //computed
       computed: {
-        sumSubTotal() {
-          let sumSubTotal = 0; // initialize sum variable to 0
 
-          for (let i = 0; i < this.saleItem.length; i++) {
-            sumSubTotal += this.saleItem[i].qty * this.saleItem[i].productPrice; // add current element to sum
-          }
-          console.log("saleItem", this.saleItem);
-          return sumSubTotal;
-        },
-        sumTotal() {
-          let sumTotal = 0; // initialize sum variable to 0
 
-          for (let i = 0; i < this.saleItem.length; i++) {
-            sumTotal += this.saleItem[i].qty * this.saleItem[i].productPrice; // add current element to sum
-          }
-          console.log("saleItem", this.saleItem);
-          if (this.selectedDiscountDrop.discountPercentage == null) {
-            return sumTotal;
-          }
-          else {
-            sumTotal -= (sumTotal * this.selectedDiscountDrop.discountPercentage);
-            return sumTotal;
-          }
-        }
       }
       ,
       //created
       async created() {
         try {
-          var res3 = await axios.get("/api/GetDiscount");
-          this.discountDrop = res3.data;
-          console.log(this.discountDrop);
+          var response = await axios.get("/api/GetOrders");
+          this.orderItems = response.data;
+          console.log(response.data);
         }
         catch (error) {
           console.log(error);
         }
         try {
-          var res4 = await axios.get("/api/GetCustomers");
-          this.customerDrop = res4.data;
-          console.log(this.customerDrop);
+          var res = await axios.get("/api/GetStatus");
+          this.statusDrop = res.data;
         }
         catch (error) {
           console.log(error);
         }
-      }
+
+
+      }//ecreated
       ,
       //mounted
       mounted() {
-        this.$refs.input1.$el.focus();
-        this.selectedDiscountDrop.discountPercentage = null;
+
       }
 
     };
