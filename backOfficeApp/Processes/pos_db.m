@@ -1,15 +1,15 @@
 {
-    "orderDate": "27/01/2001",
-    "orderStatus": {
-        "statusName": "Pending"
+    "Order_Date": "27/01/2001",
+    "Order_Status": {
+        "Status_Name": "Pending"
     },
-    "shippingMethod": {
-        "methodName": "In-store Pickup"
+    "Shipping_Method": {
+        "Method_Name": "In-store Pickup"
     },
-    "customerTransferPics": {
-        "picPath": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n"
+    "Customer_Transfer_Pics": {
+        "Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n"
     },
-    "discount": {
+    "Discount": {
         "Min_Spend": 4000,
         "Start": "2023/12/03",
         "Duration": 2,
@@ -19,78 +19,78 @@
         },
         "Description": "new year happiness"
     },
-    "deliveryBranch": {
-        "deliveryService": {
-            "deliveryCompanyName": "Anousith Express"
+    "Delivery_Branch": {
+        "Delivery_Service": {
+            "Delivery_Company_Name": "Anousith Express"
         },
-        "branchName": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
-        "branchTelNumbers": [
+        "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
+        "Branch_Tel_Numbers": [
             {
-                "telNumber": "020-95960461"
+                "Tel_Number": "020-95960461"
             }
         ],
-        "branchAvailability": "open",
-        "branchAddress": {
-            "province": "ນະຄອນຫຼວງວຽງຈັນ",
-            "city": "ຈັນທະບູລີ",
-            "village": "ໂພນຕ້ອງສະຫວາດ",
-            "addressDetail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC"
+        "Branch_Availability": "open",
+        "Branch_Address": {
+            "Province": "ນະຄອນຫຼວງວຽງຈັນ",
+            "City": "ຈັນທະບູລີ",
+            "Village": "ໂພນຕ້ອງສະຫວາດ",
+            "Address_Detail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC"
         },
-        "branchGooglemapPosition": "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+        "Branch_Googlemap_Position": "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
     },
-    "staff": {
-        "staffFirstName": "andy",
-        "staffLastName": "o",
-        "staffBirthday": "19/01/2001",
-        "email": "huangguifu21@gmail.com",
-        "staffPhoneNumber": "",
-        "permission": {
-            "permissionName": "Admin"
+    "Staff": {
+        "Staff_FirstName": "andy",
+        "Staff_LastName": "asdasdo",
+        "Staff_Birthday": "19/01/2001",
+        "Email": "huangguifu21@gmail.com",
+        "Staff_Phone_Number": "",
+        "Permission": {
+            "Permission_Name": "Admin"
         }
     },
-    "customer": {
-        "customerFirstName": "andy",
-        "customerLastName": "o",
-        "customerBirthday": "19/01/2001",
-        "customerPhoneNumber": "",
-        "customerSocialLink": "",
-        "gender": "",
-        "email": "huangguifu21@gmail.com"
+    "Customer": {
+        "Customer_FirstName": "andy",
+        "Customer_LastName": "oasd",
+        "Customer_Birthday": "19/01/2001",
+        "Customer_Phone_Number": "asdasdasdasd",
+        "Customer_Social_Link": "axdasdasdasd",
+        "Gender": "male",
+        "Email": "huangguifu21@gmail.com"
     },
-    "billItems": [
+    "Bill_Items": [
         {
-            "shoeSize": {
-                "sizeType": "EU",
-                "sizeNumber": 38.5
+            "Shoe_Size": {
+                "size_Type": "EU",
+                "size_Number": 38.5
             },
-            "productCondition": {
-                "conditionName": "Brand New"
+            "Product_Condition": {
+                "condition_Name": "Brand New"
             },
-            "product": {
-                "productName": "Jordan 4 Retro Thunder (2023)",
-                "retailPrice": 5000,
-                "sellingPrice": 5200,
+            "Product": {
+                "Product_Name": "Jordan 4 Retro Thunder (2023)",
+                "Retail_Price": 5000,
+                "Selling_Price": 5200,
                 "SKU": "DH6927-017",
-                "colorway": "BLACK/TOUR YELLOW",
-                "releaseDate": "13/05/2023",
-                "amountSold": 1494,
-                "productWithSizes": [
+                "Colorway": "BLACK/TOUR YELLOW",
+                "ReleaseDate": "13/05/2023",
+                "AmountSold": 1494,
+                "Product_With_Sizes": [
                     {
-                        "inventoryQty": 20,
-                        "shoeSize": {
-                            "sizeType": "EU",
-                            "sizeNumber": 38.5
+                        "Inventory_Qty": 20,
+                        "Shoe_Size": {
+                            "Size_Type": "EU",
+                            "Size_Number": 38.5
                         }
                     }
                 ],
-                "productCollection": {
-                    "collectionName": "Jordan 1",
-                    "brand": {
-                        "brandName": "Jordan"
+                "Product_Collection": {
+                    "Collection_Name": "Jordan 1",
+                    "Brand": {
+                        "Brand_Name": "Jordan"
                     }
                 },
-                "productImage": {
-                  "productImagePath":""
+                "Product_Image": {
+                  "Product_Image_Path":"adasdasdad"
                 }
             }
         }
