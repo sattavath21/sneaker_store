@@ -7,11 +7,15 @@
         <q-separator vertical class="q-my-md"></q-separator>
         <div class="text-h6 q-pa-lg">Product Information</div>
 
-        <q-input class="q-px-sm" filled v-model="product.name" label="Product Name" lazy-rules
+        <q-input class="q-px-sm" filled v-model="product.productName" label="Product Name" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.storePrice" label="Store Price" hint="Number only" lazy-rules
+        <q-input class="q-px-sm" filled v-model="product.retailPrice" label="Retail Price" hint="Number only" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-separator vertical class="q-my-md"></q-separator>
+
+        <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="Retail Price" hint="Number only" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
@@ -57,14 +61,7 @@
             lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.productCollection.brand.brandLogo" label="Brand Logo"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="product.productCat.catName" label="Product Cat Name" lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-
-        <q-input class="q-px-sm" filled v-model="product.productImages[0].productImageUrl" label="Product Image URLs"
+        <q-input class="q-px-sm" filled v-model="product.productImage.productImagePath" label="Product Image URLs"
             hint="Enter the URL" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
         </q-input>
 
@@ -127,9 +124,9 @@
                 return {
                     confirm: false,
                     product: {
-                        name: "Jordan 4 Retro Thunder (2023)",
-                        storePrice: 7400,
-                        lowestSellingPrice: 6500,
+                        productName: "Jordan 4 Retro Thunder (2023)",
+                        retailPrice: 7400,
+                        sellingPrice: 6500,
                         sku: "DH6927-017",
                         colorway: "BLACK/TOUR YELLOW",
                         releaseDate: "2023/05/13",
@@ -146,18 +143,13 @@
                         productCollection: {
                             collectionName: "Jordan 1",
                             brand: {
-                                brandName: "Jordan",
-                                brandLogo: "asdadasdsadasdasd"
+                                brandName: "Jordan"
                             }
                         },
-                        productCat: {
-                            catName: "Sneakers"
-                        },
-                        productImages: [
-                            {
-                                productImageUrl: "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
-                            }
-                        ]
+                        productImage:  {
+                                productImagePath: "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+                        }
+                        
                     },
                     completedDialog: false,
                 };
@@ -250,9 +242,9 @@
 
                         // Reset the form fields and data
                         this.product = {
-                            name: "",
-                            storePrice: null,
-                            lowestSellingPrice: null,
+                            productName: "",
+                            retailPrice: null,
+                            sellingPrice: null,
                             sku: "",
                             colorway: "",
                             releaseDate: "",
@@ -269,18 +261,13 @@
                             productCollection: {
                                 collectionName: "",
                                 brand: {
-                                    brandName: "",
-                                    brandLogo: ""
+                                    brandName: ""
                                 }
                             },
-                            productCat: {
-                                catName: ""
-                            },
-                            productImages: [
-                                {
-                                    productImageUrl: ""
-                                }
-                            ]
+                            productImage: {
+                                    productImagePath: ""
+                            }
+                            
                         };
 
                         // Clear the input field for image URL

@@ -18,38 +18,6 @@ namespace backOfficeApp.Migrations
                 .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Address", b =>
-                {
-                    b.Property<int>("AddressId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AddressDetail")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("City")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("PostCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Province")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SellerName")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("SellerTelNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Village")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("AddressId");
-
-                    b.ToTable("Address");
-                });
-
             modelBuilder.Entity("AppRole", b =>
                 {
                     b.Property<int>("Id")
@@ -151,20 +119,6 @@ namespace backOfficeApp.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Bank", b =>
-                {
-                    b.Property<int>("BankId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("BankName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("BankId");
-
-                    b.ToTable("Bank");
-                });
-
             modelBuilder.Entity("Bill", b =>
                 {
                     b.Property<int>("BillId")
@@ -174,14 +128,17 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("CustomerTransferPicId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DeliveryBranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("OrderDate")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
@@ -189,15 +146,14 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("ShippingMethodId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StatusDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("StoreBranchId")
+                    b.Property<int>("StaffId")
                         .HasColumnType("int");
 
                     b.HasKey("BillId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("CustomerTransferPicId");
 
                     b.HasIndex("DeliveryBranchId");
 
@@ -207,7 +163,7 @@ namespace backOfficeApp.Migrations
 
                     b.HasIndex("ShippingMethodId");
 
-                    b.HasIndex("StoreBranchId");
+                    b.HasIndex("StaffId");
 
                     b.ToTable("Bill");
                 });
@@ -225,9 +181,6 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Qty")
                         .HasColumnType("int");
 
                     b.Property<int>("ShoeSizeId")
@@ -294,9 +247,6 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("BrandLogo")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("BrandName")
                         .HasColumnType("longtext");
 
@@ -311,148 +261,44 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerBirthday")
+                        .HasColumnType("longtext");
 
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("CustomerFirstname")
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("DefaultAddress")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerLastname")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerPhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CustomerSocialLink")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("EmailSubscription")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("FirstName")
+                    b.Property<string>("Gender")
                         .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("VacationMode")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("CustomerId");
 
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("CustomerAddress", b =>
+            modelBuilder.Entity("CustomerTransferPic", b =>
                 {
-                    b.Property<int>("CustomerAddressId")
+                    b.Property<int>("CustomerTransferPicId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CustomerAddressId");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("CustomerAddress");
-                });
-
-            modelBuilder.Entity("CustomerBankAccount", b =>
-                {
-                    b.Property<int>("CustomerBankAccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AccountName")
+                    b.Property<string>("PicPath")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("AccountNumber")
-                        .HasColumnType("int");
+                    b.HasKey("CustomerTransferPicId");
 
-                    b.Property<string>("AccountQr")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("BankId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CustomerBankAccountId");
-
-                    b.HasIndex("BankId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.ToTable("CustomerBankAccount");
-                });
-
-            modelBuilder.Entity("CustomerDefectImage", b =>
-                {
-                    b.Property<int>("CustomerDefectImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("DefectImage")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("ProductSellingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CustomerDefectImageId");
-
-                    b.HasIndex("ProductSellingId");
-
-                    b.ToTable("CustomerDefectImage");
-                });
-
-            modelBuilder.Entity("CustomerProductImage", b =>
-                {
-                    b.Property<int>("CustomerProductImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductImage")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("ProductSellingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CustomerProductImageId");
-
-                    b.HasIndex("ProductSellingId");
-
-                    b.ToTable("CustomerProductImage");
-                });
-
-            modelBuilder.Entity("CustomerWishlist", b =>
-                {
-                    b.Property<int>("CustomerWishlistId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShoeSizeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CustomerWishlistId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ShoeSizeId");
-
-                    b.ToTable("CustomerWishlist");
+                    b.ToTable("CustomerTransferPic");
                 });
 
             modelBuilder.Entity("DeliveryBranch", b =>
@@ -483,25 +329,6 @@ namespace backOfficeApp.Migrations
                     b.HasIndex("DeliveryServiceId");
 
                     b.ToTable("DeliveryBranch");
-                });
-
-            modelBuilder.Entity("DeliveryReceiptPic", b =>
-                {
-                    b.Property<int>("DeliveryReceiptPicId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("BillId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PicString")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("DeliveryReceiptPicId");
-
-                    b.HasIndex("BillId");
-
-                    b.ToTable("DeliveryReceiptPic");
                 });
 
             modelBuilder.Entity("DeliveryService", b =>
@@ -662,60 +489,60 @@ namespace backOfficeApp.Migrations
                     b.ToTable("OrderStatus");
                 });
 
+            modelBuilder.Entity("Permission", b =>
+                {
+                    b.Property<int>("PermissionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("PermissionName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("PermissionId");
+
+                    b.ToTable("Permission");
+                });
+
             modelBuilder.Entity("Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("AmountSold")
+                    b.Property<int>("Amountsold")
                         .HasColumnType("int");
 
                     b.Property<string>("Colorway")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("LowestSellingPrice")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("ProductCatId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCollectionId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("ProductImageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Releasedate")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("RetailPrice")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SellingPrice")
+                        .HasColumnType("int");
 
                     b.Property<string>("Sku")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("StorePrice")
-                        .HasColumnType("int");
-
                     b.HasKey("ProductId");
-
-                    b.HasIndex("ProductCatId");
 
                     b.HasIndex("ProductCollectionId");
 
+                    b.HasIndex("ProductImageId");
+
                     b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("ProductCat", b =>
-                {
-                    b.Property<int>("ProductCatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CatName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ProductCatId");
-
-                    b.ToTable("ProductCat");
                 });
 
             modelBuilder.Entity("ProductCollection", b =>
@@ -757,68 +584,12 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductImageUrl")
+                    b.Property<string>("ProductImagePath")
                         .HasColumnType("longtext");
 
                     b.HasKey("ProductImageId");
 
-                    b.HasIndex("ProductId");
-
                     b.ToTable("ProductImage");
-                });
-
-            modelBuilder.Entity("ProductSelling", b =>
-                {
-                    b.Property<int>("ProductSellingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("BoxDefect")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerPlacedPrice")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductConditionId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ProductDefect")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ProductLiveDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Qty")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShoeSizeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductSellingId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("OrderStatusId");
-
-                    b.HasIndex("ProductConditionId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ShoeSizeId");
-
-                    b.ToTable("ProductSelling");
                 });
 
             modelBuilder.Entity("ProductWithSize", b =>
@@ -876,18 +647,35 @@ namespace backOfficeApp.Migrations
                     b.ToTable("ShoeSize");
                 });
 
-            modelBuilder.Entity("StoreBranch", b =>
+            modelBuilder.Entity("Staff", b =>
                 {
-                    b.Property<int>("StoreBranchId")
+                    b.Property<int>("StaffId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Province")
+                    b.Property<string>("Email")
                         .HasColumnType("longtext");
 
-                    b.HasKey("StoreBranchId");
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
 
-                    b.ToTable("StoreBranch");
+                    b.Property<string>("StaffBirthday")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StaffFirstname")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StaffLastname")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StaffPhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("StaffId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("Staff");
                 });
 
             modelBuilder.Entity("Bill", b =>
@@ -895,6 +683,12 @@ namespace backOfficeApp.Migrations
                     b.HasOne("Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CustomerTransferPic", "CustomerTransferPic")
+                        .WithMany()
+                        .HasForeignKey("CustomerTransferPicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -922,13 +716,15 @@ namespace backOfficeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("StoreBranch", "StoreBranch")
+                    b.HasOne("Staff", "Staff")
                         .WithMany()
-                        .HasForeignKey("StoreBranchId")
+                        .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
+
+                    b.Navigation("CustomerTransferPic");
 
                     b.Navigation("DeliveryBranch");
 
@@ -938,7 +734,7 @@ namespace backOfficeApp.Migrations
 
                     b.Navigation("ShippingMethod");
 
-                    b.Navigation("StoreBranch");
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("BillItem", b =>
@@ -987,93 +783,6 @@ namespace backOfficeApp.Migrations
                     b.Navigation("DeliveryBranch");
                 });
 
-            modelBuilder.Entity("CustomerAddress", b =>
-                {
-                    b.HasOne("Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Customer", "Customer")
-                        .WithMany("CustomerAddresses")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("CustomerBankAccount", b =>
-                {
-                    b.HasOne("Bank", "Bank")
-                        .WithMany()
-                        .HasForeignKey("BankId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Customer", "Customer")
-                        .WithMany("CustomerBankAccounts")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bank");
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("CustomerDefectImage", b =>
-                {
-                    b.HasOne("ProductSelling", "ProductSelling")
-                        .WithMany("CustomerDefectImages")
-                        .HasForeignKey("ProductSellingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductSelling");
-                });
-
-            modelBuilder.Entity("CustomerProductImage", b =>
-                {
-                    b.HasOne("ProductSelling", "ProductSelling")
-                        .WithMany("CustomerProductImages")
-                        .HasForeignKey("ProductSellingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductSelling");
-                });
-
-            modelBuilder.Entity("CustomerWishlist", b =>
-                {
-                    b.HasOne("Customer", "Customer")
-                        .WithMany("CustomerWishlists")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShoeSize", "ShoeSize")
-                        .WithMany()
-                        .HasForeignKey("ShoeSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ShoeSize");
-                });
-
             modelBuilder.Entity("DeliveryBranch", b =>
                 {
                     b.HasOne("BranchAddress", "BranchAddress")
@@ -1091,17 +800,6 @@ namespace backOfficeApp.Migrations
                     b.Navigation("BranchAddress");
 
                     b.Navigation("DeliveryService");
-                });
-
-            modelBuilder.Entity("DeliveryReceiptPic", b =>
-                {
-                    b.HasOne("Bill", "Bill")
-                        .WithMany("DeliveryReceiptPics")
-                        .HasForeignKey("BillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Bill");
                 });
 
             modelBuilder.Entity("Discount", b =>
@@ -1168,21 +866,21 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
-                    b.HasOne("ProductCat", "ProductCat")
-                        .WithMany()
-                        .HasForeignKey("ProductCatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ProductCollection", "ProductCollection")
                         .WithMany()
                         .HasForeignKey("ProductCollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductCat");
+                    b.HasOne("ProductImage", "ProductImage")
+                        .WithMany()
+                        .HasForeignKey("ProductImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ProductCollection");
+
+                    b.Navigation("ProductImage");
                 });
 
             modelBuilder.Entity("ProductCollection", b =>
@@ -1194,60 +892,6 @@ namespace backOfficeApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
-                });
-
-            modelBuilder.Entity("ProductImage", b =>
-                {
-                    b.HasOne("Product", "Product")
-                        .WithMany("ProductImages")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ProductSelling", b =>
-                {
-                    b.HasOne("Customer", "Customer")
-                        .WithMany("ProductSellings")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OrderStatus", "OrderStatus")
-                        .WithMany()
-                        .HasForeignKey("OrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProductCondition", "ProductCondition")
-                        .WithMany()
-                        .HasForeignKey("ProductConditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShoeSize", "ShoeSize")
-                        .WithMany()
-                        .HasForeignKey("ShoeSizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("OrderStatus");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("ProductCondition");
-
-                    b.Navigation("ShoeSize");
                 });
 
             modelBuilder.Entity("ProductWithSize", b =>
@@ -1269,22 +913,20 @@ namespace backOfficeApp.Migrations
                     b.Navigation("ShoeSize");
                 });
 
+            modelBuilder.Entity("Staff", b =>
+                {
+                    b.HasOne("Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+                });
+
             modelBuilder.Entity("Bill", b =>
                 {
                     b.Navigation("BillItems");
-
-                    b.Navigation("DeliveryReceiptPics");
-                });
-
-            modelBuilder.Entity("Customer", b =>
-                {
-                    b.Navigation("CustomerAddresses");
-
-                    b.Navigation("CustomerBankAccounts");
-
-                    b.Navigation("CustomerWishlists");
-
-                    b.Navigation("ProductSellings");
                 });
 
             modelBuilder.Entity("DeliveryBranch", b =>
@@ -1294,16 +936,7 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
-                    b.Navigation("ProductImages");
-
                     b.Navigation("ProductWithSizes");
-                });
-
-            modelBuilder.Entity("ProductSelling", b =>
-                {
-                    b.Navigation("CustomerDefectImages");
-
-                    b.Navigation("CustomerProductImages");
                 });
 #pragma warning restore 612, 618
         }
