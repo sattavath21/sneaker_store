@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    [Migration("20240217081659_2")]
-    partial class _2
+    [Migration("20240217090125_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -139,8 +139,8 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
-                    b.Property<string>("OrderDate")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
@@ -343,7 +343,13 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("DiscountPercentage")
+                        .HasColumnType("int");
+
                     b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxDiscountAmount")
                         .HasColumnType("int");
 
                     b.Property<int>("MinSpend")
@@ -497,6 +503,9 @@ namespace backOfficeApp.Migrations
 
                     b.Property<int>("Amountsold")
                         .HasColumnType("int");
+
+                    b.Property<string>("Barcode")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Colorway")
                         .HasColumnType("longtext");

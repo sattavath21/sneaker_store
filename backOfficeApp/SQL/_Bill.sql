@@ -22,6 +22,8 @@ create table `ShippingMethod` (
 
 create table `Discount` (
  DiscountId int(11) not null,
+ DiscountPercentage int(11) not null,
+ MaxDiscountAmount int(11) not null,
  MinSpend int(11) not null,
  Start datetime not null,
  Duration int(11) not null,
@@ -34,45 +36,56 @@ create table `Discount` (
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `DeliveryService` (
- DeliveryServiceId int(11) not null,
- DeliveryCompanyName varchar(255)  default null,
- primary key (DeliveryServiceId)    
+create table `BranchTelNumber` (
+ BranchTelNumberId int(11) not null,
+ TelNumber varchar(255)  default null,
+ BranchId int(11) not null,
+ primary key (BranchTelNumberId),
+ KEY IX_BranchTelNumber_BranchId (BranchId),
+ CONSTRAINT FK_BranchTelNumber_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Branch` (
+ BranchId int(11) not null,
+ BranchName varchar(255)  default null,
+ primary key (BranchId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
 create table `BranchTelNumber` (
  BranchTelNumberId int(11) not null,
  TelNumber varchar(255)  default null,
- DeliveryBranchId int(11) not null,
+ BranchId int(11) not null,
  primary key (BranchTelNumberId),
- KEY IX_BranchTelNumber_DeliveryBranchId (DeliveryBranchId),
- CONSTRAINT FK_BranchTelNumber_DeliveryBranch_DeliveryBranchId FOREIGN KEY (DeliveryBranchId) REFERENCES `DeliveryBranch` (DeliveryBranchId) ON DELETE CASCADE    
+ KEY IX_BranchTelNumber_BranchId (BranchId),
+ CONSTRAINT FK_BranchTelNumber_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `BranchAddress` (
- BranchAddressId int(11) not null,
- Province varchar(255)  default null,
- City varchar(255)  default null,
- Village varchar(255)  default null,
- AddressDetail varchar(255)  default null,
- primary key (BranchAddressId)    
+create table `Branch` (
+ BranchId int(11) not null,
+ BranchName varchar(255)  default null,
+ primary key (BranchId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
 create table `DeliveryBranch` (
  DeliveryBranchId int(11) not null,
+ BranchId int(11) not null,
  DeliveryServiceId int(11) not null,
- BranchName varchar(255)  default null,
- BranchAvailability varchar(255)  default null,
- BranchAddressId int(11) not null,
- BranchGooglemapPosition varchar(255)  default null,
  primary key (DeliveryBranchId),
+ KEY IX_DeliveryBranch_BranchId (BranchId),
  KEY IX_DeliveryBranch_DeliveryServiceId (DeliveryServiceId),
- KEY IX_DeliveryBranch_BranchAddressId (BranchAddressId),
- CONSTRAINT FK_DeliveryBranch_DeliveryService_DeliveryServiceId FOREIGN KEY (DeliveryServiceId) REFERENCES `DeliveryService` (DeliveryServiceId) ON DELETE CASCADE,
- CONSTRAINT FK_DeliveryBranch_BranchAddress_BranchAddressId FOREIGN KEY (BranchAddressId) REFERENCES `BranchAddress` (BranchAddressId) ON DELETE CASCADE    
+ CONSTRAINT FK_DeliveryBranch_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE,
+ CONSTRAINT FK_DeliveryBranch_DeliveryService_DeliveryServiceId FOREIGN KEY (DeliveryServiceId) REFERENCES `DeliveryService` (DeliveryServiceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `DeliveryService` (
+ DeliveryServiceId int(11) not null,
+ DeliveryCompanyName varchar(255)  default null,
+ primary key (DeliveryServiceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
@@ -87,7 +100,7 @@ create table `Staff` (
  StaffId int(11) not null,
  StaffFirstname varchar(255)  default null,
  StaffLastname varchar(255)  default null,
- StaffBirthday varchar(255)  default null,
+ StaffBirthday datetime not null,
  Email varchar(255)  default null,
  StaffPhoneNumber varchar(255)  default null,
  PermissionId int(11) not null,
@@ -101,7 +114,7 @@ create table `Customer` (
  CustomerId int(11) not null,
  CustomerFirstname varchar(255)  default null,
  CustomerLastname varchar(255)  default null,
- CustomerBirthday varchar(255)  default null,
+ CustomerBirthday datetime not null,
  CustomerPhoneNumber varchar(255)  default null,
  CustomerSocialLink varchar(255)  default null,
  Gender varchar(255)  default null,
@@ -172,12 +185,13 @@ create table `ProductImage` (
 
 create table `Product` (
  ProductId int(11) not null,
+ Barcode varchar(255)  default null,
  ProductName varchar(255)  default null,
- RetailPrice int(11) not null,
+ CostPrice int(11) not null,
  SellingPrice int(11) not null,
  Sku varchar(255)  default null,
  Colorway varchar(255)  default null,
- Releasedate varchar(255)  default null,
+ Releasedate datetime not null,
  Amountsold int(11) not null,
  ProductCollectionId int(11) not null,
  ProductImageId int(11) not null,
@@ -214,20 +228,23 @@ create table `Bill` (
  ShippingMethodId int(11) not null,
  CustomerTransferPicPath varchar(255)  default null,
  DiscountId int(11) not null,
- DeliveryBranchId int(11) not null,
+ BranchId int(11) not null,
+ DeliveryServiceId int(11) not null,
  StaffId int(11) not null,
  CustomerId int(11) not null,
  primary key (BillId),
  KEY IX_Bill_OrderStatusId (OrderStatusId),
  KEY IX_Bill_ShippingMethodId (ShippingMethodId),
  KEY IX_Bill_DiscountId (DiscountId),
- KEY IX_Bill_DeliveryBranchId (DeliveryBranchId),
+ KEY IX_Bill_BranchId (BranchId),
+ KEY IX_Bill_DeliveryServiceId (DeliveryServiceId),
  KEY IX_Bill_StaffId (StaffId),
  KEY IX_Bill_CustomerId (CustomerId),
  CONSTRAINT FK_Bill_OrderStatus_OrderStatusId FOREIGN KEY (OrderStatusId) REFERENCES `OrderStatus` (OrderStatusId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_ShippingMethod_ShippingMethodId FOREIGN KEY (ShippingMethodId) REFERENCES `ShippingMethod` (ShippingMethodId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Discount_DiscountId FOREIGN KEY (DiscountId) REFERENCES `Discount` (DiscountId) ON DELETE CASCADE,
- CONSTRAINT FK_Bill_DeliveryBranch_DeliveryBranchId FOREIGN KEY (DeliveryBranchId) REFERENCES `DeliveryBranch` (DeliveryBranchId) ON DELETE CASCADE,
+ CONSTRAINT FK_Bill_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE,
+ CONSTRAINT FK_Bill_DeliveryService_DeliveryServiceId FOREIGN KEY (DeliveryServiceId) REFERENCES `DeliveryService` (DeliveryServiceId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Staff_StaffId FOREIGN KEY (StaffId) REFERENCES `Staff` (StaffId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Customer_CustomerId FOREIGN KEY (CustomerId) REFERENCES `Customer` (CustomerId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;

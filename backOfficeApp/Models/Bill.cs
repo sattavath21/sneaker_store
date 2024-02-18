@@ -11,8 +11,10 @@ public class Bill {
   public String CustomerTransferPicPath {get;set;}//label="Customer_ Transfer_ Pic_ Path"
   public int DiscountId {get;set;}//fk="Discount"
   public Discount Discount {get;set;} //np
-  public int DeliveryBranchId {get;set;}//fk="DeliveryBranch"
-  public DeliveryBranch DeliveryBranch {get;set;} //np
+  public int BranchId {get;set;}//fk="Branch"
+  public Branch Branch {get;set;} //np
+  public int DeliveryServiceId {get;set;}//fk="DeliveryService"
+  public DeliveryService DeliveryService {get;set;} //np
   public int StaffId {get;set;}//fk="Staff"
   public Staff Staff {get;set;} //np
   public int CustomerId {get;set;}//fk="Customer"
