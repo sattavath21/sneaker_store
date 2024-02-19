@@ -8,6 +8,8 @@
     },
     "Customer_Transfer_Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
     "Discount": {
+        "Discount_Percentage": 10,
+        "Max_Discount_Amount": 800,
         "Min_Spend": 4000,
         "Start": "2023/12/03",
         "Duration": 2,
@@ -17,29 +19,36 @@
         },
         "Description": "new year happiness"
     },
-    "Delivery_Branch": {
-        "Delivery_Service": {
-            "Delivery_Company_Name": "Anousith Express"
-        },
+    
+    "Delivery_Service": {
+        "Delivery_Company_Name": "Anousith Express",
+        "Delivery_Branches": [
+            {
+                "Branch": {
+                    "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
+                    "Branch_Tel_Numbers": [
+                        {
+                            "Tel_Number": "020-95960461"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+
+        "Branch": {
         "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
         "Branch_Tel_Numbers": [
             {
                 "Tel_Number": "020-95960461"
             }
-        ],
-        "Branch_Availability": "open",
-        "Branch_Address": {
-            "Province": "ນະຄອນຫຼວງວຽງຈັນ",
-            "City": "ຈັນທະບູລີ",
-            "Village": "ໂພນຕ້ອງສະຫວາດ",
-            "Address_Detail": "ຂ້າງວົງວຽນ ຕິດກັບບໍລິສັດ SKC"
-        },
-        "Branch_Googlemap_Position": "?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
+        ]
     },
+
     "Staff": {
-        "Staff_FirstName": "andy",
-        "Staff_LastName": "asdasdo",
-        "Staff_Birthday": "19/01/2001",
+        "Staff_Firstname": "andy",
+        "Staff_Lastname": "asdasdo",
+        "Staff_Birthday": "2023/12/03",
         "Email": "huangguifu21@gmail.com",
         "Staff_Phone_Number": "",
         "Permission": {
@@ -47,9 +56,9 @@
         }
     },
     "Customer": {
-        "Customer_FirstName": "andy",
-        "Customer_LastName": "oasd",
-        "Customer_Birthday": "19/01/2001",
+        "Customer_Firstname": "andy",
+        "Customer_Lastname": "oasd",
+        "Customer_Birthday": "2023/12/03",
         "Customer_Phone_Number": "asdasdasdasd",
         "Customer_Social_Link": "axdasdasdasd",
         "Gender": "male",
@@ -65,13 +74,13 @@
                 "condition_Name": "Brand New"
             },
             "Product": {
-                "Barcode":"asdasdasdasd",
+                "Barcode": "asdasdasdasd",
                 "Product_Name": "Jordan 4 Retro Thunder (2023)",
-                "Retail_Price": 5000,
+                "Cost_Price": 5000,
                 "Selling_Price": 5200,
                 "SKU": "DH6927-017",
                 "Colorway": "BLACK/TOUR YELLOW",
-                "ReleaseDate": "13/05/2023",
+                "ReleaseDate": "2023/12/03",
                 "AmountSold": 1494,
                 "Product_With_Sizes": [
                     {
@@ -88,9 +97,8 @@
                         "Brand_Name": "Jordan"
                     }
                 },
-                "Product_Image": {
-                  "Product_Image_Path":"adasdasdad"
-                }
+                "Product_Image_Url": "adasdasdad"
+                
             }
         }
     ]

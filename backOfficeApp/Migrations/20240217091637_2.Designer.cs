@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    [Migration("20240217081659_2")]
+    [Migration("20240217091637_2")]
     partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -139,8 +139,8 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
-                    b.Property<string>("OrderDate")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("OrderStatusId")
                         .HasColumnType("int");
@@ -197,29 +197,6 @@ namespace backOfficeApp.Migrations
                     b.HasIndex("ShoeSizeId");
 
                     b.ToTable("BillItem");
-                });
-
-            modelBuilder.Entity("BranchAddress", b =>
-                {
-                    b.Property<int>("BranchAddressId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AddressDetail")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("City")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Province")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Village")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("BranchAddressId");
-
-                    b.ToTable("BranchAddress");
                 });
 
             modelBuilder.Entity("BranchTelNumber", b =>
@@ -293,15 +270,6 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchAddressId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BranchAvailability")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("BranchGooglemapPosition")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("BranchName")
                         .HasColumnType("longtext");
 
@@ -309,8 +277,6 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("DeliveryBranchId");
-
-                    b.HasIndex("BranchAddressId");
 
                     b.HasIndex("DeliveryServiceId");
 
@@ -343,7 +309,13 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("DiscountPercentage")
+                        .HasColumnType("int");
+
                     b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxDiscountAmount")
                         .HasColumnType("int");
 
                     b.Property<int>("MinSpend")
@@ -497,6 +469,9 @@ namespace backOfficeApp.Migrations
 
                     b.Property<int>("Amountsold")
                         .HasColumnType("int");
+
+                    b.Property<string>("Barcode")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Colorway")
                         .HasColumnType("longtext");
@@ -763,19 +738,11 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("DeliveryBranch", b =>
                 {
-                    b.HasOne("BranchAddress", "BranchAddress")
-                        .WithMany()
-                        .HasForeignKey("BranchAddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DeliveryService", "DeliveryService")
                         .WithMany()
                         .HasForeignKey("DeliveryServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BranchAddress");
 
                     b.Navigation("DeliveryService");
                 });

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    partial class BackofficeappDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240217090125_1")]
+    partial class _1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,16 +127,13 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("CustomerTransferPicPath")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("DeliveryServiceId")
+                    b.Property<int>("DeliveryBranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("DiscountId")
@@ -154,11 +153,9 @@ namespace backOfficeApp.Migrations
 
                     b.HasKey("BillId");
 
-                    b.HasIndex("BranchId");
-
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("DeliveryServiceId");
+                    b.HasIndex("DeliveryBranchId");
 
                     b.HasIndex("DiscountId");
 
@@ -202,18 +199,27 @@ namespace backOfficeApp.Migrations
                     b.ToTable("BillItem");
                 });
 
-            modelBuilder.Entity("Branch", b =>
+            modelBuilder.Entity("BranchAddress", b =>
                 {
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchAddressId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("BranchName")
+                    b.Property<string>("AddressDetail")
                         .HasColumnType("longtext");
 
-                    b.HasKey("BranchId");
+                    b.Property<string>("City")
+                        .HasColumnType("longtext");
 
-                    b.ToTable("Branch");
+                    b.Property<string>("Province")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Village")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("BranchAddressId");
+
+                    b.ToTable("BranchAddress");
                 });
 
             modelBuilder.Entity("BranchTelNumber", b =>
@@ -222,7 +228,7 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("DeliveryBranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("TelNumber")
@@ -230,7 +236,7 @@ namespace backOfficeApp.Migrations
 
                     b.HasKey("BranchTelNumberId");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("DeliveryBranchId");
 
                     b.ToTable("BranchTelNumber");
                 });
@@ -255,8 +261,8 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CustomerBirthday")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("CustomerBirthday")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("CustomerFirstname")
                         .HasColumnType("longtext");
@@ -287,15 +293,24 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("BranchAddressId")
                         .HasColumnType("int");
+
+                    b.Property<string>("BranchAvailability")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BranchGooglemapPosition")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BranchName")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("DeliveryServiceId")
                         .HasColumnType("int");
 
                     b.HasKey("DeliveryBranchId");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchAddressId");
 
                     b.HasIndex("DeliveryServiceId");
 
@@ -495,20 +510,20 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("Colorway")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("CostPrice")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCollectionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductImageUrl")
-                        .HasColumnType("longtext");
+                    b.Property<int>("ProductImageId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("Releasedate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("Releasedate")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("RetailPrice")
+                        .HasColumnType("int");
 
                     b.Property<int>("SellingPrice")
                         .HasColumnType("int");
@@ -519,6 +534,8 @@ namespace backOfficeApp.Migrations
                     b.HasKey("ProductId");
 
                     b.HasIndex("ProductCollectionId");
+
+                    b.HasIndex("ProductImageId");
 
                     b.ToTable("Product");
                 });
@@ -554,6 +571,20 @@ namespace backOfficeApp.Migrations
                     b.HasKey("ProductConditionId");
 
                     b.ToTable("ProductCondition");
+                });
+
+            modelBuilder.Entity("ProductImage", b =>
+                {
+                    b.Property<int>("ProductImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductImagePath")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ProductImageId");
+
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("ProductWithSize", b =>
@@ -623,8 +654,8 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StaffBirthday")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("StaffBirthday")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("StaffFirstname")
                         .HasColumnType("longtext");
@@ -644,21 +675,15 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("Bill", b =>
                 {
-                    b.HasOne("Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DeliveryService", "DeliveryService")
+                    b.HasOne("DeliveryBranch", "DeliveryBranch")
                         .WithMany()
-                        .HasForeignKey("DeliveryServiceId")
+                        .HasForeignKey("DeliveryBranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -686,11 +711,9 @@ namespace backOfficeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Branch");
-
                     b.Navigation("Customer");
 
-                    b.Navigation("DeliveryService");
+                    b.Navigation("DeliveryBranch");
 
                     b.Navigation("Discount");
 
@@ -738,30 +761,30 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("BranchTelNumber", b =>
                 {
-                    b.HasOne("Branch", "Branch")
+                    b.HasOne("DeliveryBranch", "DeliveryBranch")
                         .WithMany("BranchTelNumbers")
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("DeliveryBranchId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Branch");
+                    b.Navigation("DeliveryBranch");
                 });
 
             modelBuilder.Entity("DeliveryBranch", b =>
                 {
-                    b.HasOne("Branch", "Branch")
+                    b.HasOne("BranchAddress", "BranchAddress")
                         .WithMany()
-                        .HasForeignKey("BranchId")
+                        .HasForeignKey("BranchAddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DeliveryService", "DeliveryService")
-                        .WithMany("DeliveryBranches")
+                        .WithMany()
                         .HasForeignKey("DeliveryServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Branch");
+                    b.Navigation("BranchAddress");
 
                     b.Navigation("DeliveryService");
                 });
@@ -836,7 +859,15 @@ namespace backOfficeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProductImage", "ProductImage")
+                        .WithMany()
+                        .HasForeignKey("ProductImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ProductCollection");
+
+                    b.Navigation("ProductImage");
                 });
 
             modelBuilder.Entity("ProductCollection", b =>
@@ -885,14 +916,9 @@ namespace backOfficeApp.Migrations
                     b.Navigation("BillItems");
                 });
 
-            modelBuilder.Entity("Branch", b =>
+            modelBuilder.Entity("DeliveryBranch", b =>
                 {
                     b.Navigation("BranchTelNumbers");
-                });
-
-            modelBuilder.Entity("DeliveryService", b =>
-                {
-                    b.Navigation("DeliveryBranches");
                 });
 
             modelBuilder.Entity("Product", b =>

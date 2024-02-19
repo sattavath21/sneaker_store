@@ -137,21 +137,6 @@ namespace backOfficeApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CustomerTransferPic",
-                columns: table => new
-                {
-                    CustomerTransferPicId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PicPath = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CustomerTransferPic", x => x.CustomerTransferPicId);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "DeliveryService",
                 columns: table => new
                 {
@@ -469,6 +454,8 @@ namespace backOfficeApp.Migrations
                 {
                     DiscountId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DiscountPercentage = table.Column<int>(type: "int", nullable: false),
+                    MaxDiscountAmount = table.Column<int>(type: "int", nullable: false),
                     MinSpend = table.Column<int>(type: "int", nullable: false),
                     Start = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
@@ -495,6 +482,8 @@ namespace backOfficeApp.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Barcode = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     ProductName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     RetailPrice = table.Column<int>(type: "int", nullable: false),
@@ -555,11 +544,11 @@ namespace backOfficeApp.Migrations
                 {
                     BillId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    OrderDate = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    OrderDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     OrderStatusId = table.Column<int>(type: "int", nullable: false),
                     ShippingMethodId = table.Column<int>(type: "int", nullable: false),
-                    CustomerTransferPicId = table.Column<int>(type: "int", nullable: false),
+                    CustomerTransferPicPath = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     DiscountId = table.Column<int>(type: "int", nullable: false),
                     DeliveryBranchId = table.Column<int>(type: "int", nullable: false),
                     StaffId = table.Column<int>(type: "int", nullable: false),
@@ -573,12 +562,6 @@ namespace backOfficeApp.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customer",
                         principalColumn: "CustomerId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bill_CustomerTransferPic_CustomerTransferPicId",
-                        column: x => x.CustomerTransferPicId,
-                        principalTable: "CustomerTransferPic",
-                        principalColumn: "CustomerTransferPicId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Bill_DeliveryBranch_DeliveryBranchId",
@@ -662,16 +645,16 @@ namespace backOfficeApp.Migrations
                         principalColumn: "BillId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BillItem_ProductCondition_ProductConditionId",
-                        column: x => x.ProductConditionId,
-                        principalTable: "ProductCondition",
-                        principalColumn: "ProductConditionId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_BillItem_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BillItem_ProductCondition_ProductConditionId",
+                        column: x => x.ProductConditionId,
+                        principalTable: "ProductCondition",
+                        principalColumn: "ProductConditionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BillItem_ShoeSize_ShoeSizeId",
@@ -723,11 +706,6 @@ namespace backOfficeApp.Migrations
                 name: "IX_Bill_CustomerId",
                 table: "Bill",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bill_CustomerTransferPicId",
-                table: "Bill",
-                column: "CustomerTransferPicId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bill_DeliveryBranchId",
@@ -871,9 +849,6 @@ namespace backOfficeApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customer");
-
-            migrationBuilder.DropTable(
-                name: "CustomerTransferPic");
 
             migrationBuilder.DropTable(
                 name: "DeliveryBranch");

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    partial class BackofficeappDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240218023922_4")]
+    partial class _4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -501,8 +503,8 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("ProductCollectionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductImageUrl")
-                        .HasColumnType("longtext");
+                    b.Property<int>("ProductImageId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("longtext");
@@ -519,6 +521,8 @@ namespace backOfficeApp.Migrations
                     b.HasKey("ProductId");
 
                     b.HasIndex("ProductCollectionId");
+
+                    b.HasIndex("ProductImageId");
 
                     b.ToTable("Product");
                 });
@@ -554,6 +558,20 @@ namespace backOfficeApp.Migrations
                     b.HasKey("ProductConditionId");
 
                     b.ToTable("ProductCondition");
+                });
+
+            modelBuilder.Entity("ProductImage", b =>
+                {
+                    b.Property<int>("ProductImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductImagePath")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("ProductImageId");
+
+                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("ProductWithSize", b =>
@@ -836,7 +854,15 @@ namespace backOfficeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProductImage", "ProductImage")
+                        .WithMany()
+                        .HasForeignKey("ProductImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ProductCollection");
+
+                    b.Navigation("ProductImage");
                 });
 
             modelBuilder.Entity("ProductCollection", b =>

@@ -5,28 +5,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace backOfficeApp.Migrations
 {
-    public partial class _2 : Migration
+    public partial class _5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Bill_CustomerTransferPic_CustomerTransferPicId",
-                table: "Bill");
+                name: "FK_Product_ProductImage_ProductImageId",
+                table: "Product");
 
             migrationBuilder.DropTable(
-                name: "CustomerTransferPic");
+                name: "ProductImage");
 
             migrationBuilder.DropIndex(
-                name: "IX_Bill_CustomerTransferPicId",
-                table: "Bill");
+                name: "IX_Product_ProductImageId",
+                table: "Product");
 
             migrationBuilder.DropColumn(
-                name: "CustomerTransferPicId",
-                table: "Bill");
+                name: "ProductImageId",
+                table: "Product");
 
             migrationBuilder.AddColumn<string>(
-                name: "CustomerTransferPicPath",
-                table: "Bill",
+                name: "ProductImageUrl",
+                table: "Product",
                 type: "longtext",
                 nullable: true)
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -35,42 +35,42 @@ namespace backOfficeApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "CustomerTransferPicPath",
-                table: "Bill");
+                name: "ProductImageUrl",
+                table: "Product");
 
             migrationBuilder.AddColumn<int>(
-                name: "CustomerTransferPicId",
-                table: "Bill",
+                name: "ProductImageId",
+                table: "Product",
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "CustomerTransferPic",
+                name: "ProductImage",
                 columns: table => new
                 {
-                    CustomerTransferPicId = table.Column<int>(type: "int", nullable: false)
+                    ProductImageId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PicPath = table.Column<string>(type: "longtext", nullable: true)
+                    ProductImagePath = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CustomerTransferPic", x => x.CustomerTransferPicId);
+                    table.PrimaryKey("PK_ProductImage", x => x.ProductImageId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bill_CustomerTransferPicId",
-                table: "Bill",
-                column: "CustomerTransferPicId");
+                name: "IX_Product_ProductImageId",
+                table: "Product",
+                column: "ProductImageId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Bill_CustomerTransferPic_CustomerTransferPicId",
-                table: "Bill",
-                column: "CustomerTransferPicId",
-                principalTable: "CustomerTransferPic",
-                principalColumn: "CustomerTransferPicId",
+                name: "FK_Product_ProductImage_ProductImageId",
+                table: "Product",
+                column: "ProductImageId",
+                principalTable: "ProductImage",
+                principalColumn: "ProductImageId",
                 onDelete: ReferentialAction.Cascade);
         }
     }
