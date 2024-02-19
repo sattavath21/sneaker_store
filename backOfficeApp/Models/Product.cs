@@ -15,8 +15,7 @@ public class Product {
 //label="Product_ With_ Sizes"
   public int ProductCollectionId {get;set;}//fk="ProductCollection"
   public ProductCollection ProductCollection {get;set;} //np
-  public int ProductImageId {get;set;}//fk="ProductImage"
-  public ProductImage ProductImage {get;set;} //np
+  public String ProductImageUrl {get;set;}//label="Product_ Image_ Url"
 
 }//ec
 

@@ -114,7 +114,6 @@ public IActionResult GetProducts()
     .Include(db => db.ProductWithSizes)
         .ThenInclude(pws => pws.ShoeSize)
     .Include(db => db.ProductCollection.Brand)  // Include Brand explicitly
-    .Include(db => db.ProductImage)
     .ToList();
 
 
@@ -136,7 +135,6 @@ public IActionResult DeleteProduct(Product p)
                 .ThenInclude(pws => pws.ShoeSize) // Include ShoeSize for cascading delete
             .Include(db => db.ProductCollection)
                 .ThenInclude(pws => pws.Brand) // Include ShoeSize for cascading delete
-            .Include(db => db.ProductImage)
             .FirstOrDefault(x => x.ProductId == p.ProductId);
 
         if (productToDelete == null)

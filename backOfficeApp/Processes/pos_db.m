@@ -19,7 +19,7 @@
         },
         "Description": "new year happiness"
     },
-
+    
     "Delivery_Service": {
         "Delivery_Company_Name": "Anousith Express",
         "Delivery_Branches": [
@@ -44,7 +44,7 @@
             }
         ]
     },
-    
+
     "Staff": {
         "Staff_Firstname": "andy",
         "Staff_Lastname": "asdasdo",
@@ -97,9 +97,8 @@
                         "Brand_Name": "Jordan"
                     }
                 },
-                "Product_Image": {
-                    "Product_Image_Path": "adasdasdad"
-                }
+                "Product_Image_Url": "adasdasdad"
+                
             }
         }
     ]
