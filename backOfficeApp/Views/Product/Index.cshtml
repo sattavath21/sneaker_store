@@ -41,11 +41,11 @@
           </q-dialog>
         </q-td>
         <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
-        <q-td key="productImage" :props="props">
-          <q-img :src="props.row.productImage.productImagePath" style="cursor: pointer;" @@click="toggleImageDialog" />
+        <q-td key="productImageUrl" :props="props">
+          <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog" />
           <q-dialog v-model="showImageDialog" persistent auto-close>
             <div style="text-align: center;">
-              <img :src="props.row.productImage.productImagePath" style="max-width: 100%; max-height: 100%;" />
+              <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
             </div>
           </q-dialog>
         </q-td>
@@ -60,9 +60,9 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="retailPrice" :props="props">{{ props.row.retailPrice}}
-          <q-popup-edit v-model="props.row.retailPrice">
-            <q-input v-model="props.row.retailPrice" dense autofocus counter></q-input>
+        <q-td key="costPrice" :props="props">{{ props.row.costPrice}}
+          <q-popup-edit v-model="props.row.costPrice">
+            <q-input v-model="props.row.costPrice" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -217,10 +217,10 @@
           </q-input>
         </q-td>
 
-        <q-td key="productImagePath" :props="props">
-          {{ props.row.productImage.productImagePath }}
-          <q-popup-edit v-model="props.row.productImage.productImagePath">
-            <q-input v-model="props.row.productImage.productImagePath" dense autofocus counter></q-input>
+        <q-td key="productImageUrl" :props="props">
+          {{ props.row.productImageUrl }}
+          <q-popup-edit v-model="props.row.productImageUrl">
+            <q-input v-model="props.row.productImageUrl" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -273,9 +273,9 @@
               label: 'No'
             },
             {
-              name: 'productImage',
+              name: 'productImageUrl',
               label: 'Product Image',
-              field: 'productImage.productImagePath',
+              field: 'productImageUrl',
               sortable: true,
               align: 'center',
 
@@ -289,9 +289,9 @@
 
             },
             {
-              name: 'retailPrice',
-              label: 'Retail Price',
-              field: 'retailPrice',
+              name: 'costPrice',
+              label: 'Cost Price',
+              field: 'costPrice',
               sortable: true,
               align: 'center',
 
@@ -382,9 +382,9 @@
 
             },
             {
-              name: 'productImagePath',
+              name: 'productImageUrl',
               label: 'Product URL',
-              field: 'productImage.productImagePath',
+              field: 'productImageUrl',
               sortable: true,
               align: 'center',
 

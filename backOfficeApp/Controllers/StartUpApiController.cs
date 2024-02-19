@@ -780,13 +780,6 @@ _db.Bill.AddRange(bills);
 
 // //         // Add all bills to the database
         _db.Bill.AddRange(bills);
-<<<<<<< HEAD
-       
-       
-       
-=======
->>>>>>> fda7b34b8612669b1d31e8a4800eb1b9bbdc4064
-       
         _db.SaveChanges();
 
         var result = _db.Bill.ToList();
