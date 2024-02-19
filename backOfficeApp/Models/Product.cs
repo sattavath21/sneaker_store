@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 public class Product {
   [Key]
   public int ProductId {get;set;}//pk label="Product"
+  public String Barcode {get;set;}//label="Barcode"
   public String ProductName {get;set;}//label="Product_ Name"
   public int RetailPrice {get;set;}//label="Retail_ Price"
   public int SellingPrice {get;set;}//label="Selling_ Price"

@@ -172,6 +172,7 @@ create table `ProductImage` (
 
 create table `Product` (
  ProductId int(11) not null,
+ Barcode varchar(255)  default null,
  ProductName varchar(255)  default null,
  RetailPrice int(11) not null,
  SellingPrice int(11) not null,
