@@ -314,10 +314,8 @@ Console.WriteLine("Start Seeding.... ");
 
         for (double size = 35.5; size <= 52.5; size += 0.5)
         {
-            int id = (int)((size - 35.5) * 2); // Calculate id based on index
             ShoeSize shoeSize = new ShoeSize
             {
-                ShoeSizeId = id,
                 SizeType = "EU",
                 SizeNumber = size
             };
@@ -660,7 +658,6 @@ Console.WriteLine("Start Seeding.... ");
 
 
 
-
         foreach (string collectionName in asicsCollectionNames)
         {
             ProductCollection asicsCollection = new ProductCollection
@@ -671,7 +668,7 @@ Console.WriteLine("Start Seeding.... ");
             asicsCollections.Add(asicsCollection);
         }
 
-        List<List<ProductCollection>> allCollections = new List<List<ProductCollection>>{
+        List<List<ProductCollection>> allBrandsCollections = new List<List<ProductCollection>>{
             nikeCollections,
             adidasCollections,
             jordanCollections,
@@ -685,167 +682,125 @@ Console.WriteLine("Start Seeding.... ");
     };
 
 
-        // _db.ProductCollection.AddRange(nikeCollections);
-        // _db.ProductCollection.AddRange(adidasCollections);
-        // _db.ProductCollection.AddRange(jordanCollections);
-        // _db.ProductCollection.AddRange(pumaCollections);
-        // _db.ProductCollection.AddRange(converseCollections);
-        // _db.ProductCollection.AddRange(newBalanceCollections);
-        // _db.ProductCollection.AddRange(reebokCollections);
-        // _db.ProductCollection.AddRange(vansCollections);
-        // _db.ProductCollection.AddRange(underArmourCollections);
-        // _db.ProductCollection.AddRange(asicsCollections);
+        _db.ProductCollection.AddRange(nikeCollections);
+        _db.ProductCollection.AddRange(adidasCollections);
+        _db.ProductCollection.AddRange(jordanCollections);
+        _db.ProductCollection.AddRange(pumaCollections);
+        _db.ProductCollection.AddRange(converseCollections);
+        _db.ProductCollection.AddRange(newBalanceCollections);
+        _db.ProductCollection.AddRange(reebokCollections);
+        _db.ProductCollection.AddRange(vansCollections);
+        _db.ProductCollection.AddRange(underArmourCollections);
+        _db.ProductCollection.AddRange(asicsCollections);
 
-        List<Product> mockProducts = new List<Product>();
 
-        // Loop through each brand
-        for (int brandIndex = 0; brandIndex < allCollections.Count; brandIndex++)
+
+
+List<Product> mockProducts = new List<Product>();
+
+for (int brandIndex = 0; brandIndex < allBrandsCollections.Count; brandIndex++)
+{
+    List<ProductCollection> brandCollections = allBrandsCollections[brandIndex];
+    
+    // Loop through each collection within the current brand
+    for (int collectionIndex = 0; collectionIndex < brandCollections.Count; collectionIndex++)
+    {
+        ProductCollection productCollection = brandCollections[collectionIndex];
+
+        // Randomly select a product size index within the range of available sizes
+        int randomSizeIndex = random.Next(allProductsWithSizes[brandIndex].Count);
+
+        // Get the randomly selected product size
+        ProductWithSize productWithSize = allProductsWithSizes[brandIndex][randomSizeIndex];
+
+        // Create a mock product
+        Product mockProduct = new Product
         {
-            List<ProductCollection> brandCollections = allCollections[brandIndex];
+            Barcode = "SampleBarcode",
+            ProductName = $"{productCollection.CollectionName} Mock Product",
+            CostPrice = random.Next(30, 80), // Random cost price between 3000 and 8000
+            SellingPrice = 0, // Will be calculated below
+            Sku = "SampleSKU",
+            Colorway = "SampleColorway",
+            Releasedate = DateTime.Now.AddDays(-random.Next(1, 365)), // Random release date within the past year
+            Amountsold = random.Next(151), // Random amount sold
+            ProductWithSizes = new List<ProductWithSize> { productWithSize }, // Assign a list with a single product size
+            ProductCollection = productCollection,
+            ProductImageUrl = "blank"
+        };
 
-            // Loop through each collection within the current brand
-            for (int collectionIndex = 0; collectionIndex < brandCollections.Count; collectionIndex++)
-            {
-                ProductCollection productCollection = brandCollections[collectionIndex];
+        mockProduct.CostPrice = mockProduct.CostPrice * 100;
+        // Set selling price as cost price plus 200
+        mockProduct.SellingPrice = mockProduct.CostPrice + 200;
 
-                // Randomly select a product size index within the range of available sizes
-                int randomSizeIndex = random.Next(allProductsWithSizes[brandIndex].Count);
+        // Add the mock product to DB
+        mockProducts.Add(mockProduct);
+    }
+}
 
-                // Get the randomly selected product size
-                ProductWithSize productWithSize = allProductsWithSizes[brandIndex][randomSizeIndex];
+    _db.Product.AddRange(mockProducts);
 
-                // Create a mock product
-                Product mockProduct = new Product
-                {
-                    
-                    Barcode = "SampleBarcode",
-                    ProductName = $"{productCollection.CollectionName} Mock Product",
-                    CostPrice = random.Next(3000, 8000), // Random cost price between 3000 and 8000
-                    SellingPrice = 0, // Will be calculated below
-                    Sku = "SampleSKU",
-                    Colorway = "SampleColorway",
-                    Releasedate = DateTime.Now.AddDays(-random.Next(1, 365)), // Random release date within the past year
-                    Amountsold = random.Next(151), // Random amount sold
-                    ProductWithSizes = new List<ProductWithSize> { productWithSize }, // Assign a list with a single product size
-                    ProductCollection = productCollection,
-                    ProductImageUrl = "blank"
-                };
 
-                // Set selling price as cost price plus 200
-                mockProduct.SellingPrice = mockProduct.CostPrice + 200;
 
-                // Add the mock product to the list
-                mockProducts.Add(mockProduct);
-            }
-        }
+ List<Bill> bills = new List<Bill>();
+for (int i = 0; i < 10; i++)
+{
+    OrderStatus randomOrderStatus = new OrderStatus(); // Create a new OrderStatus instance
+    randomOrderStatus = orderStatuses[random.Next(orderStatuses.Count)]; // Random order status
 
-        // Add all mock products to the database
-        _db.Product.AddRange(mockProducts);
+    ShippingMethod randomShippingMethod = new ShippingMethod(); // Create a new ShippingMethod instance
+    randomShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)]; // Random shipping method
 
-//  List<Bill> bills = new List<Bill>();
-// for (int i = 0; i < 10; i++)
-// {
-//     OrderStatus randomOrderStatus = new OrderStatus(); // Create a new OrderStatus instance
-//     randomOrderStatus = orderStatuses[random.Next(orderStatuses.Count)]; // Random order status
+    Discount randomDiscount = new Discount(); // Create a new Discount instance
+    randomDiscount = discountList[random.Next(discountList.Count)]; // Random discount
 
-//     ShippingMethod randomShippingMethod = new ShippingMethod(); // Create a new ShippingMethod instance
-//     randomShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)]; // Random shipping method
+    Staff randomStaff = new Staff(); // Create a new Staff instance
+    randomStaff = staffList[random.Next(staffList.Count)]; // Random staff
 
-//     Discount randomDiscount = new Discount(); // Create a new Discount instance
-//     randomDiscount = discountList[random.Next(discountList.Count)]; // Random discount
+    Customer randomCustomer = new Customer(); // Create a new Customer instance
+    randomCustomer = customers[random.Next(customers.Count)]; // Random customer
 
-//     Staff randomStaff = new Staff(); // Create a new Staff instance
-//     randomStaff = staffList[random.Next(staffList.Count)]; // Random staff
+    Bill bill = new Bill
+    {
+        OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
+        OrderStatus = randomOrderStatus, // Use the newly created OrderStatus
+        ShippingMethod = randomShippingMethod, // Use the newly created ShippingMethod
+        CustomerTransferPicPath = "SomeWhereInAssets",
+        Discount = randomDiscount, // Use the newly created Discount
+        Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
+        DeliveryService = anousithDeliveryService,
+        Staff = randomStaff, // Use the newly created Staff
+        Customer = randomCustomer, // Use the newly created Customer
+        BillItems = new List<BillItem>()
+    };
 
-//     Customer randomCustomer = new Customer(); // Create a new Customer instance
-//     randomCustomer = customers[random.Next(customers.Count)]; // Random customer
+    // Ensure that each bill has exactly three items
+    for (int j = 0; j < 3; j++)
+    {
+        ShoeSize randomShoeSize = new ShoeSize();
+        randomShoeSize = shoeSizes[random.Next(shoeSizes.Count)];
+        ProductCondition randomProductCondition = new ProductCondition();
+        randomProductCondition = productConditionList[random.Next(productConditionList.Count)];
+        Product randomProduct = new Product();
+        randomProduct = mockProducts[random.Next(mockProducts.Count)];
 
-//     Bill bill = new Bill
-//     {
-//         OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
-//         OrderStatus = randomOrderStatus, // Use the newly created OrderStatus
-//         ShippingMethod = randomShippingMethod, // Use the newly created ShippingMethod
-//         CustomerTransferPicPath = "SomeWhereInAssets",
-//         Discount = randomDiscount, // Use the newly created Discount
-//         Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
-//         DeliveryService = anousithDeliveryService,
-//         Staff = randomStaff, // Use the newly created Staff
-//         Customer = randomCustomer, // Use the newly created Customer
-//         BillItems = new List<BillItem>()
-//     };
+        BillItem billItem = new BillItem
+        {
+            ShoeSize = randomShoeSize, // Random shoe size
+            ProductCondition = randomProductCondition, // Random product condition
+            Product = randomProduct // Random product from mockProducts list
+        };
 
-//     // Ensure that each bill has exactly three items
-//     for (int j = 0; j < 3; j++)
-//     {
-//         ShoeSize randomShoeSize = new ShoeSize();
-//         randomShoeSize = shoeSizes[random.Next(shoeSizes.Count)];
-//         ProductCondition randomProductCondition = new ProductCondition();
-//         randomProductCondition = productConditionList[random.Next(productConditionList.Count)];
-//         Product randomProduct = new Product();
-//         randomProduct = mockProducts[random.Next(mockProducts.Count)];
-
-//         BillItem billItem = new BillItem
-//         {
-//             ShoeSize = randomShoeSize, // Random shoe size
-//             ProductCondition = randomProductCondition, // Random product condition
-//             Product = randomProduct // Random product from mockProducts list
-//         };
-
-//         bill.BillItems.Add(billItem);
+        bill.BillItems.Add(billItem);
         
-//     }
+    }
 
-//     // Add the bill to the list
-//     bills.Add(bill);
-// }
-
-
-
-
-// Console.WriteLine("Before adding billItems1 to the database");
-
-//     List<BillItem> billItems1 = new List<BillItem>{
-//         new BillItem{
-//        BillItemId = 1,
-//                         ShoeSize = shoeSizes[0],
-//                         ProductCondition = productConditionList[0],
-//                         Product = mockProducts[0],
-//         },
-//                   new BillItem{
-//        BillItemId = 2,
-//                         ShoeSize = shoeSizes[1],
-//                         ProductCondition = productConditionList[1],
-//                         Product = mockProducts[1],
-//         }
-//     };
-
-//     _db.BillItem.AddRange(billItems1);
-
-
-// Console.WriteLine("Before creating bill1");
-
-
-//           Bill bill1 = new Bill
-//             {
-                
-//                 OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
-//                 OrderStatus = orderStatuses[0], // Random order status
-//                 ShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)], // Random shipping method
-//                 CustomerTransferPicPath = "SomeWhereInAssets",
-//                 Discount = discountList[random.Next(discountList.Count)], // Random discount
-//                 Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
-//                 DeliveryService = anousithDeliveryService,
-//                 Staff = staffList[random.Next(staffList.Count)], // Random staff
-//                 Customer = customers[random.Next(customers.Count)], // Random customer
-//                 BillItems = billItems1
-//             };
-// Console.WriteLine("after creating bill1");
+    // Add the bill to the list
+    bills.Add(bill);
+}
 
 // //         // Add all bills to the database
-//         _db.Bill.Add(bill1);
-       
-       
-       
+        _db.Bill.AddRange(bills);
        
         _db.SaveChanges();
 
