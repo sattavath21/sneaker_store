@@ -4,7 +4,7 @@
 
 namespace backOfficeApp.Migrations
 {
-    public partial class _6 : Migration
+    public partial class _8 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

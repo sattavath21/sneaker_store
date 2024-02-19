@@ -314,10 +314,8 @@ Console.WriteLine("Start Seeding.... ");
 
         for (double size = 35.5; size <= 52.5; size += 0.5)
         {
-            int id = (int)((size - 35.5) * 2); // Calculate id based on index
             ShoeSize shoeSize = new ShoeSize
             {
-                ShoeSizeId = id,
                 SizeType = "EU",
                 SizeNumber = size
             };
@@ -842,7 +840,7 @@ Console.WriteLine("Start Seeding.... ");
 // Console.WriteLine("after creating bill1");
 
 // //         // Add all bills to the database
-//         _db.Bill.Add(bill1);
+        _db.Bill.AddRange(bills);
        
        
        

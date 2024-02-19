@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    [Migration("20240217092017_3")]
-    partial class _3
+    [Migration("20240219091609_4")]
+    partial class _4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -257,8 +257,8 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("CustomerBirthday")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("CustomerBirthday")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("CustomerFirstname")
                         .HasColumnType("longtext");
@@ -497,20 +497,20 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("Colorway")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("CostPrice")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductCollectionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductImageId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProductImageUrl")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Releasedate")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("RetailPrice")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("Releasedate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("SellingPrice")
                         .HasColumnType("int");
@@ -521,8 +521,6 @@ namespace backOfficeApp.Migrations
                     b.HasKey("ProductId");
 
                     b.HasIndex("ProductCollectionId");
-
-                    b.HasIndex("ProductImageId");
 
                     b.ToTable("Product");
                 });
@@ -558,20 +556,6 @@ namespace backOfficeApp.Migrations
                     b.HasKey("ProductConditionId");
 
                     b.ToTable("ProductCondition");
-                });
-
-            modelBuilder.Entity("ProductImage", b =>
-                {
-                    b.Property<int>("ProductImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductImagePath")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("ProductImageId");
-
-                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("ProductWithSize", b =>
@@ -641,8 +625,8 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("StaffBirthday")
-                        .HasColumnType("longtext");
+                    b.Property<DateTime>("StaffBirthday")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("StaffFirstname")
                         .HasColumnType("longtext");
@@ -854,15 +838,7 @@ namespace backOfficeApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProductImage", "ProductImage")
-                        .WithMany()
-                        .HasForeignKey("ProductImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ProductCollection");
-
-                    b.Navigation("ProductImage");
                 });
 
             modelBuilder.Entity("ProductCollection", b =>

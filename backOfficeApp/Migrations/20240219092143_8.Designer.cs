@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    [Migration("20240218031037_5")]
-    partial class _5
+    [Migration("20240219092143_8")]
+    partial class _8
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
