@@ -310,18 +310,6 @@ Console.WriteLine("Start Seeding.... ");
 
         // _db.Customer.AddRange(customers);
 
-        List<ShoeSize> shoeSizes = new List<ShoeSize>();
-
-        for (double size = 35.5; size <= 52.5; size += 0.5)
-        {
-            ShoeSize shoeSize = new ShoeSize
-            {
-                SizeType = "EU",
-                SizeNumber = size
-            };
-
-            shoeSizes.Add(shoeSize);
-        }
 
         ProductCondition brandNewCondition = new ProductCondition
         {
@@ -337,9 +325,22 @@ Console.WriteLine("Start Seeding.... ");
 
         List<ProductCondition> productConditionList = new List<ProductCondition> { brandNewCondition, preOwnedCondition };
 
+        List<ShoeSize> shoeSizes = new List<ShoeSize>();
+
+        for (double size = 35.5; size <= 52.5; size += 0.5)
+        {
+            ShoeSize shoeSize = new ShoeSize
+            {
+                SizeType = "EU",
+                SizeNumber = size
+            };
+
+            shoeSizes.Add(shoeSize);
+        }
+
         List<List<ProductWithSize>> allProductsWithSizes = new List<List<ProductWithSize>>();
 
-        for (int j = 0; j < 20; j++)
+        for (int j = 0; j < 100; j++)
         {
             List<ProductWithSize> productWithSizes = new List<ProductWithSize>();
 
@@ -697,6 +698,7 @@ Console.WriteLine("Start Seeding.... ");
 
 
 List<Product> mockProducts = new List<Product>();
+int countProductWithSize = 0;
 
 for (int brandIndex = 0; brandIndex < allBrandsCollections.Count; brandIndex++)
 {
@@ -724,7 +726,7 @@ for (int brandIndex = 0; brandIndex < allBrandsCollections.Count; brandIndex++)
             Colorway = "SampleColorway",
             Releasedate = DateTime.Now.AddDays(-random.Next(1, 365)), // Random release date within the past year
             Amountsold = random.Next(151), // Random amount sold
-            ProductWithSizes = new List<ProductWithSize> { productWithSize }, // Assign a list with a single product size
+            ProductWithSizes = allProductsWithSizes[countProductWithSize],
             ProductCollection = productCollection,
             ProductImageUrl = "blank"
         };
@@ -732,7 +734,7 @@ for (int brandIndex = 0; brandIndex < allBrandsCollections.Count; brandIndex++)
         mockProduct.CostPrice = mockProduct.CostPrice * 100;
         // Set selling price as cost price plus 200
         mockProduct.SellingPrice = mockProduct.CostPrice + 200;
-
+        countProductWithSize++;
         // Add the mock product to DB
         mockProducts.Add(mockProduct);
     }
