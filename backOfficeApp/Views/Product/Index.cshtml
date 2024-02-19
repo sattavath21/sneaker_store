@@ -41,6 +41,14 @@
           </q-dialog>
         </q-td>
         <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
+        <q-td key="productImage" :props="props">
+          <q-img :src="props.row.productImage.productImagePath" style="cursor: pointer;" @@click="toggleImageDialog" />
+          <q-dialog v-model="showImageDialog" persistent auto-close>
+            <div style="text-align: center;">
+              <img :src="props.row.productImage.productImagePath" style="max-width: 100%; max-height: 100%;" />
+            </div>
+          </q-dialog>
+        </q-td>
         <q-td key="productName" :props="props">
           {{ props.row.productName }}
           <q-popup-edit v-model="props.row.productName">
@@ -72,59 +80,31 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="sku" :props="props">{{ props.row.sku}}
-          <q-popup-edit v-model="props.row.sku">
-            <q-input v-model="props.row.sku" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="colorway" :props="props">
-          {{ props.row.colorway }}
-          <q-popup-edit v-model="props.row.colorway">
-            <q-input v-model="props.row.colorway" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-        <q-td key="releasedate" :props="props">
-          <q-input filled v-model="props.row.releasedate" mask="date" style="width: 165px;">
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="props.row.releasedate" landscape color="red">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Change" color="red" flat @@click="editProduct(props.row)"></q-btn>
-                      <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-        </q-td>
-
-
-
-
         <q-td key="amountsold" :props="props">{{ props.row.amountsold}}</q-td>
-        <q-td key="inventoryQty" :props="props">{{ props.row.productWithSizes && props.row.productWithSizes.length > 0 ?
+        <q-td key="inventoryQty" :props="props">
+          {{ props.row.productWithSizes && props.row.productWithSizes.length > 0 ?
           props.row.productWithSizes[0].inventoryQty : '' }}
-          <q-popup-edit v-model="props.row.productWithSizes[0].inventoryQty">
-            <q-input v-model="props.row.productWithSizes[0].inventoryQty" dense autofocus counter></q-input>
+          <q-popup-edit v-model.number="props.row.productWithSizes[0].inventoryQty"
+            :validate="val => val !== null && val !== undefined && Number.isInteger(val) && val >= 0" v-slot="scope">
+            <q-input type="number" v-model.number="scope.value" dense autofocus @@keyup.enter="scope.set">
+              <template v-slot:rules>
+                <q-validator v-slot="{ validate }">
+                  <span v-if="!validate(scope.value)">Value must be a non-negative integer</span>
+                </q-validator>
+              </template>
+            </q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
+              <q-btn flat dense color="negative" icon="cancel" @@click.stop.prevent="scope.cancel" />
+              <q-btn flat dense color="positive" icon="check_circle"
+                @@click.stop.prevent="updateInventory(props.row, scope.value)" :disable="!scope.validate(scope.value)"
+                v-close-popup />
             </div>
           </q-popup-edit>
         </q-td>
+
+
+
+
         <q-td key="sizeType" :props="props">
           {{
           props.row.productWithSizes &&
@@ -187,6 +167,56 @@
           </q-popup-edit>
 
         </q-td>
+        <q-td key="barcode" :props="props">
+          {{ props.row.barcode }}
+          <q-popup-edit v-model="props.row.barcode">
+            <q-input v-model="props.row.barcode" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+
+        <q-td key="sku" :props="props">{{ props.row.sku}}
+          <q-popup-edit v-model="props.row.sku">
+            <q-input v-model="props.row.sku" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="colorway" :props="props">
+          {{ props.row.colorway }}
+          <q-popup-edit v-model="props.row.colorway">
+            <q-input v-model="props.row.colorway" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+        <q-td key="releasedate" :props="props">
+          <q-input filled v-model="props.row.releasedate" mask="date" style="width: 165px;">
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="props.row.releasedate" landscape color="red">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Change" color="red" flat @@click="editProduct(props.row)"></q-btn>
+                      <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        </q-td>
+
         <q-td key="productImagePath" :props="props">
           {{ props.row.productImage.productImagePath }}
           <q-popup-edit v-model="props.row.productImage.productImagePath">
@@ -198,6 +228,11 @@
             </div>
           </q-popup-edit>
         </q-td>
+
+
+
+
+
       </q-tr>
     </template>
   </q-table>
@@ -217,6 +252,7 @@
       //data
       data() {
         return {
+          showImageDialog: false, // Add showImageDialog variable
           products: [],
           originalProducts: [],
           confirm: false,
@@ -235,6 +271,14 @@
               align: 'left',
               sortable: true,
               label: 'No'
+            },
+            {
+              name: 'productImage',
+              label: 'Product Image',
+              field: 'productImage.productImagePath',
+              sortable: true,
+              align: 'center',
+
             },
             {
               name: 'productName',
@@ -256,30 +300,6 @@
               name: 'sellingPrice',
               label: 'Selling Price',
               field: 'sellingPrice',
-              sortable: true,
-              align: 'center',
-
-            },
-            {
-              name: 'sku',
-              label: 'SKU',
-              field: 'sku',
-              sortable: true,
-              align: 'center',
-
-            },
-            {
-              name: 'colorway',
-              label: 'Colorway',
-              field: 'colorway',
-              sortable: true,
-              align: 'center',
-
-            },
-            {
-              name: 'releasedate',
-              label: 'Release Date',
-              field: 'releasedate',
               sortable: true,
               align: 'center',
 
@@ -330,8 +350,40 @@
 
             },
             {
+              name: 'barcode',
+              label: 'Barcode',
+              field: 'barcode',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'sku',
+              label: 'SKU',
+              field: 'sku',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'colorway',
+              label: 'Colorway',
+              field: 'colorway',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
+              name: 'releasedate',
+              label: 'Release Date',
+              field: 'releasedate',
+              sortable: true,
+              align: 'center',
+
+            },
+            {
               name: 'productImagePath',
-              label: 'Product Image',
+              label: 'Product URL',
               field: 'productImage.productImagePath',
               sortable: true,
               align: 'center',
@@ -343,6 +395,23 @@
       ,
       //methods
       methods: {
+        toggleImageDialog() {
+          this.showImageDialog = !this.showImageDialog;
+        },
+        async updateInventory(row, newValue) {
+          try {
+            // Update inventory quantity
+            row.productWithSizes[0].inventoryQty = newValue;
+
+            // Call your editProduct function or any other logic to handle the update
+            await this.editProduct(row);
+
+            // Close the popup
+            row.isPopupOpen = false;
+          } catch (error) {
+            console.error("Error updating inventory:", error);
+          }
+        },
         async editProduct(item) {
           try {
             // Assuming item.releasedate is a valid date string

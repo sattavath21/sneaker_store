@@ -211,6 +211,43 @@ public IActionResult AddProduct(Product product)
 //     return Ok(ProductSellingsList);
 // }
 
+[HttpPost]
+    public IActionResult AddStaff(Staff c)
+    {
+        _db.Staff.Add(c);
+        _db.SaveChanges();
+        return Ok(c);
+
+    }//ef
+
+    [HttpGet]
+    public IActionResult GetStaff()
+    {
+        var list1 = _db.Staff
+            .Include(db => db.Permission)
+            .ToList();
+        return Ok(list1);
+    }
+
+    [HttpPost]
+    public IActionResult DeleteStaff(Staff c)
+    {
+        //delete staff 
+        _db.Staff.Remove(c);
+        _db.SaveChanges();
+
+        return Ok(c);
+    }//ef
+
+    [HttpPost]
+    public IActionResult EditStaff(Staff c)
+    {
+        //update staff 
+        _db.Staff.Update(c);
+        _db.SaveChanges();
+        return Ok(c);
+    }//ef
+
 // [HttpGet]
 // public IActionResult GetCustomers()
 // {
