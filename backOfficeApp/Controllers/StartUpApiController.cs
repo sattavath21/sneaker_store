@@ -741,63 +741,42 @@ for (int brandIndex = 0; brandIndex < allBrandsCollections.Count; brandIndex++)
     _db.Product.AddRange(mockProducts);
 
 
-
- List<Bill> bills = new List<Bill>();
+List<Bill> bills = new List<Bill>();
 for (int i = 0; i < 10; i++)
 {
-    OrderStatus randomOrderStatus = new OrderStatus(); // Create a new OrderStatus instance
-    randomOrderStatus = orderStatuses[random.Next(orderStatuses.Count)]; // Random order status
-
-    ShippingMethod randomShippingMethod = new ShippingMethod(); // Create a new ShippingMethod instance
-    randomShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)]; // Random shipping method
-
-    Discount randomDiscount = new Discount(); // Create a new Discount instance
-    randomDiscount = discountList[random.Next(discountList.Count)]; // Random discount
-
-    Staff randomStaff = new Staff(); // Create a new Staff instance
-    randomStaff = staffList[random.Next(staffList.Count)]; // Random staff
-
-    Customer randomCustomer = new Customer(); // Create a new Customer instance
-    randomCustomer = customers[random.Next(customers.Count)]; // Random customer
-
     Bill bill = new Bill
     {
         OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
-        OrderStatus = randomOrderStatus, // Use the newly created OrderStatus
-        ShippingMethod = randomShippingMethod, // Use the newly created ShippingMethod
+        OrderStatus = orderStatuses[random.Next(orderStatuses.Count)], // Random order status
+        ShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)], // Random shipping method
         CustomerTransferPicPath = "SomeWhereInAssets",
-        Discount = randomDiscount, // Use the newly created Discount
+        Discount = discountList[random.Next(discountList.Count)], // Random discount
         Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
         DeliveryService = anousithDeliveryService,
-        Staff = randomStaff, // Use the newly created Staff
-        Customer = randomCustomer, // Use the newly created Customer
+        Staff = staffList[random.Next(staffList.Count)], // Random staff
+        Customer = customers[random.Next(customers.Count)], // Random customer
         BillItems = new List<BillItem>()
     };
 
-    // Ensure that each bill has exactly three items
-    for (int j = 0; j < 3; j++)
-    {
-        ShoeSize randomShoeSize = new ShoeSize();
-        randomShoeSize = shoeSizes[random.Next(shoeSizes.Count)];
-        ProductCondition randomProductCondition = new ProductCondition();
-        randomProductCondition = productConditionList[random.Next(productConditionList.Count)];
-        Product randomProduct = new Product();
-        randomProduct = mockProducts[random.Next(mockProducts.Count)];
+    int numberOfItems = random.Next(1, 6); // Random number of bill items between 1 and 5
 
+    for (int j = 0; j < numberOfItems; j++)
+    {
         BillItem billItem = new BillItem
         {
-            ShoeSize = randomShoeSize, // Random shoe size
-            ProductCondition = randomProductCondition, // Random product condition
-            Product = randomProduct // Random product from mockProducts list
+            ShoeSize = shoeSizes[random.Next(shoeSizes.Count)], // Random shoe size
+            ProductCondition = productConditionList[random.Next(productConditionList.Count)], // Random product condition
+            Product = mockProducts[random.Next(mockProducts.Count)] // Random product from mockProducts list
         };
 
         bill.BillItems.Add(billItem);
-        
     }
 
-    // Add the bill to the list
     bills.Add(bill);
 }
+
+_db.Bill.AddRange(bills);
+
 
 // //         // Add all bills to the database
         _db.Bill.AddRange(bills);
