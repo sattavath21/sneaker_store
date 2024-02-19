@@ -148,7 +148,6 @@ using (var serviceScope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-
         Console.WriteLine("seeding error {0}", ex.Message);
 
     }
