@@ -39,68 +39,77 @@
               </q-card-actions>
             </q-card>
           </q-dialog>
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue" @@click="showDetails(props.row)" icon="info"
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue-12" @@click="showDetails(props.row)" icon="details"
             size="15px"></q-btn>
           <q-dialog v-model="showProductDetails" persistent :max-width="400">
-  <div style="width: 100%; max-width: 400px;">
-    <!-- Content of your dialog -->
-    <q-card>
-      <!-- Card header section -->
-      <q-card-section class="row items-center">
-        <q-img :src="selectedProduct.productImageUrl" alt="Product Image" class="avatar-image" />
-      </q-card-section>
+            <div style="width: 100%; max-width: 400px;">
+              <!-- Content of your dialog -->
+              <q-card>
+                <!-- Card header section -->
+                <q-card-section class="row items-center">
+                  <q-img :src="selectedProduct.productImageUrl" alt="Product Image" class="avatar-image" />
+                </q-card-section>
 
-      <!-- Product name section -->
-      <q-card-section class="row items-center">
-        <div class="text-h6">{{ selectedProduct.productName }} Details</div>
-      </q-card-section>
+                <!-- Product name section -->
+                <q-card-section class="row items-center">
+                  <div class="text-h6">{{ selectedProduct.productName }} Details</div>
+                </q-card-section>
 
-      <!-- Select size section -->
-      <q-card-section>
-        <div v-if="selectedProduct && selectedProduct.productWithSizes">
-          <q-select v-model="selectedSize" :options="sizeOptions" label="Select Size" dense outlined @@update:model-value="selectedShoeSize" />
-        </div>
-      </q-card-section>
+                <!-- Select size section -->
+                <q-card-section>
+                  <div v-if="selectedProduct && selectedProduct.productWithSizes">
+                    <q-select v-model="selectedSize" :options="sizeOptions" label="Select Size" dense outlined
+                      @@update:model-value="selectedShoeSize" />
+                  </div>
+                </q-card-section>
 
-      <!-- Inventory quantity section -->
-      <q-card-section>
-        <div class="text-primary text-h6" v-if="selectedInventoryQty !== null">Inventory Qty: {{ selectedInventoryQty }}</div>
-        <q-popup-edit class="bg-grey-12 text-white" v-model.number="selectedInventoryQty" :validate="val => val !== null && val !== undefined && Number.isInteger(val) && val >= 0" v-slot="scope">
-          <q-input type="number" v-model.number="selectedInventoryQty" dense autofocus @@input="updateInventoryQty($event.target.value)">
-            <template v-slot:rules>
-              <q-validator v-slot="{ validate }">
-                <span v-if="!validate(selectedInventoryQty)">Value must be a non-negative integer</span>
-              </q-validator>
-            </template>
-          </q-input>
-          <div class="justify-end row">
-            <q-btn flat dense color="negative" icon="cancel" @@click.stop.prevent="scope.cancel" />
-            <q-btn flat dense color="positive" icon="check_circle" @@click.stop.prevent="updateInventoryQty(selectedProduct, selectedInventoryQty)" :disable="!scope.validate(selectedInventoryQty)" v-close-popup />
-          </div>
-        </q-popup-edit>
-      </q-card-section>
+                <!-- Inventory quantity section -->
+                <q-card-section v-if="selectedSize" class="bg-light-blue">
+                  <div class="text-white text-h6" v-if="selectedInventoryQty !== null">Inventory Qty: {{
+                    selectedInventoryQty }}</div>
+                  <q-popup-edit class="bg-grey-12 text-white" v-model.number="selectedInventoryQty"
+                    :validate="val => val !== null && val !== undefined && Number.isInteger(val) && val >= 0"
+                    v-slot="scope">
+                    <q-input type="number" v-model.number="selectedInventoryQty" dense autofocus
+                      @@input="updateInventoryQty($event.target.value)">
+                      <template v-slot:rules>
+                        <q-validator v-slot="{ validate }">
+                          <span v-if="!validate(selectedInventoryQty)">Value must be a non-negative integer</span>
+                        </q-validator>
+                      </template>
+                    </q-input>
+                    <div class="justify-end row">
+                      <q-btn flat dense color="negative" icon="cancel" @@click.stop.prevent="scope.cancel" />
+                      <q-btn flat dense color="positive" icon="check_circle"
+                        @@click.stop.prevent="updateInventoryQty(selectedProduct, selectedInventoryQty)"
+                        :disable="!scope.validate(selectedInventoryQty)" v-close-popup />
+                    </div>
+                  </q-popup-edit>
+                </q-card-section>
 
-      <!-- Card actions section -->
-      <q-card-actions align="center">
-        <q-btn class="q-ma-sm" color="primary" @@click="showProductDetails = false" label="Close"></q-btn>
-      </q-card-actions>
-    </q-card>
-  </div>
-</q-dialog>
+                <!-- Card actions section -->
+                <q-card-actions align="center">
+  <q-btn class="q-ma-sm text-h6" color="grey" @@click="showProductDetails = false" label="Close" style="height: 30px; width: 120px;"></q-btn>
+</q-card-actions>
+
+              </q-card>
+            </div>
+          </q-dialog>
 
 
 
 
         </q-td>
         <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
-        <q-td key="productImageUrl" :props="props">
-          <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog" />
-          <q-dialog v-model="showImageDialog" persistent auto-close>
-            <div style="text-align: center;">
-              <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
-            </div>
-          </q-dialog>
-        </q-td>
+        <q-td key="productImage" :props="props">
+  <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
+  <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
+    <div style="text-align: center;">
+      <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
+    </div>
+  </q-dialog>
+</q-td>
+
         <q-td key="productName" :props="props">
           {{ props.row.productName }}
           <q-popup-edit v-model="props.row.productName">
@@ -271,7 +280,7 @@
               label: 'No'
             },
             {
-              name: 'productImageUrl',
+              name: 'productImage',
               label: 'Product Image',
               field: 'productImageUrl',
               sortable: true,
@@ -415,9 +424,9 @@
           this.selectedInventoryQty = null;
           this.showProductDetails = true;
         },
-        toggleImageDialog() {
-          this.showImageDialog = !this.showImageDialog;
-        },
+        toggleImageDialog(product) {
+    product.showImageDialog = !product.showImageDialog;
+  },
         async editProduct(item) {
           try {
             // Assuming item.releasedate is a valid date string
@@ -538,15 +547,14 @@
       ,
       //created
       async created() {
-        try {
-          var response = await axios.get("/api/GetProducts");
-          this.originalProducts = response.data;
-          this.products = response.data;
-          console.log(this.products);
-        }
-        catch (error) {
-          console.log(error);
-        }
+  try {
+    var response = await axios.get("/api/GetProducts");
+    this.originalProducts = response.data;
+    this.products = response.data.map(product => ({ ...product, showImageDialog: false }));
+    console.log(this.products);
+  } catch (error) {
+    console.log(error);
+  }
 
 
       }//ecreated
