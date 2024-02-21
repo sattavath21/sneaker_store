@@ -6,7 +6,7 @@
     </div>
 
 
-    <q-table class="bg-grey-2" title="Delivery Information" :rows="deliveryBranches" :columns="columns"
+    <q-table class="bg-grey-2" title="Delivery Information" :rows="deliveryServices" :columns="columns"
         :filter="searchText">
 
         <template v-slot:top-left>
@@ -41,11 +41,25 @@
                         </q-card>
                     </q-dialog>
                 </q-td>
-                <q-td key="index" :props="props">{{ deliveryBranches.indexOf(props.row) + 1 }}</q-td>
+            <q-td key="index" :props="props">{{ deliveryServices.indexOf(props.row) + 1 }}</q-td>
                 <q-td key="deliveryCompanyName" :props="props">
-                    {{ props.row.deliveryService ? props.row.deliveryService.deliveryCompanyName : '' }}
-                    <q-popup-edit v-model="props.row.deliveryService.deliveryCompanyName">
-                        <q-input v-model="props.row.deliveryService.deliveryCompanyName" dense autofocus
+                    {{ props.row.deliveryCompanyName }}
+                    <q-popup-edit v-model="props.row.deliveryCompanyName">
+                        <q-input v-model="props.row.deliveryCompanyName" dense autofocus
+                            counter></q-input>
+                        <div class="justify-end row">
+                            <q-btn color="blue-grey-6" @@click="editDeliveryService(props.row)" icon="edit" label="edit"
+                                v-close-popup="cancelEnabled">
+                            </q-btn>
+                        </div>
+                    </q-popup-edit>
+                </q-td>
+                
+
+                <q-td key="branchName" :props="props">
+                    {{ props.row.deliveryBranches[0] ? props.row.deliveryBranches[0].branch.branchName : '' }}
+                    <q-popup-edit v-model="props.row.deliveryBranches[0].branch.branchName">
+                        <q-input v-model="props.row.deliveryBranches[0].branch.branchName" dense autofocus
                             counter></q-input>
                         <div class="justify-end row">
                             <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
@@ -54,10 +68,12 @@
                         </div>
                     </q-popup-edit>
                 </q-td>
-                <q-td key="branchName" :props="props">
-                    {{ props.row.branchName }}
-                    <q-popup-edit v-model="props.row.branchName">
-                        <q-input v-model="props.row.branchName" dense autofocus counter></q-input>
+                
+ <q-td key="telNumber" :props="props">
+                    {{ props.row.deliveryBranches.length > 0 ? props.row.deliveryBranches[0].branch.branchName : '' }}
+                    <q-popup-edit v-model="props.row.deliveryBranches[0].branch.branchName">
+                        <q-input v-model="props.row.deliveryBranches[0].branch.branchName" dense autofocus
+                            counter></q-input>
                         <div class="justify-end row">
                             <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
                                 v-close-popup="cancelEnabled">
@@ -65,79 +81,41 @@
                         </div>
                     </q-popup-edit>
                 </q-td>
+
+
                 <q-td key="telNumber" :props="props">
                     {{ props.row.branchTelNumbers && props.row.branchTelNumbers.length > 0 ?
                     props.row.branchTelNumbers[0].telNumber : '' }}
                     <q-popup-edit v-model="props.row.branchTelNumbers[0].telNumber">
                         <q-input v-model="props.row.branchTelNumbers[0].telNumber" dense autofocus counter></q-input>
                         <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
+                            <q-btn color="blue-grey-6" @@click="editDeliveryService(props.row)" icon="edit" label="edit"
                                 v-close-popup="cancelEnabled">
                             </q-btn>
                         </div>
                     </q-popup-edit>
                 </q-td>
-                <q-td key="branchAvailability" :props="props">
-                    {{ props.row.branchAvailability }}
-                    <q-popup-edit v-model="props.row.branchAvailability">
-                        <q-input v-model="props.row.branchAvailability" dense autofocus counter></q-input>
-                        <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
-                                v-close-popup="cancelEnabled">
-                            </q-btn>
-                        </div>
-                    </q-popup-edit>
-                </q-td>
+
+    
+
                 <q-td key="branchAddress" :props="props">
                     {{ props.row.branchAddress ? props.row.branchAddress.province : '' }}
                     <q-popup-edit v-model="props.row.branchAddress.province">
                         <q-input v-model="props.row.branchAddress.province" dense autofocus counter></q-input>
                         <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
+                            <q-btn color="blue-grey-6" @@click="editDeliveryService(props.row)" icon="edit" label="edit"
                                 v-close-popup="cancelEnabled">
                             </q-btn>
                         </div>
                     </q-popup-edit>
                 </q-td>
-                <q-td key="branchAddress" :props="props">
-                    {{ props.row.branchAddress ? props.row.branchAddress.city : '' }}
-                    <q-popup-edit v-model="props.row.branchAddress.city">
-                        <q-input v-model="props.row.branchAddress.city" dense autofocus counter></q-input>
-                        <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
-                                v-close-popup="cancelEnabled">
-                            </q-btn>
-                        </div>
-                    </q-popup-edit>
-                </q-td>
-                <q-td key="branchAddress" :props="props">
-                    {{ props.row.branchAddress ? props.row.branchAddress.village : '' }}
-                    <q-popup-edit v-model="props.row.branchAddress.village">
-                        <q-input v-model="props.row.branchAddress.village" dense autofocus counter></q-input>
-                        <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
-                                v-close-popup="cancelEnabled">
-                            </q-btn>
-                        </div>
-                    </q-popup-edit>
-                </q-td>
-                <q-td key="branchAddress" :props="props">
-                    {{ props.row.branchAddress ? props.row.branchAddress.addressDetail : '' }}
-                    <q-popup-edit v-model="props.row.branchAddress.addressDetail">
-                        <q-input v-model="props.row.branchAddress.addressDetail" dense autofocus counter></q-input>
-                        <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
-                                v-close-popup="cancelEnabled">
-                            </q-btn>
-                        </div>
-                    </q-popup-edit>
-                </q-td>
+    
                 <q-td key="branchGooglemapPosition" :props="props">
                     {{ props.row.branchGooglemapPosition }}
                     <q-popup-edit v-model="props.row.branchGooglemapPosition">
                         <q-input v-model="props.row.branchGooglemapPosition" dense autofocus counter></q-input>
                         <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editDeliveryBranch(props.row)" icon="edit" label="edit"
+                            <q-btn color="blue-grey-6" @@click="editDeliveryService(props.row)" icon="edit" label="edit"
                                 v-close-popup="cancelEnabled">
                             </q-btn>
                         </div>
@@ -151,7 +129,7 @@
     <div class="bg-grey-9 q-pa-sm" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></div>
 
     <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 50px;" color="green" icon="add_box" label="Add Delivery Location" size="md" 
-        onclick='window.location="/Supplier/AddSup"'></q-btn>
+        onclick='window.location="/DeliveryService/AddDelivery"'></q-btn>
 </div>
 
 @section code {
@@ -162,7 +140,7 @@
                 return {
                     confirm: false,
                     searchText: "",
-                    deliveryBranches: []
+                    deliveryServices: []
                     ,
                     columns: [
                         {
@@ -181,75 +159,37 @@
                         {
                             name: 'deliveryCompanyName',
                             label: 'Delivery Service',
-                            field: 'deliveryService.deliveryCompanyName',
+                            field: 'deliveryCompanyName',
                             sortable: true,
                             align: 'center'
                         },
                         {
                             name: 'branchName',
                             label: 'Branch Name',
-                            field: 'branchName',
+                            field: 'deliveryBranches[0].branch.branchName',
                             sortable: true,
                             align: 'center'
                         },
                         {
                             name: 'telNumber',
                             label: 'Branch Tel Numbers',
-                            field: 'branchTelNumbers[0].telNumber', // Assuming you want the first telNumber
+                            field: 'deliveryBranches[0].branch.branchTelNumbers[0].telNumber', // Assuming you want the first telNumber
                             sortable: true,
                             align: 'center'
                         },
-                        {
-                            name: 'branchAvailability',
-                            label: 'Branch Availability',
-                            field: 'branchAvailability',
-                            sortable: true,
-                            align: 'center'
-                        },
-                        {
-                            name: 'branchAddress',
-                            label: 'Branch Address',
-                            field: 'branchAddress.province', // Adjust as needed
-                            sortable: true,
-                            align: 'center'
-                        },
-                        {
-                            name: 'branchAddress',
-                            label: 'Branch Address',
-                            field: 'branchAddress.city', // Adjust as needed
-                            sortable: true,
-                            align: 'center'
-                        },
-                        {
-                            name: 'branchAddress',
-                            label: 'Branch Address',
-                            field: 'branchAddress.village', // Adjust as needed
-                            sortable: true,
-                            align: 'center'
-                        },
-                        {
-                            name: 'branchAddress',
-                            label: 'Branch Address',
-                            field: 'branchAddress.addressDetail', // Adjust as needed
-                            sortable: true,
-                            align: 'center'
-                        },
-                        {
-                            name: 'branchGooglemapPosition',
-                            label: 'Branch Googlemap Position',
-                            field: 'branchGooglemapPosition',
-                            sortable: true,
-                            align: 'center'
-                        }
+                
+                  
+            
+                
                     ]
                 };
             }
             ,
             //methods
             methods: {
-                async editDeliveryBranch(item) {
+                async editDeliveryService(item) {
 
-                    var url = "api/EditDeliveryBranch";
+                    var url = "api/editDeliveryService";
                     try {
                         console.log(item);
                         var result = await axios.post(url, item);
@@ -270,7 +210,7 @@
                         await axios.post(url, del);
 
                         // Use the correct property name in the filter callback
-                        this.deliveryBranches = this.deliveryBranches.filter(x => x.DeliveryBranchId !== item.DeliveryBranchId);
+                        this.deliveryServices = this.deliveryServices.filter(x => x.DeliveryBranchId !== item.DeliveryBranchId);
 
                         // Set a flag in local storage indicating successful delete
                         localStorage.setItem('deleteSuccess', 'true');
@@ -302,8 +242,8 @@
             //created
             async created() {
                 try {
-                    var response = await axios.get("/api/GetDeliveryBranches"); // Updated API endpoint
-                    this.deliveryBranches = response.data;
+                    var response = await axios.get("/api/GetDeliveryServices"); // Updated API endpoint
+                    this.deliveryServices = response.data;
                 } catch (error) {
                     console.log(error);
                 }

@@ -20,6 +20,16 @@ public class ApiController : ControllerBase
 
      #region ACTIONS
 
+
+    [HttpGet]
+    public IActionResult GetDeliveryServices()
+    {
+        var list1 = _db.DeliveryService
+            .Include(db => db.DeliveryBranches).ThenInclude(db => db.Branch).ThenInclude(db=>db.BranchTelNumbers)
+            .ToList();
+        return Ok(list1);
+    }
+
 // [HttpGet]
 // public IActionResult GetDeliveryBranches()
 // {
@@ -62,14 +72,14 @@ public class ApiController : ControllerBase
 //     }
 // }
 
-// [HttpPost]
-//     public IActionResult EditDeliveryBranch(DeliveryBranch e)
-//     {
-//         //update product
-//         _db.DeliveryBranch.Update(e);
-//         _db.SaveChanges();
-//         return Ok(e);
-//     }//ef
+[HttpPost]
+    public IActionResult EditDeliveryService(DeliveryService e)
+    {
+        //update product
+        _db.DeliveryService.Update(e);
+        _db.SaveChanges();
+        return Ok(e);
+    }//ef
 
 //     [HttpPost]
 // public IActionResult DeleteDeliveryBranch(DeliveryBranch d)
