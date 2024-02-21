@@ -39,13 +39,65 @@
               </q-card-actions>
             </q-card>
           </q-dialog>
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue" @@click="showDetails(props.row)" icon="info"
+            size="15px"></q-btn>
+          <q-dialog v-model="showProductDetails" persistent :max-width="400">
+  <div style="width: 100%; max-width: 400px;">
+    <!-- Content of your dialog -->
+    <q-card>
+      <!-- Card header section -->
+      <q-card-section class="row items-center">
+        <q-img :src="selectedProduct.productImageUrl" alt="Product Image" class="avatar-image" />
+      </q-card-section>
+
+      <!-- Product name section -->
+      <q-card-section class="row items-center">
+        <div class="text-h6">{{ selectedProduct.productName }} Details</div>
+      </q-card-section>
+
+      <!-- Select size section -->
+      <q-card-section>
+        <div v-if="selectedProduct && selectedProduct.productWithSizes">
+          <q-select v-model="selectedSize" :options="sizeOptions" label="Select Size" dense outlined @@update:model-value="selectedShoeSize" />
+        </div>
+      </q-card-section>
+
+      <!-- Inventory quantity section -->
+      <q-card-section>
+        <div class="text-primary text-h6" v-if="selectedInventoryQty !== null">Inventory Qty: {{ selectedInventoryQty }}</div>
+        <q-popup-edit class="bg-grey-12 text-white" v-model.number="selectedInventoryQty" :validate="val => val !== null && val !== undefined && Number.isInteger(val) && val >= 0" v-slot="scope">
+          <q-input type="number" v-model.number="selectedInventoryQty" dense autofocus @@input="updateInventoryQty($event.target.value)">
+            <template v-slot:rules>
+              <q-validator v-slot="{ validate }">
+                <span v-if="!validate(selectedInventoryQty)">Value must be a non-negative integer</span>
+              </q-validator>
+            </template>
+          </q-input>
+          <div class="justify-end row">
+            <q-btn flat dense color="negative" icon="cancel" @@click.stop.prevent="scope.cancel" />
+            <q-btn flat dense color="positive" icon="check_circle" @@click.stop.prevent="updateInventoryQty(selectedProduct, selectedInventoryQty)" :disable="!scope.validate(selectedInventoryQty)" v-close-popup />
+          </div>
+        </q-popup-edit>
+      </q-card-section>
+
+      <!-- Card actions section -->
+      <q-card-actions align="center">
+        <q-btn class="q-ma-sm" color="primary" @@click="showProductDetails = false" label="Close"></q-btn>
+      </q-card-actions>
+    </q-card>
+  </div>
+</q-dialog>
+
+
+
+
         </q-td>
         <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
-        <q-td key="productImage" :props="props">
-          <q-img :src="props.row.productImage.productImagePath" style="cursor: pointer;" @@click="toggleImageDialog" />
+        <q-td key="productImageUrl" :props="props">
+          <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog" />
           <q-dialog v-model="showImageDialog" persistent auto-close>
             <div style="text-align: center;">
-              <img :src="props.row.productImage.productImagePath" style="max-width: 100%; max-height: 100%;" />
+              <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
             </div>
           </q-dialog>
         </q-td>
@@ -60,9 +112,9 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="retailPrice" :props="props">{{ props.row.retailPrice}}
-          <q-popup-edit v-model="props.row.retailPrice">
-            <q-input v-model="props.row.retailPrice" dense autofocus counter></q-input>
+        <q-td key="costPrice" :props="props">{{ props.row.costPrice}}
+          <q-popup-edit v-model="props.row.costPrice">
+            <q-input v-model="props.row.costPrice" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -82,67 +134,8 @@
         </q-td>
         <q-td key="amountsold" :props="props">{{ props.row.amountsold}}</q-td>
         <q-td key="inventoryQty" :props="props">
-          {{ props.row.productWithSizes && props.row.productWithSizes.length > 0 ?
-          props.row.productWithSizes[0].inventoryQty : '' }}
-          <q-popup-edit v-model.number="props.row.productWithSizes[0].inventoryQty"
-            :validate="val => val !== null && val !== undefined && Number.isInteger(val) && val >= 0" v-slot="scope">
-            <q-input type="number" v-model.number="scope.value" dense autofocus @@keyup.enter="scope.set">
-              <template v-slot:rules>
-                <q-validator v-slot="{ validate }">
-                  <span v-if="!validate(scope.value)">Value must be a non-negative integer</span>
-                </q-validator>
-              </template>
-            </q-input>
-            <div class="justify-end row">
-              <q-btn flat dense color="negative" icon="cancel" @@click.stop.prevent="scope.cancel" />
-              <q-btn flat dense color="positive" icon="check_circle"
-                @@click.stop.prevent="updateInventory(props.row, scope.value)" :disable="!scope.validate(scope.value)"
-                v-close-popup />
-            </div>
-          </q-popup-edit>
+          {{ props.row.totalInventoryQty }}
         </q-td>
-
-
-
-
-        <q-td key="sizeType" :props="props">
-          {{
-          props.row.productWithSizes &&
-          props.row.productWithSizes.length > 0 &&
-          props.row.productWithSizes[0].shoeSize &&
-          props.row.productWithSizes[0].shoeSize.sizeType !== null
-          ? props.row.productWithSizes[0].shoeSize.sizeType
-          : 'N/A'
-          }}
-          <q-popup-edit v-model="props.row.productWithSizes[0].shoeSize.sizeType">
-            <q-input v-model="props.row.productWithSizes[0].shoeSize.sizeType" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-
-        <q-td key="sizeNumber" :props="props">
-          {{
-          props.row.productWithSizes &&
-          props.row.productWithSizes.length > 0 &&
-          props.row.productWithSizes[0].shoeSize &&
-          props.row.productWithSizes[0].shoeSize.sizeNumber !== null
-          ? props.row.productWithSizes[0].shoeSize.sizeNumber
-          : 'N/A'
-          }}
-          <q-popup-edit v-model="props.row.productWithSizes[0].shoeSize.sizeNumber">
-            <q-input v-model="props.row.productWithSizes[0].shoeSize.sizeNumber" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-        </q-td>
-
 
         <q-td key="collectionName" :props="props">
           {{ props.row.productCollection.collectionName }}
@@ -217,10 +210,10 @@
           </q-input>
         </q-td>
 
-        <q-td key="productImagePath" :props="props">
-          {{ props.row.productImage.productImagePath }}
-          <q-popup-edit v-model="props.row.productImage.productImagePath">
-            <q-input v-model="props.row.productImage.productImagePath" dense autofocus counter></q-input>
+        <q-td key="productImageUrl" :props="props">
+          {{ props.row.productImageUrl }}
+          <q-popup-edit v-model="props.row.productImageUrl">
+            <q-input v-model="props.row.productImageUrl" dense autofocus counter></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -252,6 +245,11 @@
       //data
       data() {
         return {
+          showProductDetails: false,
+          selectedProduct: null,
+          selectedSize: null,
+          selectedInventoryQty: null,
+          sizeOptions: [],
           showImageDialog: false, // Add showImageDialog variable
           products: [],
           originalProducts: [],
@@ -273,9 +271,9 @@
               label: 'No'
             },
             {
-              name: 'productImage',
+              name: 'productImageUrl',
               label: 'Product Image',
-              field: 'productImage.productImagePath',
+              field: 'productImageUrl',
               sortable: true,
               align: 'center',
 
@@ -289,9 +287,9 @@
 
             },
             {
-              name: 'retailPrice',
-              label: 'Retail Price',
-              field: 'retailPrice',
+              name: 'costPrice',
+              label: 'Cost Price',
+              field: 'costPrice',
               sortable: true,
               align: 'center',
 
@@ -314,25 +312,12 @@
             },
             {
               name: 'inventoryQty',
-              label: 'Inventory Qty',
-              field: 'productWithSizes[0].inventoryQty',
+              label: 'Total Qty',
+              field: 'totalInventoryQty', // Update the field to TotalInventoryQty
               sortable: true,
               align: 'center',
             },
-            {
-              name: 'sizeType',
-              label: 'Size Type',
-              field: 'productWithSizes[0].shoeSize.sizeType',
-              sortable: true,
-              align: 'center',
-            },
-            {
-              name: 'sizeNumber',
-              label: 'Size Number',
-              field: 'productWithSizes[0].shoeSize.sizeNumber',
-              sortable: true,
-              align: 'center',
-            },
+
             {
               name: 'collectionName',
               label: 'Product Collection',
@@ -382,9 +367,9 @@
 
             },
             {
-              name: 'productImagePath',
+              name: 'productImageUrl',
               label: 'Product URL',
-              field: 'productImage.productImagePath',
+              field: 'productImageUrl',
               sortable: true,
               align: 'center',
 
@@ -395,22 +380,43 @@
       ,
       //methods
       methods: {
-        toggleImageDialog() {
-          this.showImageDialog = !this.showImageDialog;
-        },
-        async updateInventory(row, newValue) {
+        async updateInventoryQty(product, newValue) {
           try {
-            // Update inventory quantity
-            row.productWithSizes[0].inventoryQty = newValue;
+            // Find the productWithSize object corresponding to the selected size number
+            const selectedProductWithSize = product.productWithSizes.find(pws => pws.shoeSize.sizeNumber === this.selectedSize);
 
-            // Call your editProduct function or any other logic to handle the update
-            await this.editProduct(row);
+            if (selectedProductWithSize) {
+              // Update the inventory quantity of the selected productWithSize
+              selectedProductWithSize.inventoryQty = newValue;
 
-            // Close the popup
-            row.isPopupOpen = false;
+              // Call your editProduct function or any other logic to handle the update
+              await this.editProduct(product);
+            } else {
+              console.error("Selected productWithSize not found.");
+            }
           } catch (error) {
             console.error("Error updating inventory:", error);
           }
+        },
+
+        selectedShoeSize(newValue) {
+          if (newValue !== null) {
+            const selectedProductWithSize = this.selectedProduct.productWithSizes.find(pws => pws.shoeSize.sizeNumber === newValue);
+            this.selectedInventoryQty = selectedProductWithSize ? selectedProductWithSize.inventoryQty : null;
+          } else {
+            this.selectedInventoryQty = null;
+          }
+        },
+        showDetails(product) {
+          this.selectedProduct = product;
+          this.sizeOptions = this.selectedProduct.productWithSizes.map(pws => pws.shoeSize.sizeNumber);
+          // Reset selected size and inventory quantity when showing details
+          this.selectedSize = null;
+          this.selectedInventoryQty = null;
+          this.showProductDetails = true;
+        },
+        toggleImageDialog() {
+          this.showImageDialog = !this.showImageDialog;
         },
         async editProduct(item) {
           try {
@@ -479,19 +485,6 @@
                 product.productName.toLowerCase().includes(searchTextLower) ||
                 product.sku.toLowerCase().includes(searchTextLower) ||
                 product.colorway.toLowerCase().includes(searchTextLower) ||
-                (
-                  product.productWithSizes.length > 0 &&
-                  product.productWithSizes[0].shoeSize &&
-                  product.productWithSizes[0].shoeSize.sizeType &&
-                  product.productWithSizes[0].shoeSize.sizeType.toLowerCase().includes(searchTextLower)
-                ) ||
-                (
-                  product.productWithSizes.length > 0 &&
-                  product.productWithSizes[0].shoeSize &&
-                  product.productWithSizes[0].shoeSize.sizeNumber !== null &&
-                  product.productWithSizes[0].shoeSize.sizeNumber !== undefined &&
-                  String(product.productWithSizes[0].shoeSize.sizeNumber).toLowerCase().includes(searchTextLower)
-                ) ||
                 product.productCollection.collectionName.toLowerCase().includes(searchTextLower) ||
                 product.productCollection.brand.brandName.toLowerCase().includes(searchTextLower)
               );

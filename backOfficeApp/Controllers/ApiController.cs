@@ -121,9 +121,26 @@ public class ApiController : ControllerBase
 public IActionResult GetProducts()
 {
     var ProductsList = _db.Product
-    .Include(db => db.ProductWithSizes)
+    .Include(p => p.ProductWithSizes)
         .ThenInclude(pws => pws.ShoeSize)
-    .Include(db => db.ProductCollection.Brand)  // Include Brand explicitly
+    .Include(p => p.ProductCollection.Brand)
+    .Select(p => new
+    {
+        p.ProductId,
+        p.Barcode,
+        p.ProductName,
+        p.CostPrice,
+        p.SellingPrice,
+        p.Sku,
+        p.Colorway,
+        p.Releasedate,
+        p.Amountsold,
+        p.ProductCollectionId,
+        p.ProductCollection,
+        p.ProductImageUrl,
+        TotalInventoryQty = p.ProductWithSizes.Sum(pws => pws.InventoryQty),
+        ProductWithSizes = p.ProductWithSizes  // Include ProductWithSizes here
+    })
     .ToList();
 
 

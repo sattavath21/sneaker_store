@@ -782,7 +782,6 @@ _db.Bill.AddRange(bills);
 
 // //         // Add all bills to the database
         _db.Bill.AddRange(bills);
-       
         _db.SaveChanges();
 
         var result = _db.Bill.ToList();
