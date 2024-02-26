@@ -76,7 +76,7 @@ public IActionResult Login()
     public async Task<IActionResult> LogOut()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "POS");
 
     }//ef
 #endregion

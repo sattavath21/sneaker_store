@@ -217,6 +217,194 @@ public IActionResult AddProduct(Product product)
     }
 }
 
+[HttpGet]
+    public IActionResult GetProductByBarcodeAdd(string barcode)
+    {
+        var result = _db.Product.FirstOrDefault(x => x.Barcode == barcode);
+        return Ok(result);
+    }//ef
+
+[HttpGet]
+public IActionResult GetProductByBarcode(string barcode)
+{
+    var result = _db.Product
+        .Where(x => x.Barcode == barcode)
+        .Select(x => new
+        {
+            x.Barcode,
+            x.ProductName,
+            x.CostPrice,
+            x.SellingPrice,
+            x.Sku,
+            x.Colorway,
+            x.Releasedate,
+            qty = 1,
+            x.Amountsold, // Use directly from Product model
+            ProductWithSizes = x.ProductWithSizes.Select(pws => new
+            {
+                pws.InventoryQty,
+                ShoeSize = new
+                {
+                    pws.ShoeSize.SizeType,
+                    pws.ShoeSize.SizeNumber
+                }
+            }),
+            ProductCollection = new
+            {
+                x.ProductCollection.CollectionName, // Use directly from ProductCollection model
+                Brand = new
+                {
+                    x.ProductCollection.Brand.BrandName // Use directly from Brand model
+                }
+            },
+            x.ProductImageUrl
+        })
+        .FirstOrDefault();
+
+    if (result == null)
+    {
+        return Ok(new
+        {
+            result,
+            status = -1
+        });
+    }
+    else
+    {
+        return Ok(new
+        {
+            result,
+            status = 1
+        });
+    }
+}
+
+[HttpGet]
+public IActionResult GetDiscountSelection()
+{
+    var discounts = _db.Discount.ToList();
+    return Ok(discounts);
+}
+
+
+[HttpGet]
+public IActionResult GetProductConditionSelection()
+{
+    var productConditions = _db.BillItem
+        .Select(billItem => billItem.ProductCondition)
+        .Distinct() // To get unique ProductConditions
+        .ToList();
+
+    return Ok(productConditions);
+}
+
+
+[HttpGet]
+public IActionResult GetStaffSelection()
+{
+    var staffList = _db.Staff.ToList();
+    return Ok(staffList);
+}
+
+[HttpGet]
+public IActionResult GetCustomersSelection()
+{
+    var customerList = _db.Customer.ToList();
+    return Ok(customerList);
+}
+
+[HttpGet]
+public IActionResult GetShippingMethodsSelection()
+{
+    var shippingMethods = _db.ShippingMethod.ToList();
+    return Ok(shippingMethods);
+}
+
+[HttpGet]
+public IActionResult GetDeliveryServicesSelection()
+{
+    var deliveryServices = _db.DeliveryService.ToList();
+    return Ok(deliveryServices);
+}
+
+[HttpGet]
+public IActionResult GetBranchesSelection()
+{
+    var branches = _db.Branch.ToList();
+    return Ok(branches);
+}
+
+[HttpGet]
+public IActionResult GetOrderStatusesSelection()
+{
+    var statuses = _db.OrderStatus.ToList();
+    return Ok(statuses);
+}
+
+[HttpPost]
+public IActionResult AddSale(Bill bill)
+{
+    try
+    {
+
+        // Assuming other necessary properties are already populated
+        var soldProduct = bill.BillItems.Select(x => x.ProductId).ToList();
+        
+        // Save the bill to the database
+        _db.Bill.Add(bill);
+        _db.SaveChanges();
+
+        // Optionally, you can return the newly created bill as a response
+        return Ok(bill);
+    }
+    catch (Exception ex)
+    {
+        // Handle any exceptions that occur during the process
+        return StatusCode(500, $"An error occurred: {ex.Message}");
+    }
+}
+
+
+    // [HttpGet]
+    // public IActionResult ProductByBarcode(string barcode)
+    // {
+    //     var result = _db.CheckInItem
+    //     .Select(x => new
+    //     {
+    //         checkInItemId = x.CheckInItemId,
+    //         productId = x.ProductId,
+    //         checkinId = x.CheckinId,
+    //         checkinDate = x.Checkin.CheckInDate,
+    //         checkinCredit = x.Checkin.CreditTerm,
+    //         productName = x.Product.ProductName,
+    //         checkInQty = x.CheckInQty,
+    //         productCost = x.Product.ProductCost,
+    //         productPrice = x.Product.ProductPrice,
+    //         productMake = x.Product.ProductMake,
+    //         productType = x.Product.ProductType,
+    //         productUnit = x.Product.ProductUnit,
+    //         productBarcode = x.Product.Barcode
+
+    //     }).FirstOrDefault(x => x.productBarcode == barcode);
+    //     if (result == null)
+    //     {
+
+    //         return Ok(new
+    //         {
+    //             result,
+    //             status = -1
+    //         });
+    //     }
+    //     else
+    //     {
+    //         return Ok(new
+    //         {
+    //             result,
+    //             status = 1
+    //         });
+    //     }
+    // }//ef
+
 // [HttpGet]
 // public IActionResult GetProductSellings()
 // {
