@@ -14,6 +14,9 @@
     <link href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
         rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/quasar@2.11.2/dist/quasar.css" rel="stylesheet" type="text/css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@100..900&display=swap" rel="stylesheet">
 
 
 </head>
@@ -49,7 +52,7 @@
     
   "
 >
-  ລາຍການຄຳສັ່ງຊື້
+  ກະຕ່າ
 </q-tab>
 
 <q-tab
@@ -66,14 +69,14 @@
     
   "
 >
-  ສິນຄ້າໃນສາງ
+  ສະຕ໋ອກໜ້າຮ້ານ
 </q-tab>
 
 <q-tab
   class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
-  name="suppliers"
+  name="history"
   icon="history"
-  onclick='window.location="/supplier"'
+  onclick='window.location="/history"'
   :ripple="{ center: true }"
   style="
     font-size: 20px;
@@ -88,9 +91,9 @@
 
 <q-tab
   class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
-  name="suppliers"
-  icon="local_shipping"
-  onclick='window.location="/supplier"'
+  name="discount"
+  icon="local_offer"
+  onclick='window.location="/discount"'
   :ripple="{ center: true }"
   style="
     font-size: 20px;
@@ -100,14 +103,14 @@
     
   "
 >
-  ການຈັດສົ່ງ
+  ໂປຣໂມຊັ່ນ
 </q-tab>
 
 <q-tab
   class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
-  name="staff"
-  icon="supervised_user_circle"
-  onclick='window.location="/staff"'
+  name="delivery"
+  icon="local_shipping"
+  onclick='window.location="/delivery"'
   :ripple="{ center: true }"
   style="
     font-size: 20px;
@@ -117,8 +120,27 @@
     
   "
 >
-  ພະນັກງານ
+  ບໍລິສັດຂົນສົ່ງ
 </q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="stakeholder"
+  icon="face"
+  onclick='window.location="/stakeholder"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  ຜູ້ກ່ຽວຂ້ອງ
+</q-tab>
+
+
 <q-tab
   class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
   name="reports"
@@ -135,6 +157,23 @@
 >
   ລາຍງານສະຫຼຸບ
 </q-tab>
+
+<q-tab
+  class="text-grey-10 text-h6 text-weight-medium  my-custom-tab-class"
+  name="testing"
+  onclick='window.location="/testing"'
+  :ripple="{ center: true }"
+  style="
+    font-size: 20px;
+    padding: 22px;
+    color: #333;
+    background-color: #dedede;
+    
+  "
+>
+  DEVELOPMENT TESTING
+</q-tab>
+
 
 <q-tab
   class="text-red-8 text-h7 text-weight-medium  my-custom-tab-class"

@@ -1,0 +1,550 @@
+<div id="app1">
+
+
+  <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */;
+            ">
+    Delivery Information
+  </div>
+
+  <q-table title="Delivery Services" :rows="deliveryRows" :columns="deliveryColumns" row-key="deliveryServiceId"
+    separator="none" @* v-model:selected="selected" selection="multiple" *@>
+
+    <template #body="props">
+      <q-tr :props="props">
+
+        <q-td key="expand" :props="props">
+          <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
+            @@click="props.expand = !props.expand">
+          </q-btn>
+        </q-td>
+
+        <q-td key="deliveryActions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+            size="15px"></q-btn>
+          <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this delivery service?</span>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteDelivery(props.row)" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </q-td>
+
+        <q-td key="deliveryServiceId" :props="props">
+          {{ props.row.deliveryServiceId }}
+        </q-td>
+
+        <q-td key="deliveryCompanyName" :props="props">
+          {{ props.row.deliveryCompanyName }}
+          <q-popup-edit v-model="props.row.deliveryCompanyName">
+            <q-input v-model="props.row.deliveryCompanyName" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editDelivery(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+
+      </q-tr>
+
+      @* Expanded section *@
+      <q-tr :props="props" v-show="props.expand">
+        <q-td colspan="100%">
+          <q-table :title="props.row.deliveryCompanyName + ' Branches'" :rows="props.row.deliveryBranches" :columns="branchesColumns" row-key="branchId"
+            separator="none">
+            <!-- Define columns for phone numbers -->
+            <!-- Dont forget template -->
+            <!-- props become the phoneNumbers -->
+            <template #body="props">
+
+              <!-- NEW props -->
+              <q-tr :props="props">
+                <q-td key="branchActions" :props="props">
+                  <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+                    size="15px"></q-btn>
+                  <q-dialog v-model="confirm" persistent>
+                    <q-card>
+                      <q-card-section class="row items-center">
+                        <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
+                        <span class="q-ml-sm">Are you sure you want to delete this branch?</span>
+                      </q-card-section>
+
+                      <q-card-actions align="center">
+                        <q-btn class="q-ma-sm" color="red-6" @@click="deleteDelivery(props.row)" label="Yes"
+                          v-close-popup></q-btn>
+                        <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                      </q-card-actions>
+                    </q-card>
+                  </q-dialog>
+                </q-td>
+
+<q-td key="branchIndex" :props="props">{{ props.rowIndex + 1 }}</q-td>
+
+                <q-td key="branchId" :props="props">
+                  {{ props.row.branch.branchId }}
+                </q-td>
+                <q-td key="branchName" :props="props">
+                  {{ props.row.branch.branchName }}
+                  <q-popup-edit v-model="props.row.branch.branchName">
+                    <q-input v-model="props.row.branch.branchName" dense autofocus counter></q-input>
+                    <div class="justify-end row">
+                      <q-btn color="blue-grey-6" @@click="editBranch(props.row.branch)" icon="edit" label="edit"
+                        v-close-popup="cancelEnabled">
+                      </q-btn>
+                    </div>
+                  </q-popup-edit>
+
+                </q-td>
+
+
+
+              </q-tr>
+            </template>
+
+          </q-table>
+
+          <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
+  label="Add new branch" size="md" @@click="openBranchDialog(props.row.deliveryServiceId)">
+</q-btn>
+
+          @* Dialog when add branch *@
+          <q-dialog v-model="branchDialogVisible" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <span class="q-ml-sm">Enter branch name:</span>
+              </q-card-section>
+
+              <q-card-section>
+                <q-input filled v-model="newBranch.branchName" label="Branch Name" lazy-rules
+                  :rules="[ val => val && val.length > 0 || 'Please enter branch name']">
+                </q-input>
+              </q-card-section>
+
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="primary" @@click="addBranch(props.row.deliveryServiceId)"
+                  label="Add"></q-btn>
+                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeBranchDialog"></q-btn>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+
+        </q-td>
+      </q-tr>
+
+
+
+    </template>
+
+  </q-table>
+
+  <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
+    label="Add new delivery service" size="md" @@click="openDialog">
+  </q-btn>
+
+  @* Dialog when add Delivery *@
+  <q-dialog v-model="deliveryDialogVisible" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <span class="q-ml-sm">Enter Delivery Company Name:</span>
+      </q-card-section>
+
+      <q-card-section>
+        <q-input filled v-model="newDeliveryCompanyName.deliveryCompanyName" label="Delivery Company Name" lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter company name']">
+        </q-input>
+      </q-card-section>
+
+      <q-card-actions align="center">
+        <q-btn class="q-ma-sm" color="primary" @@click="addDelivery" label="Add"></q-btn>
+        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeDialog"></q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+
+
+
+</div>
+
+@section code {
+  <script>
+    var option = {
+      //data
+      data() {
+        return {
+          deliveryDialogVisible: false,
+          branchDialogVisible: false,
+          newDeliveryCompanyName: {
+            deliveryCompanyName: ""
+          },
+          newBranch: {
+            branchName: ""
+          },
+          newDeliveryBranch:{
+            deliveryServiceId: null,
+            branchId: null
+          },
+          deliveryRows: [],
+          deliveryColumns: [
+            {
+              name: 'expand',
+              label: 'Expand',
+              field: 'expand',
+              align: 'center'
+
+            },
+            {
+              name: 'deliveryActions',
+              label: 'Actions',
+              field: 'deliveryActions',
+              align: 'center'
+            },
+
+            {
+              name: 'deliveryServiceId',
+              field: 'deliveryServiceId',
+              align: 'center',
+              sortable: true,
+              label: 'ID'
+            },
+            {
+              name: 'deliveryCompanyName',
+              label: 'Delivery name',
+              field: 'deliveryCompanyName',
+              align: 'center',
+              sortable: true,
+            },
+
+
+          ],
+
+          branchesColumns: [
+            {
+              name: 'branchActions',
+              label: 'Actions',
+              field: 'branchActions',
+              align: 'center'
+            },
+            {
+              name: 'branchIndex',
+              field: 'branchIndex',
+              align: 'center',
+              sortable: true,
+              label: 'Branch No'
+            },
+            {
+              name: 'branchId',
+              field: 'branch.branchId',
+              align: 'center',
+              sortable: true,
+              label: 'Branch ID'
+            },
+            {
+              name: 'branchName',
+              label: 'Branch name',
+              field: 'branch.branchName',
+              align: 'center',
+              sortable: true,
+            }
+
+          ]
+
+        };
+      }
+      ,
+      //methods
+      methods: {
+        openDialog() {
+          this.deliveryDialogVisible = true;
+        },
+        closeDialog() {
+          this.deliveryDialogVisible = false;
+        },
+      openBranchDialog(deliveryServiceId) {
+  this.branchDialogVisible = true;
+  this.newBranchDeliveryServiceId = deliveryServiceId; // Store the deliveryServiceId for later use
+},
+
+        closeBranchDialog() {
+          this.branchDialogVisible = false;
+        },
+        async addDelivery() {
+          try {
+            console.log("DeliveryService String:", this.newDeliveryCompanyName);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddDeliveryService", this.newDeliveryCompanyName);
+
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful product addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Delivery Service added successfully!'
+              });
+            this.closeDialog();
+            this.onReset();
+
+            } else {
+              // Log detailed error information
+              console.error(response);
+
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Delivery. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
+
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
+
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Delivery. Please check the console for details.'
+            });
+          }
+        }
+
+        ,
+
+        async editDelivery(item) {
+          try {
+            const response = await axios.post("myapi/EditDelivery", item);
+            console.log("Request data:", item);
+            console.log("Response data:", response.data);
+
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+            } else {
+              console.error("Unexpected response status:", response.status);
+            }
+          } catch (error) {
+            console.error("Error during request:", error);
+
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
+            }
+          }
+        }
+        ,
+
+        async deleteDelivery(item) {
+          console.log(item);
+          var url = "/myapi/DeleteDelivery";
+          var del = item;
+
+          try {
+            // Send the delete request
+            await axios.post(url, del);
+
+            // Use the correct property name in the filter callback
+            this.deliveryRows = this.deliveryRows.filter(x => x.deliveryServiceId !== item.deliveryServiceId);
+
+            // Set a flag in local storage indicating successful delete
+            localStorage.setItem('deleteSuccess', 'true');
+
+            // Refresh the page
+            window.location.reload();
+          } catch (error) {
+            console.error('Error deleting delivery branch:', error);
+
+            // Notify the user about the error
+            this.$q.notify({
+              type: 'negative',
+              color: 'red-8',
+              message: 'Error deleting delivery branch'
+            });
+          }
+        },
+
+        async editBranch(item) {
+          try {
+            const response = await axios.post("myapi/EditBranch", item);
+            console.log("Request data:", item);
+            console.log("Response data:", response.data);
+
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+            } else {
+              console.error("Unexpected response status:", response.status);
+            }
+          } catch (error) {
+            console.error("Error during request:", error);
+
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
+            }
+          }
+        }
+        ,
+
+        async deleteBranch(item) {
+          console.log(item);
+          var url = "/myapi/DeleteBranch"; // URL for the delete request
+          var del = item.branch; // Pass only the branch object to the delete method
+
+          try {
+            // Send the delete request
+            await axios.post(url, del);
+
+            // Update the delivery rows after successful deletion
+            this.deliveryRows.forEach(deliveryService => {
+              deliveryService.deliveryBranches = delivery.deliveryBranches.filter(branch => branch.branchId !== item.branch.branchId);
+            });
+
+            // Set a flag in local storage indicating successful delete
+            localStorage.setItem('deleteSuccess', 'true');
+
+            // Refresh the page
+            window.location.reload();
+          } catch (error) {
+            console.error('Error deleting delivery branch:', error);
+
+            // Notify the user about the error
+            this.$q.notify({
+              type: 'negative',
+              color: 'red-8',
+              message: 'Error deleting delivery branch'
+            });
+          }
+        },
+
+       async addBranch() {
+  try {
+    console.log("Branch String:", this.newBranch);
+   
+    // Make the API call
+    var response = await axios.post(`/myapi/AddBranch?deliveryServiceId=${this.newBranchDeliveryServiceId}`, this.newBranch);
+
+    // Handle the response or perform any necessary logic
+    if (response.status === 200) {
+      // Additional logic after successful product addition
+      this.$q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'cloud_done',
+        message: 'New Branch added successfully!'
+      });
+       this.closeBranchDialog();
+        this.onReset();
+    } else {
+      // Log detailed error information
+      console.error(response);
+
+      // Handle the case where the API call was not successful
+      this.$q.notify({
+        color: 'red-4',
+        textColor: 'white',
+        icon: 'error',
+        message: 'Error adding Branch. Please check the console for details.'
+      });
+    }
+  } catch (error) {
+    // Log detailed error information
+    console.error(error);
+
+    // Hide loading indicator in case of an error
+    this.$q.loading.hide();
+
+    this.$q.notify({
+      color: 'red-4',
+      textColor: 'white',
+      icon: 'error',
+      message: 'Error adding Branch. Please check the console for details.'
+    });
+  }
+},
+
+async onReset() {
+  const notif = this.$q.notify({
+    type: 'ongoing',
+    message: 'Resetting...'
+  });
+
+  try {
+    // Reset the deliveryRows array to an empty array
+    this.deliveryRows = [];
+
+    // Call the API to get delivery services data again
+    const deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
+    this.deliveryRows = deliveryReponse.data;
+
+    // Notify the user that the reset was successful
+    notif({
+      type: 'positive',
+      message: 'Reset successful',
+      timeout: 300
+    });
+  } catch (error) {
+    // Notify the user if an error occurs during the reset process
+    notif({
+      type: 'negative',
+      message: 'Failed to reset. Please try again.',
+      timeout: 300
+    });
+    console.error('Error resetting deliveries data:', error);
+  }
+}
+
+
+
+
+
+
+      }
+      ,
+      //computed
+      computed: {
+ branchIndex() {
+    return (index) => index + 1;
+  }
+      }
+      ,
+
+      //created
+      async created() {
+
+        try {
+          var deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
+          this.deliveryRows = deliveryReponse.data;
+          console.log(deliveryReponse.data);
+        }
+        catch (error) {
+          console.log(error);
+        }
+
+      }//ecreated
+      ,
+      //mounted
+      mounted() {
+
+      }
+
+    };
+
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+  </script>
+
+}

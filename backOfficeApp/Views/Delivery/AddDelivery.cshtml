@@ -42,7 +42,7 @@
                 <q-card>
                     <q-card-section class="row items-center">
                         <q-avatar icon="groups" color="green" text-color="white"></q-avatar>
-                        <span class="q-ml-sm">Add this supplier?</span>
+                        <span class="q-ml-sm">Add this delivery service?</span>
                     </q-card-section>
                     <q-card-actions align="center">
                         <q-btn class="q-ma-sm" color="green" @@click="addDeliveryBranches" label="Yes" v-close-popup></q-btn>
@@ -50,7 +50,7 @@
                     </q-card-actions>
                 </q-card>
             </q-dialog>
-            <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/supplier"'
+            <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/delivery"'
                 size="lg"></q-btn>
             <q-dialog v-model="completedDialog">
                 <q-card class="bg-indigo-1">
@@ -61,7 +61,7 @@
                         </div>
                     </q-card-section>
                     <q-card-section class="q-pt-none">
-                        Supplier Information had been added
+                        Delivery service information had been added
                     </q-card-section>
                     <q-card-actions align="right">
                         <q-btn flat label="Check" color="indigo" onclick='window.location="/supplier"'></q-btn>

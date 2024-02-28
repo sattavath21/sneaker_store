@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
 [Authorize]
-public class SupplierController : Controller
+public class DeliveryController : Controller
 {
-    private readonly ILogger<SupplierController> _logger;
+    private readonly ILogger<DeliveryController> _logger;
     private BackofficeappDbContext _db;
 
-    public SupplierController(ILogger<SupplierController> logger, BackofficeappDbContext db)
+    public DeliveryController(ILogger<DeliveryController> logger, BackofficeappDbContext db)
     {
         _logger = logger;
         _db = db;
@@ -22,7 +22,7 @@ public class SupplierController : Controller
         return View();
     }
 
-    public IActionResult AddSup()
+    public IActionResult AddDelivery()
     {
         return View();
     }

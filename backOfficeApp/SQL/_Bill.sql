@@ -22,14 +22,14 @@ create table `ShippingMethod` (
 
 create table `Discount` (
  DiscountId int(11) not null,
+ Description varchar(255)  default null,
  DiscountPercentage int(11) not null,
- MaxDiscountAmount int(11) not null,
  MinSpend int(11) not null,
+ MaxDiscountAmount int(11) not null,
  Start datetime not null,
  Duration int(11) not null,
  Amount int(11) not null,
  ShippingMethodId int(11) not null,
- Description varchar(255)  default null,
  primary key (DiscountId),
  KEY IX_Discount_ShippingMethodId (ShippingMethodId),
  CONSTRAINT FK_Discount_ShippingMethod_ShippingMethodId FOREIGN KEY (ShippingMethodId) REFERENCES `ShippingMethod` (ShippingMethodId) ON DELETE CASCADE    
@@ -114,11 +114,11 @@ create table `Customer` (
  CustomerId int(11) not null,
  CustomerFirstname varchar(255)  default null,
  CustomerLastname varchar(255)  default null,
+ Gender varchar(255)  default null,
  CustomerBirthday datetime not null,
+ Email varchar(255)  default null,
  CustomerPhoneNumber varchar(255)  default null,
  CustomerSocialLink varchar(255)  default null,
- Gender varchar(255)  default null,
- Email varchar(255)  default null,
  primary key (CustomerId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -198,6 +198,7 @@ create table `BillItem` (
  BillItemId int(11) not null,
  ShoeSizeId int(11) not null,
  ProductConditionId int(11) not null,
+ ItemQty int(11) not null,
  ProductId int(11) not null,
  BillId int(11) not null,
  primary key (BillItemId),
@@ -218,6 +219,7 @@ create table `Bill` (
  OrderStatusId int(11) not null,
  ShippingMethodId int(11) not null,
  CustomerTransferPicPath varchar(255)  default null,
+ ShippingReceipt varchar(255)  default null,
  DiscountId int(11) not null,
  DeliveryServiceId int(11) not null,
  BranchId int(11) not null,

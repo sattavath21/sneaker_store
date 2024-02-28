@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 [ApiController]
 [Route("api/[action]")]
@@ -20,92 +19,6 @@ public class ApiController : ControllerBase
 
 
      #region ACTIONS
-
-// [HttpGet]
-// public IActionResult GetDeliveryBranches()
-// {
-//     var deliveryBranchList = _db.DeliveryBranch
-//         .Include(db => db.DeliveryService)
-//         .Include(db => db.BranchTelNumbers)
-//         .Include(db => db.BranchAddress)
-//         .ToList();
-
-//     if (deliveryBranchList == null || deliveryBranchList.Count == 0)
-//     {
-//         return NotFound();
-//     }
-
-//     return Ok(deliveryBranchList);
-// }
-
-// [HttpPost]
-// public IActionResult AddDeliveryBranches(DeliveryBranch deliveryBranch)
-// {
-//     // Add validation logic if needed
-//     if (deliveryBranch == null)
-//     {
-//         return BadRequest("Invalid delivery branch data");
-//     }
-
-//     try
-//     {
-//         // Save the delivery branch information to the database
-//         _db.DeliveryBranch.Add(deliveryBranch);
-//         _db.SaveChanges();
-
-//         return Ok(deliveryBranch);
-//     }
-//     catch (Exception ex)
-//     {
-//         // Log the exception for debugging purposes
-//         Console.Error.WriteLine(ex);
-//         return StatusCode(500, "Internal Server Error");
-//     }
-// }
-
-// [HttpPost]
-//     public IActionResult EditDeliveryBranch(DeliveryBranch e)
-//     {
-//         //update product
-//         _db.DeliveryBranch.Update(e);
-//         _db.SaveChanges();
-//         return Ok(e);
-//     }//ef
-
-//     [HttpPost]
-// public IActionResult DeleteDeliveryBranch(DeliveryBranch d)
-// {
-//     try
-//     {
-//         var deliveryBranchToDelete = _db.DeliveryBranch
-//             .Include(db => db.DeliveryService)
-//             .Include(db => db.BranchTelNumbers)
-//             .Include(db => db.BranchAddress)
-//             .FirstOrDefault(x => x.DeliveryBranchId == d.DeliveryBranchId);
-
-//         if (deliveryBranchToDelete == null)
-//         {
-//             return NotFound("Delivery branch not found");
-//         }
-
-//         // Remove related entities
-//         _db.DeliveryService.RemoveRange(deliveryBranchToDelete.DeliveryService);
-//         _db.BranchTelNumber.RemoveRange(deliveryBranchToDelete.BranchTelNumbers);
-//         _db.BranchAddress.RemoveRange(deliveryBranchToDelete.BranchAddress);
-
-//         // Remove the delivery branch from the database
-//         _db.DeliveryBranch.Remove(deliveryBranchToDelete);
-//         _db.SaveChanges();
-
-//         return Ok(new { message = "Delivery branch deleted successfully" });
-//     }
-//     catch (Exception ex)
-//     {
-//         // Log the exception for debugging purposes
-//         Console.Error.WriteLine(ex);
-//         return StatusCode(500, "Internal Server Error");
-//     }
-// }
 
 
 [HttpGet]
@@ -365,67 +278,6 @@ public IActionResult AddSale(Bill bill)
 }
 
 
-    // [HttpGet]
-    // public IActionResult ProductByBarcode(string barcode)
-    // {
-    //     var result = _db.CheckInItem
-    //     .Select(x => new
-    //     {
-    //         checkInItemId = x.CheckInItemId,
-    //         productId = x.ProductId,
-    //         checkinId = x.CheckinId,
-    //         checkinDate = x.Checkin.CheckInDate,
-    //         checkinCredit = x.Checkin.CreditTerm,
-    //         productName = x.Product.ProductName,
-    //         checkInQty = x.CheckInQty,
-    //         productCost = x.Product.ProductCost,
-    //         productPrice = x.Product.ProductPrice,
-    //         productMake = x.Product.ProductMake,
-    //         productType = x.Product.ProductType,
-    //         productUnit = x.Product.ProductUnit,
-    //         productBarcode = x.Product.Barcode
-
-    //     }).FirstOrDefault(x => x.productBarcode == barcode);
-    //     if (result == null)
-    //     {
-
-    //         return Ok(new
-    //         {
-    //             result,
-    //             status = -1
-    //         });
-    //     }
-    //     else
-    //     {
-    //         return Ok(new
-    //         {
-    //             result,
-    //             status = 1
-    //         });
-    //     }
-    // }//ef
-
-// [HttpGet]
-// public IActionResult GetProductSellings()
-// {
-//     var ProductSellingsList = _db.ProductSelling
-//     .Include(db => db.OrderStatus)
-//     .Include(db => db.ShoeSize)  // Include Brand explicitly
-//     .Include(db => db.ProductCondition)
-//     .Include(db => db.CustomerProductImages)
-//     .Include(db => db.CustomerDefectImages)
-//     .Include(db => db.Product)
-//     .ToList();
-
-
-//     if (ProductSellingsList == null || ProductSellingsList.Count == 0)
-//     {
-//         return NotFound();
-//     }
-
-//     return Ok(ProductSellingsList);
-// }
-
 [HttpPost]
     public IActionResult AddStaff(Staff c)
     {
@@ -463,90 +315,6 @@ public IActionResult AddSale(Bill bill)
         return Ok(c);
     }//ef
 
-// [HttpGet]
-// public IActionResult GetCustomers()
-// {
-//     var GetCustomersList = _db.Customer
-//     .Include(db => db.CustomerAddresses)
-//         .ThenInclude(pws => pws.Address)
-//     .Include(db => db.CustomerBankAccounts)  // Include Brand explicitly
-//         .ThenInclude(pws => pws.Bank)
-//     .Include(db => db.CustomerWishlists)
-//         .ThenInclude(pws => pws.Product)
-//     .Include(db => db.CustomerWishlists)
-//     .ThenInclude(pws => pws.ShoeSize)
-//     .ToList();
-
-
-//     if (GetCustomersList == null || GetCustomersList.Count == 0)
-//     {
-//         return NotFound();
-//     }
-
-//     return Ok(GetCustomersList);
-// }
-
-// [HttpGet]
-// public IActionResult GetOrders()
-// {
-//     var GetCustomersList = _db.Bill
-//     .Include(db => db.OrderStatus)
-//     .Include(db => db.Discount)  // Include Brand explicitly
-//     .Include(db => db.DeliveryReceiptPics)
-//     .Include(db => db.StoreBranch)
-//     .Include(db => db.Customer)
-//     .Include(db => db.DeliveryBranch)
-//         .ThenInclude(pws => pws.DeliveryService)
-//     .Include(db => db.ShippingMethod)
-//     .Include(db => db.BillItems)
-//         .ThenInclude(pws => pws.ShoeSize)
-//     .Include(db => db.BillItems)
-//         .ThenInclude(pws => pws.ProductCondition)
-//     .Include(db => db.BillItems)
-//         .ThenInclude(pws => pws.Product)
-//             .ThenInclude(ss => ss.ProductCollection)
-//     .ToList();
-
-
-//     if (GetCustomersList == null || GetCustomersList.Count == 0)
-//     {
-//         return NotFound();
-//     }
-
-//     return Ok(GetCustomersList);
-// }
-
-// [HttpGet]
-//     public IActionResult GetStatus()
-//     {
-//         var list1 = _db.OrderStatus.ToList();
-//         return Ok(list1);
-//     }
-
-// [HttpPost]
-// public IActionResult ChangeOrderStatus([FromBody] ChangeOrderStatusRequest request)
-// {
-//     try
-//     {
-//         var bill = _db.Bill.Find(request.BillId);
-//         if (bill == null)
-//         {
-//             return NotFound(); // Handle not found scenario
-//         }
-
-//         bill.OrderStatusId = request.OrderStatusId;
-//         _db.Bill.Update(bill); // Update the bill object
-//         _db.SaveChanges();
-
-//         return Ok(bill); // Return updated bill object
-//     }
-//     catch (Exception ex)
-//     {
-//         // Log the exception for debugging purposes
-//         _logger.LogError(ex, "Error changing order status");
-//         return StatusCode(500, "Internal Server Error");
-//     }
-// }
 
 
      #endregion

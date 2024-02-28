@@ -7,6 +7,7 @@ public class BillItem {
   public ShoeSize ShoeSize {get;set;} //np
   public int ProductConditionId {get;set;}//fk="ProductCondition"
   public ProductCondition ProductCondition {get;set;} //np
+  public int ItemQty {get;set;}//label="Item_ Qty"
   public int ProductId {get;set;}//fk="Product"
   public Product Product {get;set;} //np
   public int BillId {get;set;}//fk="Bill"
