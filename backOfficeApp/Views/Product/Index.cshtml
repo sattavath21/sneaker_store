@@ -22,24 +22,8 @@
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
-        <q-td key="actions" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
-            size="15px"></q-btn>
-          <q-dialog v-model="confirm" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-                <span class="q-ml-sm">Are you sure you want to delete this product?</span>
-              </q-card-section>
-
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue-12" @@click="showDetails(props.row)" icon="details"
+        <q-td key="details" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue-12" @@click="showDetails(props.row)" icon="format_list_numbered"
             size="15px"></q-btn>
           <q-dialog v-model="showProductDetails" persistent :max-width="400">
             <div style="width: 100%; max-width: 400px;">
@@ -58,8 +42,20 @@
                 <!-- Select size section -->
                 <q-card-section>
                   <div v-if="selectedProduct && selectedProduct.productWithSizes">
-                    <q-select v-model="selectedSize" :options="sizeOptions" label="Select Size" dense outlined
-                      @@update:model-value="selectedShoeSize" />
+                    <q-select v-model="selectedSize" :options="sizeOptions" label="Select Size" dense outlined emit-value map-options
+                      @@update:model-value="selectedShoeSize" >
+                    <template v-slot:option="scope">
+                      <q-item v-bind="scope.itemProps">
+                        <q-item-section>
+                          <q-item-label>{{ scope.opt.label }}</q-item-label>
+                        </q-item-section>
+                          <q-item-section avatar>
+                          <q-item-label caption>Qty: {{ scope.opt.description }}</q-item-label>
+                        </q-item-section>
+                      </q-item>
+                    </template>
+
+                      </q-select>
                   </div>
                 </q-card-section>
 
@@ -231,7 +227,25 @@
           </q-popup-edit>
         </q-td>
 
+        <q-td key="deletes" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+            size="15px"></q-btn>
+          <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this product?</span>
+              </q-card-section>
 
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        
+        </q-td>
 
 
 
@@ -267,9 +281,9 @@
           searchText: "",
           columns: [
             {
-              name: 'actions',
-              label: 'Actions',
-              field: 'actions',
+              name: 'details',
+              label: 'Product details',
+              field: 'details',
               align: 'center'
             },
             {
@@ -383,6 +397,12 @@
               align: 'center',
 
             },
+            {
+              name: 'deletes',
+              label: 'Delete product',
+              field: 'deletes',
+              align: 'center'
+            },
           ]
         };
       }
@@ -418,7 +438,13 @@
         },
         showDetails(product) {
           this.selectedProduct = product;
-          this.sizeOptions = this.selectedProduct.productWithSizes.map(pws => pws.shoeSize.sizeNumber);
+          @* this.sizeOptions = this.selectedProduct.productWithSizes.map(pws => pws.shoeSize.sizeNumber); *@
+           this.sizeOptions = this.selectedProduct.productWithSizes.map(pws => ({
+            label: pws.shoeSize.sizeNumber,
+            value: pws.shoeSize.sizeNumber,
+            description: pws.inventoryQty
+    })); 
+
           // Reset selected size and inventory quantity when showing details
           this.selectedSize = null;
           this.selectedInventoryQty = null;
