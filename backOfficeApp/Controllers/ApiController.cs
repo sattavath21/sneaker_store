@@ -186,6 +186,13 @@ public IActionResult GetProductByBarcode(string barcode)
 }
 
 [HttpGet]
+public IActionResult GetCollections()
+{
+    var shoeSizes = _db.ProductCollection.ToList();
+    return Ok(shoeSizes);
+}
+
+[HttpGet]
 public IActionResult GetShoeSizes()
 {
     var shoeSizes = _db.ShoeSize.ToList();

@@ -36,7 +36,7 @@
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 300px;">
+        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 400px;">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -56,21 +56,14 @@
             hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
          <q-select
+         class="q-px-sm"
       filled
-      v-model="selectedSizeType"
-      :options="sizeTypeOptions"
-      label="Select Size Type"
+      v-model="selectedShoeSizeId"
+      :options="shoeSizeOptions"
+      label="Select Shoe Size"
       lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Please select a size type']"
-    ></q-select>
-<q-separator vertical class="q-my-md"></q-separator>
-    <q-select
-      filled
-      v-model="selectedSizeNumber"
-      :options="sizeNumberOptions"
-      label="Select Size Number"
-      lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Please select a size number']"
+      :rules="[ val => val && val.length > 0 || 'Please select a shoe size']"
+      style="width: 400px;"
     ></q-select>
 <q-separator vertical class="q-my-md"></q-separator>
         <q-input class="q-px-sm" filled v-model="product.productCollection.collectionName" label="Collection Name"
@@ -142,10 +135,8 @@
             //data
             data() {
                 return {
-                    selectedSizeType: null,
-      selectedSizeNumber: null,
-      sizeTypeOptions: [],
-      sizeNumberOptions: [],
+                    selectedShoeSizeId: null,
+      shoeSizeOptions: [],
                     barcodeScan: '',
                     confirm: false,
                     product: {
@@ -275,13 +266,15 @@
                         });
                     }
                 },
-async fetchSizeData() {
+async fetchShoeSizeData() {
       try {
-        const response = await axios.get("/api/GetShoeSizes"); // Replace "/api/sizeData" with your actual endpoint
-        this.sizeTypeOptions = response.data.map(size => size.sizeType); // Assuming response.data is an array of ShoeSize objects
-        this.sizeNumberOptions = response.data.map(size => size.sizeNumber); // Modify accordingly if structure is different
+        const response = await axios.get("/api/GetShoeSizes"); // Replace "/api/shoeSizeData" with your actual endpoint
+        this.shoeSizeOptions = response.data.map(size => ({
+          value: size.shoeSizeId,
+          label: `${size.sizeType} - ${size.sizeNumber}`
+        }));
       } catch (error) {
-        console.error("Error fetching size data: ", error);
+        console.error("Error fetching shoe size data: ", error);
       }
     },
                 
@@ -351,7 +344,8 @@ async fetchSizeData() {
             ,
             //mounted
             mounted() {
-this.fetchSizeData();
+this.fetchShoeSizeData();
+this.$refs.input1.$el.focus()
             }
 
         };

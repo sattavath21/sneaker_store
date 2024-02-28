@@ -95,13 +95,24 @@
                         }
                     }
                 ],
-               
-                "Product_Collection": {
-                    "Collection_Name": "Jordan 1",
-                    "Brand": {
-                        "Brand_Name": "Jordan"
+                "Brand":{
+                    "Brand_Name":"asdasdasd",
+                    "Brand_Logo":"asdasdasdasd",
+                  "Brand_Collections":[
+                    {
+                        "Product_Collection":{
+                                                "Collection_Name": "Jordan 1",
+
+                        }
                     }
+                  ]  
                 },
+
+            "Product_Collection":{
+                                                "Collection_Name": "Jordan 1"
+
+                        },
+
                 "Product_Image_Url": "adasdasdad"
                 
             }
