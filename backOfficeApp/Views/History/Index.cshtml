@@ -90,6 +90,18 @@
             </q-popup-edit>
           </q-td>
 
+          <q-td key="shippingReceipt" :props="props">
+            {{ props.row.shippingReceipt }}
+            <q-popup-edit v-model="props.row.shippingReceipt">
+              <q-input v-model="props.row.shippingReceipt" dense autofocus counter></q-input>
+              <div class="justify-end row">
+                <q-btn color="blue-grey-6" @@click="editBill(props.row)" icon="edit" label="Edit"
+                  v-close-popup="cancelEnabled">
+                </q-btn>
+              </div>
+            </q-popup-edit>
+          </q-td>
+
           <q-td key="description" :props="props">
             {{ props.row.discount.description }}
             
@@ -150,12 +162,14 @@
                 </q-td>
                 <q-td key="productName" :props="props">
                   {{ props.row.product.productName }}
-                
                 </q-td>
 
                 <q-td key="shoeSizeNumber" :props="props">
                   {{ props.row.shoeSize.sizeNumber }}
-                
+                </q-td>
+
+                <q-td key="itemQty" :props="props">
+                  {{ props.row.itemQty }}
                 </q-td>
 
                  <q-td key="productCondition" :props="props">
@@ -173,9 +187,7 @@
 
           </q-table>
 
-          <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
-            label="Add new branch" size="md" @@click="openBranchDialog(props.row.deliveryServiceId)">
-          </q-btn>
+        
 
           @* Dialog when add branch *@
           <q-dialog v-model="branchDialogVisible" persistent>
@@ -205,10 +217,7 @@
 
       </template>
     </q-table>
-    <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
-    label="Add new history" size="md" onclick='window.location="/Product/Addhistory"'></q-btn>
-
-
+   
 </div>
 
 @section code {
@@ -272,6 +281,13 @@
               name: 'customerTransferPicPath',
               label: 'Customer transfer evidence',
               field: 'customerTransferPicPath',
+              align: 'center',
+              sortable: true,
+            },
+            {
+              name: 'shippingReceipt',
+              label: 'Shipping Receipt',
+              field: 'shippingReceipt',
               align: 'center',
               sortable: true,
             },
@@ -348,6 +364,13 @@
               sortable: true
           },
           {
+              name: 'itemQty',
+              label: 'Qty',
+              field: 'itemQty',
+              align: 'center',
+              sortable: true
+          },
+          {
               name: 'productCondition',
               label: 'Condition',
               field: 'productCondition.conditionName',
@@ -370,7 +393,7 @@
       
           async editBill(item) {
           try {
-            const response = await axios.post("api/editBill", item);
+            const response = await axios.post("myapi/EditBill", item);
             console.log("Request data:", item);
             console.log("Response data:", response.data);
 
@@ -391,7 +414,7 @@
 
         async deleteBill(item) {
           console.log(item);
-          var url = "/api/deleteBill";
+          var url = "/myapi/DeleteBill";
           var del = item;
 
           try {
@@ -439,11 +462,11 @@ async onReset() {
 
   try {
     // Reset the deliveryRows array to an empty array
-    this.deliveryRows = [];
+    this.bills = [];
 
     // Call the API to get delivery services data again
-    const deliveryResponse = await axios.get("/api/GetDeliveryServices");
-    this.deliveryRows = deliveryResponse.data;
+    const billResponse = await axios.get("/api/GetBills");
+    this.bills = billResponse.data;
 
     // Notify the user that the reset was successful
     notif({
@@ -458,7 +481,7 @@ async onReset() {
       message: 'Failed to reset. Please try again.',
       timeout: 300
     });
-    console.error('Error resetting delivery data:', error);
+    console.error('Error resetting bills data:', error);
   }
 }
 
@@ -476,7 +499,7 @@ async onReset() {
     
 
         try {
-          var billResponse = await axios.get("/api/GetBills");
+          var billResponse = await axios.get("/myapi/GetBills");
           this.bills = billResponse.data;
           console.log(historyResponse.data);
         }

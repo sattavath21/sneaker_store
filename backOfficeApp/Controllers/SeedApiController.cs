@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/initialization/[action]")]
-public class StartUpApiController : ControllerBase
+public class SeedApiController : ControllerBase
 {
-    private readonly ILogger<StartUpApiController> _logger;
+    private readonly ILogger<SeedApiController> _logger;
     private BackofficeappDbContext _db;
 
-    public StartUpApiController(ILogger<StartUpApiController> logger, BackofficeappDbContext db)
+    public SeedApiController(ILogger<SeedApiController> logger, BackofficeappDbContext db)
     {
         _logger = logger;
         _db = db;
@@ -136,7 +136,6 @@ Console.WriteLine("Start Seeding.... ");
             Branch = anousithBranch4
         },
 
-        // Add anousithBranch3, anousithBranch4, etc. here
     },
 
 
@@ -752,6 +751,7 @@ for (int i = 0; i < 10; i++)
         OrderStatus = orderStatuses[random.Next(orderStatuses.Count)], // Random order status
         ShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)], // Random shipping method
         CustomerTransferPicPath = "SomeWhereInAssets",
+        ShippingReceipt = "AlsoSomeWhereInAssets",
         Discount = discountList[random.Next(discountList.Count)], // Random discount
         Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
         DeliveryService = anousithDeliveryService,
@@ -768,6 +768,7 @@ for (int i = 0; i < 10; i++)
         {
             ShoeSize = shoeSizes[random.Next(shoeSizes.Count)], // Random shoe size
             ProductCondition = productConditionList[random.Next(productConditionList.Count)], // Random product condition
+            ItemQty = random.Next(6),
             Product = mockProducts[random.Next(mockProducts.Count)] // Random product from mockProducts list
         };
 

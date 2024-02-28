@@ -9,6 +9,7 @@ public class Bill {
   public int ShippingMethodId {get;set;}//fk="ShippingMethod"
   public ShippingMethod ShippingMethod {get;set;} //np
   public String CustomerTransferPicPath {get;set;}//label="Customer_ Transfer_ Pic_ Path"
+  public String ShippingReceipt {get;set;}//label="Shipping_ Receipt"
   public int DiscountId {get;set;}//fk="Discount"
   public Discount Discount {get;set;} //np
   public int DeliveryServiceId {get;set;}//fk="DeliveryService"

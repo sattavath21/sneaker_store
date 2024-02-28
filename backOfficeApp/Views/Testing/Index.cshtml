@@ -1,12 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <q-table
-      title="Treats"
-      :rows="rows"
-      :columns="columns"
-      row-key="name"
-      binary-state-sort
-    >
+    <q-table title="Treats" :rows="rows" :columns="columns" row-key="name" binary-state-sort>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="name" :props="props">
@@ -44,62 +38,52 @@
 </template>
 
 <script>
-import { useQuasar } from 'quasar'
-import { onBeforeUnmount } from 'vue'
+  import { useQuasar } from 'quasar'
+  import { onBeforeUnmount } from 'vue'
 
-export default {
-  setup () {
-    const $q = useQuasar()
-    let timer
+  export default {
+    setup() {
+      const $q = useQuasar()
+      let timer
 
-    onBeforeUnmount(() => {
-      if (timer !== void 0) {
-        clearTimeout(timer)
-        $q.loading.hide()
-      }
-    })
-
-    return {
-      showLoading () {
-        $q.loading.show()
-
-        // hiding in 2s
-        timer = setTimeout(() => {
+      onBeforeUnmount(() => {
+        if (timer !== void 0) {
+          clearTimeout(timer)
           $q.loading.hide()
-          timer = void 0
-        }, 2000)
+        }
+      })
+
+      return {
+        showLoading() {
+          $q.loading.show()
+
+          // hiding in 2s
+          timer = setTimeout(() => {
+            $q.loading.hide()
+            timer = void 0
+          }, 2000)
+        }
       }
     }
   }
-}
 </script>
 
-{
-  "saleId": 0,
-  "date": "2023-03-24T15:42:05.269Z",
-  "customerId": 0,
-  "customer": {
-    "customerId": 0,
-    "firstName": "string",
-    "lastName": "string",
-    "dateOfBirth": "2023-03-24T15:42:05.269Z",
-    "phone": "string",
-    "email": "string",
-    "customerAddressId": 0,
-    "customerAddress": {
-      "customerAddressId": 0,
-      "no": "string",
-      "street": "string",
-      "city": "string",
-      "zip": "string"
-    }
-  },
-  "saleItems": [
-    {
-      "saleItemId": 0,
-      "saleQty": 0,
-      "discountId": 0,
-      "productId": 1
-    }
-  ]
+
+
+
+<div id="app1">
+
+
+
+</div>
+
+@section code {
+  <script>
+    
+
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+  </script>
+
 }

@@ -130,8 +130,14 @@
           <q-td key="methodName" :props="props">
             {{ props.row.shippingMethod.methodName }}
           </q-td>
+    
+
+          @* <q-td key="methodName" :props="props">
+        <q-select v-model="props.row.selectedShippingMethod" :options="shippingMethodOptions" dense />
+      </q-td> *@
 
 
+      
         </q-tr>
       </template>
     </q-table>
@@ -147,6 +153,8 @@
       //data
       data() {
         return {
+          confirm: false,
+          shippingMethodOptions: [],
           discounts: [],
           discountColumns: [
             {
@@ -227,6 +235,14 @@
               sortable: true,
             },
 
+            @* {
+              name: 'methodName', // Name of the column
+              label: 'Shipping Method', // Label for the column
+              field: 'selectedShippingMethod', // Field to bind data to
+              align: 'center',
+              format: this.shippingMethodSelectFormat // Use the computed property for formatting
+            } *@
+
           ]
         };
       }
@@ -236,7 +252,7 @@
       
           async editDiscount(item) {
           try {
-            const response = await axios.post("api/EditDiscount", item);
+            const response = await axios.post("myapi/EditDiscount", item);
             console.log("Request data:", item);
             console.log("Response data:", response.data);
 
@@ -257,7 +273,7 @@
 
         async deleteDiscount(item) {
           console.log(item);
-          var url = "/api/DeleteDiscount";
+          var url = "/myapi/DeleteDiscount";
           var del = item;
 
           try {
@@ -283,6 +299,7 @@
             });
           }
         },
+        
         calculateEndDate(start, duration) {
   const startDate = new Date(start); // Convert start date string to Date object
   const endDate = new Date(startDate); // Create a copy of the start date
@@ -295,11 +312,38 @@
   const formattedEndDate = endDate.toISOString().slice(0, 10);
 
   return formattedEndDate;
-}
+},
 
+async fetchShippingMethods() {
+          try {
+            const response = await axios.get("/api/GetShippingMethodsSelection");
+            // Map the data to the format required by q-select
+            this.shippingMethodOptions = response.data.map(method => ({ label: method.methodName, value: method.shippingMethodId }));
+            console.log("Shipping Methods:", this.shippingMethodOptions);
+          } catch (error) {
+            console.error("Error fetching shipping methods:", error);
+          }
+        },
+
+    shippingMethodSelectFormat() {
+          return (val, row) => {
+            return h('q-select', {
+              props: {
+                options: this.shippingMethodOptions,
+                value: row.selectedShippingMethod
+              },
+              on: {
+                input: (selectedShippingMethod) => {
+                  row.selectedShippingMethod = selectedShippingMethod;
+                }
+              }
+            });
+          };
+        }
 
       }
       ,
+
       //computed
       computed: {
 
@@ -307,11 +351,10 @@
       ,
       //created
       async created() {
-    
-
         try {
-          var discountResponse = await axios.get("/api/GetDiscounts");
+          var discountResponse = await axios.get("/myapi/GetDiscounts");
           this.discounts = discountResponse.data;
+          this.fetchShippingMethods();
           console.log(discountResponse.data);
         }
         catch (error) {

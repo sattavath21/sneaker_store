@@ -36,6 +36,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/AddDiscount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRcQWRkRGlzY291bnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/History/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGlzdG9yeVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -78,6 +90,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Staff/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Stakeholder/AddCus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3Rha2Vob2xkZXJcQWRkQ3VzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Stakeholder/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3Rha2Vob2xkZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Testing/Index.cshtml]

@@ -7,6 +7,7 @@
         "Method_Name": "In-store Pickup"
     },
     "Customer_Transfer_Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
+    "Shipping_Receipt":"C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
     "Discount": {
         "Description": "new year happiness",
         "Discount_Percentage": 10,
@@ -21,6 +22,7 @@
     },
     
     "Delivery_Service": {
+        
         "Delivery_Company_Name": "Anousith Express",
         "Delivery_Branches": [
             {
@@ -36,7 +38,7 @@
         ]
     },
 
-        "Branch": {
+    "Branch": {
         "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
         "Branch_Tel_Numbers": [
             {
