@@ -159,20 +159,37 @@ create table `ProductWithSize` (
 ) engine=InnoDB default charset=utf8mb4;
 
 
+create table `Collection` (
+ CollectionId int(11) not null,
+ CollectionName varchar(255)  default null,
+ primary key (CollectionId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `BrandWithCollection` (
+ BrandWithCollectionId int(11) not null,
+ CollectionId int(11) not null,
+ BrandId int(11) not null,
+ primary key (BrandWithCollectionId),
+ KEY IX_BrandWithCollection_CollectionId (CollectionId),
+ KEY IX_BrandWithCollection_BrandId (BrandId),
+ CONSTRAINT FK_BrandWithCollection_Collection_CollectionId FOREIGN KEY (CollectionId) REFERENCES `Collection` (CollectionId) ON DELETE CASCADE,
+ CONSTRAINT FK_BrandWithCollection_Brand_BrandId FOREIGN KEY (BrandId) REFERENCES `Brand` (BrandId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
 create table `Brand` (
  BrandId int(11) not null,
  BrandName varchar(255)  default null,
+ BrandLogoUrl varchar(255)  default null,
  primary key (BrandId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `ProductCollection` (
- ProductCollectionId int(11) not null,
+create table `Collection` (
+ CollectionId int(11) not null,
  CollectionName varchar(255)  default null,
- BrandId int(11) not null,
- primary key (ProductCollectionId),
- KEY IX_ProductCollection_BrandId (BrandId),
- CONSTRAINT FK_ProductCollection_Brand_BrandId FOREIGN KEY (BrandId) REFERENCES `Brand` (BrandId) ON DELETE CASCADE    
+ primary key (CollectionId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
@@ -186,11 +203,14 @@ create table `Product` (
  Colorway varchar(255)  default null,
  Releasedate datetime not null,
  Amountsold int(11) not null,
- ProductCollectionId int(11) not null,
+ BrandId int(11) not null,
+ CollectionId int(11) not null,
  ProductImageUrl varchar(255)  default null,
  primary key (ProductId),
- KEY IX_Product_ProductCollectionId (ProductCollectionId),
- CONSTRAINT FK_Product_ProductCollection_ProductCollectionId FOREIGN KEY (ProductCollectionId) REFERENCES `ProductCollection` (ProductCollectionId) ON DELETE CASCADE    
+ KEY IX_Product_BrandId (BrandId),
+ KEY IX_Product_CollectionId (CollectionId),
+ CONSTRAINT FK_Product_Brand_BrandId FOREIGN KEY (BrandId) REFERENCES `Brand` (BrandId) ON DELETE CASCADE,
+ CONSTRAINT FK_Product_Collection_CollectionId FOREIGN KEY (CollectionId) REFERENCES `Collection` (CollectionId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;
 
 

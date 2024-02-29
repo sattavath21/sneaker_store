@@ -4,6 +4,9 @@ public class Brand {
   [Key]
   public int BrandId {get;set;}//pk label="Brand"
   public String BrandName {get;set;}//label="Brand_ Name"
+  public String BrandLogoUrl {get;set;}//label="Brand_ Logo_ Url"
+  public List<BrandWithCollection> BrandWithCollections {get;set;}
+//label="Brand_ With_ Collections"
 
 }//ec
 

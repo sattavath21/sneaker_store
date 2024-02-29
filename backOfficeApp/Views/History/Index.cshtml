@@ -7,7 +7,7 @@
             ">
     ໜ້າປະວັດການຂາຍ
 </div>
-    <q-table title="Bills History" class="bg-grey-2" :rows="bills" :columns="billColumns" :filter="searchText" row-key="billIndex" separator="none">
+    <q-table title="Bills History" class="bg-grey-2" :rows="bills" :columns="billColumns" :filter="searchText" row-key="billId" separator="none">
       <template v-slot:top-left>
       <div class="text-h6 q-pa-md"> Bills History <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
           color="grey" @@click="onReset"></q-btn></div>

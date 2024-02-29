@@ -364,10 +364,10 @@ namespace backOfficeApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ProductCollection",
+                name: "Collection",
                 columns: table => new
                 {
-                    ProductCollectionId = table.Column<int>(type: "int", nullable: false)
+                    CollectionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CollectionName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -375,9 +375,9 @@ namespace backOfficeApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCollection", x => x.ProductCollectionId);
+                    table.PrimaryKey("PK_Collection", x => x.CollectionId);
                     table.ForeignKey(
-                        name: "FK_ProductCollection_Brand_BrandId",
+                        name: "FK_Collection_Brand_BrandId",
                         column: x => x.BrandId,
                         principalTable: "Brand",
                         principalColumn: "BrandId",
@@ -487,7 +487,7 @@ namespace backOfficeApp.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Releasedate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Amountsold = table.Column<int>(type: "int", nullable: false),
-                    ProductCollectionId = table.Column<int>(type: "int", nullable: false),
+                    CollectionId = table.Column<int>(type: "int", nullable: false),
                     ProductImageUrl = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -495,10 +495,10 @@ namespace backOfficeApp.Migrations
                 {
                     table.PrimaryKey("PK_Product", x => x.ProductId);
                     table.ForeignKey(
-                        name: "FK_Product_ProductCollection_ProductCollectionId",
-                        column: x => x.ProductCollectionId,
-                        principalTable: "ProductCollection",
-                        principalColumn: "ProductCollectionId",
+                        name: "FK_Product_Collection_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "Collection",
+                        principalColumn: "CollectionId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -750,13 +750,13 @@ namespace backOfficeApp.Migrations
                 column: "ShippingMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_ProductCollectionId",
+                name: "IX_Product_CollectionId",
                 table: "Product",
-                column: "ProductCollectionId");
+                column: "CollectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCollection_BrandId",
-                table: "ProductCollection",
+                name: "IX_Collection_BrandId",
+                table: "Collection",
                 column: "BrandId");
 
             migrationBuilder.CreateIndex(
@@ -841,7 +841,7 @@ namespace backOfficeApp.Migrations
                 name: "Staff");
 
             migrationBuilder.DropTable(
-                name: "ProductCollection");
+                name: "Collection");
 
             migrationBuilder.DropTable(
                 name: "ShippingMethod");

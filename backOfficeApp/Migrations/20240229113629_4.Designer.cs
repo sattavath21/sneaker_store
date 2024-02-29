@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    [Migration("20240219100430_1")]
-    partial class _1
+    [Migration("20240229113629_4")]
+    partial class _4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -151,6 +151,9 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("ShippingMethodId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ShippingReceipt")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("StaffId")
                         .HasColumnType("int");
 
@@ -180,6 +183,9 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("BillId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemQty")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductConditionId")
@@ -243,12 +249,50 @@ namespace backOfficeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("BrandLogoUrl")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("BrandName")
                         .HasColumnType("longtext");
 
                     b.HasKey("BrandId");
 
                     b.ToTable("Brand");
+                });
+
+            modelBuilder.Entity("BrandWithCollection", b =>
+                {
+                    b.Property<int>("BrandWithCollectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CollectionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BrandWithCollectionId");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CollectionId");
+
+                    b.ToTable("BrandWithCollection");
+                });
+
+            modelBuilder.Entity("Collection", b =>
+                {
+                    b.Property<int>("CollectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CollectionName")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("CollectionId");
+
+                    b.ToTable("Collection");
                 });
 
             modelBuilder.Entity("Customer", b =>
@@ -494,13 +538,16 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("Barcode")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CollectionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Colorway")
                         .HasColumnType("longtext");
 
                     b.Property<int>("CostPrice")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CollectionId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductImageUrl")
@@ -520,28 +567,11 @@ namespace backOfficeApp.Migrations
 
                     b.HasKey("ProductId");
 
+                    b.HasIndex("BrandId");
+
                     b.HasIndex("CollectionId");
 
                     b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("Collection", b =>
-                {
-                    b.Property<int>("CollectionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("BrandId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CollectionName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("CollectionId");
-
-                    b.HasIndex("BrandId");
-
-                    b.ToTable("Collection");
                 });
 
             modelBuilder.Entity("ProductCondition", b =>
@@ -749,6 +779,25 @@ namespace backOfficeApp.Migrations
                     b.Navigation("Branch");
                 });
 
+            modelBuilder.Entity("BrandWithCollection", b =>
+                {
+                    b.HasOne("Brand", "Brand")
+                        .WithMany("BrandWithCollections")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Collection", "Collection")
+                        .WithMany()
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Collection");
+                });
+
             modelBuilder.Entity("DeliveryBranch", b =>
                 {
                     b.HasOne("Branch", "Branch")
@@ -832,24 +881,21 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
-                    b.HasOne("Collection", "Collection")
-                        .WithMany()
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Collection");
-                });
-
-            modelBuilder.Entity("Collection", b =>
-                {
                     b.HasOne("Brand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Collection", "Collection")
+                        .WithMany()
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Brand");
+
+                    b.Navigation("Collection");
                 });
 
             modelBuilder.Entity("ProductWithSize", b =>
@@ -890,6 +936,11 @@ namespace backOfficeApp.Migrations
             modelBuilder.Entity("Branch", b =>
                 {
                     b.Navigation("BranchTelNumbers");
+                });
+
+            modelBuilder.Entity("Brand", b =>
+                {
+                    b.Navigation("BrandWithCollections");
                 });
 
             modelBuilder.Entity("DeliveryService", b =>
