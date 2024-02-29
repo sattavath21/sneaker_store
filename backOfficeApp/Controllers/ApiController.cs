@@ -138,6 +138,7 @@ public IActionResult GetProductByBarcode(string barcode)
         .Where(x => x.Barcode == barcode)
         .Select(x => new
         {
+            x.ProductId, // Include the productId property
             x.Barcode,
             x.ProductName,
             x.CostPrice,
@@ -152,6 +153,7 @@ public IActionResult GetProductByBarcode(string barcode)
                 pws.InventoryQty,
                 ShoeSize = new
                 {
+                    pws.ShoeSizeId, // Include the ShoeSizeId property
                     pws.ShoeSize.SizeType,
                     pws.ShoeSize.SizeNumber
                 }
@@ -185,6 +187,20 @@ public IActionResult GetProductByBarcode(string barcode)
             status = 1
         });
     }
+}
+
+[HttpGet]
+public IActionResult GetCollections()
+{
+    var shoeSizes = _db.ProductCollection.ToList();
+    return Ok(shoeSizes);
+}
+
+[HttpGet]
+public IActionResult GetShoeSizes()
+{
+    var shoeSizes = _db.ShoeSize.ToList();
+    return Ok(shoeSizes);
 }
 
 [HttpGet]
@@ -256,7 +272,7 @@ public IActionResult AddSale(Bill bill)
     {
 
         // Assuming other necessary properties are already populated
-        var soldProduct = bill.BillItems.Select(x => x.ProductId).ToList();
+        // var soldProduct = bill.BillItems.Select(x => x.ProductId).ToList();
         
         // Save the bill to the database
         _db.Bill.Add(bill);

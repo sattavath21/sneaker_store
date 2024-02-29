@@ -22,7 +22,6 @@
     },
     
     "Delivery_Service": {
-        
         "Delivery_Company_Name": "Anousith Express",
         "Delivery_Branches": [
             {
@@ -96,6 +95,7 @@
                         }
                     }
                 ],
+               
                 "Product_Collection": {
                     "Collection_Name": "Jordan 1",
                     "Brand": {

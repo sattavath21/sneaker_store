@@ -7,7 +7,11 @@
         "Method_Name": "In-store Pickup"
     },
     "Customer_Transfer_Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
+<<<<<<< HEAD
     "Shipping_Receipt": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
+=======
+    "Shipping_Receipt":"C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
     "Discount": {
         "Description": "new year happiness",
         "Discount_Percentage": 10,
@@ -20,6 +24,10 @@
             "Method_Name": "In-store Pickup"
         }
     },
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
     "Delivery_Service": {
         "Delivery_Company_Name": "Anousith Express",
         "Delivery_Branches": [
@@ -35,6 +43,10 @@
             }
         ]
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
     "Branch": {
         "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
         "Branch_Tel_Numbers": [
@@ -43,6 +55,10 @@
             }
         ]
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
     "Staff": {
         "Staff_Firstname": "andy",
         "Staff_Lastname": "asdasdo",
@@ -53,6 +69,10 @@
             "Permission_Name": "Admin"
         }
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
     "Customer": {
         "Customer_Firstname": "andy",
         "Customer_Lastname": "oasd",
@@ -62,6 +82,10 @@
         "Customer_Phone_Number": "asdasdasdasd",
         "Customer_Social_Link": "axdasdasdasd"
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
     "Bill_Items": [
         {
             "Shoe_Size": {
@@ -71,7 +95,11 @@
             "Product_Condition": {
                 "condition_Name": "Brand New"
             },
+<<<<<<< HEAD
             "Item_Qty": 2,
+=======
+            "Item_Qty":2,
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
             "Product": {
                 "Barcode": "asdasdasdasd",
                 "Product_Name": "Jordan 4 Retro Thunder (2023)",
@@ -90,6 +118,7 @@
                         }
                     }
                 ],
+<<<<<<< HEAD
                 "Brand": {
                     "Brand_Name": "Jordan",
                     "Brand_Logo_Url": "asd",
@@ -108,4 +137,30 @@
             }
         }
     ]
+=======
+                "Brand":{
+                    "Brand_Name":"asdasdasd",
+                    "Brand_Logo":"asdasdasdasd",
+                  "Brand_Collections":[
+                    {
+                        "Product_Collection":{
+                                                "Collection_Name": "Jordan 1",
+
+                        }
+                    }
+                  ]  
+                },
+
+            "Product_Collection":{
+                                                "Collection_Name": "Jordan 1"
+
+                        },
+
+                "Product_Image_Url": "adasdasdad"
+                
+            }
+        }
+    ]
+    
+>>>>>>> 44b5b0cfc6cae778f8d00b07da244e5e34f3a020
 }

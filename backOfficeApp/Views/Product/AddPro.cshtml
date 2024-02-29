@@ -4,6 +4,15 @@
         <q-card-section class="bg-cyan text-white">
             <div class="text-h6">Add New Product</div>
         </q-card-section>
+
+    <div class="q-ma-sm">
+            <q-input ref="input1" v-model="barcodeScan" label="Input Barcode" @@change="item_change">
+            </q-input>
+            <div class="q-ma-sm">
+                <q-input v-model="product.barcode" label="Scanned Barcode"></q-input>
+
+            </div>
+        </div>
         <q-separator vertical class="q-my-md"></q-separator>
         <div class="text-h6 q-pa-lg">Product Information</div>
 
@@ -11,11 +20,11 @@
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.retailPrice" label="Retail Price" hint="Number only" lazy-rules
+        <q-input class="q-px-sm" filled v-model="product.costPrice" label="Cost Price" hint="Number only" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="Retail Price" hint="Number only" lazy-rules
+        <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="Selling Price" hint="Number only" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
@@ -27,7 +36,7 @@
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 300px;">
+        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 400px;">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -46,13 +55,17 @@
         <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].inventoryQty" label="Inventory Quantity"
             hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].shoeSize.sizeType" label="Size Type"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].shoeSize.sizeNumber" label="Size Number"
-            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
-
+         <q-select
+         class="q-px-sm"
+      filled
+      v-model="selectedShoeSizeId"
+      :options="shoeSizeOptions"
+      label="Select Shoe Size"
+      lazy-rules
+      :rules="[ val => val && val.length > 0 || 'Please select a shoe size']"
+      style="width: 400px;"
+    ></q-select>
+<q-separator vertical class="q-my-md"></q-separator>
         <q-input class="q-px-sm" filled v-model="product.productCollection.collectionName" label="Collection Name"
             lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
@@ -122,10 +135,14 @@
             //data
             data() {
                 return {
+                    selectedShoeSizeId: null,
+      shoeSizeOptions: [],
+                    barcodeScan: '',
                     confirm: false,
                     product: {
+                        barcode: "",
                         productName: "Jordan 4 Retro Thunder (2023)",
-                        retailPrice: 7400,
+                        costPrice: 7400,
                         sellingPrice: 6500,
                         sku: "DH6927-017",
                         colorway: "BLACK/TOUR YELLOW",
@@ -157,6 +174,32 @@
             ,
             //methods
             methods: {
+                async item_change() {
+                    this.product.barcode = this.barcodeScan;
+                    //data is object notation
+                    try {
+                        var url = '/api/GetProductByBarcodeAdd?barcode=' + this.product.barcode;
+                        var res = await axios.get(url);
+                        this.barcodeScan = '';
+                        if (res.data) {
+                            this.$q.notify({
+                                type: 'warning',
+                                message: 'This barcode already in stock'
+                            })
+                            this.product.barcode ='';
+                        }
+                        else {
+                            this.$q.notify({
+                                type: 'positive',
+                                message: 'This barcode can be add'
+                            })
+                        }
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+
+                },
                 formatReleaseDate(dateString) {
                     const date = new Date(dateString);
 
@@ -222,9 +265,19 @@
                             message: 'Error adding product. Please check the console for details.'
                         });
                     }
-                }
-
-                ,
+                },
+async fetchShoeSizeData() {
+      try {
+        const response = await axios.get("/api/GetShoeSizes"); // Replace "/api/shoeSizeData" with your actual endpoint
+        this.shoeSizeOptions = response.data.map(size => ({
+          value: size.shoeSizeId,
+          label: `${size.sizeType} - ${size.sizeNumber}`
+        }));
+      } catch (error) {
+        console.error("Error fetching shoe size data: ", error);
+      }
+    },
+                
                 onReset() {
                     // Show an ongoing notification
                     const notif = this.$q.notify({
@@ -243,7 +296,7 @@
                         // Reset the form fields and data
                         this.product = {
                             productName: "",
-                            retailPrice: null,
+                            costPrice: null,
                             sellingPrice: null,
                             sku: "",
                             colorway: "",
@@ -291,7 +344,8 @@
             ,
             //mounted
             mounted() {
-
+this.fetchShoeSizeData();
+this.$refs.input1.$el.focus()
             }
 
         };
