@@ -669,11 +669,11 @@ brandDialogVisible: false,
                             field: 'collection.collectionId',
                             align: 'center',
                             sortable: true,
-                            label: 'Branch ID'
+                            label: 'Collection ID'
                         },
                         {
                             name: 'collectionName',
-                            label: 'Branch name',
+                            label: 'Collection name',
                             field: 'collection.collectionName',
                             align: 'center',
                             sortable: true,
@@ -869,7 +869,7 @@ brandDialogVisible: false,
                     try {
                         console.log("Brand String:", this.newBrand);
                         // Make the myapi call
-                        var response = await axios.post("/myapi/AddBrandWithCollection", this.newBrand);
+                        var response = await axios.post("/myapi/AddBrand", this.newBrand);
 
                         // Handle the response or perform any necessary logic
                         if (response.status === 200) {
