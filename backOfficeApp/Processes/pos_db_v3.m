@@ -101,7 +101,7 @@
                   "Brand_Collections":[
                     {
                         "Product_Collection":{
-                                                "Collection_Name": "Jordan 1",
+                                                "Collection_Name": "Jordan 1"
 
                         }
                     }

@@ -7,10 +7,25 @@
             ">
     ໜ້າປະວັດການຂາຍ
 </div>
-    <q-table title="Bills History" class="bg-grey-2" :rows="bills" :columns="billColumns" :filter="searchText" row-key="billIndex" separator="none">
+    <q-table title="Bills History" class="bg-grey-2" :rows="bills" :columns="billColumns" row-key="billIndex" separator="none">
       <template v-slot:top-left>
       <div class="text-h6 q-pa-md"> Bills History <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
           color="grey" @@click="onReset"></q-btn></div>
+          <q-separator vertical class="q-my-sm"></q-separator>
+      <div class="q-pl-sm">
+        <q-input debounce="200" dense v-model="searchText" type="text" @@change="searchBill">
+          <template v-slot:prepend>
+            <q-icon name="search"></q-icon>
+          </template>
+        </q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <q-select v-model="orderStatusSelected" :options="orderStatusSelection" label="Filter by Order Status" outlined emit-value 
+        @@update:model-value="selectedOrderStatus">
+
+                      </q-select>
+        
+
+      </div>
     </template>
     
       <template #body="props">
@@ -242,6 +257,10 @@
       //data
       data() {
         return {
+          orderStatusSelected: [],
+          orderStatusSelection: [],
+          searchText: "",
+          originalBills: [],
           bills: [],
           billColumns: [
                {
@@ -407,7 +426,71 @@
       ,
       //methods
       methods: {
-      
+        selectedOrderStatus(newValue) {
+          if (newValue !== null) {
+            this.bills = this.originalBills.filter(x => x.customer.customerFirstname.toLowerCase().includes(this.orderStatusSelected.toLowerCase()) ||
+              x.customer.customerLastname.toLowerCase().includes(this.orderStatusSelected.toLowerCase()) ||
+              x.orderStatus.statusName.toLowerCase().includes(this.orderStatusSelected.toLowerCase())
+
+            )
+            console.log(this.orderStatusSelected);
+          }
+          else {
+            console.log(this.bills);
+            this.bills = [...this.originalBills]
+            const notif = this.$q.notify({
+              type: 'ongoing',
+              message: 'Loading...'
+            })
+
+            // simulate delay
+            setTimeout(() => {
+              notif({
+                type: 'positive',
+                message: 'Reseted',
+                timeout: 300
+              })
+            }, 600)
+          }
+        },
+        async fetchOrderStatus() {
+          try {
+            const response = await axios.get("/api/GetOrderStatusesSelection");
+            // Map the data to the format required by q-select
+            this.orderStatusSelection = response.data.map(status => ({ label: `${status.statusName}`, value: status.statusName }));
+            console.log("Status:", this.orderStatusSelection);
+          } catch (error) {
+            console.error("Error fetching Status:", error);
+          }
+        },
+      searchBill() {
+          if (this.searchText !== "") {
+            this.bills = this.originalBills.filter(x => x.customer.customerFirstname.toLowerCase().includes(this.searchText.toLowerCase()) ||
+              x.customer.customerLastname.toLowerCase().includes(this.searchText.toLowerCase()) ||
+              x.orderStatus.statusName.toLowerCase().includes(this.searchText.toLowerCase())
+
+            )
+            console.log(this.searchText);
+          }
+          else {
+            console.log(this.bills);
+            this.bills = [...this.originalBills]
+            const notif = this.$q.notify({
+              type: 'ongoing',
+              message: 'Loading...'
+            })
+
+            // simulate delay
+            setTimeout(() => {
+              notif({
+                type: 'positive',
+                message: 'Reseted',
+                timeout: 300
+              })
+            }, 600)
+          }
+        }
+        ,
           async editBill(item) {
           try {
             const response = await axios.post("myapi/EditBill", item);
@@ -478,13 +561,14 @@ async onReset() {
   });
 
   try {
-    // Reset the deliveryRows array to an empty array
+    // Reset the deliveryRow arrasy to an empty array
     this.bills = [];
 
     // Call the API to get delivery services data again
-    const billResponse = await axios.get("/api/GetBills");
+    const billResponse = await axios.get("/myapi/GetBills");
     this.bills = billResponse.data;
 
+          this.searchText = ""
     // Notify the user that the reset was successful
     notif({
       type: 'positive',
@@ -570,12 +654,13 @@ async onReset() {
       ,
       //created
       async created() {
-    
+    this.fetchOrderStatus();
 
         try {
           var billResponse = await axios.get("/myapi/GetBills");
           this.bills = billResponse.data;
-          console.log(historyResponse.data);
+          this.originalBills = billResponse.data;
+          console.log(billResponse.data);
         }
         catch (error) {
           console.log(error);
