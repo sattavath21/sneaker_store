@@ -506,7 +506,7 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("CostPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductCollectionId")
+                    b.Property<int>("CollectionId")
                         .HasColumnType("int");
 
                     b.Property<string>("ProductImageUrl")
@@ -526,14 +526,14 @@ namespace backOfficeApp.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("ProductCollectionId");
+                    b.HasIndex("CollectionId");
 
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("ProductCollection", b =>
+            modelBuilder.Entity("Collection", b =>
                 {
-                    b.Property<int>("ProductCollectionId")
+                    b.Property<int>("CollectionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -543,11 +543,11 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("CollectionName")
                         .HasColumnType("longtext");
 
-                    b.HasKey("ProductCollectionId");
+                    b.HasKey("CollectionId");
 
                     b.HasIndex("BrandId");
 
-                    b.ToTable("ProductCollection");
+                    b.ToTable("Collection");
                 });
 
             modelBuilder.Entity("ProductCondition", b =>
@@ -838,16 +838,16 @@ namespace backOfficeApp.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
-                    b.HasOne("ProductCollection", "ProductCollection")
+                    b.HasOne("Collection", "Collection")
                         .WithMany()
-                        .HasForeignKey("ProductCollectionId")
+                        .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProductCollection");
+                    b.Navigation("Collection");
                 });
 
-            modelBuilder.Entity("ProductCollection", b =>
+            modelBuilder.Entity("Collection", b =>
                 {
                     b.HasOne("Brand", "Brand")
                         .WithMany()

@@ -22,7 +22,7 @@ public class SeedApiController : ControllerBase
 
     {
 
-Console.WriteLine("Start Seeding.... ");
+        Console.WriteLine("Start Seeding.... ");
 
         OrderStatus pendingStatus = new OrderStatus
         {
@@ -33,13 +33,13 @@ Console.WriteLine("Start Seeding.... ");
         OrderStatus paidStatus = new OrderStatus
         {
             OrderStatusId = 2,
-            StatusName = "Paid"
+            StatusName = "Shipped"
         };
 
         OrderStatus deliveredStatus = new OrderStatus
         {
             OrderStatusId = 3,
-            StatusName = "Delivered"
+            StatusName = "succeeded"
         };
 
         List<OrderStatus> orderStatuses = new List<OrderStatus> {
@@ -115,12 +115,58 @@ Console.WriteLine("Start Seeding.... ");
         }
 }
         };
-
+        Branch mixayBranch1 = new Branch
+        {
+            BranchName = "ສາຂາ ໂນນໂພຄຳ",
+            BranchTelNumbers = new List<BranchTelNumber>{
+        new BranchTelNumber{
+            TelNumber = "020 123123123"
+        },
+        new BranchTelNumber{
+            TelNumber = "030 878980898"
+        },
+}
+        };
+        Branch mixayBranch2 = new Branch
+        {
+            BranchName = "ສາຂາ ໂພໂນນຄຳ",
+            BranchTelNumbers = new List<BranchTelNumber>{
+        new BranchTelNumber{
+            TelNumber = "020 22222211"
+        },
+        new BranchTelNumber{
+            TelNumber = "030 37678678"
+        },
+}
+        };
+        Branch halBranch1 = new Branch
+        {
+            BranchName = "ສາຂາ ເລນໂຍໂກxາມ່າ",
+            BranchTelNumbers = new List<BranchTelNumber>{
+        new BranchTelNumber{
+            TelNumber = "020 88887777666"
+        },
+        new BranchTelNumber{
+            TelNumber = "030 6768890853"
+        },
+}
+        };
+        Branch halBranch2 = new Branch
+        {
+            BranchName = "ສາຂາ ໂລຄອສ",
+            BranchTelNumbers = new List<BranchTelNumber>{
+        new BranchTelNumber{
+            TelNumber = "020 21194531"
+        },
+        new BranchTelNumber{
+            TelNumber = "030 1975895"
+        },
+}
+        };
         // _db.Branch.AddRange(anousithBranch1, anousithBranch2, anousithBranch3, anousithBranch4);
 
         DeliveryService anousithDeliveryService = new DeliveryService
         {
-            DeliveryServiceId = 1,
             DeliveryCompanyName = "Anousith Express",
             DeliveryBranches = new List<DeliveryBranch> {
         new DeliveryBranch {
@@ -138,17 +184,43 @@ Console.WriteLine("Start Seeding.... ");
 
     },
 
-
         };
 
-
-        // _db.DeliveryService.Add(anousithDeliveryService);
-
-        DeliveryService MDeliveryService = new DeliveryService
+        DeliveryService mixayDeliveryService = new DeliveryService
         {
-            DeliveryServiceId = 1,
-            DeliveryCompanyName = "M Express"
+            DeliveryCompanyName = "Mixay Express",
+            DeliveryBranches = new List<DeliveryBranch> {
+        new DeliveryBranch {
+            Branch = mixayBranch1
+        },
+          new DeliveryBranch {
+            Branch = mixayBranch2
+        }
+
+
+    },
+
         };
+
+        DeliveryService halDeliveryService = new DeliveryService
+        {
+            DeliveryCompanyName = "HAL Express",
+            DeliveryBranches = new List<DeliveryBranch> {
+        new DeliveryBranch {
+            Branch = halBranch1
+        },
+          new DeliveryBranch {
+            Branch = halBranch2
+        }
+
+
+    },
+
+        };
+
+        _db.DeliveryService.AddRange(mixayDeliveryService, halDeliveryService);
+
+
 
         // Define the start and end dates of your range
         DateTime startDate = new DateTime(2023, 12, 1);
@@ -360,66 +432,32 @@ Console.WriteLine("Start Seeding.... ");
         }
 
 
-
-        List<string> brandNameList = new List<string> {
-    "Nike",
-    "Adidas",
-    "Jordan",
-    "Puma",
-    "Converse",
-    "New Balance",
-    "Reebok",
-    "Vans",
-    "Under Armour",
-    "ASICS"
-};
-
-        List<Brand> brands = new List<Brand>();
-
-        for (int i = 0; i < brandNameList.Count; i++)
-        {
-            Brand brand = new Brand
-            {
-                BrandId = i + 1,
-                BrandName = brandNameList[i]
-            };
-            brands.Add(brand);
-        }
-
-
-
-
-        List<ProductCollection> nikeCollections = new List<ProductCollection>();
-
-        Brand nikeBrand = brands[0]; // Using the first brand for Nike
+        List<Collection> nikeCollections = new List<Collection>();
 
         string[] nikeCollectionNames = {
-    "Nike Air Force 1",
-    "Nike Air Max",
-    "Nike Jordan",
-    "Nike Blazer",
-    "Nike React",
-    "Nike Dunk Low",
-    "Nike Zoom Fly",
-    "Nike Air Max 90",
-    "Nike Air Max 97",
-    "Nike Air Max 270"
-};
+            "Nike Air Force 1",
+            "Nike Air Max",
+            "Nike Jordan",
+            "Nike Blazer",
+            "Nike React",
+            "Nike Dunk Low",
+            "Nike Zoom Fly",
+            "Nike Air Max 90",
+            "Nike Air Max 97",
+            "Nike Air Max 270"
+        };
 
         for (int i = 0; i < nikeCollectionNames.Length; i++)
         {
-            ProductCollection nikeCollection = new ProductCollection
+            Collection nikeCollection = new Collection
             {
                 CollectionName = nikeCollectionNames[i],
-                Brand = nikeBrand
             };
             nikeCollections.Add(nikeCollection);
         }
 
 
-        List<ProductCollection> adidasCollections = new List<ProductCollection>();
-
-        Brand adidasBrand = brands[1]; // Using the second brand for Adidas
+        List<Collection> adidasCollections = new List<Collection>();
 
         string[] adidasCollectionNames = {
     "Adidas Superstar",
@@ -436,18 +474,15 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in adidasCollectionNames)
         {
-            ProductCollection adidasCollection = new ProductCollection
+            Collection adidasCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = adidasBrand
+                CollectionName = collectionName
             };
             adidasCollections.Add(adidasCollection);
         }
 
 
-        List<ProductCollection> jordanCollections = new List<ProductCollection>();
-
-        Brand jordanBrand = brands[2]; // Using the third brand for Jordan
+        List<Collection> jordanCollections = new List<Collection>();
 
         string[] jordanCollectionNames = {
     "Air Jordan 1",
@@ -464,17 +499,14 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in jordanCollectionNames)
         {
-            ProductCollection jordanCollection = new ProductCollection
+            Collection jordanCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = jordanBrand
+                CollectionName = collectionName
             };
             jordanCollections.Add(jordanCollection);
         }
 
-        List<ProductCollection> pumaCollections = new List<ProductCollection>();
-
-        Brand pumaBrand = brands[3]; // Using the fourth brand for Puma
+        List<Collection> pumaCollections = new List<Collection>();
 
         string[] pumaCollectionNames = {
     "Puma Suede",
@@ -491,17 +523,15 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in pumaCollectionNames)
         {
-            ProductCollection pumaCollection = new ProductCollection
+            Collection pumaCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = pumaBrand
+                CollectionName = collectionName
             };
             pumaCollections.Add(pumaCollection);
         }
 
-        List<ProductCollection> converseCollections = new List<ProductCollection>();
+        List<Collection> converseCollections = new List<Collection>();
 
-        Brand converseBrand = brands[4]; // Using the fifth brand for Converse
 
         string[] converseCollectionNames = {
     "Converse Chuck Taylor",
@@ -518,17 +548,15 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in converseCollectionNames)
         {
-            ProductCollection converseCollection = new ProductCollection
+            Collection converseCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = converseBrand
+                CollectionName = collectionName
             };
             converseCollections.Add(converseCollection);
         }
 
-        List<ProductCollection> newBalanceCollections = new List<ProductCollection>();
+        List<Collection> newBalanceCollections = new List<Collection>();
 
-        Brand newBalanceBrand = brands[5]; // Using the sixth brand for New Balance
 
         string[] newBalanceCollectionNames = {
     "New Balance 574",
@@ -545,18 +573,16 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in newBalanceCollectionNames)
         {
-            ProductCollection newBalanceCollection = new ProductCollection
+            Collection newBalanceCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = newBalanceBrand
+                CollectionName = collectionName
             };
             newBalanceCollections.Add(newBalanceCollection);
         }
 
 
-        List<ProductCollection> reebokCollections = new List<ProductCollection>();
+        List<Collection> reebokCollections = new List<Collection>();
 
-        Brand reebokBrand = brands[6]; // Using the seventh brand for Reebok
 
         string[] reebokCollectionNames = {
     "Reebok Classic",
@@ -573,17 +599,14 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in reebokCollectionNames)
         {
-            ProductCollection reebokCollection = new ProductCollection
+            Collection reebokCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = reebokBrand
+                CollectionName = collectionName
             };
             reebokCollections.Add(reebokCollection);
         }
 
-        List<ProductCollection> vansCollections = new List<ProductCollection>();
-
-        Brand vansBrand = brands[7]; // Assuming Vans is the eighth brand in the list
+        List<Collection> vansCollections = new List<Collection>();
 
         string[] vansCollectionNames = {
     "Vans Authentic",
@@ -600,19 +623,16 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in vansCollectionNames)
         {
-            ProductCollection vansCollection = new ProductCollection
+            Collection vansCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = vansBrand
+                CollectionName = collectionName
             };
             vansCollections.Add(vansCollection);
         }
 
 
+        List<Collection> underArmourCollections = new List<Collection>();
 
-        List<ProductCollection> underArmourCollections = new List<ProductCollection>();
-
-        Brand underArmourBrand = brands[8]; // Assuming Under Armour is the ninth brand in the list
 
         string[] underArmourCollectionNames = {
     "Under Armour HOVR",
@@ -629,46 +649,53 @@ Console.WriteLine("Start Seeding.... ");
 
         foreach (string collectionName in underArmourCollectionNames)
         {
-            ProductCollection underArmourCollection = new ProductCollection
+            Collection underArmourCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = underArmourBrand
+                CollectionName = collectionName
             };
             underArmourCollections.Add(underArmourCollection);
         }
 
 
-        List<ProductCollection> asicsCollections = new List<ProductCollection>();
-
-        Brand asicsBrand = brands[9]; // Assuming ASICS is the tenth brand in the list
+        List<Collection> asicsCollections = new List<Collection>();
 
         string[] asicsCollectionNames = {
-    "ASICS GEL-Kayano",
-    "ASICS GEL-Nimbus",
-    "ASICS GEL-Cumulus",
-    "ASICS GEL-Lyte",
-    "ASICS GEL-Quantum",
-    "ASICS GEL-Kayano Lite",
-    "ASICS GEL-Kayano 25",
-    "ASICS GEL-Kayano 26",
-    "ASICS GEL-Kayano 27",
-    "ASICS GEL-Kayano Trainer"
-};
-
-
-
+            "ASICS GEL-Kayano",
+            "ASICS GEL-Nimbus",
+            "ASICS GEL-Cumulus",
+            "ASICS GEL-Lyte",
+            "ASICS GEL-Quantum",
+            "ASICS GEL-Kayano Lite",
+            "ASICS GEL-Kayano 25",
+            "ASICS GEL-Kayano 26",
+            "ASICS GEL-Kayano 27",
+            "ASICS GEL-Kayano Trainer"
+        };
 
         foreach (string collectionName in asicsCollectionNames)
         {
-            ProductCollection asicsCollection = new ProductCollection
+            Collection asicsCollection = new Collection
             {
-                CollectionName = collectionName,
-                Brand = asicsBrand
+                CollectionName = collectionName
             };
             asicsCollections.Add(asicsCollection);
         }
 
-        List<List<ProductCollection>> allBrandsCollections = new List<List<ProductCollection>>{
+
+        _db.Collection.AddRange(nikeCollections);
+        _db.Collection.AddRange(adidasCollections);
+        _db.Collection.AddRange(jordanCollections);
+        _db.Collection.AddRange(pumaCollections);
+        _db.Collection.AddRange(converseCollections);
+        _db.Collection.AddRange(newBalanceCollections);
+        _db.Collection.AddRange(reebokCollections);
+        _db.Collection.AddRange(vansCollections);
+        _db.Collection.AddRange(underArmourCollections);
+        _db.Collection.AddRange(asicsCollections);
+
+
+        List<List<Collection>> allCollections = new List<List<Collection>>()
+        {
             nikeCollections,
             adidasCollections,
             jordanCollections,
@@ -679,110 +706,143 @@ Console.WriteLine("Start Seeding.... ");
             vansCollections,
             underArmourCollections,
             asicsCollections
-    };
+        };
 
 
-        _db.ProductCollection.AddRange(nikeCollections);
-        _db.ProductCollection.AddRange(adidasCollections);
-        _db.ProductCollection.AddRange(jordanCollections);
-        _db.ProductCollection.AddRange(pumaCollections);
-        _db.ProductCollection.AddRange(converseCollections);
-        _db.ProductCollection.AddRange(newBalanceCollections);
-        _db.ProductCollection.AddRange(reebokCollections);
-        _db.ProductCollection.AddRange(vansCollections);
-        _db.ProductCollection.AddRange(underArmourCollections);
-        _db.ProductCollection.AddRange(asicsCollections);
+       List<string> brandNameList = new List<string> {
+            "Nike",
+            "Adidas",
+            "Jordan",
+            "Puma",
+            "Converse",
+            "New Balance",
+            "Reebok",
+            "Vans",
+            "Under Armour",
+            "ASICS"
+        };
 
+        List<Brand> brands = new List<Brand>();
 
-
-
-List<Product> mockProducts = new List<Product>();
-int countProductWithSize = 0;
-
-for (int brandIndex = 0; brandIndex < allBrandsCollections.Count; brandIndex++)
+// Loop through each brand
+for (int i = 0; i < allCollections.Count; i++)
 {
-    List<ProductCollection> brandCollections = allBrandsCollections[brandIndex];
-    
+    List<Collection> brandCollections = allCollections[i];
+    List<BrandWithCollection> brandCollection = new List<BrandWithCollection>();
+
     // Loop through each collection within the current brand
-    for (int collectionIndex = 0; collectionIndex < brandCollections.Count; collectionIndex++)
+    for (int j = 0; j < brandCollections.Count; j++)
     {
-        ProductCollection productCollection = brandCollections[collectionIndex];
-
-        // Randomly select a product size index within the range of available sizes
-        int randomSizeIndex = random.Next(allProductsWithSizes[brandIndex].Count);
-
-        // Get the randomly selected product size
-        ProductWithSize productWithSize = allProductsWithSizes[brandIndex][randomSizeIndex];
-
-        // Create a mock product
-        Product mockProduct = new Product
-        {
-            Barcode = "SampleBarcode",
-            ProductName = $"{productCollection.CollectionName} Mock Product",
-            CostPrice = random.Next(30, 80), // Random cost price between 3000 and 8000
-            SellingPrice = 0, // Will be calculated below
-            Sku = "SampleSKU",
-            Colorway = "SampleColorway",
-            Releasedate = DateTime.Now.AddDays(-random.Next(1, 365)), // Random release date within the past year
-            Amountsold = random.Next(151), // Random amount sold
-            ProductWithSizes = allProductsWithSizes[countProductWithSize],
-            ProductCollection = productCollection,
-            ProductImageUrl = "blank"
-        };
-
-        mockProduct.CostPrice = mockProduct.CostPrice * 100;
-        // Set selling price as cost price plus 200
-        mockProduct.SellingPrice = mockProduct.CostPrice + 200;
-        countProductWithSize++;
-        // Add the mock product to DB
-        mockProducts.Add(mockProduct);
-    }
-}
-
-    _db.Product.AddRange(mockProducts);
-
-
-List<Bill> bills = new List<Bill>();
-for (int i = 0; i < 10; i++)
-{
-    Bill bill = new Bill
-    {
-        OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
-        OrderStatus = orderStatuses[random.Next(orderStatuses.Count)], // Random order status
-        ShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)], // Random shipping method
-        CustomerTransferPicPath = "SomeWhereInAssets",
-        ShippingReceipt = "AlsoSomeWhereInAssets",
-        Discount = discountList[random.Next(discountList.Count)], // Random discount
-        Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
-        DeliveryService = anousithDeliveryService,
-        Staff = staffList[random.Next(staffList.Count)], // Random staff
-        Customer = customers[random.Next(customers.Count)], // Random customer
-        BillItems = new List<BillItem>()
-    };
-
-    int numberOfItems = random.Next(1, 6); // Random number of bill items between 1 and 5
-
-    for (int j = 0; j < numberOfItems; j++)
-    {
-        BillItem billItem = new BillItem
-        {
-            ShoeSize = shoeSizes[random.Next(shoeSizes.Count)], // Random shoe size
-            ProductCondition = productConditionList[random.Next(productConditionList.Count)], // Random product condition
-            ItemQty = random.Next(6),
-            Product = mockProducts[random.Next(mockProducts.Count)] // Random product from mockProducts list
-        };
-
-        bill.BillItems.Add(billItem);
+        Collection productCollection = brandCollections[j];
+        brandCollection.Add(new BrandWithCollection{
+            Collection = productCollection
+        });
+      
     }
 
-    bills.Add(bill);
+     Brand brand = new Brand
+            {
+                BrandId = i + 1,
+                BrandName = brandNameList[i],
+                BrandLogoUrl = "blank",
+                BrandWithCollections = brandCollection
+        };
+
+    brands.Add(brand);
 }
+        _db.Brand.AddRange(brands);
 
-_db.Bill.AddRange(bills);
 
 
-// //         // Add all bills to the database
+        List<Product> mockProducts = new List<Product>();
+        int countProductWithSize = 0;
+
+        // TODO: Cont. from this
+
+        for (int brandIndex = 0; brandIndex < brands.Count; brandIndex++)
+        {
+            List<BrandWithCollection> brandWithCollections = brands[brandIndex].BrandWithCollections;
+
+            // Loop through each collection within the current brand
+            for (int collectionIndex = 0; collectionIndex < brandWithCollections.Count; collectionIndex++)
+            {
+                Collection collection = brandWithCollections[collectionIndex].Collection;
+
+                // Randomly select a product size index within the range of available sizes
+                int randomSizeIndex = random.Next(allProductsWithSizes[brandIndex].Count);
+
+                // Get the randomly selected product size
+                ProductWithSize productWithSize = allProductsWithSizes[brandIndex][randomSizeIndex];
+
+                // Create a mock product
+                Product mockProduct = new Product
+                {
+                    Barcode = "SampleBarcode",
+                    ProductName = $"{collection.CollectionName} Mock Product",
+                    CostPrice = random.Next(30, 80), // Random cost price between 3000 and 8000
+                    SellingPrice = 0, // Will be calculated below
+                    Sku = "SampleSKU",
+                    Colorway = "SampleColorway",
+                    Releasedate = DateTime.Now.AddDays(-random.Next(1, 365)), // Random release date within the past year
+                    Amountsold = random.Next(151), // Random amount sold
+                    ProductWithSizes = allProductsWithSizes[countProductWithSize],
+                    Brand = brands[brandIndex],
+                    Collection = collection,
+                    ProductImageUrl = "blank"
+                };
+
+                mockProduct.CostPrice = mockProduct.CostPrice * 100;
+                // Set selling price as cost price plus 200
+                mockProduct.SellingPrice = mockProduct.CostPrice + 200;
+                countProductWithSize++;
+                // Add the mock product to DB
+                mockProducts.Add(mockProduct);
+            }
+        }
+
+            _db.Product.AddRange(mockProducts);
+
+
+        List<Bill> bills = new List<Bill>();
+        for (int i = 0; i < 10; i++)
+        {
+            Bill bill = new Bill
+            {
+                OrderDate = startDate.AddDays(random.Next((endDate - startDate).Days)),
+                OrderStatus = orderStatuses[random.Next(orderStatuses.Count)], // Random order status
+                ShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)], // Random shipping method
+                CustomerTransferPicPath = "SomeWhereInAssets",
+                ShippingReceipt = "AlsoSomeWhereInAssets",
+                Discount = discountList[random.Next(discountList.Count)], // Random discount
+                Branch = anousithDeliveryService.DeliveryBranches[0].Branch,
+                DeliveryService = anousithDeliveryService,
+                Staff = staffList[random.Next(staffList.Count)], // Random staff
+                Customer = customers[random.Next(customers.Count)], // Random customer
+                BillItems = new List<BillItem>()
+            };
+
+            int numberOfItems = random.Next(1, 6); // Random number of bill items between 1 and 5
+
+            for (int j = 0; j < numberOfItems; j++)
+            {
+                BillItem billItem = new BillItem
+                {
+                    ShoeSize = shoeSizes[random.Next(shoeSizes.Count)], // Random shoe size
+                    ProductCondition = productConditionList[random.Next(productConditionList.Count)], // Random product condition
+                    ItemQty = random.Next(6),
+                    Product = mockProducts[random.Next(mockProducts.Count)] // Random product from mockProducts list
+                };
+
+                bill.BillItems.Add(billItem);
+            }
+
+            bills.Add(bill);
+        }
+
         _db.Bill.AddRange(bills);
+
+
+        // // //         // Add all bills to the database
         _db.SaveChanges();
 
         var result = _db.Bill.ToList();

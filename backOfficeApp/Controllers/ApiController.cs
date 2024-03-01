@@ -27,7 +27,8 @@ public IActionResult GetProducts()
     var ProductsList = _db.Product
     .Include(p => p.ProductWithSizes)
         .ThenInclude(pws => pws.ShoeSize)
-    .Include(p => p.ProductCollection.Brand)
+    .Include(p => p.Brand)
+    .Include(p => p.Collection)
     .Select(p => new
     {
         p.ProductId,
@@ -39,8 +40,10 @@ public IActionResult GetProducts()
         p.Colorway,
         p.Releasedate,
         p.Amountsold,
-        p.ProductCollectionId,
-        p.ProductCollection,
+        p.BrandId,
+        p.Brand,
+        p.CollectionId,
+        p.Collection,
         p.ProductImageUrl,
         TotalInventoryQty = p.ProductWithSizes.Sum(pws => pws.InventoryQty),
         ProductWithSizes = p.ProductWithSizes  // Include ProductWithSizes here
@@ -64,8 +67,8 @@ public IActionResult DeleteProduct(Product p)
         var productToDelete = _db.Product
             .Include(db => db.ProductWithSizes)
                 .ThenInclude(pws => pws.ShoeSize) // Include ShoeSize for cascading delete
-            .Include(db => db.ProductCollection)
-                .ThenInclude(pws => pws.Brand) // Include ShoeSize for cascading delete
+            .Include(db => db.Collection)
+            .Include(db=> db.Brand)
             .FirstOrDefault(x => x.ProductId == p.ProductId);
 
         if (productToDelete == null)
@@ -135,7 +138,6 @@ public IActionResult GetProductByBarcode(string barcode)
         .Where(x => x.Barcode == barcode)
         .Select(x => new
         {
-            x.ProductId, // Include the productId property
             x.Barcode,
             x.ProductName,
             x.CostPrice,
@@ -150,18 +152,18 @@ public IActionResult GetProductByBarcode(string barcode)
                 pws.InventoryQty,
                 ShoeSize = new
                 {
-                    pws.ShoeSizeId, // Include the ShoeSizeId property
                     pws.ShoeSize.SizeType,
                     pws.ShoeSize.SizeNumber
                 }
             }),
-            ProductCollection = new
+            Brand = new
             {
-                x.ProductCollection.CollectionName, // Use directly from ProductCollection model
-                Brand = new
-                {
-                    x.ProductCollection.Brand.BrandName // Use directly from Brand model
-                }
+                    x.Brand.BrandName // Use directly from Brand model
+            },
+            Collection = new
+            {
+                x.Collection.CollectionName // Use directly from Collection model
+       
             },
             x.ProductImageUrl
         })
@@ -183,20 +185,6 @@ public IActionResult GetProductByBarcode(string barcode)
             status = 1
         });
     }
-}
-
-[HttpGet]
-public IActionResult GetCollections()
-{
-    var shoeSizes = _db.ProductCollection.ToList();
-    return Ok(shoeSizes);
-}
-
-[HttpGet]
-public IActionResult GetShoeSizes()
-{
-    var shoeSizes = _db.ShoeSize.ToList();
-    return Ok(shoeSizes);
 }
 
 [HttpGet]
@@ -268,7 +256,7 @@ public IActionResult AddSale(Bill bill)
     {
 
         // Assuming other necessary properties are already populated
-        // var soldProduct = bill.BillItems.Select(x => x.ProductId).ToList();
+        var soldProduct = bill.BillItems.Select(x => x.ProductId).ToList();
         
         // Save the bill to the database
         _db.Bill.Add(bill);

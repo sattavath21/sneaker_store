@@ -496,7 +496,7 @@
       methods: {
         async editCustomer(item) {
 
-          var url = "api/EditCustomer";
+          var url = "myapi/EditCustomer";
           try {
             console.log(item);
             var result = await axios.post(url, item);
@@ -526,7 +526,7 @@
 @* Staff section *@
     async addStaff() {
                     try {
-                        var response = await axios.post("/api/AddStaff", this.staff);
+                        var response = await axios.post("/myapi/AddStaff", this.staff);
                         this.staffCompletedDialog = true;
                         console.log(response.data);
                         this.staffs.push(response.data);
@@ -540,7 +540,7 @@
                 ,
                 async editStaff(item) {
 
-                    var url = "api/EditStaff";
+                    var url = "myapi/EditStaff";
                     try {
                         console.log(item);
                         var result = await axios.post(url, item);
@@ -553,7 +553,7 @@
                 }//ef
                 ,
                 async deleteStaff(item) {
-                    var url = "/api/DeleteStaff";
+                    var url = "/myapi/DeleteStaff";
                     var del = item
                     var result = await axios.post(url, del);
                     console.log(this.staffs);
@@ -597,7 +597,7 @@
       //created
       async created() {
         try {
-          var response = await axios.get("/api/GetCustomers");
+          var response = await axios.get("/myapi/GetCustomers");
           this.customers = response.data;
           console.log(response.data);
         }
@@ -606,7 +606,7 @@
         }
 
          try {
-                    var response = await axios.get("/api/GetStaff");
+                    var response = await axios.get("/myapi/GetStaff");
                     this.staffs = response.data;
                     console.log(response.data);
                 }

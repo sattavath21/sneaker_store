@@ -13,8 +13,10 @@ public class Product {
   public int Amountsold {get;set;}//label="Amount Sold"
   public List<ProductWithSize> ProductWithSizes {get;set;}
 //label="Product_ With_ Sizes"
-  public int ProductCollectionId {get;set;}//fk="ProductCollection"
-  public ProductCollection ProductCollection {get;set;} //np
+  public int BrandId {get;set;}//fk="Brand"
+  public Brand Brand {get;set;} //np
+  public int CollectionId {get;set;}//fk="Collection"
+  public Collection Collection {get;set;} //np
   public String ProductImageUrl {get;set;}//label="Product_ Image_ Url"
 
 }//ec
