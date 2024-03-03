@@ -22,7 +22,7 @@ public class DiscountController : Controller
         return View();
     }
 
-    public IActionResult AddDiscount()
+    public IActionResult AddDis()
     {
         return View();
     }

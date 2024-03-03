@@ -10,6 +10,8 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = backOfficeApp
 build_property.RootNamespace = backOfficeApp
 build_property.ProjectDir = C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
@@ -20,16 +22,12 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaEJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Delivery/AddDelivery.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcQWRkRGVsaXZlcnkuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Delivery/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/AddDiscount.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRcQWRkRGlzY291bnQuY3NodG1s
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/AddDis.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRcQWRkRGlzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/Index.cshtml]
@@ -78,10 +76,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Staff/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RhZmZcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Stakeholder/AddCus.cshtml]

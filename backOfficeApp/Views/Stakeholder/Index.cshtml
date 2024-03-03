@@ -6,7 +6,7 @@
     Customer</div>
 
 
-  <q-table class="bg-grey-2" title="Customer Information" :rows="customers" :columns="customerColumns" :filter="searchText">
+  <q-table class="bg-grey-2" title="Customer Information" :rows="customers" :columns="customerColumns" :filter="searchText" row-key="customerId">
 
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Customer Information</div>
@@ -46,19 +46,20 @@
           <q-popup-edit v-model="props.row.customerFirstname">
             <q-input v-model="props.row.customerFirstname" dense autofocus counter></q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+              <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
               </q-btn>
             </div>
           </q-popup-edit>
         </q-td>
-        
+
+
         <q-td key="customerLastname" :props="props">
           {{ props.row.customerLastname }}
           <q-popup-edit v-model="props.row.customerLastname">
             <q-input v-model="props.row.customerLastname" dense autofocus counter></q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+              <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
               </q-btn>
             </div>
@@ -67,10 +68,10 @@
 
         <q-td key="gender" :props="props">
           {{ props.row.gender }}
-          <q-popup-edit v-model="props.row.age">
-            <q-input v-model="props.row.age" dense autofocus counter></q-input>
+          <q-popup-edit v-model="props.row.gender">
+            <q-input v-model="props.row.gender" dense autofocus counter></q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+              <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
               </q-btn>
             </div>
@@ -88,7 +89,7 @@
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-date v-model="props.row.customerBirthday" landscape color="red">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Change" color="red" flat @@click="editProduct(props.row)"></q-btn>
+                      <q-btn v-close-popup label="Change" color="red" flat @@click="formatCustomerDate(props.row)"></q-btn>
                       <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
                     </div>
                   </q-date>
@@ -104,7 +105,7 @@
           <q-popup-edit v-model="props.row.email">
             <q-input v-model="props.row.email" dense autofocus counter></q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+              <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
               </q-btn>
             </div>
@@ -114,9 +115,10 @@
         <q-td key="customerPhoneNumber" :props="props">
           {{ props.row.customerPhoneNumber }}
           <q-popup-edit v-model="props.row.customerPhoneNumber">
-            <q-input v-model="props.row.customerPhoneNumber" dense autofocus counter></q-input>
+            <q-input v-model="props.row.customerPhoneNumber" filled dense autofocus mask="### #### ####"
+></q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+              <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
               </q-btn>
             </div>
@@ -128,7 +130,7 @@
           <q-popup-edit v-model="props.row.customerSocialLink">
             <q-input v-model="props.row.customerSocialLink" dense autofocus counter></q-input>
             <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+              <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
               </q-btn>
             </div>
@@ -155,7 +157,7 @@
             margin-top: 110px;">
         Staff</div>
 
-    <q-table class="bg-grey-2" title="Staff Information" :rows="staffs" :columns="staffColumns" :filter="searchText">
+    <q-table class="bg-grey-2" title="Staff Information" :rows="staffs" :columns="staffColumns" :filter="searchText" row-key="staffId">
         <template v-slot:top-left>
             <div class="text-h6 q-pa-md">Staff Information</div>
             <q-separator vertical class="q-my-sm"></q-separator>
@@ -199,6 +201,7 @@
                         </div>
                     </q-popup-edit>
                 </q-td>
+                
                 <q-td key="staffLastname" :props="props">
                     {{ props.row.staffLastname }}
                     <q-popup-edit v-model="props.row.staffLastname">
@@ -210,9 +213,27 @@
                         </div>
                     </q-popup-edit>
                 </q-td>
-                <q-td key="staffBirthday" :props="props">
-                    {{ props.row.staffBirthday }}
+
+
+                 <q-td key="staffBirthday" :props="props">
+                  <q-input filled v-model="props.row.staffBirthday" mask="date" style="width: 165px;">
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="props.row.staffBirthday" landscape color="red">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Change" color="red" flat @@click="formatStaffDate(props.row)"></q-btn>
+                              <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
                 </q-td>
+
+              
+
 
                 <q-td key="staffEmail" :props="props">
                     {{ props.row.email }}
@@ -270,10 +291,12 @@
                                 <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
                             </div>
                         </q-date>
+                        
                     </q-popup-proxy>
                 </q-icon>
             </template>
         </q-input>
+
         <q-separator vertical class="q-my-md"></q-separator>
         <q-input class="q-px-sm q-mb-sm" filled v-model="staff.email" label="Email" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
@@ -481,7 +504,7 @@
                     staff: {
                         staffFirstName: "andy",
                         staffLastName: "asdasdo",
-                        staffBirthday: "19/01/2001",
+                        staffBirthday: "2001/05/20",
                         email: "huangguifu21@gmail.com",
                         staffPhoneNumber: "24374373",
                         permission: {
@@ -494,8 +517,18 @@
       ,
       //methods
       methods: {
+        formatCustomerDate(item) {
+    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
+                  const inputDateString = item.customerBirthday;
+                  const inputDate = new Date(inputDateString);
+                  const year = inputDate.getFullYear();
+                  const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(inputDate.getDate()).padStart(2, '0');
+                  const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
+                  item.customerBirthday = formattedDateString;
+                  this.editCustomer(item);
+                },
         async editCustomer(item) {
-
           var url = "myapi/EditCustomer";
           try {
             console.log(item);
@@ -505,6 +538,7 @@
           catch (error) {
             console.log(error);
           }
+          console.log("Finished editCustomer function!");
 
         },//ef
  calculateAge(birthdate) {
@@ -538,20 +572,31 @@
 
                 }//ef
                 ,
+                formatStaffDate(item) {
+    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
+                  const inputDateString = item.staffBirthday;
+                  const inputDate = new Date(inputDateString);
+                  const year = inputDate.getFullYear();
+                  const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(inputDate.getDate()).padStart(2, '0');
+                  const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
+                  item.staffBirthday = formattedDateString;
+                  this.editStaff(item);
+                },
                 async editStaff(item) {
+                  var url = "/myapi/EditStaff";
+                  try {
+                    console.log(item);
+                    var result = await axios.post(url, item);
+                    console.log(result.data);
+                  }
+                  catch (error) {
+                    console.log(error);
+                  }
+                  console.log("Finished editStaff function!");
 
-                    var url = "myapi/EditStaff";
-                    try {
-                        console.log(item);
-                        var result = await axios.post(url, item);
-                        console.log(result.data);
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
+                },//ef
 
-                }//ef
-                ,
                 async deleteStaff(item) {
                     var url = "/myapi/DeleteStaff";
                     var del = item
@@ -585,7 +630,7 @@
                     this.staff.staffBirthday = ""
                     this.staff.email = ""
                     this.staff.permission.permissionName = ""
-                }
+                },
         
       }//emethod
       ,
@@ -606,7 +651,7 @@
         }
 
          try {
-                    var response = await axios.get("/myapi/GetStaff");
+                    var response = await axios.get("/myapi/GetStaffs");
                     this.staffs = response.data;
                     console.log(response.data);
                 }

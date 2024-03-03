@@ -7,27 +7,28 @@
     <q-separator vertical class="q-my-md"></q-separator>
     <div class="text-h6 q-pa-lg">Discount Information</div>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.description" label="Discount Description" lazy-rules
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.description" label="Discount Description" lazy-rules
       :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.discountPercentage" label="Discount Percentage" hint="Number only"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-separator vertical class="q-my-md"></q-separator>
-
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.minSpend" label="Minimal Spend to Apply Discount"
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.discountPercentage" label="Discount Percentage"
       hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.maxDiscountAmount" label="Maximum Discount Allowed" lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.minSpend" label="Minimal Spend to Apply Discount"
+      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.start" mask="date" style="width: 300px;">
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.maxDiscountAmount" label="Maximum Discount Allowed"
+      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-separator vertical class="q-my-md"></q-separator>
+
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.start" mask="date" style="width: 300px;"
+      label="Start date">
       <template v-slot:append>
         <q-icon name="event" class="cursor-pointer">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-            <q-date v-model="discount.start" landscape color="red">
+            <q-date v-model="newDiscount.start" landscape color="red">
               <div class="row items-center justify-end">
                 <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
               </div>
@@ -37,21 +38,18 @@
       </template>
     </q-input>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.duration" label="Duration of The Discount" hint="Number only"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.duration" label="Duration of The Discount"
+      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="discount.amount" label="The Quantity of The Discount" hint="Number only"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.amount" label="The Quantity of The Discount"
+      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
     <!-- Shipping Method Dropdown -->
-    <q-select class="q-px-sm q-mb-md" filled v-model="selectedShippingMethod"
-      style="min-width: 300px; height: 10px margin: 10px; padding: 5px;" :options="shippingMethods" option-value="shippingMethods.methodName" option-label="methodName"> </q-select>
+    <q-select class="q-px-sm q-mb-md" filled v-model="newDiscount.shippingMethodId"
+      style="min-width: 300px; height: 10px margin: 10px; padding: 5px;" emit-value :options="shippingMethodOptions"
+      options-cover map-options> </q-select>
 
-      <q-select class="q-px-sm" color="brown-10" bg-color="brown-4" label="Staff" transition-show="jump-up"
-            transition-hide="jump-up" filled v-model="selectedStaffDrop" :options="staffDrop" style="width: 250px"
-            option-value="staffDrop.firstName" option-label="firstName"></q-select>
-            
 
     <q-separator vertical class="q-my-md"></q-separator>
 
@@ -107,7 +105,7 @@
       data() {
         return {
           confirm: false,
-          discount: {
+          newDiscount: {
             description: "",
             discountPercentage: 0,
             minSpend: 0,
@@ -115,12 +113,10 @@
             start: "2024/11/11",
             duration: 0,
             amount: 0,
-              shippingMethodId: null
-
+            shippingMethodId: 0
           },
           completedDialog: false,
-          shippingMethods: [], // Array to store shipping method names
-          selectedShippingMethod: [], // Variable to store the selected shipping method
+          shippingMethodOptions: [] // Array to store shipping method names
 
         };
       }
@@ -131,12 +127,11 @@
 
         async addDiscount() {
           try {
-            
-            console.log("Discount Object:", this.discount);
-            this.discount.shippingMethodId = this.selectedShippingMethod.shippingMethodId;
+
+            console.log("Discount Object:", this.newDiscount);
             // Make the API call
-            var response = await axios.post("/api/AddDiscount", this.discount);
-            
+            var response = await axios.post(`/myapi/AddDiscount?shippingMethodId=${this.newDiscount.shippingMethodId}`, this.newDiscount);
+            console.log("Reponse Object:", response);
 
             // Handle the response or perform any necessary logic
             if (response.status === 200) {
@@ -199,7 +194,7 @@
 
             // Reset the form fields and data
 
-            this.discount = {
+            this.newDiscount = {
               description: "",
               discountPercentage: null,
               minSpend: null,
@@ -232,17 +227,18 @@
       //created
       async created() {
 
-    
-    try
-    {
-        var res = await axios.get("/api/GetShippingMethods");
-                    this.shippingMethods = res.data;
-                    console.log(this.shippingMethods);
-    }
-    catch (ex)
-    {
-    console.error('Error fetching shipping method names:', error);
-    }
+
+        try {
+          var res = await axios.get("/myapi/GetShippingMethods");
+          this.shippingMethodOptions = res.data.map(method => ({
+            label: method.methodName,
+            value: method.shippingMethodId
+          }));
+          console.log(this.shippingMethodOptions);
+        }
+        catch (ex) {
+          console.error('Error fetching shipping method names:', ex);
+        }
 
 
       },

@@ -77,6 +77,18 @@ builder.Services.AddDbContextPool<BackofficeappDbContext>(
     //.EnableDetailedErrors()
     );
 
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder.WithOrigins("https://localhost:5001/",
+                                              "http://localhost:5000/");
+                      });
+});
+
 //pdf service 
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 var app = builder.Build();
@@ -97,6 +109,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseStaticFiles(new StaticFileOptions() { FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"asset")), RequestPath = new PathString("/asset") });
+
+
+app.UseCors(MyAllowSpecificOrigins);
+
 
 app.UseRouting();
 

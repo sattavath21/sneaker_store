@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "DPDJe7boaTJUw8EksfSXE7C+4zPuTW6KqIc8a6rte6rhKWw41szYN2DEkH+Rlyz0U4PMlee/3LVAdnc5a0eDCg==",
+  "dgSpecHash": "XZj4FUSfclo3yblPLYCwBB8YCWTmc/PwtAGOzOezbd63UljSVepWUcaLn0U+IVNx3kp4znq1OsGfuq+ArluoxQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeApp\\backOfficeApp.csproj",
   "expectedPackageFiles": [
@@ -116,11 +116,7 @@
     "C:\\Users\\Sattavath\\.nuget\\packages\\system.threading.thread\\4.0.0\\system.threading.thread.4.0.0.nupkg.sha512",
     "C:\\Users\\Sattavath\\.nuget\\packages\\system.threading.timer\\4.0.1\\system.threading.timer.4.0.1.nupkg.sha512",
     "C:\\Users\\Sattavath\\.nuget\\packages\\system.xml.readerwriter\\4.0.11\\system.xml.readerwriter.4.0.11.nupkg.sha512",
-    "C:\\Users\\Sattavath\\.nuget\\packages\\system.xml.xdocument\\4.0.11\\system.xml.xdocument.4.0.11.nupkg.sha512",
-    "C:\\Users\\Sattavath\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.18\\microsoft.netcore.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\Sattavath\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.18\\microsoft.windowsdesktop.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\Sattavath\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.18\\microsoft.aspnetcore.app.ref.6.0.18.nupkg.sha512",
-    "C:\\Users\\Sattavath\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.18\\microsoft.netcore.app.host.win-x64.6.0.18.nupkg.sha512"
+    "C:\\Users\\Sattavath\\.nuget\\packages\\system.xml.xdocument\\4.0.11\\system.xml.xdocument.4.0.11.nupkg.sha512"
   ],
   "logs": []
 }

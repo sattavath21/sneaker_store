@@ -1,25 +1,11 @@
 <div id="app1">
 
-  
 
-  <q-select v-model="selection" 
-    style="max-width: 250px"
-    :options="[
+
+  <q-select v-model="selection" style="max-width: 250px" :options="[
     'Panda', 'lily', 'bro'
-    ]"
-    label="Dogs" 
-    filled 
-    borderless
-    dense
-    color = "red"
-    bg-color = "white-2"
-    clearable
-    hint="Select panda pls"
-    options-cover
-    emit-value
-    @* disabled
-    readonly *@
-    >
+    ]" label="Dogs" filled borderless dense color="red" bg-color="white-2" clearable hint="Select panda pls"
+    options-cover emit-value @* disabled readonly *@>
 
     <template #prepend>
       <q-icon name="event" />
@@ -27,13 +13,14 @@
 
   </q-select>
 
-    <pre style="color: black;"> {{ selection }} </pre>
-    
+  <pre style="color: black;"> {{ selection }} </pre>
+
+  <q-btn class="q-ma-sm q-px-lg q-py-sm" size="15px" icon="print" color="primary" @@click="printContent"></q-btn>
 
 
-  
- 
-  
+
+
+
 
 </div>
 
@@ -52,8 +39,274 @@
       ,
       //methods
       methods: {
-      
-    
+        printContent() {
+          const selectedValue = this.selection; // Replace 'selectedValue' with the actual variable name containing the selection
+          const depositMoney = "2,000.00";
+          // Mock data list
+              const dataList = [
+                  { qty: 1, productName: 'Product Aasdadasdasdasdadasdasdasd', size: '35.5', price: '5,000.00' },
+                  { qty: 2, productName: 'Product B', size: '36', price: '6,000.00' },
+                  { qty: 5, productName: 'Product C', size: '37', price: '7,000.00' },
+                  { qty: 6, productName: 'Product D', size: '45.5', price: '8,000.00' },
+                  
+                  // Add more mock data objects as needed
+              ];
+          const printWindow = window.open('', '_blank', 'width=600,height=600,chrome=0');
+
+          printWindow.document.write(`
+
+  <html>
+  <head>
+      <title>99ᵗʰ Century Sneaker Store</title>
+      <style>
+        /* Add CSS styles for printing if needed */
+        body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+        }
+        .bold-text {
+      font-weight: bold;
+        margin: 0;
+    padding: 0;
+      margin-top: 0; /* Add this line to remove the space on top */
+
+    }
+        @@page {
+                      margin: 1in; /* Set paper margin */
+                      size: A5; /* Set paper size */
+                  }
+        .header {
+          font-size: 26px;
+          margin-top: 25px;
+          margin-bottom: 25px;
+        }
+        .content{
+              white-space: nowrap; /* Prevents wrapping to a new line */
+  margin-bottom: 25px;
+
+        }
+        .box34content{
+          margin-top: 15px;
+                        white-space: nowrap; /* Prevents wrapping to a new line */
+            padding: 0 30px; /* Add padding of 20px to the left and right */
+
+        }
+              * {
+    font-family: 'Noto Sans Lao', sans-serif; /* Change the font-family to Noto Sans */
+    font-style: normal;
+    font-weight: 400;
+  }
+        .box1{
+           display: inline-block;
+      width: 50%; /* Each box takes up 50% of the container width */
+      vertical-align: top; /* Align box1 to the top */
+          font-size: 18px;
+
+        }
+        .box2 {
+      display: inline-block;
+      width: 50%; /* Each box takes up 50% of the container width */
+                font-size: 18px;
+
+  }
+      .box3{
+           display: inline-block;
+      width: 50%; /* Each box takes up 50% of the container width */
+      vertical-align: top; /* Align box1 to the top */
+          font-size: 12px;
+          margin-top: 30px;
+            background-color: #f2f2f2; /* Grey background color */
+              padding-bottom: 8px; /* Add padding at the bottom */
+           border-radius: 10px; /* Rounded corners */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Shadow effect without blur */
+
+        }
+.box4 {
+         display: inline-block;
+      width: 50%; /* Each box takes up 50% of the container width */
+      vertical-align: top; /* Align box1 to the top */
+          font-size: 12px;
+        padding-left: 15px; /* Adjust the value as needed */
+
+}
+
+        /* Container for watermark */
+        .watermark-container {
+        position: absolute;
+        top: 0; /* Adjust as needed */
+        left: 0; /* Adjust as needed */
+        width: 100%; /* Take up the full width of the container */
+        height: 100%; /* Take up the full height of the container */
+        z-index: 1; /* Ensure the watermark is above other content */
+      }
+
+        /* Watermark styling */
+        .watermark {
+      position: absolute;
+      top: 40%; /* Center vertically */
+      left: 50%; /* Center horizontally */
+      transform: translate(-50%, -50%); /* Center the watermark */
+      width: 100%; /* Reduce width to half */
+      height: auto; /* Automatically adjust height */
+      pointer-events: none; /* Ensure the watermark doesn't interfere with click events */
+      opacity: 0.35; /* Adjust opacity as needed */
+      z-index: -1; /* Place the watermark behind other content */
+        }
+         /* Table styles */
+         .table-container {
+  padding: 0 30px; /* Add padding of 20px to the left and right */
+  margin: 0 auto; /* Center the table horizontally */
+}
+     table {
+  border-collapse: collapse;
+  width: 100%; /* Ensure the table takes up the entire width of the container */
+            font-size: 16px;
+
+}
+      th {
+        padding: 10px;
+        border: none; /* Remove borders */
+      }
+      td {
+        padding: 10px;
+        border: none; /* Remove borders */
+        text-align: center; /* Horizontal alignment */
+
+      }
+      .td-align-left {
+  text-align: left;
+}
+
+
+.td-align-right {
+  text-align: right;
+}
+      /* Adjust column widths */
+      th:nth-child(1), td:nth-child(1) {
+        width: 5%; /* Small width for 1st column */
+      }
+      th:nth-child(2), td:nth-child(2) {
+        width: 55%; /* Widest width for 2nd column */
+      }
+      th:nth-child(3), td:nth-child(3) {
+        width: 15%; /* Moderate width for 3rd column */
+      }
+      th:nth-child(4), td:nth-child(4) {
+        width: 25%; /* Wide width for 4th column */
+      }
+       tr:nth-child(odd) {
+      background-color: #f2f2f2; /* Change the background color as needed */
+    }
+    .row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd; /* Optional: add borders between rows */
+}
+
+.cell {
+  padding: 10px;
+}
+      </style>
+    </head>
+
+  <body>
+      <!-- Watermark container -->
+      <div class="watermark-container">
+    <!-- Watermark image -->
+    <img class="watermark" src="/asset/image/99Th_white.png" alt="Watermark">
+  </div>
+          <!-- Header -->
+          <div class="header">
+<p style="white-space: nowrap;">
+  <span class="bold-text">ໃບຮັບຈອງສິນຄ້າ (Receipt)</span> [orderDate]
+</p>          </div>
+
+          <!-- Content -->
+          <div class="content">
+
+            <div class="box1">
+              <p>ຮ້ານຄ້າຜູ້ບໍລິການ<br><div class="bold-text">99<sup>th</sup> Century</div></p>
+            </div>
+            <div class="box2">
+              <p>ລາຍລະອຽດລູກຄ້າ<div class="bold-text">[Customer Name]</div>ວັນທີ່ຈອງສິນຄ້າ [Ordered Date]</p>
+            </div>
+
+          </div>
+
+<div class="table-container">
+  <table id="data-table" style="border-collapse: collapse; border: none;">
+  <tr style="background-color: #fff6c4;">
+    <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ຈຳນວນ</th>
+    <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຍການສິນຄ້າ</th>
+    <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ໄຊສ໌</th>
+    <th style="padding: 10px; font-weight: bold;">ລາຄາ (ບາດ)</th>
+  </tr>
+
+ 
+</table>
+</div>
+          <div class="box34content">
+<div class="box3">
+              <p><span style="color: red;">ໝາຍເຫດ</span><br>ທາງຮ້ານເຮົານຳເຂົ້າສິນຄ້າອອກຊັອບໂດຍຕົງ<br>ເເລະມີຮັບປະກັນສິນຄ້າຂອງເເທ້ 100% <br>ຫາກພົບຂອງປອມທາງຮ້ານຮັບຜິດຊອບ<br>ຄວາມເສຍຫາຍຄືນເເກ່ລູກຄ້າ 2 ເທົ່າ</p>
+            </div>
+            <div class="box4">
+  <div class="row">
+    <div class="cell">ທັງໝົດ</div>
+    <div class="cell" style="font-weight: bold;">[Subtotal]</div>
+  </div>
+  <div class="row">
+    <div class="cell">ສ່ວນລົດ</div>
+    <div class="cell" style="font-weight: bold;">[Discount]</div>
+  </div>
+  <div class="row">
+    <div class="cell">ມັດຈຳ</div>
+    <div class="cell" style="font-weight: bold;">${depositMoney}</div>
+  </div>
+  <div class="row">
+    <div class="cell">ຄ່າຈັດສົ່ງ</div>
+    <div class="cell" style="font-weight: bold;">FREE</div>
+  </div>
+  <div class="row" style="background-color: #f2f2f2;">
+    <div class="cell" style="font-weight: bold;">ຍອດທີ່ເຫຼືອ</div>
+    <div class="cell" style="font-weight: bold;">[Grand total]</div>
+  </div>
+</div>
+            </div>
+  
+
+          </div>
+
+
+             <div class="selected-value">
+            <p>Selected Value: ${selectedValue}</p>
+      </div>
+
+
+  </body>
+  </html
+        `);
+
+        
+          printWindow.document.close();
+           // After closing the document, select the table element
+    const table = printWindow.document.getElementById('data-table');
+    // Append rows to the table
+    dataList.forEach(item => {
+        const row = printWindow.document.createElement('tr');
+        row.innerHTML = `
+            <td style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.qty}</td>
+            <td class="td-align-left" style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.productName}</td>
+            <td style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.size}</td>
+            <td class="td-align-right" style="padding: 10px; font-size:14px;">${item.price}</td>
+        `;
+        table.appendChild(row);
+    });
+
+
+
+          printWindow.print();
+        }
+
 
       }
       ,
@@ -65,7 +318,7 @@
       ,
       //created
       async created() {
-       
+
       }//ecreated
       ,
       //mounted
@@ -81,3 +334,5 @@
   </script>
 
 }
+
+

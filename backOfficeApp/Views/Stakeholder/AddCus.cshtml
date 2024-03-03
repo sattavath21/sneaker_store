@@ -5,7 +5,7 @@
     <q-card-section class="bg-cyan text-white">
       <div class="text-h6">Add New Customer</div>
     </q-card-section>
-    <div class="text-h6 q-pa-lg">General Information</div>
+    <div class="q-pa-md"></div>
     <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerFirstname" label="First Name"
       lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     
@@ -47,7 +47,7 @@
             <q-card>
               <q-card-section class="row items-center">
                 <q-avatar icon="face" color="orange-10" text-color="white"></q-avatar>
-                <span class="q-ml-sm">Add this product?</span>
+                <span class="q-ml-sm">Add this customer?</span>
               </q-card-section>
 
               <q-card-actions align="center">
@@ -57,7 +57,7 @@
               </q-card-actions>
             </q-card>
           </q-dialog>
-      <q-btn size="lg" icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/customer"'></q-btn>
+      <q-btn size="lg" icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" onclick='window.location="/stakeholder"'></q-btn>
       <q-dialog v-model="completedDialog">
         <q-card class="bg-indigo-1">
           <q-card-section>
@@ -115,7 +115,7 @@
             console.log(this.customer);
             var date = new Date(this.customer.customerBirthday)
             this.customer.customerBirthday = date.toJSON();
-            var response = await axios.post("/api/AddCustomer", this.customer);
+            var response = await axios.post("/myapi/AddCustomer", this.customer);
             this.completedDialog = true;
             this.$q.notify({
                             color: 'green-4',
