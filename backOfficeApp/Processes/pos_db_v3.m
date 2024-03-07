@@ -90,16 +90,6 @@
                         }
                     }
                 ],
-<<<<<<< HEAD
-                "Brand":{
-                    "Brand_Name":"asdasdasd",
-                    "Brand_Logo":"asdasdasdasd",
-                  "Brand_Collections":[
-                    {
-                        "Product_Collection":{
-                                                "Collection_Name": "Jordan 1"
-
-=======
                 "Brand": {
                     "Brand_Name": "Jordan",
                     "Brand_Logo_Url": "asd",
@@ -108,7 +98,6 @@
                             "Collection": {
                                 "Collection_Name": "Jordan 1"
                             }
->>>>>>> 58fa36f9468c3566465b5deec34f134c0e1e9a14
                         }
                     ]
                 },

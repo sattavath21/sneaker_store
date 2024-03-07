@@ -4,10 +4,17 @@
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
     Order Item</div>
   <q-form class=" q-pa-lg" style="background-color: #f2f2f2;">
+    <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
+      <div style="display: flex; flex-direction: column; width: 450px;">
+        <q-select v-model="selectedOrderStatus" :options="orderStatus" label="Select Order Status"></q-select>
+        <q-separator vertical class="q-my-sm"></q-separator>
+
+      </div>
+    </q-card-actions>
     <q-input ref="input1" v-model="item.barcode" label="Input Barcode" @@change="item_change">
     </q-input>
     <div class="q-ma-sm">
-      <q-input v-model="item.barcode2" label="Scanned Barcode"></q-input>
+      <q-input v-model="item.barcode2" label="Scanned Barcode" readonly></q-input>
 
     </div>
 </div>
@@ -35,10 +42,13 @@
       <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
       <q-td key="qty" :props="props">
         {{ props.row.qty }}
-        <q-popup-edit v-model.number="props.row.qty" buttons v-slot="scope">
-          <q-input type="number" v-model.number="scope.value" dense autofocus @@keyup.enter="scope.set" />
+
+        <q-popup-edit v-model="props.row.qty" buttons v-slot="scope">
+          <q-input v-model="scope.value" dense autofocus counter type="number" @@keyup.enter="scope.set" />
         </q-popup-edit>
       </q-td>
+
+
       <q-td key="productImageUrl" :props="props">
         <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
         <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
@@ -55,14 +65,16 @@
         {{ props.row.sellingPrice }}
       </q-td>
       <q-td key="shoeSize" :props="props">
-        <q-select v-model="props.row.selectedShoeSize" :options="formattedShoeSizes(props.row.shoeSizes)" dense outlined
-          @@update:model-value="handleSelectedShoeSize" />
+        <q-select v-model="props.row.selectedShoeSize" :options="formattedShoeSizes(props.row.shoeSizes)"
+          label="Select Size" dense outlined emit-value map-options>
+        </q-select>
+
       </q-td>
 
 
       <q-td key="conditionName" :props="props">
-        <q-select v-model="props.row.selectedCondition" :options="conditionOptions" dense outlined
-          @@update:model-value="handleSelectedCondition" />
+        <q-select v-model="props.row.selectedCondition" :options="conditionOptions" dense outlined emit-value
+          map-options />
       </q-td>
 
       <q-td key="colorway" :props="props">
@@ -148,15 +160,16 @@
       data() {
         return {
           customerTransferPic: "",
-          selectedShoeSize: null, // Array to store selected shoe sizes for each row
-          selectedCondition: null, // Array to store selected conditions for each row
-          selectedDiscount: [],
-          selectedShippingMethod: [],
-          selectedDeliveryService: [],
-          selectedBranch: [],
-          selectedStaff: [],
-          selectedCustomer: [],
+
+          selectedOrderStatus: null,
+          selectedDiscount: null,
+          selectedShippingMethod: null,
+          selectedDeliveryService: null,
+          selectedBranch: null,
+          selectedStaff: null,
+          selectedCustomer: null,
           discounts: [],
+          orderStatus: [],
           shippingMethods: [],
           deliveryServices: [],
           branches: [],
@@ -224,7 +237,9 @@
               sortable: true,
               align: 'center',
               field: 'selectedShoeSize',
+              format: (value) => `${value.sizeNumber} - ${value.sizeType} - QTY: ${value.inventoryQty}`,
             }
+
 
 
             ,
@@ -253,18 +268,14 @@
       methods: {
         formattedShoeSizes(shoeSizes) {
           return shoeSizes.map(size => ({
-            label: `${size.sizeNumber} - ${size.sizeType}`,
-            value: size.shoeSizeId
+            label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,
+            value: { productWithSizeId: size.productWithSizeId, shoeSizeId: size.shoeSizeId }
           }));
         }
+
         ,
         async checkOut() {
-          console.log("Selected Size:", this.selectedShoeSize);
-          console.log("Selected Condition:", this.selectedCondition);
-          if (!this.selectedShoeSize) {
-            // Handle case when no shoe size is selected
-            return;
-          }
+
 
           if (this.orderItems.length === 0) {
             this.$q.notify({
@@ -277,12 +288,28 @@
 
           // Restructure order items
           var reBillItems = this.orderItems.map(item => {
+            // Access shoeSizeId and productWithSizeId through selectedShoeSize
+            const shoeSizeId = item.selectedShoeSize ? item.selectedShoeSize.shoeSizeId : null;
+            const productWithSizeId = item.selectedShoeSize ? item.selectedShoeSize.productWithSizeId : null;
+
+            // Return the restructured item object
             return {
-              shoeSizeId: this.selectedShoeSize,
-              productConditionId: this.selectedCondition,
-              productId: item.productId,
+              shoeSizeId: shoeSizeId,
+              productConditionId: item.selectedCondition,
+              itemQty: item.qty,
+              product: {
+                productId: item.productId,
+                productWithSizes: [{
+                  productWithSizeId: productWithSizeId // Include productWithSizeId here
+                }]
+              }
             };
           });
+
+
+
+
+
           console.log("shippingMethodId:", this.selectedShippingMethod.value);
           console.log("customerTransferPicPath:", this.customerTransferPic);
           console.log("discountId:", this.selectedDiscount.value);
@@ -295,7 +322,7 @@
           // Create sale object
           var bill = {
             orderDate: new Date(),
-            orderStatusId: 2,
+            orderStatusId: this.selectedOrderStatus.value,
             shippingMethodId: this.selectedShippingMethod.value,
             customerTransferPicPath: this.customerTransferPic,
             discountId: this.selectedDiscount.value,
@@ -310,6 +337,12 @@
           try {
             var res = await axios.post(url, bill);
             this.orderItems = [];
+            this.selectedDiscount = null;
+            this.selectedShippingMethod = null;
+            this.selectedDeliveryService = null;
+            this.selectedBranch = null;
+            this.selectedStaff = null;
+            this.selectedCustomer = null;
             this.$q.notify({
               color: 'green-4',
               textColor: 'white',
@@ -389,6 +422,18 @@
             console.error("Error fetching branches:", error);
           }
         },
+        async fetchOrderStatus() {
+          try {
+            const response = await axios.get("/api/GetOrderStatusesSelection");
+            // Map the data to the format required by q-select
+            this.orderStatus = response.data.map(status => ({ label: status.statusName, value: status.orderStatusId }));
+            console.log("Order status:", this.orderStatus);
+            // Set selectedOrderStatus to the label "Pending"
+            this.selectedOrderStatus = this.orderStatus.find(status => status.label === 'Pending');
+          } catch (error) {
+            console.error("Error fetching orderStatus:", error);
+          }
+        },
 
 
 
@@ -410,87 +455,72 @@
           product.showImageDialog = !product.showImageDialog;
         },
         async item_change() {
-  this.item.barcode2 = this.item.barcode;
+          this.item.barcode2 = this.item.barcode;
 
-  try {
-    var url = '/api/GetProductByBarcode?barcode=' + this.item.barcode;
-    var res = await axios.get(url);
+          try {
+            var url = '/api/GetProductByBarcode?barcode=' + this.item.barcode;
+            var res = await axios.get(url);
 
-    if (res.data.result !== undefined) {
-      console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
-
-
-      if (res.data.status != -1) {
-        var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
-
-        if (index !== -1) {
-          // If the product is already in orderItems, create a new row with the same product details
-          var newProduct = { ...res.data.result }; // Create a new object to avoid modifying the original
-          newProduct.qty = 1; // Set initial quantity
-          newProduct.shoeSizes = res.data.result.productWithSizes.map(pws => ({
-            sizeNumber: pws.shoeSize.sizeNumber,
-            shoeSizeId: pws.shoeSize.shoeSizeId, // Ensure shoeSizeId is correctly assigned
-            sizeType: pws.shoeSize.sizeType // Include sizeType
-          })); // Populate shoe sizes
-
-          console.log('New Product Shoe Sizes:', newProduct.shoeSizes); // Log the shoeSizes array
-
-          this.orderItems.push(newProduct);
-        } else {
-          // Add new product to orderItems array
-          res.data.result.qty = 1; // Set initial quantity
-          res.data.result.shoeSizes = res.data.result.productWithSizes.map(pws => ({
-            sizeNumber: pws.shoeSize.sizeNumber,
-            shoeSizeId: pws.shoeSize.shoeSizeId, // Ensure shoeSizeId is correctly assigned
-            sizeType: pws.shoeSize.sizeType // Include sizeType
-          })); // Populate shoe sizes
-
-          console.log('New Product Shoe Sizes:', res.data.result.shoeSizes); // Log the shoeSizes array
-
-          this.orderItems.push(res.data.result);
-        }
-
-        this.item.barcode = '';
-        this.$refs.input1.$el.focus();
-      } else {
-        this.$q.notify({
-          type: 'warning',
-          message: 'Product not found'
-        });
-      }
-    } else {
-      // Handle case when the result is undefined (product not found)
-      this.$q.notify({
-        type: 'warning',
-        message: 'Product not found'
-      });
-    }
-
-  } catch (error) {
-    console.log(error);
-  }
-},
+            if (res.data.result !== undefined) {
+              console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
 
 
-        formatDate(dateString) {
-          // Parse the date string
-          const date = new Date(dateString);
+              if (res.data.status != -1) {
+                var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
 
-          // Format the date as needed (e.g., "MM/DD/YYYY")
-          const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+                if (index !== -1) {
+                  // If the product is already in orderItems, create a new row with the same product details
+                  var newProduct = { ...res.data.result }; // Create a new object to avoid modifying the original
+                  newProduct.qty = 1; // Set initial quantity
+                  newProduct.shoeSizes = res.data.result.productWithSizes.map(pws => ({
+                    shoeSizeId: pws.shoeSize.shoeSizeId,
+                    productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
+                    inventoryQty: pws.inventoryQty, // Include inventoryQty
+                    sizeNumber: pws.shoeSize.sizeNumber,
+                    sizeType: pws.shoeSize.sizeType
+                  })); // Populate shoe sizes
 
-          return formattedDate;
+                  console.log('New Product Shoe Sizes:', newProduct.shoeSizes); // Log the shoeSizes array
+
+                  this.orderItems.push(newProduct);
+                } else {
+                  // Add new product to orderItems array
+                  res.data.result.qty = 1; // Set initial quantity
+                  res.data.result.shoeSizes = res.data.result.productWithSizes.map(pws => ({
+                    shoeSizeId: pws.shoeSize.shoeSizeId,
+                    productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
+                    inventoryQty: pws.inventoryQty, // Include inventoryQty
+                    sizeNumber: pws.shoeSize.sizeNumber,
+                    sizeType: pws.shoeSize.sizeType
+                  })); // Populate shoe sizes
+
+                  console.log('New Product Shoe Sizes:', res.data.result.shoeSizes); // Log the shoeSizes array
+
+                  this.orderItems.push(res.data.result);
+                }
+
+                this.item.barcode = '';
+                this.$refs.input1.$el.focus();
+              } else {
+                this.$q.notify({
+                  type: 'warning',
+                  message: 'Product not found'
+                });
+              }
+            } else {
+              // Handle case when the result is undefined (product not found)
+              this.$q.notify({
+                type: 'warning',
+                message: 'Product not found'
+              });
+            }
+
+          } catch (error) {
+            console.log(error);
+          }
         }
         ,
-        handleSelectedShoeSize(newValue) {
-          console.log("Selected Shoe Size:", newValue); // Ensure newValue is not null
-          this.selectedShoeSize = newValue.value; // Set selectedShoeSize to the newly selected value
-        },
 
-        handleSelectedCondition(newValue) {
-          console.log("Selected Condition:", newValue); // Ensure newValue is not null
-          this.selectedCondition = newValue.value; // Set selectedShoeSize to the newly selected value
-        },
 
 
 
@@ -532,6 +562,7 @@
       ,
       //created
       created() {
+        this.fetchOrderStatus();
         this.fetchDiscounts();
         this.fetchProductConditions();
         this.fetchStaffData();

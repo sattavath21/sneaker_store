@@ -35,6 +35,102 @@ public IActionResult AddDeliveryService(DeliveryService newDeliveryService)
   
 }
 
+[HttpPost]
+public IActionResult EditBill(Bill updatedBill)
+{
+    // Update bill information
+    _db.Bill.Update(updatedBill);
+    _db.SaveChanges();
+    return Ok(updatedBill);
+}//ef
+
+
+[HttpPost]
+public IActionResult EditCustomerTransfer(string newTransfer, int billId)
+{
+   try
+    {
+        // Retrieve the bill from the database based on the provided billId
+        var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+        if (bill == null)
+        {
+            return NotFound("Bill not found");
+        }
+
+        // Update the CustomerTransferPicPath attribute
+        bill.CustomerTransferPicPath = newTransfer;
+        // Save the changes to the database
+        _db.SaveChanges();
+
+        // Return the updated bill
+        return Ok(bill);
+    }
+    catch (Exception ex)
+    {
+        // Log the exception for debugging purposes
+        Console.Error.WriteLine(ex);
+        return StatusCode(500, "Internal Server Error");
+    }
+}//ef
+
+[HttpPost]
+public IActionResult EditShippingReceipt(string newTransfer, int billId)
+{
+   try
+    {
+        // Retrieve the bill from the database based on the provided billId
+        var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+        if (bill == null)
+        {
+            return NotFound("Bill not found");
+        }
+
+        // Update the CustomerTransferPicPath attribute
+        bill.ShippingReceipt = newTransfer;
+        // Save the changes to the database
+        _db.SaveChanges();
+
+        // Return the updated bill
+        return Ok(bill);
+    }
+    catch (Exception ex)
+    {
+        // Log the exception for debugging purposes
+        Console.Error.WriteLine(ex);
+        return StatusCode(500, "Internal Server Error");
+    }
+}//ef
+
+[HttpPost]
+public IActionResult EditOrderStatus(int newTransfer, int billId)
+{
+   try
+    {
+        // Retrieve the bill from the database based on the provided billId
+        var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+        if (bill == null)
+        {
+            return NotFound("Bill not found");
+        }
+
+        // Update the CustomerTransferPicPath attribute
+        bill.OrderStatusId = newTransfer;
+        // Save the changes to the database
+        _db.SaveChanges();
+
+        // Return the updated bill
+        return Ok(bill);
+    }
+    catch (Exception ex)
+    {
+        // Log the exception for debugging purposes
+        Console.Error.WriteLine(ex);
+        return StatusCode(500, "Internal Server Error");
+    }
+}//ef
 
 [HttpPost]
     public IActionResult EditDeliveryService(DeliveryService e)

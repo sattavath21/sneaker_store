@@ -5,7 +5,7 @@
             <div class="text-h6">Add New Product</div>
         </q-card-section>
 
-    <div class="q-ma-sm">
+        <div class="q-ma-sm">
             <q-input ref="input1" v-model="barcodeScan" label="Input Barcode" @@change="item_change">
             </q-input>
             <div class="q-ma-sm">
@@ -24,8 +24,8 @@
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="Selling Price" hint="Number only" lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="Selling Price" hint="Number only"
+            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
         <q-input class="q-px-sm" filled v-model="product.sku" label="SKU" lazy-rules
@@ -55,26 +55,21 @@
         <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].inventoryQty" label="Inventory Quantity"
             hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
-         <q-select
-         class="q-px-sm"
-      filled
-      v-model="selectedShoeSizeId"
-      :options="shoeSizeOptions"
-      label="Select Shoe Size"
-      lazy-rules
-      :rules="[ val => val && val.length > 0 || 'Please select a shoe size']"
-      style="width: 400px;"
-    ></q-select>
-<q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm" filled v-model="product.productCollection.collectionName" label="Collection Name"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-select class="q-px-sm" filled v-model="selectedShoeSizeId" :options="shoeSizeOptions"
+            label="Select Shoe Size" lazy-rules :rules="[ val => !!val || 'Please select a shoe size']"
+            style="width: 400px;" emit-value></q-select>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.productCollection.brand.brandName" label="Brand Name"
-            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+        <q-select class="q-px-sm" filled v-model="selectedBrandId" :options="brandOptions" label="Select brand"
+            lazy-rules :rules="[ val => !!val || 'Please select a brand']" style="width: 400px;" emit-value></q-select>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.productImage.productImagePath" label="Product Image URLs"
+        <q-select class="q-px-sm" filled v-model="selectedCollectionId" :options="collectionOptions"
+            label="Select Collection" lazy-rules :rules="[ val => !!val || 'Please select a collection']"
+            style="width: 400px;" emit-value></q-select>
+        <q-separator vertical class="q-my-md"></q-separator>
+
+        <q-input class="q-px-sm" filled v-model="product.productImageUrl" label="Product Image URLs"
             hint="Enter the URL" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
         </q-input>
 
@@ -135,38 +130,32 @@
             //data
             data() {
                 return {
+                    selectedCollectionId: null,
+                    selectedBrandId: null,
                     selectedShoeSizeId: null,
-      shoeSizeOptions: [],
+                    collectionOptions: [],
+                    brandOptions: [],
+                    shoeSizeOptions: [],
                     barcodeScan: '',
                     confirm: false,
                     product: {
-                        barcode: "",
+                        barcode: "asdasdasdasd",
                         productName: "Jordan 4 Retro Thunder (2023)",
-                        costPrice: 7400,
-                        sellingPrice: 6500,
+                        costPrice: 5000,
+                        sellingPrice: 5200,
                         sku: "DH6927-017",
                         colorway: "BLACK/TOUR YELLOW",
-                        releaseDate: "2023/05/13",
+                        releaseDate: "2023/12/03",
                         amountSold: 1494,
                         productWithSizes: [
                             {
                                 inventoryQty: 20,
-                                shoeSize: {
-                                    sizeType: "EU",
-                                    sizeNumber: 38.5
-                                }
+                                shoeSizeId: null
                             }
                         ],
-                        productCollection: {
-                            collectionName: "Jordan 1",
-                            brand: {
-                                brandName: "Jordan"
-                            }
-                        },
-                        productImage:  {
-                                productImagePath: "git.com/?saddr=17.995622,102.6241915&daddr=17.99646520515873,102.62392149999998"
-                        }
-                        
+                        brandId: null,
+                        collectionId: null,
+                        productImageUrl: "adasdasdad"
                     },
                     completedDialog: false,
                 };
@@ -186,7 +175,7 @@
                                 type: 'warning',
                                 message: 'This barcode already in stock'
                             })
-                            this.product.barcode ='';
+                            this.product.barcode = '';
                         }
                         else {
                             this.$q.notify({
@@ -221,6 +210,12 @@
                         console.log("Product Object:", this.product);
                         // Make the API call
                         this.product.releaseDate = this.formatReleaseDate(this.product.releaseDate);
+                        this.product.productWithSizes[0].shoeSizeId = this.selectedShoeSizeId;
+                        this.product.brandId = this.selectedBrandId;
+                        this.product.collectionId = this.selectedCollectionId;
+                        console.log("brandId:", this.selectedBrandId);
+                        console.log("collectionId:", this.selectedCollectionId);
+                        console.log("productWithSizes[0].shoeSizeId:", this.selectedShoeSizeId);
                         console.log("Formatted Release Date:", this.formatReleaseDate(this.product.releaseDate));
                         var response = await axios.post("/api/AddProduct", this.product);
 
@@ -266,18 +261,40 @@
                         });
                     }
                 },
-async fetchShoeSizeData() {
-      try {
-        const response = await axios.get("/api/GetShoeSizes"); // Replace "/api/shoeSizeData" with your actual endpoint
-        this.shoeSizeOptions = response.data.map(size => ({
-          value: size.shoeSizeId,
-          label: `${size.sizeType} - ${size.sizeNumber}`
-        }));
-      } catch (error) {
-        console.error("Error fetching shoe size data: ", error);
-      }
-    },
-                
+                async fetchShoeSizeData() {
+                    try {
+                        const response = await axios.get("/api/GetShoeSizes"); // Replace "/api/shoeSizeData" with your actual endpoint
+                        this.shoeSizeOptions = response.data.map(size => ({
+                            value: size.shoeSizeId,
+                            label: `${size.sizeType} - ${size.sizeNumber}`
+                        }));
+                    } catch (error) {
+                        console.error("Error fetching shoe size data: ", error);
+                    }
+                },
+                async fetchCollectionData() {
+                    try {
+                        const response = await axios.get("/api/GetCollections"); // Replace "/api/shoeSizeData" with your actual endpoint
+                        this.collectionOptions = response.data.map(collection => ({
+                            value: collection.collectionId,
+                            label: `${collection.collectionName}`
+                        }));
+                    } catch (error) {
+                        console.error("Error fetching collection data: ", error);
+                    }
+                },
+                async fetchBrandData() {
+                    try {
+                        const response = await axios.get("/api/GetBrands"); // Replace "/api/shoeSizeData" with your actual endpoint
+                        this.brandOptions = response.data.map(brand => ({
+                            value: brand.brandId,
+                            label: `${brand.brandName}`
+                        }));
+                    } catch (error) {
+                        console.error("Error fetching brand data: ", error);
+                    }
+                },
+
                 onReset() {
                     // Show an ongoing notification
                     const notif = this.$q.notify({
@@ -318,9 +335,9 @@ async fetchShoeSizeData() {
                                 }
                             },
                             productImage: {
-                                    productImagePath: ""
+                                productImagePath: ""
                             }
-                            
+
                         };
 
                         // Clear the input field for image URL
@@ -344,8 +361,10 @@ async fetchShoeSizeData() {
             ,
             //mounted
             mounted() {
-this.fetchShoeSizeData();
-this.$refs.input1.$el.focus()
+                this.fetchCollectionData();
+                this.fetchBrandData();
+                this.fetchShoeSizeData();
+                this.$refs.input1.$el.focus()
             }
 
         };
