@@ -7,20 +7,20 @@
     <q-separator vertical class="q-my-md"></q-separator>
     <div class="text-h6 q-pa-lg">Discount Information</div>
 
-    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.description" label="Discount Description" lazy-rules
+    <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.description" label="Discount Description" 
       :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
     <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.discountPercentage" label="Discount Percentage"
-      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+      hint="Number only"  :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
     <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.minSpend" label="Minimal Spend to Apply Discount"
-      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+      hint="Number only"  :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
     <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.maxDiscountAmount" label="Maximum Discount Allowed"
-      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+       hint="Number only" :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
     <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.start" mask="date" style="width: 300px;"
@@ -39,15 +39,15 @@
     </q-input>
 
     <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.duration" label="Duration of The Discount"
-      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+      hint="Number only"  :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-separator vertical class="q-my-md"></q-separator>
 
     <q-input class="q-px-sm q-mb-md" filled v-model="newDiscount.amount" label="The Quantity of The Discount"
-      hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+      hint="Number only"  :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
     <!-- Shipping Method Dropdown -->
     <q-select class="q-px-sm q-mb-md" filled v-model="newDiscount.shippingMethodId"
-      style="min-width: 300px; height: 10px margin: 10px; padding: 5px;" emit-value :options="shippingMethodOptions"
+      style="min-width: 300px; height: 10px margin: 10px; padding: 5px;" emit-value :options="shippingMethodOptions" label="Select Shipping"
       options-cover map-options> </q-select>
 
 
@@ -59,7 +59,7 @@
       <q-dialog v-model="confirm" persistent>
         <q-card>
           <q-card-section class="row items-center">
-            <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+            <q-avatar icon="local_offer" color="grey-9" text-color="white"></q-avatar>
             <span class="q-ml-sm">Add this discount?</span>
           </q-card-section>
 
@@ -107,13 +107,13 @@
           confirm: false,
           newDiscount: {
             description: "",
-            discountPercentage: 0,
-            minSpend: 0,
-            maxDiscountAmount: 0,
-            start: "2024/11/11",
-            duration: 0,
-            amount: 0,
-            shippingMethodId: 0
+            discountPercentage: null,
+            minSpend: null,
+            maxDiscountAmount: null,
+            start: "",
+            duration: null,
+            amount: null,
+            shippingMethodId: null
           },
           completedDialog: false,
           shippingMethodOptions: [] // Array to store shipping method names
@@ -127,6 +127,7 @@
 
         async addDiscount() {
           try {
+            this.newDiscount.start = this.formatDisountDate(this.newDiscount.start);
 
             console.log("Discount Object:", this.newDiscount);
             // Make the API call
@@ -144,7 +145,6 @@
               });
 
               // Clear form fields and reset data after successful addition
-              this.onReset();
 
               // Show the completed dialog
               this.completedDialog = true;
@@ -195,25 +195,30 @@
             // Reset the form fields and data
 
             this.newDiscount = {
-              description: "",
-              discountPercentage: null,
-              minSpend: null,
-              maxDiscountAmount: null,
-              start: "",
-              duration: null,
-              amount: null,
-              shippingMethod: {
-                methodName: ""
-              }
-
+              description: "-",
+              discountPercentage: 1,
+              minSpend: 1,
+              maxDiscountAmount: 1,
+              start: "-",
+              duration: 1,
+              amount: 1,
+              shippingMethodId: 1
             };
 
             // Clear the input field for image URL
           }, 715);
 
-          this.selectedShippingMethod = ""
-
-        }
+        },
+              formatDisountDate(start) {
+    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
+                  const inputDateString = start;
+                  const inputDate = new Date(inputDateString);
+                  const year = inputDate.getFullYear();
+                  const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(inputDate.getDate()).padStart(2, '0');
+                  const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
+                  return formattedDateString;
+                },
 
 
 

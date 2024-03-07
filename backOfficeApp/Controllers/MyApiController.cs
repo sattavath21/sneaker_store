@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 [ApiController]
 [Route("myapi/[action]")]
 public class MyApiController : ControllerBase
 {
+    private readonly SignInManager<AppUser> _signInManager;
+    private readonly UserManager<AppUser> _userManager;
     private readonly ILogger<MyApiController> _logger;
     private BackofficeappDbContext _db;
 
@@ -25,6 +29,7 @@ public class MyApiController : ControllerBase
             .ToList();
         return Ok(list1);
     }
+    
     
     [HttpGet]
     public IActionResult GetDeliveryServices()
@@ -304,16 +309,28 @@ public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
             .ToList();
         return Ok(list1);
     }
-
     [HttpPost]
-    public IActionResult AddStaff(Staff newStaff)
+    public IActionResult AddStaff(int permissionId, Staff s)
     {
+        try
+        {
 
-        _db.Staff.Add(newStaff);
-        _db.SaveChanges();
-        return Ok(newStaff);
+            s.PermissionId = permissionId;
+            // Add the new branch to the Branch table
+            _db.Staff.Add(s);
+            _db.SaveChanges();
 
-    }
+
+            return Ok(s);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
+        }
+
+    }//ef
 
     [HttpPost]
     public IActionResult EditStaff(Staff s)
@@ -350,7 +367,14 @@ public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
             return StatusCode(500, "Internal Server Error");
         }
     }
-
+    [HttpGet]
+    public IActionResult GetPermissions()
+    {
+        var list1 = _db.Permission
+            .ToList();
+        return Ok(list1);
+    }
+    
     [HttpGet]
     public IActionResult GetBrands()
     {
@@ -444,7 +468,14 @@ public IActionResult DeleteBrand(int brandIdToDelete)
             return StatusCode(500, "Internal Server Error");
         }
     }
-
+    [HttpPost]
+    public IActionResult EditCollection(Collection c)
+    {
+        //update product
+        _db.Collection.Update(c);
+        _db.SaveChanges();
+        return Ok(c);
+    }//ef
     [HttpPost]
 public IActionResult DeleteBrandWithCollection(int brandWithCollectionId)
 {
@@ -475,6 +506,26 @@ public IActionResult DeleteBrandWithCollection(int brandWithCollectionId)
         return StatusCode(500, "Internal Server Error");
     }
 }
+[HttpPost]
+    public async Task<IActionResult> RegisterStaff(string newEmail, string newPassword)
+    {
+        if (ModelState.IsValid)
+        {
+            var user = new AppUser { UserName = newEmail, Email = newEmail };
+            var result = await _userManager.CreateAsync(user, newPassword);
+            if (result.Succeeded)
+            {
+                return Ok("Staff registered to the database!"); // Redirect to home page after successful registration
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+        }
+        // If we got this far, something failed, redisplay form
+        return Ok("Something failed...");
+
+    }
     #endregion
 
 }//ec

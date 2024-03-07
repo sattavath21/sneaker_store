@@ -77,7 +77,7 @@
                     <div class="justify-end row">
                       <q-btn flat dense color="negative" icon="cancel" @@click.stop.prevent="scope.cancel" />
                       <q-btn flat dense color="positive" icon="check_circle"
-                        @@click.stop.prevent="updateInventoryQty(selectedProduct, selectedInventoryQty)"
+                        @@click.stop.prevent="updateInventoryQty(selectedProduct, selectedInventoryQty); refreshDialog()"
                         :disable="!scope.validate(selectedInventoryQty)" v-close-popup />
                     </div>
                   </q-popup-edit>
@@ -138,33 +138,28 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="amountsold" :props="props">{{ props.row.amountsold}}</q-td>
+        <q-td key="amountsold" :props="props">{{ props.row.amountsold}}
+          <q-popup-edit v-model="props.row.amountsold">
+            <q-input v-model="props.row.amountsold" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+
         <q-td key="inventoryQty" :props="props">
           {{ props.row.totalInventoryQty }}
         </q-td>
 
         <q-td key="collectionName" :props="props">
           {{ props.row.collection.collectionName }}
-          <q-popup-edit v-model="props.row.collection.collectionName">
-            <q-input v-model="props.row.collection.collectionName" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
+        
         </q-td>
         <q-td key="brandName" :props="props">
           {{ props.row.brand ? props.row.brand.brandName : '' }}
-          <q-popup-edit v-model="props.row.brand.brandName">
-            <q-input v-model="props.row.brand.brandName" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editProduct(props.row)" icon="edit" label="edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
-
+        
         </q-td>
         <q-td key="barcode" :props="props">
           {{ props.row.barcode }}
@@ -697,6 +692,13 @@
       ,
       //methods
       methods: {
+        refreshDialog() {
+        this.showProductDetails = false;
+        this.$nextTick(() => {
+            this.showProductDetails = true;
+            this.showDetails(this.selectedProduct); // Call showDetails again to update dialog data
+        });
+    },
         async updateInventoryQty(product, newValue) {
           try {
             // Find the productWithSize object corresponding to the selected size number
@@ -945,6 +947,7 @@
 
                         if (response.status >= 200 && response.status < 300) {
                             console.log("Request successful");
+            window.location.reload();
                         } else {
                             console.error("Unexpected response status:", response.status);
                         }
@@ -1020,12 +1023,14 @@ async deleteBrand() {
 
                 async editCollection(item) {
                     try {
-                        const response = await axios.post("myapi/EditCollection", item);
                         console.log("Request data:", item);
+                        const response = await axios.post("myapi/EditCollection", item);
                         console.log("Response data:", response.data);
 
                         if (response.status >= 200 && response.status < 300) {
                             console.log("Request successful");
+                                        window.location.reload();
+
                         } else {
                             console.error("Unexpected response status:", response.status);
                         }

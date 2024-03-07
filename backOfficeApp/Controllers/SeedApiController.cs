@@ -39,7 +39,7 @@ public class SeedApiController : ControllerBase
         OrderStatus deliveredStatus = new OrderStatus
         {
             OrderStatusId = 3,
-            StatusName = "succeeded"
+            StatusName = "Succeeded"
         };
 
         List<OrderStatus> orderStatuses = new List<OrderStatus> {
@@ -314,7 +314,7 @@ public class SeedApiController : ControllerBase
             PermissionName = "Staff"
         };
 
-        // _db.Permission.AddRange(ownerPermissopn, viceOwnerPermission, staffPermission);
+        _db.Permission.AddRange(ownerPermissopn, viceOwnerPermission, staffPermission);
 
         Staff taStaff = new Staff
         {

@@ -134,9 +134,24 @@
           </q-popup-edit>
         </q-td>
 
-        <q-td key="methodName" :props="props">
-          {{ props.row.shippingMethod.methodName }}
-        </q-td>
+        <q-td key="shippingMethodId" :props="props">
+            <q-select
+              class="q-px-sm"
+              filled
+              v-model="props.row.shippingMethodId"
+              style="min-width: 300px; height: 10px margin: 10px; padding: 5px;"
+              emit-value
+              :options="shippingMethodOptions"
+              options-cover
+              map-options
+              @@update:model-value="updateShippingMethod(props.row)" 
+              
+            >
+            </q-select>        
+</q-td>
+
+
+
 
 
         @* <q-td key="methodName" :props="props">
@@ -236,27 +251,27 @@
             },
 
             {
-              name: 'methodName',
+              name: 'shippingMethodId',
               label: 'Shipping Method',
-              field: 'discount.shippingMethod.methodName',
+              field: 'selectedMethod',
               align: 'center',
               sortable: true,
             },
-
-    @* {
-          name: 'methodName', // Name of the column
-          label: 'Shipping Method', // Label for the column
-          field: 'selectedShippingMethod', // Field to bind data to
-          align: 'center',
-          format: this.shippingMethodSelectFormat // Use the computed property for formatting
-          } *@
-
             ]
         };
       }
       ,
       //methods
       methods: {
+        async updateShippingMethod(item){
+          item.shippingMethod.shippingMethodId = item.shippingMethodId;
+          if (item.shippingMethodId == 1){
+            item.shippingMethod.methodName = "In-store"
+          } else{
+            item.shippingMethod.methodName = "Delivery"
+          }
+          this.editDiscount(item);
+        },
         async editDiscount(item) {
           try {
             const response = await axios.post("myapi/EditDiscount", item);
@@ -280,18 +295,13 @@
          formatDateString(item) {
   // Split the date string by '/'
   const parts = item.start.split('/');
-
   // Construct a Date object
   const dateObject = new Date(parts[0], parts[1] - 1, parts[2]); // Months are 0-indexed in JavaScript Date objects
-
   // Add one day to the date
   dateObject.setDate(dateObject.getDate() + 1);
-
   // Use Date methods to construct the desired format
   const formattedDate = dateObject.toISOString().split('T')[0];
-
   item.start = formattedDate;
-
   this.editDiscount(item);
 },
 
@@ -349,24 +359,12 @@
           }
         },
 
-        shippingMethodSelectFormat() {
-          return (val, row) => {
-            return h('q-select', {
-              props: {
-                options: this.shippingMethodOptions,
-                value: row.selectedShippingMethod
-              },
-              on: {
-                input: (selectedShippingMethod) => {
-                  row.selectedShippingMethod = selectedShippingMethod;
-                }
-              }
-            });
-          };
-        }
+    
 
       }
       ,
+
+
 
       //computed
       computed: {

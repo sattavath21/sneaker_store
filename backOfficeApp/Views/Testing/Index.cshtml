@@ -2,10 +2,20 @@
 
 
 
-  <q-select v-model="selection" style="max-width: 250px" :options="[
+  <q-select 
+  v-model="selection" 
+  style="max-width: 250px" 
+  :options="[
     'Panda', 'lily', 'bro'
-    ]" label="Dogs" filled borderless dense color="red" bg-color="white-2" clearable hint="Select panda pls"
-    options-cover emit-value @* disabled readonly *@>
+    ]" 
+    label="Dogs" 
+    filled borderless dense 
+    color="red" 
+    bg-color="white-2" 
+    clearable 
+    hint="Select panda pls"
+    options-cover 
+    emit-value @* disabled readonly *@>
 
     <template #prepend>
       <q-icon name="event" />

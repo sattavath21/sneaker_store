@@ -263,6 +263,23 @@
                     {{ props.row.permission.permissionName }}
                 </q-td>
 
+                <q-td key="permissionId" :props="props">
+            <q-select
+              class="q-px-sm"
+              filled
+              v-model="props.row.permissionId"
+              style="min-width: 300px; height: 10px margin: 10px; padding: 5px;"
+              emit-value
+              :options="permissionOptions"
+              options-cover
+              map-options
+              @@update:model-value="updatePermission(props.row)" 
+              
+            >
+            </q-select>     
+
+</q-td>
+
 
             </q-tr>
         </template>
@@ -276,17 +293,17 @@
             <div class="text-h6">Add New Staff</div>
         </q-card-section>
         <div class="text-h6 q-pa-lg">General Information</div>
-        <q-input class="q-px-sm q-mb-sm" filled v-model="staff.staffFirstName" label="First Name" lazy-rules
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffFirstName" label="First Name" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
-        <q-input class="q-px-sm q-mb-sm" filled v-model="staff.staffLastName" label="Last Name" lazy-rules
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffLastName" label="Last Name" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
-        <q-input class="q-px-sm" filled v-model="staff.staffBirthday" mask="date" style="width: 300px;">
+        <q-input class="q-px-sm" filled v-model="newStaff.staffBirthday" mask="date" style="width: 300px;">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="staff.staffBirthday" landscape color="red">
+                        <q-date v-model="newStaff.staffBirthday" landscape color="red">
                             <div class="row items-center justify-end">
                                 <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
                             </div>
@@ -298,14 +315,16 @@
         </q-input>
 
         <q-separator vertical class="q-my-md"></q-separator>
-        <q-input class="q-px-sm q-mb-sm" filled v-model="staff.email" label="Email" lazy-rules
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.email" label="Email" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
-        <q-input class="q-px-sm q-mb-sm" filled v-model="staff.staffPhoneNumber" label="Phone Number" lazy-rules
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffPhoneNumber" label="Phone Number" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
-        <q-input class="q-px-sm q-mb-sm" filled v-model="staff.permission.permissionName" label="Permission" lazy-rules
-            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+<q-select class="q-px-sm q-mb-md" filled v-model="newStaff.permissionId"
+      style="min-width: 300px; height: 10px margin: 10px; padding: 5px;" emit-value :options="permissionOptions" label="Select Permission"
+      options-cover map-options> </q-select>
+
         <q-separator vertical class="q-my-md"></q-separator>
         <div class="justify-end row">
             <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onResetStaff" size="lg"></q-btn>
@@ -316,7 +335,7 @@
             <q-dialog v-model="staffConfirm2" persistent>
                 <q-card>
                     <q-card-section class="row items-center">
-                        <q-avatar icon="engineering" color="brown-10" text-color="white"></q-avatar>
+                        <q-avatar icon="groups" color="brown-10" text-color="white"></q-avatar>
                         <span class="q-ml-sm">Add this staff?</span>
                     </q-card-section>
 
@@ -492,26 +511,26 @@
                             sortable: true,
                             align: 'center'
                         },
+    
                         {
-                            name: 'permissionName',
-                            label: 'Permission',
-                            field: 'permission.permissionName',
-                            sortable: true,
-                            align: 'center'
-                        }
+              name: 'permissionId',
+              label: 'Permission',
+              field: 'selectedPermission',
+              align: 'center',
+              sortable: true,
+            },
 
                     ],
-                    staff: {
-                        staffFirstName: "andy",
-                        staffLastName: "asdasdo",
-                        staffBirthday: "2001/05/20",
-                        email: "huangguifu21@gmail.com",
-                        staffPhoneNumber: "24374373",
-                        permission: {
-                            permissionName: "Admin"
-                        }
+                    newStaff: {
+                        staffFirstName: "",
+                        staffLastName: "",
+                        staffBirthday: "",
+                        email: "",
+                        staffPhoneNumber: "",
+                        permissionId: null,
                     },
-                    staffCompletedDialog: false
+                    staffCompletedDialog: false,
+                    permissionOptions:[]
         };
       }
       ,
@@ -558,20 +577,82 @@
     },
 
 @* Staff section *@
-    async addStaff() {
-                    try {
-                        var response = await axios.post("/myapi/AddStaff", this.staff);
-                        this.staffCompletedDialog = true;
-                        console.log(response.data);
-                        this.staffs.push(response.data);
-                        console.log(this.staffs);
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
+        async updatePermission(item){
+          item.permission.permissionId = item.permissionId;
+          if (item.permissionId == 1){
+            item.permission.permissionName = "Owner"
+          } else if(item.permissionId == 2){
+            item.permission.permissionName = "Vice-owner"
+          }else{
+            item.permission.permissionName = "Staff"
+          }
+          this.editStaff(item);
+        },
+                async addStaff() {
+          try {
+            this.newStaff.staffBirthday = this.formatAddStaffDate(this.newStaff.staffBirthday);
+            console.log("Staff Object:", this.newStaff);
+            // Make the API call
+            var response = await axios.post(`/myapi/AddStaff?permissionId=${this.newStaff.permissionId}`, this.newStaff);
+            console.log("Reponse Object:", response);
 
-                }//ef
-                ,
+            var registerStaffResponse = await axios.post(`/myapi/RegisterStaff?newEmail=${this.newStaff.email}&newPassword=99th1234`);
+            console.log("Reponse Register Object:", registerStaffResponse);
+
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful discount addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Staff added successfully!'
+              });
+
+              // Clear form fields and reset data after successful addition
+
+              // Show the completed dialog
+              this.completedDialog = true;
+            } else {
+              // Log detailed error information
+              console.error(response);
+
+              // Handle the case where the API call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Staff. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
+
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
+
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Staff. Please check the console for details.'
+            });
+          }
+        }
+
+        ,
+            formatAddStaffDate(birthdate) {
+    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
+                  const inputDateString = birthdate;
+                  const inputDate = new Date(inputDateString);
+                  const year = inputDate.getFullYear();
+                  const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(inputDate.getDate()).padStart(2, '0');
+                  const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
+                  return formattedDateString;
+                },
+                
                 formatStaffDate(item) {
     // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
                   const inputDateString = item.staffBirthday;
@@ -624,12 +705,12 @@
                             timeout: 315
                         })
                     }, 715)
-                    this.staff.staffFirstName = ""
-                    this.staff.staffLastName = ""
-                    this.staff.staffPhoneNumber = ""
-                    this.staff.staffBirthday = ""
-                    this.staff.email = ""
-                    this.staff.permission.permissionName = ""
+                    this.newStaff.staffFirstName = ""
+                    this.newStaff.staffLastName = ""
+                    this.newStaff.staffPhoneNumber = ""
+                    this.newStaff.staffBirthday = ""
+                    this.newStaff.email = ""
+                    this.newStaff.permission.permissionName = ""
                 },
         
       }//emethod
@@ -659,6 +740,17 @@
                     console.log(error);
                 }
 
+ try {
+          var res = await axios.get("/myapi/GetPermissions");
+          this.permissionOptions = res.data.map(permission => ({
+            label: permission.permissionName,
+            value: permission.permissionId
+          }));
+          console.log(this.permissionOptions);
+        }
+        catch (ex) {
+          console.error('Error fetching permission Options:', ex);
+        }
 
 
       }//ecreated
