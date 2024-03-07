@@ -6480,24 +6480,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\USER\\.nuget\\packages\\": {}
+    "C:\\Users\\Sattavath\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\backOfficeApp.csproj",
+      "projectUniqueName": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeApp\\backOfficeApp.csproj",
       "projectName": "backOfficeApp",
-      "projectPath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\backOfficeApp.csproj",
-      "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\USER\\Documents\\sneaker_store\\backOfficeApp\\obj\\",
+      "projectPath": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeApp\\backOfficeApp.csproj",
+      "packagesPath": "C:\\Users\\Sattavath\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Sattavath\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -6589,12 +6591,16 @@
             "privateAssets": "all"
           }
         },
-<<<<<<< HEAD
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201\\RuntimeIdentifierGraph.json"
-=======
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.407\\RuntimeIdentifierGraph.json"
->>>>>>> 2efdedb767aea0a8f314dc37689042f18fa0d9c6
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Problem reading the cache file C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeApp\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

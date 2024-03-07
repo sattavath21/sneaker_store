@@ -89,7 +89,7 @@
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-date v-model="props.row.customerBirthday" landscape color="red">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Change" color="red" flat @@click="formatCustomerDate(props.row)"></q-btn>
+                      <q-btn v-close-popup label="Change" color="red" flat @@click="editCustomer(props.row)"></q-btn>
                       <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
                     </div>
                   </q-date>
@@ -222,7 +222,7 @@
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                           <q-date v-model="props.row.staffBirthday" landscape color="red">
                             <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Change" color="red" flat @@click="formatStaffDate(props.row)"></q-btn>
+                              <q-btn v-close-popup label="Change" color="red" flat @@click="editStaff(props.row)"></q-btn>
                               <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
                             </div>
                           </q-date>
@@ -536,26 +536,41 @@
       ,
       //methods
       methods: {
-        formatCustomerDate(item) {
-    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
-                  const inputDateString = item.customerBirthday;
+  
+        async editCustomer(item) {
+          var url = "myapi/EditCustomer";
+          const inputDateString = item.customerBirthday;
                   const inputDate = new Date(inputDateString);
                   const year = inputDate.getFullYear();
                   const month = String(inputDate.getMonth() + 1).padStart(2, '0');
-                  const day = String(inputDate.getDate()).padStart(2, '0');
-                  const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
-                  item.customerBirthday = formattedDateString;
-                  this.editCustomer(item);
-                },
-        async editCustomer(item) {
-          var url = "myapi/EditCustomer";
+          const day = String(inputDate.getDate()).padStart(2, '0');
+          const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
+          item.customerBirthday = formattedDateString;
+
           try {
             console.log(item);
-            var result = await axios.post(url, item);
-            console.log(result.data);
+            var response = await axios.post(url, item);
+             if (response.status >= 200 && response.status < 300) {
+                      console.log("Request successful");
+                      this.$q.notify({
+                        color: 'green-4',
+                        textColor: 'white',
+                        icon: 'cloud_done',
+                        message: 'Customer Modified!',
+                        timeout: 1000
+                      });
+            console.log(response.data);
+            }
           }
           catch (error) {
             console.log(error);
+            this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
+            
           }
           console.log("Finished editCustomer function!");
 
@@ -653,8 +668,9 @@
                   return formattedDateString;
                 },
                 
-                formatStaffDate(item) {
-    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
+                async editStaff(item) {
+                  var url = "/myapi/EditStaff";
+                  // Format Staff Birthdate
                   const inputDateString = item.staffBirthday;
                   const inputDate = new Date(inputDateString);
                   const year = inputDate.getFullYear();
@@ -662,17 +678,30 @@
                   const day = String(inputDate.getDate()).padStart(2, '0');
                   const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
                   item.staffBirthday = formattedDateString;
-                  this.editStaff(item);
-                },
-                async editStaff(item) {
-                  var url = "/myapi/EditStaff";
+                  
                   try {
                     console.log(item);
-                    var result = await axios.post(url, item);
-                    console.log(result.data);
+                    var response = await axios.post(url, item);
+                    console.log(response.data);
+                     if (response.status >= 200 && response.status < 300) {
+                      console.log("Request successful");
+                      this.$q.notify({
+                        color: 'green-4',
+                        textColor: 'white',
+                        icon: 'cloud_done',
+                        message: 'Staff Modified!',
+                        timeout: 1000
+                      });
+            }
                   }
                   catch (error) {
                     console.log(error);
+                    this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
                   }
                   console.log("Finished editStaff function!");
 
@@ -681,7 +710,7 @@
                 async deleteStaff(item) {
                     var url = "/myapi/DeleteStaff";
                     var del = item
-                    var result = await axios.post(url, del);
+                    var response = await axios.post(url, del);
                     console.log(this.staffs);
                     this.staffs = this.staffs.filter(x => x.staffId != item.staffId);
                     this.$q.notify({
@@ -725,10 +754,20 @@
         try {
           var response = await axios.get("/myapi/GetCustomers");
           this.customers = response.data;
+          if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+  
+            }
           console.log(response.data);
         }
         catch (error) {
           console.log(error);
+          this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
         }
 
          try {

@@ -130,7 +130,13 @@ public class ApiController : ControllerBase
         var result = _db.Product.FirstOrDefault(x => x.Barcode == barcode);
         return Ok(result);
     }//ef
-
+    
+    [HttpGet]
+    public IActionResult GetProductByBarcode(string barcode)
+    {
+        var result = _db.Product
+            .Where(x => x.Barcode == barcode)
+            .Select(x => new
             {
                 x.ProductId, // Include the productId property
                 x.Barcode,
@@ -292,5 +298,6 @@ public IActionResult AddSale(Bill bill)
         return Ok(list1);
     }
 
+    #endregion
 
 }//ec

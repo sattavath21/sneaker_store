@@ -147,7 +147,7 @@ public IActionResult EditOrderStatus(int newTransfer, int billId)
 }//ef
 
     [HttpPost]
-    public IActionResult EditDeliveryService(DeliveryService e)
+    public IActionResult EditDelivery(DeliveryService e)
     {
         //update product
         _db.DeliveryService.Update(e);
@@ -223,7 +223,14 @@ public IActionResult DeleteDeliveryService(int deliveryServiceIdToDelete)
             return StatusCode(500, "Internal Server Error");
         }
     }
-
+    [HttpPost]
+    public IActionResult EditBranch(Branch b)
+    {
+        //update product
+        _db.Branch.Update(b);
+        _db.SaveChanges();
+        return Ok(b);
+    }//ef
     [HttpPost]
 public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
 {
