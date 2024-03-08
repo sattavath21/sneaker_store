@@ -268,17 +268,44 @@ public class ApiController : ControllerBase
     [HttpPost]
 public IActionResult AddSale(Bill bill)
 {
-
+    try
+    {
         bill.OrderDate = DateTime.Now;
-
 
         // Save the bill to the database
         _db.Bill.Add(bill);
         _db.SaveChanges();
 
+        // Update inventory quantities
+        foreach (var item in bill.BillItems)
+        {
+            // Fetch the ProductWithSize entity associated with the current BillItem
+            var productWithSize = _db.ProductWithSize
+                .Include(pws => pws.Product)
+                .FirstOrDefault(pws => pws.ProductId == item.ProductId && pws.ShoeSizeId == item.ShoeSizeId);
+            
+            if (productWithSize != null)
+            {
+                // Deduct itemQty from inventoryQty
+                productWithSize.InventoryQty -= item.ItemQty;
+                _db.SaveChanges();
+            }
+        }
+
         // Return the newly created bill as a response
         return Ok(bill);
     }
+    catch (Exception ex)
+    {
+        // Log any errors
+        Console.WriteLine(ex.Message);
+
+        // Return an error response
+        return StatusCode(500, "An error occurred while adding sale");
+    }
+}
+
+
 
 
 

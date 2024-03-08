@@ -44,7 +44,8 @@
         {{ props.row.qty }}
 
         <q-popup-edit v-model="props.row.qty" buttons v-slot="scope">
-          <q-input v-model="scope.value" dense autofocus counter type="number" @@keyup.enter="scope.set" />
+          <q-input v-model="scope.value" dense autofocus counter type="number" :rules="[val => val >= 0 || 'Value must be non-negative']" @@keyup.enter="scope.set" />
+
         </q-popup-edit>
       </q-td>
 
@@ -267,93 +268,115 @@
       //methods
       methods: {
         formattedShoeSizes(shoeSizes) {
-          return shoeSizes.map(size => ({
-            label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,
-            value: { productWithSizeId: size.productWithSizeId, shoeSizeId: size.shoeSizeId }
-          }));
-        }
+    console.log('Shoe sizes:', shoeSizes); // Log shoe sizes
+    return shoeSizes.map(size => ({
+        label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,
+        value: { productWithSizeId: size.productWithSizeId, shoeSizeId: size.shoeSizeId, inventoryQty: size.inventoryQty } // Include inventoryQty in value
+    }));
+}
+
+
 
         ,
         async checkOut() {
+  if (this.orderItems.length === 0) {
+    this.$q.notify({
+      type: 'negative',
+      color: "yellow-8",
+      message: 'No items in the cart'
+    });
+    return;
+  }
+
+  // Restructure order items
+  var reBillItems = this.orderItems.map(item => {
+    // Access shoeSizeId and productWithSizeId through selectedShoeSize
+    const shoeSizeId = item.selectedShoeSize ? item.selectedShoeSize.shoeSizeId : null;
+    const productWithSizeId = item.selectedShoeSize ? item.selectedShoeSize.productWithSizeId : null;
+
+    // Access inventoryQty from selectedShoeSize if available
+    const inventoryQty = item.selectedShoeSize ? item.selectedShoeSize.inventoryQty : null;
+
+    // Deduct itemQty from inventoryQty
+if (inventoryQty !== null && item.qty !== null) {
+    if (item.qty <= inventoryQty) {
+        item.selectedShoeSize.inventoryQty -= item.qty;
+    } else {
+        // Notify user if item quantity exceeds inventory quantity
+        this.$q.notify({
+            type: 'negative',
+            color: 'yellow-8',
+            message: 'Not enough item in inventory'
+        });
+        // Optionally, you can handle this case further as needed
+        return; // Stop processing this item and return
+    }
+}
 
 
-          if (this.orderItems.length === 0) {
-            this.$q.notify({
-              type: 'negative',
-              color: "yellow-8",
-              message: 'No items in the cart'
-            });
-            return;
-          }
+    console.log('Item:', item); // Log the item object
+    console.log('Selected shoe size:', item.selectedShoeSize); // Log selected shoe size
+    console.log('Inventory quantity:', inventoryQty); // Log inventory quantity
 
-          // Restructure order items
-          var reBillItems = this.orderItems.map(item => {
-            // Access shoeSizeId and productWithSizeId through selectedShoeSize
-            const shoeSizeId = item.selectedShoeSize ? item.selectedShoeSize.shoeSizeId : null;
-            const productWithSizeId = item.selectedShoeSize ? item.selectedShoeSize.productWithSizeId : null;
+    // Return the restructured item object
+    return {
+      shoeSizeId: shoeSizeId,
+      productConditionId: item.selectedCondition,
+      itemQty: item.qty,
+      productId: item.productId,
+      productWithSizeId: productWithSizeId,
+      inventoryQty: inventoryQty
+    };
+  });
 
-            // Return the restructured item object
-            return {
-              shoeSizeId: shoeSizeId,
-              productConditionId: item.selectedCondition,
-              itemQty: item.qty,
-              product: {
-                productId: item.productId,
-                productWithSizes: [{
-                  productWithSizeId: productWithSizeId // Include productWithSizeId here
-                }]
-              }
-            };
-          });
+  console.log("shippingMethodId:", this.selectedShippingMethod.value);
+  console.log("customerTransferPicPath:", this.customerTransferPic);
+  console.log("discountId:", this.selectedDiscount.value);
+  console.log("deliveryServiceId:", this.selectedDeliveryService.value);
+  console.log("branchId:", this.selectedBranch.value);
+  console.log("staffId:", this.selectedStaff.value);
+  console.log("customerId:", this.selectedCustomer.value);
+
+  console.log("reBillItems:", reBillItems);
+
+  // Create sale object
+  var bill = {
+    orderDate: new Date(),
+    orderStatusId: this.selectedOrderStatus.value,
+    shippingMethodId: this.selectedShippingMethod.value,
+    customerTransferPicPath: this.customerTransferPic,
+    discountId: this.selectedDiscount.value,
+    deliveryServiceId: this.selectedDeliveryService.value,
+    branchId: this.selectedBranch.value,
+    staffId: this.selectedStaff.value,
+    customerId: this.selectedCustomer.value,
+    billItems: reBillItems
+  };
+  console.log("Bill:", bill);
+
+  var url = "/api/AddSale";
+  try {
+    var res = await axios.post(url, bill);
+    this.orderItems = [];
+    this.selectedDiscount = null;
+    this.selectedShippingMethod = null;
+    this.selectedDeliveryService = null;
+    this.selectedBranch = null;
+    this.selectedStaff = null;
+    this.selectedCustomer = null;
+    this.$q.notify({
+      color: 'green-4',
+      textColor: 'white',
+      icon: 'cloud_done',
+      message: 'Order completed'
+    });
+    console.log(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 
-
-
-
-          console.log("shippingMethodId:", this.selectedShippingMethod.value);
-          console.log("customerTransferPicPath:", this.customerTransferPic);
-          console.log("discountId:", this.selectedDiscount.value);
-          console.log("deliveryServiceId:", this.selectedDeliveryService.value);
-          console.log("branchId:", this.selectedBranch.value);
-          console.log("staffId:", this.selectedStaff.value);
-          console.log("customerId:", this.selectedCustomer.value);
-
-          console.log("reBillItems:", reBillItems);
-          // Create sale object
-          var bill = {
-            orderDate: new Date(),
-            orderStatusId: this.selectedOrderStatus.value,
-            shippingMethodId: this.selectedShippingMethod.value,
-            customerTransferPicPath: this.customerTransferPic,
-            discountId: this.selectedDiscount.value,
-            deliveryServiceId: this.selectedDeliveryService.value,
-            branchId: this.selectedBranch.value,
-            staffId: this.selectedStaff.value,
-            customerId: this.selectedCustomer.value,
-            billItems: reBillItems
-          };
-          console.log("Bill:", bill);
-          var url = "/api/AddSale";
-          try {
-            var res = await axios.post(url, bill);
-            this.orderItems = [];
-            this.selectedDiscount = null;
-            this.selectedShippingMethod = null;
-            this.selectedDeliveryService = null;
-            this.selectedBranch = null;
-            this.selectedStaff = null;
-            this.selectedCustomer = null;
-            this.$q.notify({
-              color: 'green-4',
-              textColor: 'white',
-              icon: 'cloud_done',
-              message: 'Order completed'
-            });
-            console.log(res.data);
-          } catch (error) {
-            console.log(error);
-          }
-        }
         ,
         // Function to fetch staff data
         async fetchStaffData() {
@@ -462,39 +485,38 @@
             var res = await axios.get(url);
 
             if (res.data.result !== undefined) {
-              console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
+    console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
 
+    if (res.data.status != -1) {
+        var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
 
-              if (res.data.status != -1) {
-                var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
+        if (index !== -1) {
+            // If the product is already in orderItems, create a new row with the same product details
+            var newProduct = { ...res.data.result }; // Create a new object to avoid modifying the original
+            newProduct.qty = 1; // Set initial quantity
+            newProduct.shoeSizes = res.data.result.productWithSizes.map(pws => ({
+                shoeSizeId: pws.shoeSize.shoeSizeId,
+                productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
+                inventoryQty: pws.inventoryQty, // Include inventoryQty
+                sizeNumber: pws.shoeSize.sizeNumber,
+                sizeType: pws.shoeSize.sizeType
+            })); // Populate shoe sizes
 
-                if (index !== -1) {
-                  // If the product is already in orderItems, create a new row with the same product details
-                  var newProduct = { ...res.data.result }; // Create a new object to avoid modifying the original
-                  newProduct.qty = 1; // Set initial quantity
-                  newProduct.shoeSizes = res.data.result.productWithSizes.map(pws => ({
-                    shoeSizeId: pws.shoeSize.shoeSizeId,
-                    productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
-                    inventoryQty: pws.inventoryQty, // Include inventoryQty
-                    sizeNumber: pws.shoeSize.sizeNumber,
-                    sizeType: pws.shoeSize.sizeType
-                  })); // Populate shoe sizes
+            console.log('New Product Shoe Sizes:', newProduct.shoeSizes); // Log the shoeSizes array
 
-                  console.log('New Product Shoe Sizes:', newProduct.shoeSizes); // Log the shoeSizes array
+            this.orderItems.push(newProduct);
+        } else {
+            // Add new product to orderItems array
+            res.data.result.qty = 1; // Set initial quantity
+            res.data.result.shoeSizes = res.data.result.productWithSizes.map(pws => ({
+                shoeSizeId: pws.shoeSize.shoeSizeId,
+                productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
+                inventoryQty: pws.inventoryQty, // Include inventoryQty
+                sizeNumber: pws.shoeSize.sizeNumber,
+                sizeType: pws.shoeSize.sizeType
+            })); // Populate shoe sizes
 
-                  this.orderItems.push(newProduct);
-                } else {
-                  // Add new product to orderItems array
-                  res.data.result.qty = 1; // Set initial quantity
-                  res.data.result.shoeSizes = res.data.result.productWithSizes.map(pws => ({
-                    shoeSizeId: pws.shoeSize.shoeSizeId,
-                    productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
-                    inventoryQty: pws.inventoryQty, // Include inventoryQty
-                    sizeNumber: pws.shoeSize.sizeNumber,
-                    sizeType: pws.shoeSize.sizeType
-                  })); // Populate shoe sizes
-
-                  console.log('New Product Shoe Sizes:', res.data.result.shoeSizes); // Log the shoeSizes array
+            console.log('New Product Shoe Sizes:', res.data.result.shoeSizes); // Log the shoeSizes array
 
                   this.orderItems.push(res.data.result);
                 }
