@@ -3,7 +3,7 @@
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
     Order Item</div>
-  <q-form class=" q-pa-lg" style="background-color: #f2f2f2;">
+  <q-form class=" q-pa-lg" style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
     <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
       <div style="display: flex; flex-direction: column; width: 450px;">
         <q-select v-model="selectedOrderStatus" :options="orderStatus" label="Select Order Status"></q-select>
@@ -17,7 +17,7 @@
       <q-input v-model="item.barcode2" label="Scanned Barcode" readonly></q-input>
 
     </div>
-</div>
+
 <q-separator vertical class="q-my-xl"></q-separator>
 <q-table class="bg-grey-2" title="Order Cart" :rows="orderItems" :columns="columns">
   <template v-slot:body="props">
@@ -112,9 +112,9 @@
         <q-icon name="receipt_long" color="white" size="60px"></q-icon>
       </q-card-section>
       <q-card-section align="left" class="bg-teal-6">
-        <h6 class="text-bold q-ma-md">Customer name : {{ selectedCustomer.customerFirstname }} {{
-          selectedCustomer.customerLastname }}</h6>
-      </q-card-section>
+  <h6 class="text-bold q-ma-md">Customer name : {{ selectedCustomer.label }}</h6>
+</q-card-section>
+
 
       <q-card-section align="right" class="bg-teal-4 q-pt-none q-pa-sm">
         <h6 v-for="item in orderItems">{{item.productName}} : {{item.qty}} x {{item.sellingPrice}} THB =
@@ -288,7 +288,7 @@
     return;
   }
 
-  // Restructure order items
+   // Restructure order items
   var reBillItems = this.orderItems.map(item => {
     // Access shoeSizeId and productWithSizeId through selectedShoeSize
     const shoeSizeId = item.selectedShoeSize ? item.selectedShoeSize.shoeSizeId : null;
@@ -298,20 +298,21 @@
     const inventoryQty = item.selectedShoeSize ? item.selectedShoeSize.inventoryQty : null;
 
     // Deduct itemQty from inventoryQty
-if (inventoryQty !== null && item.qty !== null) {
-    if (item.qty <= inventoryQty) {
+    if (inventoryQty !== null && item.qty !== null) {
+      if (item.qty <= inventoryQty) {
         item.selectedShoeSize.inventoryQty -= item.qty;
-    } else {
+      } else {
         // Notify user if item quantity exceeds inventory quantity
         this.$q.notify({
-            type: 'negative',
-            color: 'yellow-8',
-            message: 'Not enough item in inventory'
+          type: 'negative',
+          color: 'yellow-8',
+          message: 'Not enough item in inventory'
         });
         // Optionally, you can handle this case further as needed
-        return; // Stop processing this item and return
+        return; // Exit the function here
+      }
     }
-}
+
 
 
     console.log('Item:', item); // Log the item object

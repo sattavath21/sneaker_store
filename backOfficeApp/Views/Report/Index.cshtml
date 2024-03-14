@@ -1,102 +1,588 @@
 <div id="app1">
-    <div class="text-h5 text-weight-bold text-white q-pa-lg"
-     style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+    <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
-            Sale Analytic Report</div>
-    <q-form class=" bg-white q-pa-lg">
-        <div class="row">
-            <div class="col-6">
-                <q-card class="my-card q-ma-lg">
-                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Sale Distribution by
-                        Product Name (Value)</div>
-                    <q-card-section class=" q-ma-sm">
-                        <div class="chart-container" style="position: relative; height:300px; width:300px">
-                            <canvas id="chart3"></canvas>
-                        </div>
-                    </q-card-section>
-                    <div align="center">
-                    <h5 class="text-bold text-light-blue-10">Total sale for this month: {{sumTotal}}</h5>
+        Sale Analytic Report
+    </div>
+    <q-form class="q-pa-lg"
+        style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+        <div class="row q-mb-lg">
+            <!-- Chart 1 -->
+            <div class="col-md-12">
+                <div class="q-mr-md">
+                    <!-- Chart 1 filters -->
+
+                    <div class="q-ml-lg " style=" width: 580px;">
+                        <q-select v-model="selectedYear5" :options="years" label="Year"></q-select>
                     </div>
-                    <q-card-actions align="right">
-                        <q-btn label="export" @@click="export3" color="primary" />
-                    </q-card-actions>
-                </q-card>
-
-            </div>
-            <div class="col-6">
-                <q-card class="my-card q-ma-lg">
-                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Sale Distribution by
-                        Product Type (Value)</div>
-                    <q-card-section class=" q-ma-sm">
-                        <div class="chart-container" style="position: relative; height:300px; width:300px">
-                            <canvas id="chart1"></canvas>
-                        </div>
-                    </q-card-section>
-                    <q-card-actions align="right">
-                        <q-btn label="export" @@click="export1" color="primary" />
-                    </q-card-actions>
-                </q-card>
-
-            </div>
-            <div class="col-6">
-                <q-card class="my-card q-ma-lg">
-
-                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Quantity Distribution by
-                        Product Name (Amount)</div>
-                    <q-card-section class=" q-ma-sm">
-                        <div class="chart-container" style="position: relative; height:300px; width:300px">
-                            <canvas id="chart2"></canvas>
-                        </div>
-                    </q-card-section>
-                    <div align="center">
-                    <h5 class="text-bold text-light-blue-10">Total sale amount for this month: {{sumQty}}</h5>
+                    <div class="q-mt-md q-ml-lg row justify-left">
+                        <q-btn class="q-mr-md" label="Apply Filters" color="primary" @@click="applyFilters5"></q-btn>
                     </div>
 
-                    <q-card-actions align="right">
-                        <q-btn label="export" @@click="export2" color="primary" />
-                    </q-card-actions>
-                </q-card>
+                    <q-card class="my-card q-ma-lg">
+                        <q-card-section class="q-ma-sm text-center"> <!-- Center align text content -->
+                            <div class="text-h4 text-weight-bold text-red q-pa-lg">Total sale for this year: {{
+                                sumTotalSale }} THB
+                            </div>
+                            <div class="chart-container text-center"
+                                style="position: relative; height:400px; width:800px; margin: 0 auto;">
+                                <canvas id="chart5"></canvas>
+                            </div>
 
+                        </q-card-section>
+                        <q-card-actions align="right">
+                            <q-btn label="export" @@click="export5" color="primary" />
+                        </q-card-actions>
+                    </q-card>
+
+                </div>
             </div>
-            <div class="col-6">
-                <q-card class="my-card q-ma-lg">
-                    <div class="text-h4 text-weight-bold text-white bg-light-blue-10 q-pa-lg">Sale Distribution by
-                        Customer (Value)</div>
-                    <q-card-section class=" q-ma-sm">
-                        <div class="chart-container" style="position: relative; height:300px; width:300px">
-                            <canvas id="chart4"></canvas>
+
+        </div>
+        <div class="row q-mb-lg">
+            
+            <!-- Chart 3 -->
+            <div class="col-md-6">
+                <div class="q-mr-md">
+                    <!-- Chart 3 filters -->
+                    <div class="q-ml-lg" style=" width: 580px;">
+                        <q-select v-model="selectedMonth3" :options="months" label="Month"></q-select>
+                        <q-select v-model="selectedYear3" :options="years" label="Year"></q-select>
+                    </div>
+                    <div class="q-mt-md q-ml-lg row justify-left">
+                        <q-btn class="q-mr-md" label="Apply Filters" color="primary" @@click="applyFilters3"></q-btn>
+                        <q-btn label="clear" icon="clear" color="grey" @@click="clearMonthFilter3"></q-btn>
+                        <!-- Button to clear the selected month -->
+                    </div>
+                    <q-card class="my-card q-ma-lg">
+
+                        <q-card-section class="q-ma-sm text-center">
+                            <div class="text-h4 text-weight-bold text-red  q-pa-lg">Sale Distribution by Product Name
+                                (Value)</div>
+                            <div class="chart-container"
+                                style="position: relative; height:400px; width:400px; margin: 0 auto;">
+                                <canvas id="chart3"></canvas>
+                            </div>
+                            
+                        </q-card-section>
+                        <div v-if="filtersApplied3" class="q-ma-sm text-center">
+                            <h5 class="text-bold text-light-blue-10">
+                                Total product sales
+
+                                <template v-if="selectedMonth3 && selectedYear3">
+                                    for this month: {{ sumTotal }} THB
+                                </template>
+                                <template v-else>
+                                    for this year: {{ sumTotal }} THB
+                                </template>
+                            </h5>
+                            <p class="text-bold text-light-blue-10">
+                                Most profitable product: {{ mostProfitableProduct3 }}<br>
+                                Max sales: {{ maxSales3 }} THB
+                            </p>
                         </div>
-                    </q-card-section>
+
+                        <q-card-actions align="right">
+                            <q-btn label="export" @@click="export3" color="primary" />
+                        </q-card-actions>
+                    </q-card>
+                </div>
+            </div>
+            <!-- Chart 1 -->
+            <div class="col-md-6">
+                <div class="q-mr-md">
+                    <!-- Chart 1 filters -->
+
+                    <div class="q-ml-lg" style=" width: 580px;">
+                        <q-select v-model="selectedMonth1" :options="months" label="Month"></q-select>
+                        <q-select v-model="selectedYear1" :options="years" label="Year"></q-select>
+                    </div>
+                    <div class="q-mt-md q-ml-lg row justify-left">
+                        <q-btn class="q-mr-md" label="Apply Filters" color="primary" @@click="applyFilters1"></q-btn>
+                        <q-btn label="Clear" icon="clear" color="grey" @@click="clearMonthFilter1"></q-btn>
+                        <!-- Button to clear the selected month -->
+                    </div>
+
+                    <q-card class="my-card q-ma-lg">
+                        <q-card-section class="q-ma-sm text-center"> <!-- Center align text content -->
+                            <div class="text-h4 text-weight-bold text-red q-pa-lg">Sale Distribution by Brand (Value)
+                            </div>
+                            <div class="chart-container text-center"
+                                style="position: relative; height:400px; width:400px; margin: 0 auto;">
+                                <canvas id="chart1"></canvas>
+                            </div>
+                            <h5 class="text-bold text-light-blue-10">
+                                Most profitable brand: {{ mostProfitableBrand1 }}<br>
+                                Max sales: {{ maxSales1 }} THB
+                            </h5>
 
 
-                    <q-card-actions align="right">
-                        <q-btn label="export" @@click="export4" color="primary" />
-                    </q-card-actions>
-                </q-card>
+                        </q-card-section>
+                        <q-card-actions align="right">
+                            <q-btn label="export" @@click="export1" color="primary" />
+                        </q-card-actions>
+                    </q-card>
 
+                </div>
+            </div>
+        </div>
+        <div class="row q-mb-lg">
+            <!-- Chart 2 -->
+            <div class="col-md-6">
+                <div class="q-ml-md">
+                    <!-- Chart 2 filters -->
+                    <div class="q-ml-lg" style="width: 580px;">
+                        <q-select v-model="selectedMonth2" :options="months" label="Month"></q-select>
+                        <q-select v-model="selectedYear2" :options="years" label="Year"></q-select>
+                    </div>
+                    <div class="q-mt-md q-ml-lg row justify-left">
+                        <q-btn class="q-mr-md" label="Apply Filters" color="primary" @@click="applyFilters2"></q-btn>
+                        <q-btn label="clear" icon="clear" color="grey" @@click="clearMonthFilter2"></q-btn>
+                        <!-- Button to clear the selected month -->
+                    </div>
+                    <q-card class="my-card q-ma-lg">
+                        <q-card-section class="q-ma-sm text-center">
+                            <div class="text-h4 text-weight-bold text-red  q-pa-lg">Quantity Distribution by Product
+                                Name (Amount)</div>
+                            <div class="chart-container text-center"
+                                style="position: relative; height:400px; width:400px; margin: 0 auto;">
+                                <canvas id="chart2"></canvas>
+                            </div>
+                        </q-card-section>
+                        <!-- Conditional rendering based on applyFilters2 click -->
+                        <div v-if="filtersApplied2" class="q-ma-sm text-center">
+                            <h5 class="text-bold text-light-blue-10">
+                                Quantity sales
+                                <template v-if="selectedMonth2 && selectedYear2">
+                                    for this month: {{ sumQty }}
+                                </template>
+                                <template v-else>
+                                    for this year: {{ sumQty }}
+                                </template>
+                            </h5>
+                        </div>
+                        <!-- End of conditional rendering -->
+                        <q-card-actions align="right">
+                            <q-btn label="export" @@click="export2" color="primary" />
+                        </q-card-actions>
+                    </q-card>
+                </div>
+            </div>
+            
+            <!-- Chart 4 -->
+            <div class="col-md-6">
+                <div class="q-ml-md">
+                    <!-- Chart 4 filters -->
+                    <div class="q-ml-lg" style=" width: 580px;">
+                        <q-select v-model="selectedMonth4" :options="months" label="Month"></q-select>
+                        <q-select v-model="selectedYear4" :options="years" label="Year"></q-select>
+                    </div>
+                    <div class="q-mt-md q-ml-lg row justify-left">
+                        <q-btn class="q-mr-md" label="Apply Filters" color="primary" @@click="applyFilters4"></q-btn>
+                        <q-btn label="clear" icon="clear" color="grey" @@click="clearMonthFilter4"></q-btn>
+                        <!-- Button to clear the selected month -->
+                    </div>
+                    <q-card class="my-card q-ma-lg">
+
+                        <q-card-section class="q-ma-sm text-center">
+                            <div class="text-h4 text-weight-bold text-red q-pa-lg">Sale Distribution by Customer (Value)
+                            </div>
+                            <div class="chart-container"
+                                style="position: relative; height:400px; width:400px; margin: 0 auto;">
+                                <canvas id="chart4"></canvas>
+                            </div>
+                        </q-card-section>
+                        <q-card-actions align="right">
+                            <q-btn label="export" @@click="export4" color="primary" />
+                        </q-card-actions>
+                    </q-card>
+                </div>
             </div>
         </div>
     </q-form>
-
 </div>
 
-@section code{
+
+@section code {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var option = {
             //data
             data() {
                 return {
+                    mostProfitableProduct3: '',
+                    maxSales3: 0,
+                    mostProfitableBrand1: '',
+                    maxSales1: 0,
+                    filtersApplied2: false,
+                    filtersApplied3: false,
+                    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    // Generate list of years dynamically including future years
+                    years: (() => {
+                        const currentYear = new Date().getFullYear();
+                        const pastYears = 5; // Adjust this as needed for past years
+                        const startYear = currentYear - pastYears;
+                        return Array.from({ length: pastYears + 1 }, (_, index) => startYear + index);
+                    })(),
+
+                    // Selected month and year for each chart
+                    selectedMonth1: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYear1: new Date().getFullYear(),
+                    selectedMonth2: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYear2: new Date().getFullYear(),
+                    selectedMonth3: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYear3: new Date().getFullYear(),
+                    selectedMonth4: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYear4: new Date().getFullYear(),
+                    selectedYear5: new Date().getFullYear(),
                     //your data go here
-                    sale: [],
                     sale1: [],
                     sale2: [],
                     sale3: [],
-                    sale4: []
+                    sale4: [],
+                    sale5: [],
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+
+                        }
+                    }
                 };
             },
             //methods
             methods: {
+
+                // Method to fetch data for chart 1
+                async fetchChartData1() {
+                    // Check if chart1 already exists
+                    if (this.chart1) {
+                        // Destroy the existing chart
+                        this.chart1.destroy();
+                    }
+
+                    // Fetch data for chart 1
+                    var res1 = await axios.get(`/api/Report1?month=${this.selectedMonth1}&year=${this.selectedYear1}`);
+                    var data = res1.data;
+                    console.log("data from report1", data);
+                    this.sale1 = data.sales;
+
+                    // Ensure that data contains the expected properties
+                    if (data && data.sales && Array.isArray(data.sales)) {
+                        // Parse and set data for chart 1
+                        var labels = data.sales.map(x => x.name);
+                        var values = data.sales.map(x => x.sale);
+                        var set1 = {
+                            labels: labels,
+                            datasets: [{
+                                label: '฿',
+                                data: values,
+                                borderWidth: 1
+                            }]
+                        };
+
+                        // Create new chart instance
+                        this.chart1 = new Chart('chart1', {
+                            type: 'pie',
+                            data: set1,
+                            options: this.options
+                        });
+
+                        // Access most profitable brand and max sales from the response
+                        var mostProfitableBrand = data.mostProfitableBrand;
+                        var maxSales = data.maxSales;
+
+                        // Update Vue data properties with the most profitable brand and max sales
+                        this.mostProfitableBrand1 = mostProfitableBrand;
+                        this.maxSales1 = maxSales;
+                    } else {
+                        console.error('Data received from the API does not contain the expected properties.');
+                    }
+                }
+
+                ,
+                // Method to fetch data for chart 2
+                async fetchChartData2() {
+                    // Check if chart1 already exists
+                    if (this.chart2) {
+                        // Destroy the existing chart
+                        this.chart2.destroy();
+                    }
+                    var res2 = await axios.get(`/api/Report2?month=${this.selectedMonth2}&year=${this.selectedYear2}`);
+                    data = res2.data;
+                    this.sale2 = data;
+                    // Parse and set data for chart 2
+                    var labels = data.map(x => {
+                        return x.name;
+                    });
+                    var values = data.map(x => {
+                        return x.saleQty;
+                    });
+                    console.log('Report2 labels', labels);
+                    console.log('Report2 values', values);
+                    var set2 = {
+                        labels: labels,
+                        datasets: [{
+                            label: 'QTY',
+                            data: values,
+                            borderWidth: 1
+                        }]
+                    };
+                    this.chart2 = new Chart('chart2', {
+                        type: 'doughnut',
+                        data: set2,
+                        options: this.options
+                    });
+                },
+                async fetchChartData3() {
+    // Check if chart3 already exists
+    if (this.chart3) {
+        // Destroy the existing chart
+        this.chart3.destroy();
+    }
+    
+    // Fetch data for chart 3
+    var res3 = await axios.get(`/api/Report3?month=${this.selectedMonth3}&year=${this.selectedYear3}`);
+    var data = res3.data;
+    console.log("data from Report3", data);
+    this.sale3 = data.sales;
+
+    // Ensure that data contains the expected properties
+    if (data && data.sales && Array.isArray(data.sales)) {
+        // Parse and set data for chart 3
+        var labels = data.sales.map(x => x.name);
+        var values = data.sales.map(x => x.sale);
+        var set3 = {
+            labels: labels,
+            datasets: [{
+                label: '฿',
+                data: values,
+                borderWidth: 1
+            }]
+        };
+
+        // Create new chart instance
+        this.chart3 = new Chart('chart3', {
+            type: 'doughnut',
+            data: set3,
+            options: this.options
+        });
+
+        // Access most profitable product and max sales from the response
+        var mostProfitableProduct = data.mostProfitableProduct;
+        var maxSales = data.maxSales;
+
+        // Update Vue data properties with the most profitable product and max sales
+        this.mostProfitableProduct3 = mostProfitableProduct;
+        this.maxSales3 = maxSales;
+    } else {
+        console.error('Data received from the API does not contain the expected properties.');
+    }
+}
+,
+                // Method to fetch data for chart 4
+                async fetchChartData4() {
+                    // Check if chart1 already exists
+                    if (this.chart4) {
+                        // Destroy the existing chart
+                        this.chart4.destroy();
+                    }
+                    var res4 = await axios.get(`/api/Report4?month=${this.selectedMonth4}&year=${this.selectedYear4}`);
+                    data = res4.data;
+                    this.sale4 = data;
+                    // Parse and set data for chart 4
+                    var labels = data.map(x => {
+                        return x.name;
+                    });
+                    var values = data.map(x => {
+                        return x.sale;
+                    });
+                    console.log('Report4 labels', labels);
+                    console.log('Report4 values', values);
+                    var set4 = {
+                        labels: labels,
+                        datasets: [{
+                            label: '฿',
+                            data: values,
+                            borderWidth: 1
+                        }]
+                    };
+                    this.chart4 = new Chart('chart4', {
+                        type: 'pie',
+                        data: set4,
+                        options: this.options
+                    });
+                },
+                async fetchChartData5() {
+                    // Check if chart5 already exists
+                    if (this.chart5) {
+                        // Destroy the existing chart
+                        this.chart5.destroy();
+                    }
+
+                    try {
+                        // Fetch data from the API
+                        const response = await axios.get(`/api/Report5?year=${this.selectedYear5}`);
+                        const data = response.data;
+                        this.sale5 = data;
+
+                        // Parse and set data for chart 5
+                        const labels = data.map(item => item.date); // Assuming the API response includes a 'date' field
+                        const values = data.map(item => item.totalSale);
+                        const set5 = {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Sale value',
+                                data: values,
+                                radius: 1.5,
+                                borderWidth: 3,
+                            }]
+                        };
+
+                        // Custom animation configuration
+                        const easing = Chart.helpers.easingEffects.easeInOutQuad;
+                        const totalDuration = 750;
+                        const duration = (ctx) => easing(ctx.index / data.length) * totalDuration / data.length;
+                        const delay = (ctx) => easing(ctx.index / data.length) * totalDuration;
+                        const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+                        const animation = {
+                            x: {
+                                type: 'number',
+                                easing: 'linear',
+                                duration: duration,
+                                from: NaN, // the point is initially skipped
+                                delay(ctx) {
+                                    if (ctx.type !== 'data' || ctx.xStarted) {
+                                        return 0;
+                                    }
+                                    ctx.xStarted = true;
+                                    return delay(ctx);
+                                }
+                            },
+                            y: {
+                                type: 'number',
+                                easing: 'linear',
+                                duration: duration,
+                                from: previousY,
+                                delay(ctx) {
+                                    if (ctx.type !== 'data' || ctx.yStarted) {
+                                        return 0;
+                                    }
+                                    ctx.yStarted = true;
+                                    return delay(ctx);
+                                }
+                            }
+                        };
+
+                        // Create new chart instance with custom animation
+                        this.chart5 = new Chart('chart5', {
+                            type: 'line',
+                            data: set5,
+                            options: {
+                                animation: animation,
+                                responsive: true,
+                                scales: {
+                                    x: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Month & Day',
+                                            color: '#911',
+                                            font: {
+                                                family: 'Times',
+                                                size: 20,
+                                                weight: 'bold',
+                                                lineHeight: 1.2,
+                                            },
+                                            padding: { top: 20, left: 0, right: 0, bottom: 0 }
+                                        }
+                                    },
+                                    y: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'THB',
+                                            color: '#191',
+                                            font: {
+                                                family: 'Times',
+                                                size: 20,
+                                                style: 'normal',
+                                                lineHeight: 1.2
+                                            },
+                                            padding: { top: 30, left: 0, right: 0, bottom: 0 }
+                                        }
+                                    }
+                                }
+                            },
+                        });
+                    } catch (error) {
+                        console.error('Error fetching or processing data:', error);
+                    }
+                }
+
+                ,
+                // Method to apply filters and fetch data for chart 1
+                async applyFilters1() {
+                    try {
+                        await this.fetchChartData1();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                // Method to apply filters and fetch data for chart 2
+                async applyFilters2() {
+                    try {
+                        await this.fetchChartData2();
+                        this.filtersApplied2 = true;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                // Method to apply filters and fetch data for chart 1
+                async applyFilters3() {
+                    try {
+                        await this.fetchChartData3();
+                        this.filtersApplied3 = true;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                // Method to apply filters and fetch data for chart 2
+                async applyFilters4() {
+                    try {
+                        await this.fetchChartData4();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                async applyFilters5() {
+                    try {
+                        await this.fetchChartData5();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                clearMonthFilter1() {
+                    this.selectedMonth1 = ''; // Reset selected month to empty
+                    this.selectedYear1 = ''; // Reset selected year to empty
+                },
+                clearMonthFilter2() {
+                    this.selectedMonth2 = ''; // Reset selected month to empty
+                    this.selectedYear2 = ''; // Reset selected year to empty
+                },
+                clearMonthFilter3() {
+                    this.selectedMonth3 = ''; // Reset selected month to empty
+                    this.selectedYear3 = ''; // Reset selected year to empty
+                },
+                clearMonthFilter4() {
+                    this.selectedMonth4 = ''; // Reset selected month to empty
+                    this.selectedYear4 = ''; // Reset selected year to empty
+                },
+                clearMonthFilter5() {
+                    this.selectedYear5 = ''; // Reset selected year to empty
+                },
                 export1() {
                     downloadCsv(this.sale1, 'sale1.csv');
 
@@ -109,8 +595,12 @@
                 export3() {
                     downloadCsv(this.sale3, 'sale3.csv');
                 }//ef
-                ,export4() {
+                , export4() {
                     downloadCsv(this.sale4, 'sale4.csv');
+                }//ef
+                ,
+                export5() {
+                    downloadCsv(this.sale5, 'sale5.csv');
                 }//ef
 
             }//emethod
@@ -120,17 +610,26 @@
                 sumTotal() {
                     let sum = 0; // initialize sum variable to 0
 
-                    for (let i = 0; i < this.sale1.length; i++) {
-                        sum += this.sale1 [i].sale; // add current element to sum
+                    for (let i = 0; i < this.sale3.length; i++) {
+                        sum += this.sale3[i].sale; // add current element to sum
                     }
-                    console.log("Sumsale", this.sale1);
+                    console.log("Sumsale", this.sale3);
+                    return sum;
+                },
+                sumTotalSale() {
+                    let sum = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.sale5.length; i++) {
+                        sum += this.sale5[i].totalSale; // add current element to sum
+                    }
+                    console.log("SumTotalSale", this.sale5);
                     return sum;
                 },
                 sumQty() {
                     let sumqty = 0; // initialize sum variable to 0
 
                     for (let i = 0; i < this.sale2.length; i++) {
-                        sumqty += this.sale2 [i].saleQty; // add current element to sum
+                        sumqty += this.sale2[i].saleQty; // add current element to sum
                     }
                     console.log("saleQty", this.sale2);
                     return sumqty;
@@ -140,129 +639,17 @@
             }
             ,
             //created
-            async created() {
-                try {
-                    var res3 = await axios.get("/api/SaleItems");
-                    this.sale = res3.data;
-                    console.log("Begin",this.sale);
-                }
-                catch (error) {
-                    console.log(error);
-                }
+            created() {
+
             }
             ,
             //mounted
-            async mounted() {
-                var option = {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-
-                    }
-                };
-                //data is object notation
-                try {
-                    var res = await axios.get('/api/report1');
-                    var data = res.data;
-                    this.sale1 = data;
-                    var labels = data.map(x => {
-                        return x.name;
-                    });
-                    var values = data.map(x => {
-                        return x.sale;
-                    });
-
-                    var set1 = {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            borderWidth: 1
-                        }]
-                    };
-
-                    var res = await axios.get('/api/report2');
-                    data = res.data;
-                    this.sale2 = data;
-                    var labels = data.map(x => {
-                        return x.name;
-                    });
-                    var values = data.map(x => {
-                        return x.saleQty;
-                    });
-
-                    var set2 = {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            borderWidth: 1
-                        }]
-                    };
-
-                    var res = await axios.get('/api/report3');
-                    data = res.data;
-                    this.sale3 = data;
-                    var labels = data.map(x => {
-                        return x.name;
-                    });
-                    var values = data.map(x => {
-                        return x.sale;
-                    });
-
-                    var set3 = {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            borderWidth: 1
-                        }]
-                    };
-
-                    var res = await axios.get('/api/report4');
-                    data = res.data;
-                    this.sale4 = data;
-                    var labels = data.map(x => {
-                        return x.name;
-                    });
-                    var values = data.map(x => {
-                        return x.sale;
-                    });
-
-                    var set4 = {
-                        labels: labels,
-                        datasets: [{
-                            data: values,
-                            borderWidth: 1
-                        }]
-                    };
-
-
-                    var pieChart1 = new Chart('chart1', {
-                        type: 'doughnut',
-                        data: set1,
-                        option
-                    });
-
-                    var pieChart2 = new Chart('chart2', {
-                        type: 'doughnut',
-                        data: set2,
-                        option
-                    });
-
-                    var pieChart3 = new Chart('chart3', {
-                        type: 'pie',
-                        data: set3,
-                        option
-                    });
-
-                    var pieChart4 = new Chart('chart4', {
-                        type: 'pie',
-                        data: set4,
-                        option
-                    });
-                } catch (error) {
-                    console.log(error);
-                }
+            mounted() {
+                this.applyFilters1();
+                this.applyFilters2();
+                this.applyFilters3();
+                this.applyFilters4();
+                this.applyFilters5();
             }
 
         };
