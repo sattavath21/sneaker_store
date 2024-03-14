@@ -25,3 +25,4 @@ function downloadCsv(data, filename) {
     link.click();
     document.body.removeChild(link);
 }
+

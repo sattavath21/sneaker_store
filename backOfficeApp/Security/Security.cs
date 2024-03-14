@@ -14,7 +14,6 @@ public class AppUser : IdentityUser<int>
     public string lastName { get; set; }
     public string department { get; set; }
 
-
 }
 public class SignInModel
 {
@@ -24,3 +23,4 @@ public class SignInModel
     public string returnUrl { get; set; }
 
 }//ec     
+

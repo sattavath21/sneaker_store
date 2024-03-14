@@ -37,9 +37,9 @@
         </q-td>
 
          <q-td key="deliveryActions" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteDeliveryDialog(props.row.deliveryServiceId)" icon="delete_forever"
             size="15px"></q-btn>
-          <q-dialog v-model="confirm" persistent>
+          <q-dialog v-model="deleteDeliveryDialogVisible">
             <q-card>
               <q-card-section class="row items-center">
                 <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
@@ -47,9 +47,9 @@
               </q-card-section>
 
               <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="red-6" @@click="deleteDelivery(props.row)" label="Yes"
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteDeliveryService" label="Yes"
                   v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteDeliveryDialog" />
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -60,7 +60,7 @@
       @* Expanded section *@
       <q-tr :props="props" v-show="props.expand">
         <q-td colspan="100%">
-          <q-table :title="props.row.deliveryCompanyName + ' Branches'" :rows="props.row.deliveryBranches" :columns="branchesColumns" row-key="branchId"
+          <q-table :title="props.row.deliveryCompanyName + ' Branches'" :rows="props.row.deliveryBranches" :columns="branchesColumns" row-key="deliveryBranchId"
             separator="none">
             <!-- Define columns for phone numbers -->
             <!-- Dont forget template -->
@@ -89,9 +89,9 @@
                 </q-td>
 
 <q-td key="branchActions" :props="props">
-                  <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+                  <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteBranchDialog(props.row.deliveryBranchId)" icon="delete_forever"
                     size="15px"></q-btn>
-                  <q-dialog v-model="confirm" persistent>
+                  <q-dialog v-model="deleteBranchDialogVisible" >
                     <q-card>
                       <q-card-section class="row items-center">
                         <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
@@ -99,9 +99,9 @@
                       </q-card-section>
 
                       <q-card-actions align="center">
-                        <q-btn class="q-ma-sm" color="red-6" @@click="deleteDelivery(props.row)" label="Yes"
+                        <q-btn class="q-ma-sm" color="red-6" @@click="deleteBranch" label="Yes"
                           v-close-popup></q-btn>
-                        <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                        <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteBranchDialog" ></q-btn>
                       </q-card-actions>
                     </q-card>
                   </q-dialog>
@@ -113,11 +113,11 @@
           </q-table>
 
           <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
-  label="Add new branch" size="md" @@click="openBranchDialog(props.row.deliveryServiceId)">
+  label="Add new branch" size="md" @@click="openAddBranchDialog(props.row.deliveryServiceId)">
 </q-btn>
 
           @* Dialog when add branch *@
-          <q-dialog v-model="branchDialogVisible" persistent>
+          <q-dialog v-model="branchDialogVisible" >
             <q-card>
               <q-card-section class="row items-center">
                 <span class="q-ml-sm">Enter branch name:</span>
@@ -131,9 +131,9 @@
 
 
               <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="primary" @@click="addBranch(props.row.deliveryServiceId)"
+                <q-btn class="q-ma-sm" color="primary" @@click="addBranch(props.row)"
                   label="Add"></q-btn>
-                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeBranchDialog"></q-btn>
+                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeAddBranchDialog"></q-btn>
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -148,11 +148,11 @@
   </q-table>
 
   <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
-    label="Add new delivery service" size="md" @@click="openDialog">
+    label="Add new delivery service" size="md" @@click="openAddDeliveryDialog">
   </q-btn>
 
   @* Dialog when add Delivery *@
-  <q-dialog v-model="deliveryDialogVisible" persistent>
+  <q-dialog v-model="deliveryDialogVisible" >
     <q-card>
       <q-card-section class="row items-center">
         <span class="q-ml-sm">Enter Delivery Company Name:</span>
@@ -166,7 +166,7 @@
 
       <q-card-actions align="center">
         <q-btn class="q-ma-sm" color="primary" @@click="addDelivery" label="Add"></q-btn>
-        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeDialog"></q-btn>
+        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeAddDeliveryDialog"></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -182,6 +182,7 @@
       //data
       data() {
         return {
+          newBranchDeliveryServiceId:0,
           deliveryDialogVisible: false,
           branchDialogVisible: false,
           newDeliveryCompanyName: {
@@ -189,10 +190,6 @@
           },
           newBranch: {
             branchName: ""
-          },
-          newDeliveryBranch:{
-            deliveryServiceId: null,
-            branchId: null
           },
           deliveryRows: [],
           deliveryColumns: [
@@ -258,27 +255,52 @@
               align: 'center'
             }
 
-          ]
+          ],
+
+
+          deleteDeliveryDialogVisible: false,
+          deleteBranchDialogVisible: false,
+          deliveryServiceIdToDelete:0,
+          deliveryBranchIdToDelete: 0
 
         };
       }
       ,
       //methods
       methods: {
-        openDialog() {
+        openAddDeliveryDialog() {
           this.deliveryDialogVisible = true;
         },
-        closeDialog() {
+        closeAddDeliveryDialog() {
           this.deliveryDialogVisible = false;
         },
-      openBranchDialog(deliveryServiceId) {
+
+      openAddBranchDialog(deliveryServiceId) {
         this.branchDialogVisible = true;
         this.newBranchDeliveryServiceId = deliveryServiceId; // Store the deliveryServiceId for later use
       },
-
-        closeBranchDialog() {
+        closeAddBranchDialog() {
           this.branchDialogVisible = false;
         },
+
+        openDeleteDeliveryDialog(deliveryServiceId){
+          this.deleteDeliveryDialogVisible = true;
+          this.deliveryServiceIdToDelete = deliveryServiceId;
+          
+        },
+    closeDeleteDeliveryDialog() {
+          this.deliveryDialogVisible = false;
+          this.deliveryBranchIdToDelete = 0;
+        },
+
+      openDeleteBranchDialog(deliveryBranchId) {
+        this.deleteBranchDialogVisible = true;
+        this.deliveryBranchIdToDelete = deliveryBranchId; // Store the deliveryServiceId for later use
+      },
+        closeDeleteBranchDialog() {
+          this.deleteBranchDialogVisible = false;
+        },
+
         async addDelivery() {
           try {
             console.log("DeliveryService String:", this.newDeliveryCompanyName);
@@ -294,7 +316,7 @@
                 icon: 'cloud_done',
                 message: 'New Delivery Service added successfully!'
               });
-            this.closeDialog();
+            this.closeAddDeliveryDialog();
             this.onReset();
 
             } else {
@@ -335,12 +357,29 @@
 
             if (response.status >= 200 && response.status < 300) {
               console.log("Request successful");
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Delivery Modified!'
+              });
             } else {
               console.error("Unexpected response status:", response.status);
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
             }
           } catch (error) {
             console.error("Error during request:", error);
-
+            this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error during request'
+              });
             if (error.response?.data?.errors) {
               console.error("Validation errors:", error.response.data.errors);
             }
@@ -348,35 +387,24 @@
         }
         ,
 
-        async deleteDelivery(item) {
-          console.log(item);
-          var url = "/myapi/DeleteDelivery";
-          var del = item;
+        
+        async deleteDeliveryService(deliveryServiceIdToDelete) {
+    try {
+        const response = await axios.post(`/myapi/DeleteDeliveryService?deliveryServiceIdToDelete=${this.deliveryServiceIdToDelete}`);
+          
+        this.deliveryServiceIdToDelete = 0;
+        window.location.reload();
+        console.log("Delete response:", response.data);
 
-          try {
-            // Send the delete request
-            await axios.post(url, del);
+        // Handle successful deletion
+    } catch (error) {
+        console.error("Error deleting delivery service:", error);
+        // Handle error
+    }
+},
+        
 
-            // Use the correct property name in the filter callback
-            this.deliveryRows = this.deliveryRows.filter(x => x.deliveryServiceId !== item.deliveryServiceId);
-
-            // Set a flag in local storage indicating successful delete
-            localStorage.setItem('deleteSuccess', 'true');
-
-            // Refresh the page
-            window.location.reload();
-          } catch (error) {
-            console.error('Error deleting delivery branch:', error);
-
-            // Notify the user about the error
-            this.$q.notify({
-              type: 'negative',
-              color: 'red-8',
-              message: 'Error deleting delivery branch'
-            });
-          }
-        },
-
+        
         async editBranch(item) {
           try {
             const response = await axios.post("myapi/EditBranch", item);
@@ -385,12 +413,29 @@
 
             if (response.status >= 200 && response.status < 300) {
               console.log("Request successful");
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Branch Modified!'
+              });
             } else {
               console.error("Unexpected response status:", response.status);
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
             }
           } catch (error) {
             console.error("Error during request:", error);
-
+            this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error during request'
+              });
             if (error.response?.data?.errors) {
               console.error("Validation errors:", error.response.data.errors);
             }
@@ -398,19 +443,14 @@
         }
         ,
 
-        async deleteBranch(item) {
-          console.log(item);
-          var url = "/myapi/DeleteBranch"; // URL for the delete request
-          var del = item.branch; // Pass only the branch object to the delete method
-
+        async deleteBranch() {
           try {
             // Send the delete request
-            await axios.post(url, del);
+            const reponse = await axios.post(`/myapi/DeleteDeliveryBranch?deliveryBranchId=${this.deliveryBranchIdToDelete}`);
+            this.deliveryBranchIdToDelete = 0;
+            window.location.reload();
+            console.log("Delete response:", response.data);
 
-            // Update the delivery rows after successful deletion
-            this.deliveryRows.forEach(deliveryService => {
-              deliveryService.deliveryBranches = delivery.deliveryBranches.filter(branch => branch.branchId !== item.branch.branchId);
-            });
 
             // Set a flag in local storage indicating successful delete
             localStorage.setItem('deleteSuccess', 'true');
@@ -445,7 +485,7 @@
         icon: 'cloud_done',
         message: 'New Branch added successfully!'
       });
-       this.closeBranchDialog();
+       this.closeAddBranchDialog();
         this.onReset();
     } else {
       // Log detailed error information

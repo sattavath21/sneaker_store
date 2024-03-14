@@ -7,6 +7,7 @@
 
     <!--site css-->
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="icon" href="/asset/image/favicon.ico">
 
     <!--Quasar-->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet"
@@ -17,22 +18,9 @@
 
 
 </head>
-<body class="bg-blue-grey-13">
 
-
-    <div id="app1">
-        <div class="bg-cyan text-white q-py-mg q-px-mg">
-      <q-toolbar>
-        <img src="~/asset/image/logo.png" align="left" style="width: 160px;"></img>
-        
-      </q-toolbar>
-    </div>
-    
-                @RenderBody()
-        <img src="~/asset/image/cog.png" align="right" style="width: 129px;"></img>
-        
-    </div>
-
+<body style="background-image: url('https://wallpapercave.com/wp/wp3631186.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    @RenderBody()
 
     <!--site js-->
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -49,5 +37,6 @@
 
     @RenderSection("code", required: false)
 </body>
+
 
 </html>

@@ -19,8 +19,6 @@ public class ApiController : ControllerBase
 
 
     #region ACTIONS
-
-
     [HttpGet]
     public IActionResult GetProducts()
     {
@@ -130,7 +128,7 @@ public class ApiController : ControllerBase
         var result = _db.Product.FirstOrDefault(x => x.Barcode == barcode);
         return Ok(result);
     }//ef
-
+    
     [HttpGet]
     public IActionResult GetProductByBarcode(string barcode)
     {
@@ -310,25 +308,15 @@ public class ApiController : ControllerBase
 
 
 
-
     [HttpPost]
-    public IActionResult AddStaff(Staff c)
+    public IActionResult EditStatus(Bill c)
     {
-        _db.Staff.Add(c);
+        //update staff 
+        _db.Bill.Update(c);
         _db.SaveChanges();
         return Ok(c);
-
-    }//ef
-
-    [HttpGet]
-    public IActionResult GetStaff()
-    {
-        var list1 = _db.Staff
-            .Include(db => db.Permission)
-            .ToList();
-        return Ok(list1);
-    }
-
+    }//ef    
+    
     [HttpGet]
     public IActionResult GetShoeSizes()
     {
@@ -356,14 +344,8 @@ public class ApiController : ControllerBase
         return Ok(c);
     }//ef
 
-    [HttpPost]
-    public IActionResult EditStatus(Bill c)
-    {
-        //update staff 
-        _db.Bill.Update(c);
-        _db.SaveChanges();
-        return Ok(c);
-    }//ef
+
+
 
 
     [HttpGet]
@@ -530,10 +512,6 @@ public IActionResult Report3(string month, int year)
 
         return Ok(sales);
     }
-
-
-
-
     #endregion
 
 }//ec

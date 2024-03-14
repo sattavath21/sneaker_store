@@ -86,17 +86,24 @@
           </q-popup-edit>
         </q-td>
 
-        <q-td key="start" :props="props">
-          {{ props.row.start }}
-          <q-popup-edit v-model="props.row.start">
-            <q-input v-model="props.row.start" dense autofocus counter></q-input>
-            <div class="justify-end row">
-              <q-btn color="blue-grey-6" @@click="editDiscount(props.row)" icon="edit" label="Edit"
-                v-close-popup="cancelEnabled">
-              </q-btn>
-            </div>
-          </q-popup-edit>
+
+         <q-td key="start" :props="props">
+          <q-input filled v-model="props.row.start" mask="date" style="width: 165px;" >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="props.row.start" landscape color="red" today-btn>
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Change" color="red" flat @@click="formatDateString(props.row)"></q-btn>
+                      <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
         </q-td>
+
 
         <q-td key="duration" :props="props">
           {{ props.row.duration }}
@@ -127,9 +134,24 @@
           </q-popup-edit>
         </q-td>
 
-        <q-td key="methodName" :props="props">
-          {{ props.row.shippingMethod.methodName }}
-        </q-td>
+        <q-td key="shippingMethodId" :props="props">
+            <q-select
+              class="q-px-sm"
+              filled
+              v-model="props.row.shippingMethodId"
+              style="min-width: 300px; height: 10px margin: 10px; padding: 5px;"
+              emit-value
+              :options="shippingMethodOptions"
+              options-cover
+              map-options
+              @@update:model-value="updateShippingMethod(props.row)" 
+              
+            >
+            </q-select>        
+</q-td>
+
+
+
 
 
         @* <q-td key="methodName" :props="props">
@@ -143,7 +165,7 @@
   </q-table>
 
   <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
-    label="Add new discount" size="md" onclick='window.location="/Discount/AddDiscount"'></q-btn>
+    label="Add new discount" size="md" onclick='window.location="/Discount/AddDis"'></q-btn>
 
 
 </div>
@@ -229,28 +251,27 @@
             },
 
             {
-              name: 'methodName',
+              name: 'shippingMethodId',
               label: 'Shipping Method',
-              field: 'discount.shippingMethod.methodName',
+              field: 'selectedMethod',
               align: 'center',
               sortable: true,
             },
-
-    @* {
-          name: 'methodName', // Name of the column
-          label: 'Shipping Method', // Label for the column
-          field: 'selectedShippingMethod', // Field to bind data to
-          align: 'center',
-          format: this.shippingMethodSelectFormat // Use the computed property for formatting
-          } *@
-
             ]
         };
       }
       ,
       //methods
       methods: {
-
+        async updateShippingMethod(item){
+          item.shippingMethod.shippingMethodId = item.shippingMethodId;
+          if (item.shippingMethodId == 1){
+            item.shippingMethod.methodName = "In-store"
+          } else{
+            item.shippingMethod.methodName = "Delivery"
+          }
+          this.editDiscount(item);
+        },
         async editDiscount(item) {
           try {
             const response = await axios.post("myapi/EditDiscount", item);
@@ -259,18 +280,48 @@
 
             if (response.status >= 200 && response.status < 300) {
               console.log("Request successful");
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Discount Modified!'
+              });
+
             } else {
               console.error("Unexpected response status:", response.status);
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
             }
           } catch (error) {
             console.error("Error during request:", error);
-
+            this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error during request'
+              });
             if (error.response?.data?.errors) {
               console.error("Validation errors:", error.response.data.errors);
             }
           }
         }
         ,
+         formatDateString(item) {
+  // Split the date string by '/'
+  const parts = item.start.split('/');
+  // Construct a Date object
+  const dateObject = new Date(parts[0], parts[1] - 1, parts[2]); // Months are 0-indexed in JavaScript Date objects
+  // Add one day to the date
+  dateObject.setDate(dateObject.getDate() + 1);
+  // Use Date methods to construct the desired format
+  const formattedDate = dateObject.toISOString().split('T')[0];
+  item.start = formattedDate;
+  this.editDiscount(item);
+},
 
         async deleteDiscount(item) {
           console.log(item);
@@ -326,24 +377,12 @@
           }
         },
 
-        shippingMethodSelectFormat() {
-          return (val, row) => {
-            return h('q-select', {
-              props: {
-                options: this.shippingMethodOptions,
-                value: row.selectedShippingMethod
-              },
-              on: {
-                input: (selectedShippingMethod) => {
-                  row.selectedShippingMethod = selectedShippingMethod;
-                }
-              }
-            });
-          };
-        }
+    
 
       }
       ,
+
+
 
       //computed
       computed: {

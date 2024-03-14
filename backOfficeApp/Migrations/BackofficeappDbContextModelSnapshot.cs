@@ -137,6 +137,9 @@ namespace backOfficeApp.Migrations
                     b.Property<int>("DeliveryServiceId")
                         .HasColumnType("int");
 
+                    b.Property<int>("DepositMoney")
+                        .HasColumnType("int");
+
                     b.Property<int>("DiscountId")
                         .HasColumnType("int");
 
@@ -648,6 +651,9 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Password")
                         .HasColumnType("longtext");
 
                     b.Property<int>("PermissionId")

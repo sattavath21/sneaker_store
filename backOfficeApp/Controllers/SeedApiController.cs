@@ -19,9 +19,7 @@ public class SeedApiController : ControllerBase
 
     [HttpPost]
     public IActionResult SeedData()
-
     {
-
         Console.WriteLine("Start Seeding.... ");
 
         OrderStatus pendingStatus = new OrderStatus
@@ -39,7 +37,7 @@ public class SeedApiController : ControllerBase
         OrderStatus deliveredStatus = new OrderStatus
         {
             OrderStatusId = 3,
-            StatusName = "succeeded"
+            StatusName = "Succeeded"
         };
 
         List<OrderStatus> orderStatuses = new List<OrderStatus> {
@@ -314,7 +312,7 @@ public class SeedApiController : ControllerBase
             PermissionName = "Staff"
         };
 
-        // _db.Permission.AddRange(ownerPermissopn, viceOwnerPermission, staffPermission);
+        _db.Permission.AddRange(ownerPermissopn, viceOwnerPermission, staffPermission);
 
         Staff taStaff = new Staff
         {
@@ -709,7 +707,7 @@ public class SeedApiController : ControllerBase
         };
 
 
-       List<string> brandNameList = new List<string> {
+        List<string> brandNameList = new List<string> {
             "Nike",
             "Adidas",
             "Jordan",
@@ -724,32 +722,33 @@ public class SeedApiController : ControllerBase
 
         List<Brand> brands = new List<Brand>();
 
-// Loop through each brand
-for (int i = 0; i < allCollections.Count; i++)
-{
-    List<Collection> brandCollections = allCollections[i];
-    List<BrandWithCollection> brandCollection = new List<BrandWithCollection>();
+        // Loop through each brand
+        for (int i = 0; i < allCollections.Count; i++)
+        {
+            List<Collection> brandCollections = allCollections[i];
+            List<BrandWithCollection> brandCollection = new List<BrandWithCollection>();
 
-    // Loop through each collection within the current brand
-    for (int j = 0; j < brandCollections.Count; j++)
-    {
-        Collection productCollection = brandCollections[j];
-        brandCollection.Add(new BrandWithCollection{
-            Collection = productCollection
-        });
-      
-    }
+            // Loop through each collection within the current brand
+            for (int j = 0; j < brandCollections.Count; j++)
+            {
+                Collection productCollection = brandCollections[j];
+                brandCollection.Add(new BrandWithCollection
+                {
+                    Collection = productCollection
+                });
 
-     Brand brand = new Brand
+            }
+
+            Brand brand = new Brand
             {
                 BrandId = i + 1,
                 BrandName = brandNameList[i],
                 BrandLogoUrl = "blank",
                 BrandWithCollections = brandCollection
-        };
+            };
 
-    brands.Add(brand);
-}
+            brands.Add(brand);
+        }
         _db.Brand.AddRange(brands);
 
 
@@ -800,7 +799,7 @@ for (int i = 0; i < allCollections.Count; i++)
             }
         }
 
-            _db.Product.AddRange(mockProducts);
+        _db.Product.AddRange(mockProducts);
 
 
         List<Bill> bills = new List<Bill>();
@@ -812,6 +811,7 @@ for (int i = 0; i < allCollections.Count; i++)
                 OrderStatus = orderStatuses[random.Next(orderStatuses.Count)], // Random order status
                 ShippingMethod = listShippingMethods[random.Next(listShippingMethods.Count)], // Random shipping method
                 CustomerTransferPicPath = "SomeWhereInAssets",
+                DepositMoney = 2000,
                 ShippingReceipt = "AlsoSomeWhereInAssets",
                 Discount = discountList[random.Next(discountList.Count)], // Random discount
                 Branch = anousithDeliveryService.DeliveryBranches[0].Branch,

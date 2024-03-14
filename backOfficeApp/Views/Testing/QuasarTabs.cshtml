@@ -1,0 +1,112 @@
+<div id="app1">
+
+    <div class="bg-primary text-white inset">    
+        <q-toolbar>
+        <q-toolbar-title>
+            Quasar App
+        </q-toolbar-title>
+        <q-btn flat round icon="settings"/>
+    </q-toolbar>
+    <q-toolbar 
+    inset
+    >
+    Home / Components / Toolbar
+    </q-toolbar>
+
+    </div>
+
+
+<div style="padding-bottom: 20px;"></div>
+
+
+<div class="bg-primary text-white">
+      <q-toolbar >
+        <q-toolbar-title>
+            My App
+        </q-toolbar-title>
+        <q-tabs
+            v-model="tab"
+            class="text-white"
+        >
+            <q-tab label="Podcasts"></q-tab>
+            <q-tab label="Blog"></q-tab>
+            <q-tab label="Videos"></q-tab>
+        </q-tabs>
+        <q-btn flat round icon="settings"/>
+    </q-toolbar>
+</div>
+
+
+
+    
+
+
+
+            @* Panel is smth that shows your content *@
+            <q-tabs
+                v-model="currentTab"
+                @* class ="text-indigo" *@
+                @* inline-label *@
+                @* outside-arrows *@
+                narrow-indicator
+                @* align="justify" *@
+                 @* align="left"
+                 :breakpoint="600" *@
+                 @* no-caps *@
+                 @* dense *@
+            >
+                <q-tab-route to="/product/index" name="cake" icon="cake" label="cake" class="text-pink"></q-tab-route>
+                <q-tab-route to="/product/index" name="coffee" icon="coffee" label="coffee" class="text-brown"></q-tab-route>
+                <q-tab-route to="/product/index" name="ice-cream" icon="icecream" label="ice-cream" class="text-indigo"></q-tab-route>
+
+            </q-tabs>
+            @* Panels *@
+            @* Tab panel v-model when currentTab change page also change*@
+            <q-tab-panels v-model="currentTab" animated>
+               <q-tab-panel name="cake"  class="text-pink">Cake</q-tab-panel>
+                <q-tab-panel name="coffee" class="text-brown">Coffee</q-tab-panel>
+                <q-tab-panel name="ice-cream" class="text-indigo">Ice-cream</q-tab-panel>
+
+            </q-tab-panels>
+            <pre> {{ currentTab }} </pre>
+
+</div>
+
+@section code{
+    <script>
+    var option = {
+        //data
+        data(){
+            return {
+                //your data go here
+                currentTab: 'cake',
+            };
+        }
+        ,
+        //methods
+        methods:{
+
+        }
+        ,
+        //computed
+        computed:{
+
+        }
+        ,
+        //created
+        created(){
+
+        }
+        ,
+        //mounted
+        mounted(){
+            
+        }
+
+    };
+    
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+    </script>
+}

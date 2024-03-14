@@ -95,11 +95,28 @@ namespace backOfficeApp.Migrations
                     BrandId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     BrandName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BrandLogoUrl = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brand", x => x.BrandId);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Collection",
+                columns: table => new
+                {
+                    CollectionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CollectionName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Collection", x => x.CollectionId);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -113,14 +130,14 @@ namespace backOfficeApp.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CustomerLastname = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Gender = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CustomerBirthday = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Email = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     CustomerPhoneNumber = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CustomerSocialLink = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Gender = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -364,23 +381,69 @@ namespace backOfficeApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Collection",
+                name: "BrandWithCollection",
                 columns: table => new
                 {
-                    CollectionId = table.Column<int>(type: "int", nullable: false)
+                    BrandWithCollectionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CollectionName = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CollectionId = table.Column<int>(type: "int", nullable: false),
                     BrandId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Collection", x => x.CollectionId);
+                    table.PrimaryKey("PK_BrandWithCollection", x => x.BrandWithCollectionId);
                     table.ForeignKey(
-                        name: "FK_Collection_Brand_BrandId",
+                        name: "FK_BrandWithCollection_Brand_BrandId",
                         column: x => x.BrandId,
                         principalTable: "Brand",
                         principalColumn: "BrandId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BrandWithCollection_Collection_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "Collection",
+                        principalColumn: "CollectionId",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Product",
+                columns: table => new
+                {
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Barcode = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ProductName = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CostPrice = table.Column<int>(type: "int", nullable: false),
+                    SellingPrice = table.Column<int>(type: "int", nullable: false),
+                    Sku = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Colorway = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Releasedate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Amountsold = table.Column<int>(type: "int", nullable: false),
+                    BrandId = table.Column<int>(type: "int", nullable: false),
+                    CollectionId = table.Column<int>(type: "int", nullable: false),
+                    ProductImageUrl = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Product", x => x.ProductId);
+                    table.ForeignKey(
+                        name: "FK_Product_Brand_BrandId",
+                        column: x => x.BrandId,
+                        principalTable: "Brand",
+                        principalColumn: "BrandId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Product_Collection_CollectionId",
+                        column: x => x.CollectionId,
+                        principalTable: "Collection",
+                        principalColumn: "CollectionId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -425,6 +488,8 @@ namespace backOfficeApp.Migrations
                     StaffBirthday = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Email = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Password = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     StaffPhoneNumber = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PermissionId = table.Column<int>(type: "int", nullable: false)
@@ -447,15 +512,15 @@ namespace backOfficeApp.Migrations
                 {
                     DiscountId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     DiscountPercentage = table.Column<int>(type: "int", nullable: false),
-                    MaxDiscountAmount = table.Column<int>(type: "int", nullable: false),
                     MinSpend = table.Column<int>(type: "int", nullable: false),
+                    MaxDiscountAmount = table.Column<int>(type: "int", nullable: false),
                     Start = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
-                    ShippingMethodId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    ShippingMethodId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -470,35 +535,29 @@ namespace backOfficeApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "ProductWithSize",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    ProductWithSizeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Barcode = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProductName = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CostPrice = table.Column<int>(type: "int", nullable: false),
-                    SellingPrice = table.Column<int>(type: "int", nullable: false),
-                    Sku = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Colorway = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Releasedate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Amountsold = table.Column<int>(type: "int", nullable: false),
-                    CollectionId = table.Column<int>(type: "int", nullable: false),
-                    ProductImageUrl = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    InventoryQty = table.Column<int>(type: "int", nullable: false),
+                    ShoeSizeId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.ProductId);
+                    table.PrimaryKey("PK_ProductWithSize", x => x.ProductWithSizeId);
                     table.ForeignKey(
-                        name: "FK_Product_Collection_CollectionId",
-                        column: x => x.CollectionId,
-                        principalTable: "Collection",
-                        principalColumn: "CollectionId",
+                        name: "FK_ProductWithSize_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Product",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductWithSize_ShoeSize_ShoeSizeId",
+                        column: x => x.ShoeSizeId,
+                        principalTable: "ShoeSize",
+                        principalColumn: "ShoeSizeId",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -514,6 +573,9 @@ namespace backOfficeApp.Migrations
                     ShippingMethodId = table.Column<int>(type: "int", nullable: false),
                     CustomerTransferPicPath = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    ShippingReceipt = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DepositMoney = table.Column<int>(type: "int", nullable: false),
                     DiscountId = table.Column<int>(type: "int", nullable: false),
                     DeliveryServiceId = table.Column<int>(type: "int", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: false),
@@ -569,34 +631,6 @@ namespace backOfficeApp.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "ProductWithSize",
-                columns: table => new
-                {
-                    ProductWithSizeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    InventoryQty = table.Column<int>(type: "int", nullable: false),
-                    ShoeSizeId = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductWithSize", x => x.ProductWithSizeId);
-                    table.ForeignKey(
-                        name: "FK_ProductWithSize_Product_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Product",
-                        principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductWithSize_ShoeSize_ShoeSizeId",
-                        column: x => x.ShoeSizeId,
-                        principalTable: "ShoeSize",
-                        principalColumn: "ShoeSizeId",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "BillItem",
                 columns: table => new
                 {
@@ -604,6 +638,7 @@ namespace backOfficeApp.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ShoeSizeId = table.Column<int>(type: "int", nullable: false),
                     ProductConditionId = table.Column<int>(type: "int", nullable: false),
+                    ItemQty = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     BillId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -617,16 +652,16 @@ namespace backOfficeApp.Migrations
                         principalColumn: "BillId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BillItem_ProductCondition_ProductConditionId",
-                        column: x => x.ProductConditionId,
-                        principalTable: "ProductCondition",
-                        principalColumn: "ProductConditionId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_BillItem_Product_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Product",
                         principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BillItem_ProductCondition_ProductConditionId",
+                        column: x => x.ProductConditionId,
+                        principalTable: "ProductCondition",
+                        principalColumn: "ProductConditionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BillItem_ShoeSize_ShoeSizeId",
@@ -735,6 +770,16 @@ namespace backOfficeApp.Migrations
                 column: "BranchId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BrandWithCollection_BrandId",
+                table: "BrandWithCollection",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BrandWithCollection_CollectionId",
+                table: "BrandWithCollection",
+                column: "CollectionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeliveryBranch_BranchId",
                 table: "DeliveryBranch",
                 column: "BranchId");
@@ -750,14 +795,14 @@ namespace backOfficeApp.Migrations
                 column: "ShippingMethodId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Product_BrandId",
+                table: "Product",
+                column: "BrandId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Product_CollectionId",
                 table: "Product",
                 column: "CollectionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Collection_BrandId",
-                table: "Collection",
-                column: "BrandId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductWithSize_ProductId",
@@ -797,6 +842,9 @@ namespace backOfficeApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "BranchTelNumber");
+
+            migrationBuilder.DropTable(
+                name: "BrandWithCollection");
 
             migrationBuilder.DropTable(
                 name: "DeliveryBranch");
@@ -841,6 +889,9 @@ namespace backOfficeApp.Migrations
                 name: "Staff");
 
             migrationBuilder.DropTable(
+                name: "Brand");
+
+            migrationBuilder.DropTable(
                 name: "Collection");
 
             migrationBuilder.DropTable(
@@ -848,9 +899,6 @@ namespace backOfficeApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Permission");
-
-            migrationBuilder.DropTable(
-                name: "Brand");
         }
     }
 }

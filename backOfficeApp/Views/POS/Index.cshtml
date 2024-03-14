@@ -6,7 +6,7 @@
   <q-form class=" q-pa-lg" style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
     <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
       <div style="display: flex; flex-direction: column; width: 450px;">
-        <q-select v-model="selectedOrderStatus" :options="orderStatus" label="Select Order Status"></q-select>
+        <q-select v-model="selectedOrderStatus" :options="orderStatus" label="Select Order Type"></q-select>
         <q-separator vertical class="q-my-sm"></q-separator>
 
       </div>
@@ -447,17 +447,20 @@
           }
         },
         async fetchOrderStatus() {
-          try {
-            const response = await axios.get("/api/GetOrderStatusesSelection");
-            // Map the data to the format required by q-select
-            this.orderStatus = response.data.map(status => ({ label: status.statusName, value: status.orderStatusId }));
-            console.log("Order status:", this.orderStatus);
-            // Set selectedOrderStatus to the label "Pending"
-            this.selectedOrderStatus = this.orderStatus.find(status => status.label === 'Pending');
-          } catch (error) {
-            console.error("Error fetching orderStatus:", error);
-          }
-        },
+  try {
+    const response = await axios.get("/api/GetOrderStatusesSelection");
+    // Map the data to the format required by q-select
+    this.orderStatus = response.data.map(status => ({ 
+      label: this.mapStatusLabel(status.statusName), // Map the label here
+      value: status.orderStatusId 
+    }));
+    console.log("Order status:", this.orderStatus);
+    // Set selectedOrderStatus to the label "Pre-order"
+    this.selectedOrderStatus = this.orderStatus.find(status => status.label === 'Pre-order');
+  } catch (error) {
+    console.error("Error fetching orderStatus:", error);
+  }
+},
 
 
 
@@ -543,7 +546,18 @@
           }
         }
         ,
-
+mapStatusLabel(statusName) {
+    switch(statusName) {
+      case 'Pending':
+        return 'Pre-order';
+      case 'Shipped':
+        return 'Delivery';
+      case 'Success':
+        return 'In-store';
+      default:
+        return statusName;
+    }
+  }
 
 
 
