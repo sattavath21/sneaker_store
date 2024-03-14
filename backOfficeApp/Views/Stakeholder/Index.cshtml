@@ -150,7 +150,8 @@
     label="Add new customer" size="md" onclick='window.location="/Stakeholder/AddCus"'></q-btn>
 
   @* Staff Section *@
-
+   @if (User.IsInRole("admin") || User.IsInRole("manager"))
+            {
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */
@@ -276,9 +277,11 @@
       </q-tr>
     </template>
   </q-table>
- <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 50px;" color="green" icon="add_box"
-    label="Add new staff" size="md" onclick='window.location="/stakeholder/addstaf"'></q-btn>
 
+<q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 50px;" color="green" icon="add_box"
+    label="Add new staff" size="md" onclick='window.location="/stakeholder/addstaf"'></q-btn>
+            }
+ 
 
 </div>
 
