@@ -8,6 +8,7 @@
     },
     "Customer_Transfer_Pic_Path": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
     "Shipping_Receipt": "C:/Users/Sattavath/Desktop/Transaction/416472943_1754813021611319_4025405789920511094_n",
+    "Deposit_Money": 1000,
     "Discount": {
         "Description": "new year happiness",
         "Discount_Percentage": 10,
@@ -48,7 +49,7 @@
         "Staff_Lastname": "asdasdo",
         "Staff_Birthday": "2023/12/03",
         "Email": "huangguifu21@gmail.com",
-        "password":"29319293",
+        "password":"lmao123123123",
         "Staff_Phone_Number": "",
         "Permission": {
             "Permission_Name": "Admin"
@@ -72,7 +73,7 @@
             "Product_Condition": {
                 "condition_Name": "Brand New"
             },
-            "Deposit_Money":1000,
+
             "Item_Qty": 2,
             "Product": {
                 "Barcode": "asdasdasdasd",

@@ -19,8 +19,6 @@ public class ApiController : ControllerBase
 
 
     #region ACTIONS
-
-
     [HttpGet]
     public IActionResult GetProducts()
     {
@@ -266,8 +264,8 @@ public class ApiController : ControllerBase
     }
 
     [HttpPost]
-public IActionResult AddSale(Bill bill)
-{
+    public IActionResult AddSale(Bill bill)
+    {
 
         bill.OrderDate = DateTime.Now;
 
@@ -290,7 +288,9 @@ public IActionResult AddSale(Bill bill)
         _db.Bill.Update(c);
         _db.SaveChanges();
         return Ok(c);
-    }//ef    [HttpGet]
+    }//ef    
+    
+    [HttpGet]
     public IActionResult GetShoeSizes()
     {
         var list1 = _db.ShoeSize

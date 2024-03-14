@@ -8,20 +8,23 @@ using Microsoft.AspNetCore.Identity;
 [Route("myapi/[action]")]
 public class MyApiController : ControllerBase
 {
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly UserManager<AppUser> _userManager;
     private readonly ILogger<MyApiController> _logger;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly RoleManager<AppRole> _roleManager;
+
     private BackofficeappDbContext _db;
 
-    public MyApiController(ILogger<MyApiController> logger, BackofficeappDbContext db)
+    public MyApiController(ILogger<MyApiController> logger, BackofficeappDbContext db, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
     {
         _logger = logger;
         _db = db;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
 
     #region ACTIONS
-    
+
     [HttpGet]
     public IActionResult GetShippingMethods()
     {
@@ -29,8 +32,8 @@ public class MyApiController : ControllerBase
             .ToList();
         return Ok(list1);
     }
-    
-    
+
+
     [HttpGet]
     public IActionResult GetDeliveryServices()
     {
@@ -49,102 +52,102 @@ public class MyApiController : ControllerBase
 
     }
 
-[HttpPost]
-public IActionResult EditBill(Bill updatedBill)
-{
-    // Update bill information
-    _db.Bill.Update(updatedBill);
-    _db.SaveChanges();
-    return Ok(updatedBill);
-}//ef
-
-
-[HttpPost]
-public IActionResult EditCustomerTransfer(string newTransfer, int billId)
-{
-   try
+    [HttpPost]
+    public IActionResult EditBill(Bill updatedBill)
     {
-        // Retrieve the bill from the database based on the provided billId
-        var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
-
-        if (bill == null)
-        {
-            return NotFound("Bill not found");
-        }
-
-        // Update the CustomerTransferPicPath attribute
-        bill.CustomerTransferPicPath = newTransfer;
-        // Save the changes to the database
+        // Update bill information
+        _db.Bill.Update(updatedBill);
         _db.SaveChanges();
+        return Ok(updatedBill);
+    }//ef
 
-        // Return the updated bill
-        return Ok(bill);
-    }
-    catch (Exception ex)
+
+    [HttpPost]
+    public IActionResult EditCustomerTransfer(string newTransfer, int billId)
     {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}//ef
-
-[HttpPost]
-public IActionResult EditShippingReceipt(string newTransfer, int billId)
-{
-   try
-    {
-        // Retrieve the bill from the database based on the provided billId
-        var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
-
-        if (bill == null)
+        try
         {
-            return NotFound("Bill not found");
+            // Retrieve the bill from the database based on the provided billId
+            var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+            if (bill == null)
+            {
+                return NotFound("Bill not found");
+            }
+
+            // Update the CustomerTransferPicPath attribute
+            bill.CustomerTransferPicPath = newTransfer;
+            // Save the changes to the database
+            _db.SaveChanges();
+
+            // Return the updated bill
+            return Ok(bill);
         }
-
-        // Update the CustomerTransferPicPath attribute
-        bill.ShippingReceipt = newTransfer;
-        // Save the changes to the database
-        _db.SaveChanges();
-
-        // Return the updated bill
-        return Ok(bill);
-    }
-    catch (Exception ex)
-    {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}//ef
-
-[HttpPost]
-public IActionResult EditOrderStatus(int newTransfer, int billId)
-{
-   try
-    {
-        // Retrieve the bill from the database based on the provided billId
-        var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
-
-        if (bill == null)
+        catch (Exception ex)
         {
-            return NotFound("Bill not found");
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
         }
+    }//ef
 
-        // Update the CustomerTransferPicPath attribute
-        bill.OrderStatusId = newTransfer;
-        // Save the changes to the database
-        _db.SaveChanges();
-
-        // Return the updated bill
-        return Ok(bill);
-    }
-    catch (Exception ex)
+    [HttpPost]
+    public IActionResult EditShippingReceipt(string newTransfer, int billId)
     {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}//ef
+        try
+        {
+            // Retrieve the bill from the database based on the provided billId
+            var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+            if (bill == null)
+            {
+                return NotFound("Bill not found");
+            }
+
+            // Update the CustomerTransferPicPath attribute
+            bill.ShippingReceipt = newTransfer;
+            // Save the changes to the database
+            _db.SaveChanges();
+
+            // Return the updated bill
+            return Ok(bill);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }//ef
+
+    [HttpPost]
+    public IActionResult EditOrderStatus(int newTransfer, int billId)
+    {
+        try
+        {
+            // Retrieve the bill from the database based on the provided billId
+            var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+            if (bill == null)
+            {
+                return NotFound("Bill not found");
+            }
+
+            // Update the CustomerTransferPicPath attribute
+            bill.OrderStatusId = newTransfer;
+            // Save the changes to the database
+            _db.SaveChanges();
+
+            // Return the updated bill
+            return Ok(bill);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }//ef
 
     [HttpPost]
     public IActionResult EditDelivery(DeliveryService e)
@@ -155,45 +158,45 @@ public IActionResult EditOrderStatus(int newTransfer, int billId)
         return Ok(e);
     }//ef
 
-// Cascade delete delete delievery service with all of the branch
-[HttpPost]
-public IActionResult DeleteDeliveryService(int deliveryServiceIdToDelete)
-{
-    try
+    // Cascade delete delete delievery service with all of the branch
+    [HttpPost]
+    public IActionResult DeleteDeliveryService(int deliveryServiceIdToDelete)
     {
-        // Find the delivery service entity to delete based on the ID
-        var deliveryToDelete = _db.DeliveryService
-            .Include(ds => ds.DeliveryBranches)
-                .ThenInclude(db => db.Branch)
-            .FirstOrDefault(x => x.DeliveryServiceId == deliveryServiceIdToDelete);
-
-        if (deliveryToDelete == null)
+        try
         {
-            return NotFound("DeliveryService not found");
-        }
+            // Find the delivery service entity to delete based on the ID
+            var deliveryToDelete = _db.DeliveryService
+                .Include(ds => ds.DeliveryBranches)
+                    .ThenInclude(db => db.Branch)
+                .FirstOrDefault(x => x.DeliveryServiceId == deliveryServiceIdToDelete);
 
-        // Remove the associated delivery branches and branches
-        foreach (var deliveryBranch in deliveryToDelete.DeliveryBranches)
+            if (deliveryToDelete == null)
+            {
+                return NotFound("DeliveryService not found");
+            }
+
+            // Remove the associated delivery branches and branches
+            foreach (var deliveryBranch in deliveryToDelete.DeliveryBranches)
+            {
+                _db.DeliveryBranch.Remove(deliveryBranch);
+                // Also remove the associated branch
+                _db.Branch.Remove(deliveryBranch.Branch);
+            }
+
+            // Remove the delivery service from the database
+            _db.DeliveryService.Remove(deliveryToDelete);
+            _db.SaveChanges();
+
+            return Ok(new { message = "DeliveryService and associated branches deleted successfully" });
+        }
+        catch (Exception ex)
         {
-            _db.DeliveryBranch.Remove(deliveryBranch);
-            // Also remove the associated branch
-            _db.Branch.Remove(deliveryBranch.Branch);
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
         }
-
-        // Remove the delivery service from the database
-        _db.DeliveryService.Remove(deliveryToDelete);
-        _db.SaveChanges();
-
-        return Ok(new { message = "DeliveryService and associated branches deleted successfully" });
     }
-    catch (Exception ex)
-    {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}
-    
+
     [HttpPost]
     public IActionResult AddBranch(Branch newBranch, int deliveryServiceId)
     {
@@ -232,35 +235,35 @@ public IActionResult DeleteDeliveryService(int deliveryServiceIdToDelete)
         return Ok(b);
     }//ef
     [HttpPost]
-public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
-{
-    try
+    public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
     {
-        // Find the delivery service entity to delete based on the ID
-        var deliveryBranchToDelete = _db.DeliveryBranch
-            .Include(ds => ds.Branch)
-            .FirstOrDefault(x => x.DeliveryBranchId == deliveryBranchId);
-
-        if (deliveryBranchToDelete == null)
+        try
         {
-            return NotFound("DeliveryBranch not found");
+            // Find the delivery service entity to delete based on the ID
+            var deliveryBranchToDelete = _db.DeliveryBranch
+                .Include(ds => ds.Branch)
+                .FirstOrDefault(x => x.DeliveryBranchId == deliveryBranchId);
+
+            if (deliveryBranchToDelete == null)
+            {
+                return NotFound("DeliveryBranch not found");
+            }
+
+            _db.Branch.Remove(deliveryBranchToDelete.Branch);
+
+            // Remove the delivery service from the database
+            _db.DeliveryBranch.Remove(deliveryBranchToDelete);
+            _db.SaveChanges();
+
+            return Ok(new { message = "DeliveryBranch and associated branches deleted successfully" });
         }
-
-        _db.Branch.Remove(deliveryBranchToDelete.Branch);
-
-        // Remove the delivery service from the database
-        _db.DeliveryBranch.Remove(deliveryBranchToDelete);
-        _db.SaveChanges();
-
-        return Ok(new { message = "DeliveryBranch and associated branches deleted successfully" });
+        catch (Exception ex)
+        {
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
+        }
     }
-    catch (Exception ex)
-    {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}
 
 
     [HttpGet]
@@ -412,19 +415,76 @@ public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
             .ToList();
         return Ok(list1);
     }
+
     [HttpPost]
-    public IActionResult AddStaff(int permissionId, Staff s)
+    public async Task<IActionResult> RegisterStaff(Staff s)
     {
+        Console.WriteLine("Begin of RegisterStaff");
+
         try
         {
+            // Create a new AppUser instance and assign values
+            var newUser = new AppUser
+            {
+                Email = s.Email,
+                UserName = s.Email,
+                firstName = s.StaffFirstname,
+                lastName = s.StaffLastname
+            };
 
-            s.PermissionId = permissionId;
-            // Add the new branch to the Branch table
+            // Verify if that user already exist
+            if (_userManager.Users.Any(u => u.UserName == newUser.UserName))
+            {
+                return Ok(
+                    new
+                    {
+                        code = -1,
+                        messssage = "Username already taken, please tyr again"
+                    }
+                );
+            }
+
+            // Create new login account
+                    Console.WriteLine("Creating login account");
+
+            await _userManager.CreateAsync(newUser, s.Password);
+            newUser = await _userManager.FindByEmailAsync(newUser.Email);
+
+                    Console.WriteLine("Adding role to user");
+
+            if (s.PermissionId == 1)
+            {
+                await _userManager.AddToRoleAsync(newUser, "admin");
+            }
+            else if (s.PermissionId == 2)
+            {
+                await _userManager.AddToRoleAsync(newUser, "manager");
+            }
+            else if (s.PermissionId == 3)
+            {
+                await _userManager.AddToRoleAsync(newUser, "user");
+
+            }
+
+            // if(!await _userManager.IsInRoleAsync(newUser, "user")){
+            //     await _userManager.AddToRoleAsync(newUser, "user");
+            // }
+                    Console.WriteLine("Before .Add");
+
             _db.Staff.Add(s);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
+
+            return Ok(new
+        {
+            code = 0,
+            message = "User registered successfully",
+            staff = s
+        });            // var user = _userManager.FirstOrDefault(x => x.firstName = s.StaffFirstname &&  x.lastName ==s.StaffLastname);
 
 
-            return Ok(s);
+
+
+
         }
         catch (Exception ex)
         {
@@ -432,8 +492,8 @@ public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
             Console.Error.WriteLine(ex);
             return StatusCode(500, "Internal Server Error");
         }
+    }
 
-    }//ef
 
     [HttpPost]
     public IActionResult EditStaff(Staff s)
@@ -477,7 +537,7 @@ public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
             .ToList();
         return Ok(list1);
     }
-    
+
     [HttpGet]
     public IActionResult GetBrands()
     {
@@ -507,41 +567,41 @@ public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
     }//ef
 
     [HttpPost]
-public IActionResult DeleteBrand(int brandIdToDelete)
-{
-    try
+    public IActionResult DeleteBrand(int brandIdToDelete)
     {
-        // Find the delivery service entity to delete based on the ID
-        var brandToDelete = _db.Brand
-            .Include(ds => ds.BrandWithCollections)
-                .ThenInclude(db => db.Collection)
-            .FirstOrDefault(x => x.BrandId == brandIdToDelete);
-
-        if (brandToDelete == null)
+        try
         {
-            return NotFound("Brand not found");
-        }
+            // Find the delivery service entity to delete based on the ID
+            var brandToDelete = _db.Brand
+                .Include(ds => ds.BrandWithCollections)
+                    .ThenInclude(db => db.Collection)
+                .FirstOrDefault(x => x.BrandId == brandIdToDelete);
 
-        // Remove the associated delivery branches and branches
-        foreach (var brandWithCollection in brandToDelete.BrandWithCollections)
+            if (brandToDelete == null)
+            {
+                return NotFound("Brand not found");
+            }
+
+            // Remove the associated delivery branches and branches
+            foreach (var brandWithCollection in brandToDelete.BrandWithCollections)
+            {
+                _db.BrandWithCollection.Remove(brandWithCollection);
+                _db.Collection.Remove(brandWithCollection.Collection);
+            }
+
+            // Remove the delivery service from the database
+            _db.Brand.Remove(brandToDelete);
+            _db.SaveChanges();
+
+            return Ok(new { message = "Brand and associated collections deleted successfully" });
+        }
+        catch (Exception ex)
         {
-            _db.BrandWithCollection.Remove(brandWithCollection);
-            _db.Collection.Remove(brandWithCollection.Collection);
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
         }
-   
-        // Remove the delivery service from the database
-        _db.Brand.Remove(brandToDelete);
-        _db.SaveChanges();
-
-        return Ok(new { message = "Brand and associated collections deleted successfully" });
     }
-    catch (Exception ex)
-    {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}
 
     [HttpPost]
     public IActionResult AddCollection(Collection newCollection, int brandId)
@@ -580,55 +640,36 @@ public IActionResult DeleteBrand(int brandIdToDelete)
         return Ok(c);
     }//ef
     [HttpPost]
-public IActionResult DeleteBrandWithCollection(int brandWithCollectionId)
-{
-    try
+    public IActionResult DeleteBrandWithCollection(int brandWithCollectionId)
     {
-        // Find the delivery service entity to delete based on the ID
-        var brandWithCollectionToDelete = _db.BrandWithCollection
-            .Include(ds => ds.Collection)
-            .FirstOrDefault(x => x.BrandWithCollectionId == brandWithCollectionId);
-
-        if (brandWithCollectionToDelete == null)
+        try
         {
-            return NotFound("BrandWithCollection not found");
+            // Find the delivery service entity to delete based on the ID
+            var brandWithCollectionToDelete = _db.BrandWithCollection
+                .Include(ds => ds.Collection)
+                .FirstOrDefault(x => x.BrandWithCollectionId == brandWithCollectionId);
+
+            if (brandWithCollectionToDelete == null)
+            {
+                return NotFound("BrandWithCollection not found");
+            }
+
+            _db.Collection.Remove(brandWithCollectionToDelete.Collection);
+
+            // Remove the delivery service from the database
+            _db.BrandWithCollection.Remove(brandWithCollectionToDelete);
+            _db.SaveChanges();
+
+            return Ok(new { message = "BrandWithCollection and associated collection deleted successfully" });
         }
-
-        _db.Collection.Remove(brandWithCollectionToDelete.Collection);
-
-        // Remove the delivery service from the database
-        _db.BrandWithCollection.Remove(brandWithCollectionToDelete);
-        _db.SaveChanges();
-
-        return Ok(new { message = "BrandWithCollection and associated collection deleted successfully" });
-    }
-    catch (Exception ex)
-    {
-        // Log the exception for debugging purposes
-        Console.Error.WriteLine(ex);
-        return StatusCode(500, "Internal Server Error");
-    }
-}
-[HttpPost]
-    public async Task<IActionResult> RegisterStaff(string newEmail, string newPassword)
-    {
-        if (ModelState.IsValid)
+        catch (Exception ex)
         {
-            var user = new AppUser { UserName = newEmail, Email = newEmail };
-            var result = await _userManager.CreateAsync(user, newPassword);
-            if (result.Succeeded)
-            {
-                return Ok("Staff registered to the database!"); // Redirect to home page after successful registration
-            }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
         }
-        // If we got this far, something failed, redisplay form
-        return Ok("Something failed...");
-
     }
+
     #endregion
 
 }//ec

@@ -13,6 +13,8 @@ public class ReportController : Controller
         _logger = logger;
         _db =db;
     }
+    [HttpGet]
+    [Authorize(Roles = "admin")]
     public IActionResult Index()
     {
         return View();

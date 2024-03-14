@@ -17,6 +17,9 @@ public class TestingController : Controller
     public IActionResult Index(){
         return View();
     }
+       public IActionResult QuasarTabs(){
+        return View();
+    }
     #region ACTIONS
     
     #endregion

@@ -26,6 +26,12 @@ public class StakeholderController : Controller
     {
         return View();
     }
+    
+    public IActionResult AddStaf()
+    {
+        return View();
+    }
+    
     #endregion
 
 }//ec
