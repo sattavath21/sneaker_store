@@ -20,7 +20,8 @@
   <q-btn class="q-ma-sm q-px-lg q-py-sm" size="15px" icon="print" color="primary" @@click="printContent"></q-btn>
 
 
-
+<q-input v-model="props.row.qty" dense type="number" @@keyup.enter="updateQty(props.row)"
+  input-style="width: 50px; text-align: right;" ></q-input>   
 
 </div>
 

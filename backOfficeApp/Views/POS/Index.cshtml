@@ -1,8 +1,12 @@
+@{
+    ViewData["Title"] = "ກະຕ່າ";
+}
+
 <div id="app1">
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
-    Order Item</div>
+    ໜ້າກະຕ່າ</div>
   <q-form class=" q-pa-lg" style="background-color: #f2f2f2;">
     <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
       <div style="display: flex; flex-direction: column; width: 450px;">
@@ -40,17 +44,9 @@
         </q-dialog>
       </q-td>
       <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
-      <q-td key="qty" :props="props">
-        {{ props.row.qty }}
-
-        <q-popup-edit v-model="props.row.qty" buttons v-slot="scope">
-          <q-input v-model="scope.value" dense autofocus counter type="number" @@keyup.enter="scope.set" />
-        </q-popup-edit>
-      </q-td>
-
 
       <q-td key="productImageUrl" :props="props">
-        <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
+        <q-img :src="props.row.productImageUrl" style="cursor: pointer; width: 100px; height: 100px;" @@click="toggleImageDialog(props.row)" />
         <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
           <div style="text-align: center;">
             <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
@@ -62,7 +58,7 @@
       </q-td>
 
       <q-td key="sellingPrice" :props="props">
-        {{ props.row.sellingPrice }}
+        &#3647;{{ formatPrice(props.row.sellingPrice) }}
       </q-td>
       <q-td key="shoeSize" :props="props">
         <q-select v-model="props.row.selectedShoeSize" :options="formattedShoeSizes(props.row.shoeSizes)"
@@ -71,6 +67,13 @@
 
       </q-td>
 
+      <q-td key="qty" :props="props">
+        {{ props.row.qty }}
+
+        <q-popup-edit v-model="props.row.qty" buttons v-slot="scope">
+          <q-input v-model="scope.value" dense autofocus type="number" @@keyup.enter="scope.set" />
+        </q-popup-edit>
+      </q-td>
 
       <q-td key="conditionName" :props="props">
         <q-select v-model="props.row.selectedCondition" :options="conditionOptions" dense outlined emit-value
@@ -200,13 +203,7 @@
               sortable: true,
               label: 'No'
             },
-            {
-              name: 'qty',
-              label: 'QTY',
-              field: 'qty',
-              sortable: true,
-              align: 'center',
-            },
+           
             {
               name: 'productImageUrl',
               label: 'Product Image',
@@ -220,7 +217,7 @@
               label: 'Product Name',
               field: 'productName',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -228,7 +225,7 @@
               label: 'Selling Price',
               field: 'sellingPrice',
               sortable: true,
-              align: 'center',
+              align: 'right',
 
             },
             {
@@ -238,11 +235,17 @@
               align: 'center',
               field: 'selectedShoeSize',
               format: (value) => `${value.sizeNumber} - ${value.sizeType} - QTY: ${value.inventoryQty}`,
-            }
+            },
+ {
+              name: 'qty',
+              label: 'QTY',
+              field: 'qty',
+              sortable: true,
+              align: 'center',
+            },
 
 
-
-            ,
+            
             {
               name: 'conditionName', // Name of the column
               label: 'Condition', // Label for the column
@@ -266,6 +269,15 @@
       ,
       //methods
       methods: {
+        formatPrice(price) {
+    // Convert the price to a string
+    let formattedPrice = price.toString();
+    
+    // Use regex to add commas for every three digits
+    formattedPrice = formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    
+    return formattedPrice;
+  },
         formattedShoeSizes(shoeSizes) {
           return shoeSizes.map(size => ({
             label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,

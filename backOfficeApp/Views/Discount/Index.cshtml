@@ -1,14 +1,18 @@
+@{
+    ViewData["Title"] = "ໂປຣໂມຊັ່ນ";
+}
+
 <div id="app1">
 
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */;
             ">
-    Discount Information
+    ໜ້າຈັດການໂປຣໂມຊັ່ນ
   </div>
 
   <q-table class="bg-grey-2" title="Discount Information" :rows="discounts" :columns="discountColumns"
-    :filter="searchText">
+    :filter="searchText" table-header-style="font-size: 16px; ">
 
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Discount Information</div>
@@ -63,7 +67,7 @@
         </q-td>
 
         <q-td key="minSpend" :props="props">
-          {{ props.row.minSpend }}
+                    &#3647;{{ formatPrice(props.row.minSpend) }}
           <q-popup-edit v-model="props.row.minSpend">
             <q-input v-model="props.row.minSpend" dense autofocus counter></q-input>
             <div class="justify-end row">
@@ -75,7 +79,7 @@
         </q-td>
 
         <q-td key="maxDiscountAmount" :props="props">
-          {{ props.row.maxDiscountAmount }}
+          &#3647;{{ formatPrice(props.row.maxDiscountAmount) }}
           <q-popup-edit v-model="props.row.maxDiscountAmount">
             <q-input v-model="props.row.maxDiscountAmount" dense autofocus counter></q-input>
             <div class="justify-end row">
@@ -197,12 +201,12 @@
               name: 'description',
               label: 'Discount name',
               field: 'description',
-              align: 'center',
+              align: 'left',
               sortable: true,
             },
             {
               name: 'discountPercentage',
-              label: 'Discount %',
+              label: 'Discount (%)',
               field: 'discountPercentage',
               align: 'center',
               sortable: true,
@@ -211,14 +215,14 @@
               name: 'minSpend',
               label: 'Minimal spend',
               field: 'minSpend',
-              align: 'center',
+              align: 'right',
               sortable: true,
             },
             {
               name: 'maxDiscountAmount',
               label: 'Maximum discount',
               field: 'maxDiscountAmount',
-              align: 'center',
+              align: 'right',
               sortable: true,
             },
             {
@@ -230,23 +234,23 @@
             },
             {
               name: 'duration',
-              label: 'Discount duration (Days)',
+              label: 'Discount duration (days)',
               field: 'duration',
-              align: 'center',
+              align: 'right',
               sortable: true,
             },
             {
               name: 'endDate',
               label: 'End Date',
               field: 'endDate',
-              align: 'center',
+              align: 'left',
               sortable: true,
             },
             {
               name: 'amount',
-              label: 'Discount amount',
+              label: 'Discount amount (unit)',
               field: 'amount',
-              align: 'center',
+              align: 'right',
               sortable: true,
             },
 
@@ -263,6 +267,15 @@
       ,
       //methods
       methods: {
+        formatPrice(price) {
+          // Convert the price to a string
+          let formattedPrice = price.toString();
+
+          // Use regex to add commas for every three digits
+          formattedPrice = formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+          return formattedPrice;
+        },
         async updateShippingMethod(item){
           item.shippingMethod.shippingMethodId = item.shippingMethodId;
           if (item.shippingMethodId == 1){
@@ -341,13 +354,13 @@
             // Refresh the page
             window.location.reload();
           } catch (error) {
-            console.error('Error deleting delivery branch:', error);
+            console.error('Error deleting discount:', error);
 
             // Notify the user about the error
             this.$q.notify({
               type: 'negative',
               color: 'red-8',
-              message: 'Error deleting delivery branch'
+              message: 'Error deleting discount'
             });
           }
         },

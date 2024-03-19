@@ -1,15 +1,17 @@
+@{
+    ViewData["Title"] = "ບໍລິສັດຂົນສົ່ງ";
+}
+
 <div id="app1">
-
-
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */;
             ">
-    Delivery Information
+    ໜ້າຈັດການບໍລິສັດຂົນສົ່ງ
   </div>
 
   <q-table title="Delivery Services" :rows="deliveryRows" :columns="deliveryColumns" row-key="deliveryServiceId"
-    separator="none" @* v-model:selected="selected" selection="multiple" *@>
+    >
 
     <template #body="props">
       <q-tr :props="props">
@@ -20,9 +22,8 @@
           </q-btn>
         </q-td>
 
-        <q-td key="deliveryServiceId" :props="props">
-          {{ props.row.deliveryServiceId }}
-        </q-td>
+        <q-td key="deliveryIndex" :props="props">{{ deliveryRows.indexOf(props.row) + 1 }}</q-td>
+
 
         <q-td key="deliveryCompanyName" :props="props">
           {{ props.row.deliveryCompanyName }}
@@ -42,7 +43,7 @@
           <q-dialog v-model="deleteDeliveryDialogVisible">
             <q-card>
               <q-card-section class="row items-center">
-                <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
+                <q-avatar icon="local_shipping" color="orange" text-color="white"></q-avatar>
                 <span class="q-ml-sm">Are you sure you want to delete this delivery service?</span>
               </q-card-section>
 
@@ -72,9 +73,7 @@
                 
 <q-td key="branchIndex" :props="props">{{ props.rowIndex + 1 }}</q-td>
 
-                <q-td key="branchId" :props="props">
-                  {{ props.row.branch.branchId }}
-                </q-td>
+      
                 <q-td key="branchName" :props="props">
                   {{ props.row.branch.branchName }}
                   <q-popup-edit v-model="props.row.branch.branchName">
@@ -113,7 +112,7 @@
           </q-table>
 
           <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
-  label="Add new branch" size="md" @@click="openAddBranchDialog(props.row.deliveryServiceId)">
+  :label="'Add new ' + props.row.deliveryCompanyName + ' branch'" size="md" @@click="openAddBranchDialog(props.row.deliveryServiceId)">
 </q-btn>
 
           @* Dialog when add branch *@
@@ -203,17 +202,17 @@
           
 
             {
-              name: 'deliveryServiceId',
-              field: 'deliveryServiceId',
+              name: 'deliveryIndex',
+              field: 'deliveryIndex',
               align: 'center',
               sortable: true,
-              label: 'ID'
+              label: 'Delivery No'
             },
             {
               name: 'deliveryCompanyName',
               label: 'Delivery name',
               field: 'deliveryCompanyName',
-              align: 'center',
+              align: 'left',
               sortable: true,
             },
 
@@ -235,17 +234,10 @@
               label: 'Branch No'
             },
             {
-              name: 'branchId',
-              field: 'branch.branchId',
-              align: 'center',
-              sortable: true,
-              label: 'Branch ID'
-            },
-            {
               name: 'branchName',
               label: 'Branch name',
               field: 'branch.branchName',
-              align: 'center',
+              align: 'left',
               sortable: true,
             },
                {
@@ -388,7 +380,7 @@
         ,
 
         
-        async deleteDeliveryService(deliveryServiceIdToDelete) {
+        async deleteDeliveryService() {
     try {
         const response = await axios.post(`/myapi/DeleteDeliveryService?deliveryServiceIdToDelete=${this.deliveryServiceIdToDelete}`);
           

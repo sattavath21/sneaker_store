@@ -1,3 +1,6 @@
+@{
+    ViewData["Title"] = "ເພີ່ມສິນຄ້າ";
+}
 <div id="app1">
     <div class="text-h4 text-weight-bold text-white bg-grey-9 q-pa-lg">Product Information</div>
     <q-card class="my-card bg-grey-2">
@@ -36,7 +39,7 @@
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 400px;">
+        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 400px;" label="Release Date">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">

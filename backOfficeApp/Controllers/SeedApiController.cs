@@ -290,7 +290,20 @@ public class SeedApiController : ControllerBase
             Description = "Lunar New Year Discount"
         };
 
-        List<Discount> discountList = new List<Discount> { discount1, discount2, discount3, discount4, discount5 };
+               Discount discount6 = new Discount
+        {
+            DiscountId = 6,
+            MinSpend = 0,
+            DiscountPercentage = 0,
+            MaxDiscountAmount = 0,
+            Start = startDate.AddDays(random.Next((endDate - startDate).Days)),
+            Duration = 0,
+            Amount = 0,
+            ShippingMethod = inStoreMethod,
+            Description = "-"
+        };
+
+        List<Discount> discountList = new List<Discount> { discount1, discount2, discount3, discount4, discount5, discount6 };
 
         // _db.Discount.AddRange(discount1, discount2, discount3, discount4, discount5);
 

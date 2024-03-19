@@ -1,9 +1,12 @@
+@{
+    ViewData["Title"] = "ເພິ່ມລູກຄ້າ";
+}
 
 <div id="app1">
-  <div class="text-h4 text-weight-bold text-white bg-orange-10 q-pa-lg">Customer Information</div>
+  <div class="text-h4 text-weight-bold text-white bg-grey-9 q-pa-lg">Add New Customer</div>
   <q-card class="my-card bg-grey-2">
     <q-card-section class="bg-cyan text-white">
-      <div class="text-h6">Add New Customer</div>
+      <div class="text-h6">Customer Information</div>
     </q-card-section>
     <div class="q-pa-md"></div>
     <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerFirstname" label="First Name"
@@ -22,7 +25,7 @@
       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
         <q-date v-model="customer.customerBirthday">
           <div class="row items-center justify-end">
-            <q-btn label="Close" color="primary" flat />
+            <q-btn v-close-popup label="Close" color="primary" flat></q-btn>
           </div>
         </q-date>
       </q-popup-proxy>
@@ -32,7 +35,7 @@
     
     <q-input class="q-px-sm q-mb-sm" filled v-model="customer.email" label="Email"
       lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerPhoneNumber" label="Customer Phone Number"
+    <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerPhoneNumber" label="Customer Phone Number" mask="### #### ####"
       lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
     <q-input class="q-px-sm q-mb-sm" filled v-model="customer.customerSocialLink" label="Customer Social URL"
       lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>

@@ -57,36 +57,40 @@ public class ApiController : ControllerBase
         return Ok(ProductsList);
     }
 
-    [HttpPost]
-    public IActionResult DeleteProduct(Product p)
+ [HttpPost]
+public IActionResult DeleteProduct(int productIdToDelete)
+{
+    try
     {
-        try
+        // Find the product entity to delete based on the ID
+        var productToDelete = _db.Product
+            .Include(p => p.ProductWithSizes) // Include related ProductWithSize entities
+            .FirstOrDefault(x => x.ProductId == productIdToDelete);
+
+        if (productToDelete == null)
         {
-            var productToDelete = _db.Product
-                .Include(db => db.ProductWithSizes)
-                    .ThenInclude(pws => pws.ShoeSize) // Include ShoeSize for cascading delete
-                .Include(db => db.Collection)
-                .Include(db => db.Brand)
-                .FirstOrDefault(x => x.ProductId == p.ProductId);
-
-            if (productToDelete == null)
-            {
-                return NotFound("Product not found");
-            }
-
-            // Remove the product from the database
-            _db.Product.Remove(productToDelete);
-            _db.SaveChanges();
-
-            return Ok(new { message = "Product deleted successfully" });
+            return NotFound("Product not found");
         }
-        catch (Exception ex)
+
+        // Loop through each associated ProductWithSize entry and remove them
+        foreach (var productWithSize in productToDelete.ProductWithSizes)
         {
-            // Log the exception for debugging purposes
-            Console.Error.WriteLine(ex);
-            return StatusCode(500, "Internal Server Error");
+            _db.ProductWithSize.Remove(productWithSize);
         }
+
+        // Remove the product from the database
+        _db.Product.Remove(productToDelete);
+        _db.SaveChanges();
+
+        return Ok(new { message = "Product and associated ProductWithSize entries deleted successfully" });
     }
+    catch (Exception ex)
+    {
+        // Log the exception for debugging purposes
+        Console.Error.WriteLine(ex);
+        return StatusCode(500, "Internal Server Error");
+    }
+}
 
     [HttpPost]
     public IActionResult EditProduct(Product p)
@@ -263,21 +267,45 @@ public class ApiController : ControllerBase
         return Ok(statuses);
     }
 
-    [HttpPost]
+   [HttpPost]
     public IActionResult AddSale(Bill bill)
     {
+        try
+        {
+            bill.OrderDate = DateTime.Now;
 
-        bill.OrderDate = DateTime.Now;
+            // Save the bill to the database
+            _db.Bill.Add(bill);
+            _db.SaveChanges();
 
+            // Update inventory quantities
+            foreach (var item in bill.BillItems)
+            {
+                // Fetch the ProductWithSize entity associated with the current BillItem
+                var productWithSize = _db.ProductWithSize
+                    .Include(pws => pws.Product)
+                    .FirstOrDefault(pws => pws.ProductId == item.ProductId && pws.ShoeSizeId == item.ShoeSizeId);
 
-        // Save the bill to the database
-        _db.Bill.Add(bill);
-        _db.SaveChanges();
+                if (productWithSize != null)
+                {
+                    // Deduct itemQty from inventoryQty
+                    productWithSize.InventoryQty -= item.ItemQty;
+                    _db.SaveChanges();
+                }
+            }
 
-        // Return the newly created bill as a response
-        return Ok(bill);
+            // Return the newly created bill as a response
+            return Ok(bill);
+        }
+        catch (Exception ex)
+        {
+            // Log any errors
+            Console.WriteLine(ex.Message);
+
+            // Return an error response
+            return StatusCode(500, "An error occurred while adding sale");
+        }
     }
-
 
 
 

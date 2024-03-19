@@ -149,6 +149,34 @@ public class MyApiController : ControllerBase
         }
     }//ef
 
+   [HttpPost]
+    public IActionResult EditDepositMoney(int newDepositMoney, int billId)
+    {
+        try
+        {
+            // Retrieve the bill from the database based on the provided billId
+            var bill = _db.Bill.FirstOrDefault(b => b.BillId == billId);
+
+            if (bill == null)
+            {
+                return NotFound("Bill not found");
+            }
+
+            // Update the CustomerTransferPicPath attribute
+            bill.DepositMoney = newDepositMoney;
+            // Save the changes to the database
+            _db.SaveChanges();
+
+            // Return the updated bill
+            return Ok(bill);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }//ef
     [HttpPost]
     public IActionResult EditDelivery(DeliveryService e)
     {
@@ -505,10 +533,12 @@ public class MyApiController : ControllerBase
     }//ef
 
     [HttpPost]
-    public IActionResult DeleteStaff(Staff s)
+    public async Task<IActionResult> DeleteStaff(Staff s)
     {
         try
         {
+            var user = await _userManager.FindByEmailAsync(s.Email);
+
             var staffToDelete = _db.Staff
                 .FirstOrDefault(x => x.StaffId == s.StaffId);
 
@@ -516,12 +546,35 @@ public class MyApiController : ControllerBase
             {
                 return NotFound("Staff not found");
             }
+            _db.Staff.Remove(staffToDelete);
+             _db.SaveChanges();
+
+
+             if (user != null)
+        {
+            // Delete the user
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                // User deleted successfully
+                return Ok(new { message = "Staff deleted successfully" });
+            }
+            else
+            {
+                return Ok(new { message = "Error occured" });
+
+            }
+        }
+        else
+        {
+            // User with the specified email not found
+            return Ok(new { message = "Staff with specific email not found" });
+
+        }
+
 
             // Remove the product from the database
-            _db.Staff.Remove(staffToDelete);
-            _db.SaveChanges();
 
-            return Ok(new { message = "Staff deleted successfully" });
         }
         catch (Exception ex)
         {
@@ -661,6 +714,48 @@ public class MyApiController : ControllerBase
             _db.SaveChanges();
 
             return Ok(new { message = "BrandWithCollection and associated collection deleted successfully" });
+        }
+        catch (Exception ex)
+        {
+            // Log the exception for debugging purposes
+            Console.Error.WriteLine(ex);
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
+    [HttpGet]
+public IActionResult GetUserData()
+{
+    var isAdmin = User.IsInRole("admin");
+    var responseData = new { isAdmin };
+    return Ok(responseData);
+}
+
+    [HttpPost]
+    public IActionResult DeleteBill(int billIdToDelete)
+    {
+        try
+        {
+            // Find the delivery service entity to delete based on the ID
+            var billToDelete = _db.Bill
+                .Include(ds => ds.BillItems)
+                .FirstOrDefault(x => x.BillId == billIdToDelete);
+
+            if (billIdToDelete == null)
+            {
+                return NotFound("Bill not found");
+            }
+
+            // Remove the associated delivery branches and branches
+            foreach (var billItem in billToDelete.BillItems)
+            {
+                _db.BillItem.Remove(billItem);
+            }
+
+            // Remove the delivery service from the database
+            _db.Bill.Remove(billToDelete);
+            _db.SaveChanges();
+
+            return Ok(new { message = "Bill and associated BillItems deleted successfully" });
         }
         catch (Exception ex)
         {

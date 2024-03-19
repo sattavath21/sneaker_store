@@ -1,10 +1,15 @@
+@{
+    ViewData["Title"] = "ສະຕ໋ອກສິນຄ້າ";
+}
 <div id="app1">
 
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
-    Product Information</div>
-  <q-table class="bg-grey-2" title="Product Information" :rows="products" :columns="columns">
+    ໜ້າຈັດການສະຕ໋ອກສິນຄ້າ</div>
+  <q-table class="product-sticky-column-table"
+ title="Product Information" :rows="products" :columns="columns"
+    :visible-columns="visibleColumns">
 
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Product Details <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
@@ -16,8 +21,8 @@
             <q-icon name="search"></q-icon>
           </template>
         </q-input>
-        
-        
+
+
 
       </div>
 
@@ -101,7 +106,8 @@
         </q-td>
         <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
         <q-td key="productImage" :props="props">
-          <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
+          <q-img :src="props.row.productImageUrl" style="cursor: pointer; width: 100px; height: 100px;"
+            @@click="toggleImageDialog(props.row)" />
           <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
             <div style="text-align: center;">
               <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
@@ -120,7 +126,8 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="costPrice" :props="props">{{ props.row.costPrice}}
+        <q-td key="costPrice" :props="props">
+          &#3647;{{ formatPrice(props.row.costPrice) }}
           <q-popup-edit v-model="props.row.costPrice">
             <q-input v-model="props.row.costPrice" dense autofocus counter></q-input>
             <div class="justify-end row">
@@ -130,7 +137,11 @@
             </div>
           </q-popup-edit>
         </q-td>
-        <q-td key="sellingPrice" :props="props">{{ props.row.sellingPrice}}
+
+
+
+        <q-td key="sellingPrice" :props="props">
+          &#3647;{{ formatPrice(props.row.sellingPrice) }}
           <q-popup-edit v-model="props.row.sellingPrice">
             <q-input v-model="props.row.sellingPrice" dense autofocus counter></q-input>
             <div class="justify-end row">
@@ -155,14 +166,18 @@
           {{ props.row.totalInventoryQty }}
         </q-td>
 
-        <q-td key="collectionName" :props="props">
-          {{ props.row.collection.collectionName }}
-        
-        </q-td>
         <q-td key="brandName" :props="props">
           {{ props.row.brand ? props.row.brand.brandName : '' }}
-        
+
         </q-td>
+
+        <q-td key="collectionName" :props="props">
+          {{ props.row.collection.collectionName }}
+
+        </q-td>
+
+
+        
         <q-td key="barcode" :props="props">
           {{ props.row.barcode }}
           <q-popup-edit v-model="props.row.barcode">
@@ -226,8 +241,8 @@
         </q-td>
 
         <q-td key="deletes" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
-            size="15px"></q-btn>
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteProductDialog(props.row.productId)"
+            icon="delete_forever" size="15px"></q-btn>
           <q-dialog v-model="confirm" persistent>
             <q-card>
               <q-card-section class="row items-center">
@@ -236,9 +251,8 @@
               </q-card-section>
 
               <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct" label="Yes" v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteProductDialog"></q-btn>
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -259,199 +273,190 @@
 
 
 
-    <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+  <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */;
             margin-top: 110px;">
-        Brands Information
-    </div>
+    Brands Information
+  </div>
 
-    <q-table title="Brands" :rows="brandRows" :columns="brandColumns" row-key="brandId" separator="none" @*
-        v-model:selected="selected" selection="multiple" *@>
+  <q-table title="Brands" :rows="brandRows" :columns="brandColumns" row-key="brandId" separator="none" @*
+    v-model:selected="selected" selection="multiple" *@>
 
-        <template #body="props">
-            <q-tr :props="props">
+    <template #body="props">
+      <q-tr :props="props">
 
-                <q-td key="expand" :props="props">
-                    <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
-                        @@click="props.expand = !props.expand">
-                    </q-btn>
-                </q-td>
+        <q-td key="expand" :props="props">
+          <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
+            @@click="props.expand = !props.expand">
+          </q-btn>
+        </q-td>
 
-                <q-td key="brandId" :props="props">
-                    {{ props.row.brandId }}
-                </q-td>
+        <q-td key="brandId" :props="props">
+          {{ props.row.brandId }}
+        </q-td>
 
-                <q-td key="brandLogo" :props="props">
-                    <q-img :src="props.row.brandLogoUrl" style="cursor: pointer;" />
-                </q-td>
+<q-td key="brandLogo" :props="props">
+  <q-img :src="props.row.brandLogoUrl" style="cursor: pointer; width: 100%; height: 100%; object-fit: contain;"></q-img>
+</q-td>
 
-                <q-td key="brandName" :props="props">
-                    {{ props.row.brandName }}
-                    <q-popup-edit v-model="props.row.brandName">
-                        <q-input v-model="props.row.brandName" dense autofocus counter></q-input>
-                        <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editBrand(props.row)" icon="edit" label="edit"
-                                v-close-popup="cancelEnabled">
-                            </q-btn>
-                        </div>
-                    </q-popup-edit>
-                </q-td>
+        <q-td key="brandName" :props="props">
+          {{ props.row.brandName }}
+          <q-popup-edit v-model="props.row.brandName">
+            <q-input v-model="props.row.brandName" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editBrand(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
 
-                <q-td key="brandLogoUrl" :props="props">
-                    {{ props.row.brandLogoUrl }}
-                    <q-popup-edit v-model="props.row.brandLogoUrl">
-                        <q-input v-model="props.row.brandLogoUrl" dense autofocus counter></q-input>
-                        <div class="justify-end row">
-                            <q-btn color="blue-grey-6" @@click="editBrand(props.row)" icon="edit" label="edit"
-                                v-close-popup="cancelEnabled">
-                            </q-btn>
-                        </div>
-                    </q-popup-edit>
-                </q-td>
+        <q-td key="brandLogoUrl" :props="props">
+          {{ props.row.brandLogoUrl }}
+          <q-popup-edit v-model="props.row.brandLogoUrl">
+            <q-input v-model="props.row.brandLogoUrl" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editBrand(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
 
-                <q-td key="brandActions" :props="props">
-                    <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteBrandDialog(props.row.brandId)" icon="delete_forever"
-                        size="15px"></q-btn>
-                    <q-dialog v-model="deleteBrandDialogVisible" persistent>
-                        <q-card>
-                            <q-card-section class="row items-center">
-                                <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
-                                <span class="q-ml-sm">Are you sure you want to delete this brand?</span>
-                            </q-card-section>
+        <q-td key="brandActions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteBrandDialog(props.row.brandId)"
+            icon="delete_forever" size="15px"></q-btn>
+          <q-dialog v-model="deleteBrandDialogVisible" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="branding_watermark" color="orange" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this brand?</span>
+              </q-card-section>
 
-                            <q-card-actions align="center">
-                                <q-btn class="q-ma-sm" color="red-6" @@click="deleteBrand" label="Yes"
-                                    v-close-popup></q-btn>
-                                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteBrandDialog" />
-                            </q-card-actions>
-                        </q-card>
-                    </q-dialog>
-                </q-td>
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteBrand" label="Yes" v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteBrandDialog" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </q-td>
 
-            </q-tr>
+      </q-tr>
 
-            @* Expanded section *@
-            <q-tr :props="props" v-show="props.expand">
-                <q-td colspan="100%">
-                    <q-table :title="props.row.brandName + ' Collections'" :rows="props.row.brandWithCollections"
-                        :columns="collectionColumns" row-key="collectionId" separator="none">
-                        <!-- Define columns for phone numbers -->
-                        <!-- Dont forget template -->
-                        <!-- props become the phoneNumbers -->
-                        <template #body="props">
+      @* Expanded section *@
+      <q-tr :props="props" v-show="props.expand">
+        <q-td colspan="100%">
+          <q-table :title="props.row.brandName + ' Collections'" :rows="props.row.brandWithCollections"
+            :columns="collectionColumns" row-key="collectionId" separator="none">
+            <!-- Define columns for phone numbers -->
+            <!-- Dont forget template -->
+            <!-- props become the phoneNumbers -->
+            <template #body="props">
 
-                            <!-- NEW props -->
-                            <q-tr :props="props">
+              <!-- NEW props -->
+              <q-tr :props="props">
 
-                                <q-td key="collectionIndex" :props="props">{{ props.rowIndex + 1 }}</q-td>
-                                <q-td key="collectionId" :props="props">
-                                    {{ props.row.collection.collectionId }}
-                                </q-td>
-                                <q-td key="collectionName" :props="props">
-                                    {{ props.row.collection.collectionName }}
-                                    <q-popup-edit v-model="props.row.collection.collectionName">
-                                        <q-input v-model="props.row.collection.collectionName" dense autofocus
-                                            counter></q-input>
-                                        <div class="justify-end row">
-                                            <q-btn color="blue-grey-6" @@click="editCollection(props.row.collection)"
-                                                icon="edit" label="edit" v-close-popup="cancelEnabled">
-                                            </q-btn>
-                                        </div>
-                                    </q-popup-edit>
+                <q-td key="collectionIndex" :props="props">{{ props.rowIndex + 1 }}</q-td>
 
-                                </q-td>
-
-                                <q-td key="collectionActions" :props="props">
-                                    <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteCollectionDialog(props.row.brandWithCollectionId)"
-                                        icon="delete_forever" size="15px"></q-btn>
-                                    <q-dialog v-model="deleteCollectionDialogVisible" persistent>
-                                        <q-card>
-                                            <q-card-section class="row items-center">
-                                                <q-avatar icon="person_remove" color="orange"
-                                                    text-color="white"></q-avatar>
-                                                <span class="q-ml-sm">Are you sure you want to delete this
-                                                    collection?</span>
-                                            </q-card-section>
-
-                                            <q-card-actions align="center">
-                                                <q-btn class="q-ma-sm" color="red-6"
-                                                    @@click="deleteCollection" label="Yes"
-                                                    v-close-popup></q-btn>
-                                                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteCollectionDialog"  />
-                                            </q-card-actions>
-                                        </q-card>
-                                    </q-dialog>
-                                </q-td>
-
-                            </q-tr>
-                        </template>
-
-                    </q-table>
-
-                    <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8"
-                        icon="add_box" label="Add new collection" size="md"
-                        @@click="openCollectionDialog(props.row.brandId)">
-                    </q-btn>
-
-                    @* Dialog when add collection *@
-                    <q-dialog v-model="collectionDialogVisible" persistent>
-                        <q-card>
-                            <q-card-section class="row items-center">
-                                <span class="q-ml-sm">Enter collection name:</span>
-                            </q-card-section>
-
-                            <q-card-section>
-                                <q-input filled v-model="newCollection.collectionName" label="Collection Name"
-                                    lazy-rules
-                                    :rules="[ val => val && val.length > 0 || 'Please enter collection name']">
-                                </q-input>
-                            </q-card-section>
-
-
-                            <q-card-actions align="center">
-                                <q-btn class="q-ma-sm" color="primary" @@click="addCollection(props.row.brandId)"
-                                    label="Add"></q-btn>
-                                <q-btn class="q-ma-sm" label="Cancel" color="grey"
-                                    @@click="closeCollectionDialog"></q-btn>
-                            </q-card-actions>
-                        </q-card>
-                    </q-dialog>
+                <q-td key="collectionName" :props="props">
+                  {{ props.row.collection.collectionName }}
+                  <q-popup-edit v-model="props.row.collection.collectionName">
+                    <q-input v-model="props.row.collection.collectionName" dense autofocus counter></q-input>
+                    <div class="justify-end row">
+                      <q-btn color="blue-grey-6" @@click="editCollection(props.row.collection)" icon="edit" label="edit"
+                        v-close-popup="cancelEnabled">
+                      </q-btn>
+                    </div>
+                  </q-popup-edit>
 
                 </q-td>
-            </q-tr>
 
+                <q-td key="collectionActions" :props="props">
+                  <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                    @@click="openDeleteCollectionDialog(props.row.brandWithCollectionId)" icon="delete_forever"
+                    size="15px"></q-btn>
+                  <q-dialog v-model="deleteCollectionDialogVisible" persistent>
+                    <q-card>
+                      <q-card-section class="row items-center">
+                        <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
+                        <span class="q-ml-sm">Are you sure you want to delete this
+                          collection?</span>
+                      </q-card-section>
 
+                      <q-card-actions align="center">
+                        <q-btn class="q-ma-sm" color="red-6" @@click="deleteCollection" label="Yes"
+                          v-close-popup></q-btn>
+                        <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteCollectionDialog" />
+                      </q-card-actions>
+                    </q-card>
+                  </q-dialog>
+                </q-td>
 
-        </template>
+              </q-tr>
+            </template>
 
-    </q-table>
+          </q-table>
 
-    <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
-        label="Add new brand" size="md" @@click="openDialog">
-    </q-btn>
+          <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
+            label="Add new collection" size="md" @@click="openCollectionDialog(props.row.brandId)">
+          </q-btn>
 
-    @* Dialog when add Delivery *@
+          @* Dialog when add collection *@
+          <q-dialog v-model="collectionDialogVisible" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <span class="q-ml-sm">Enter collection name:</span>
+              </q-card-section>
 
-    <q-dialog v-model="brandDialogVisible" persistent>
-        <q-card>
-            <q-card-section class="row items-center">
-                <span class="q-ml-sm">Enter Brand Name:</span>
-            </q-card-section>
-
-            <q-card-section>
-                <q-input filled v-model="newBrand.brandName" label="Brand Name" lazy-rules
-                    :rules="[ val => val && val.length > 0 || 'Please enter brand name']">
+              <q-card-section>
+                <q-input filled v-model="newCollection.collectionName" label="Collection Name" lazy-rules
+                  :rules="[ val => val && val.length > 0 || 'Please enter collection name']">
                 </q-input>
-            </q-card-section>
+              </q-card-section>
 
-            <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="primary" @@click="addBrand" label="Add"></q-btn>
-                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeDialog"></q-btn>
-            </q-card-actions>
-        </q-card>
-    </q-dialog>
-    
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="primary" @@click="addCollection(props.row.brandId)" label="Add"></q-btn>
+                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeCollectionDialog"></q-btn>
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+
+        </q-td>
+      </q-tr>
+
+
+
+    </template>
+
+  </q-table>
+
+  <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
+    label="Add new brand" size="md" @@click="openDialog">
+  </q-btn>
+
+  @* Dialog when add Delivery *@
+
+  <q-dialog v-model="brandDialogVisible" persistent>
+    <q-card>
+      <q-card-section class="row items-center">
+        <span class="q-ml-sm">Enter Brand Name:</span>
+      </q-card-section>
+
+      <q-card-section>
+        <q-input filled v-model="newBrand.brandName" label="Brand Name" lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter brand name']">
+        </q-input>
+      </q-card-section>
+
+      <q-card-actions align="center">
+        <q-btn class="q-ma-sm" color="primary" @@click="addBrand" label="Add"></q-btn>
+        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeDialog"></q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
 
 </div>
 
@@ -460,7 +465,10 @@
     var option = {
       //data
       data() {
+
         return {
+          isAdmin: false, // Set to true if the user is an admin
+
           showProductDetails: false,
           selectedProduct: null,
           selectedSize: null,
@@ -499,7 +507,7 @@
               label: 'Product Name',
               field: 'productName',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -507,7 +515,7 @@
               label: 'Cost Price',
               field: 'costPrice',
               sortable: true,
-              align: 'center',
+              align: 'right',
 
             },
             {
@@ -515,15 +523,15 @@
               label: 'Selling Price',
               field: 'sellingPrice',
               sortable: true,
-              align: 'center',
+              align: 'right',
 
             },
             {
               name: 'amountsold',
-              label: 'Amount Sold',
+              label: 'Amount Sold (pair)',
               field: 'amountsold',
               sortable: true,
-              align: 'center',
+              align: 'right',
 
             },
             {
@@ -531,31 +539,31 @@
               label: 'Total Qty',
               field: 'totalInventoryQty', // Update the field to TotalInventoryQty
               sortable: true,
-              align: 'center',
+              align: 'right',
             },
+        {
+              name: 'brandName',
+              label: 'Brand Name',
+              field: 'brand.brandName',
+              sortable: true,
+              align: 'left',
 
+            },
             {
               name: 'collectionName',
               label: 'Product Collection',
               field: 'collection.collectionName',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
-            {
-              name: 'brandName',
-              label: 'Brand Name',
-              field: 'brand.brandName',
-              sortable: true,
-              align: 'center',
-
-            },
+    
             {
               name: 'barcode',
               label: 'Barcode',
               field: 'barcode',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -563,7 +571,7 @@
               label: 'SKU',
               field: 'sku',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -571,7 +579,7 @@
               label: 'Colorway',
               field: 'colorway',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -579,7 +587,7 @@
               label: 'Release Date',
               field: 'releasedate',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -587,7 +595,7 @@
               label: 'Product URL',
               field: 'productImageUrl',
               sortable: true,
-              align: 'center',
+              align: 'left',
 
             },
             {
@@ -597,110 +605,140 @@
               align: 'center'
             },
           ],
+          visibleColumns: [
+            'details',
+            'index',
+            'productImage',
+            'productName',
+            'costPrice',
+            'sellingPrice',
+            'amountsold',
+            'inventoryQty',
+            'collectionName',
+            'brandName',
+            'barcode',
+            'sku',
+            'colorway',
+            'releasedate',
+            'productImageUrl',
+            'deletes'
 
+            // Add other column keys here
+          ],
           brandDialogVisible: false,
-                    collectionDialogVisible: false,
-            newBrand: {
-                brandName: ""
+          collectionDialogVisible: false,
+          newBrand: {
+            brandName: ""
+          },
+          newCollection: {
+            collectionName: ""
+          },
+
+          brandRows: [],
+          brandColumns: [
+            {
+              name: 'expand',
+              label: 'Expand',
+              field: 'expand',
+              align: 'center'
+
             },
-                    newCollection: {
-                        collectionName: ""
-                    },
 
-                    brandRows: [],
-                    brandColumns: [
-                        {
-                            name: 'expand',
-                            label: 'Expand',
-                            field: 'expand',
-                            align: 'center'
+            {
+              name: 'brandId',
+              field: 'brandId',
+              align: 'center',
+              sortable: true,
+              label: 'ID'
+            },
+            {
+              name: 'brandLogo',
+              label: 'Brand logo',
+              field: 'brandLogoUrl',
+              sortable: true,
+              align: 'center',
+            },
+            {
+              name: 'brandName',
+              label: 'Brand name',
+              field: 'brandName',
+              align: 'center',
+              sortable: true,
+            },
+            {
+              name: 'brandLogoUrl',
+              label: 'Brand url',
+              field: 'brandLogoUrl',
+              align: 'left'
+            },
+            {
+              name: 'brandActions',
+              label: 'Actions',
+              field: 'brandActions',
+              align: 'center'
+            },
 
-                        },
+          ],
 
-                        {
-                            name: 'brandId',
-                            field: 'brandId',
-                            align: 'center',
-                            sortable: true,
-                            label: 'ID'
-                        },
-                        {
-                            name: 'brandLogo',
-                            label: 'Brand logo',
-                            field: 'brandLogoUrl',
-                            sortable: true,
-                            align: 'center',
-                        },
-                        {
-                            name: 'brandName',
-                            label: 'Brand name',
-                            field: 'brandName',
-                            align: 'center',
-                            sortable: true,
-                        },
-                        {
-                            name: 'brandLogoUrl',
-                            label: 'Brand url',
-                            field: 'brandLogoUrl',
-                            align: 'center'
-                        },
-                        {
-                            name: 'brandActions',
-                            label: 'Actions',
-                            field: 'brandActions',
-                            align: 'center'
-                        },
+          collectionColumns: [
+            {
+              name: 'collectionIndex',
+              field: 'collectionIndex',
+              align: 'center',
+              sortable: true,
+              label: 'Collection No'
+            },
 
-                    ],
+            {
+              name: 'collectionName',
+              label: 'Collection name',
+              field: 'collection.collectionName',
+              align: 'center',
+              sortable: true,
+            },
+            {
+              name: 'collectionActions',
+              label: 'Actions',
+              field: 'collectionActions',
+              align: 'center'
+            }
 
-                    collectionColumns: [
-                        {
-                            name: 'collectionIndex',
-                            field: 'collectionIndex',
-                            align: 'center',
-                            sortable: true,
-                            label: 'Collection No'
-                        },
-                        {
-                            name: 'collectionId',
-                            field: 'collection.collectionId',
-                            align: 'center',
-                            sortable: true,
-                            label: 'Collection ID'
-                        },
-                        {
-                            name: 'collectionName',
-                            label: 'Collection name',
-                            field: 'collection.collectionName',
-                            align: 'center',
-                            sortable: true,
-                        },
-                        {
-                            name: 'collectionActions',
-                            label: 'Actions',
-                            field: 'collectionActions',
-                            align: 'center'
-                        }
+          ],
 
-                    ],
-
-                     deleteBrandDialogVisible: false,
+          deleteBrandDialogVisible: false,
           deleteCollectionDialogVisible: false,
-          brandIdToDelete:0,
-          brandCollectionIdToDelete: 0
-          
+          brandIdToDelete: 0,
+          brandCollectionIdToDelete: 0,
+          productIdToDelete: null
         };
       }
       ,
       //methods
       methods: {
+        formatPrice(price) {
+          // Convert the price to a string
+          let formattedPrice = price.toString();
+
+          // Use regex to add commas for every three digits
+          formattedPrice = formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+          return formattedPrice;
+        },
+        openDeleteProductDialog(productId) {
+          this.confirm = true;
+          this.productIdToDelete = productId; // Store the deliveryServiceId for later use
+        },
+        closeDeleteProductDialog() {
+          this.confirm = false;
+        },
+
         refreshDialog() {
-        this.showProductDetails = false;
-        this.$nextTick(() => {
+          this.showProductDetails = false;
+          this.$nextTick(() => {
             this.showProductDetails = true;
             this.showDetails(this.selectedProduct); // Call showDetails again to update dialog data
-        });
-    },
+          });
+        },
         async updateInventoryQty(product, newValue) {
           try {
             // Find the productWithSize object corresponding to the selected size number
@@ -764,11 +802,29 @@
 
             if (response.status >= 200 && response.status < 300) {
               console.log("Request successful");
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Product Modified!'
+              });
             } else {
               console.error("Unexpected response status:", response.status);
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Unexpected response status.'
+              });
             }
           } catch (error) {
             console.error("Error during request:", error);
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error during request'
+            });
 
             if (error.response?.data?.errors) {
               console.error("Validation errors:", error.response.data.errors);
@@ -777,35 +833,18 @@
         }
         , //ef
 
-        async deleteProduct(item) {
-          console.log(item);
-          var url = "/api/DeleteProduct";
-          var del = item;
-
+        async deleteProduct() {
           try {
-            // Send the delete request
-            await axios.post(url, del);
+            const response = await axios.post(`/api/DeleteProduct?productIdToDelete=${this.productIdToDelete}`);
 
-            // Use the correct property name in the filter callback
-            this.products = this.products.filter(x => x.productId !== item.productId);
-
-            // Set a flag in local storage indicating successful delete
-            localStorage.setItem('deleteSuccess', 'true');
-
-            // Refresh the page
+            this.productIdToDelete = 0;
             window.location.reload();
+            console.log("Delete response:", response.data);
           } catch (error) {
-            console.error('Error deleting delivery collection:', error);
-
-            // Notify the user about the error
-            this.$q.notify({
-              type: 'negative',
-              color: 'red-8',
-              message: 'Error deleting delivery collection'
-            });
+            console.error("Error deleting delivery service:", error);
           }
-        }
-        , //ef
+
+        },
         searchProduct() {
           if (this.searchText !== "") {
             this.products = this.originalProducts.filter(product => {
@@ -861,193 +900,193 @@
         },
 
         openDialog() {
-                    this.brandDialogVisible = true;
-                }, //ef
-                closeDialog() {
-                    this.brandDialogVisible = false;
-                }, //ef
-                openCollectionDialog(brandId) {
-                    this.collectionDialogVisible = true;
-                    this.newCollectionBrandId = brandId; // Store the brandId for later use
-                }, //ef
+          this.brandDialogVisible = true;
+        }, //ef
+        closeDialog() {
+          this.brandDialogVisible = false;
+        }, //ef
+        openCollectionDialog(brandId) {
+          this.collectionDialogVisible = true;
+          this.newCollectionBrandId = brandId; // Store the brandId for later use
+        }, //ef
 
-                closeCollectionDialog() {
-                    this.collectionDialogVisible = false;
-                }, //ef
+        closeCollectionDialog() {
+          this.collectionDialogVisible = false;
+        }, //ef
 
-                openDeleteBrandDialog(brandId){
+        openDeleteBrandDialog(brandId) {
           this.deleteBrandDialogVisible = true;
           this.brandIdToDelete = brandId;
-          
+
         },
-    closeDeleteBrandDialog() {
+        closeDeleteBrandDialog() {
           this.deleteBrandDialogVisible = false;
           this.brandIdToDelete = 0;
         },
 
-      openDeleteCollectionDialog(brandCollectionId) {
-        this.deleteCollectionDialogVisible = true;
-        this.brandCollectionIdToDelete = brandCollectionId;
-      },
+        openDeleteCollectionDialog(brandCollectionId) {
+          this.deleteCollectionDialogVisible = true;
+          this.brandCollectionIdToDelete = brandCollectionId;
+        },
         closeDeleteCollectioDialog() {
           this.deleteCollectionDialogVisible = false;
           this.brandCollectionIdToDelete = 0;
         },
 
-                async addBrand() {
-                    try {
-                        console.log("Brand String:", this.newBrand);
-                        // Make the myapi call
-                        var response = await axios.post("/myapi/AddBrand", this.newBrand);
+        async addBrand() {
+          try {
+            console.log("Brand String:", this.newBrand);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddBrand", this.newBrand);
 
-                        // Handle the response or perform any necessary logic
-                        if (response.status === 200) {
-                            // Additional logic after successful product addition
-                            this.$q.notify({
-                                color: 'green-4',
-                                textColor: 'white',
-                                icon: 'cloud_done',
-                                message: 'New Brand added successfully!'
-                            });
-                            this.closeDialog();
-                            this.onReset();
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful product addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Brand added successfully!'
+              });
+              this.closeDialog();
+              this.onReset();
 
-                        } else {
-                            // Log detailed error information
-                            console.error(response);
+            } else {
+              // Log detailed error information
+              console.error(response);
 
-                            // Handle the case where the myapi call was not successful
-                            this.$q.notify({
-                                color: 'red-4',
-                                textColor: 'white',
-                                icon: 'error',
-                                message: 'Error adding Brand. Please check the console for details.'
-                            });
-                        }
-                    } catch (error) {
-                        // Log detailed error information
-                        console.error(error);
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Brand. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
 
-                        // Hide loading indicator in case of an error
-                        this.$q.loading.hide();
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
 
-                        this.$q.notify({
-                            color: 'red-4',
-                            textColor: 'white',
-                            icon: 'error',
-                            message: 'Error adding Brand. Please check the console for details.'
-                        });
-                    }
-                }
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Brand. Please check the console for details.'
+            });
+          }
+        }
 
-                , //ef
+        , //ef
 
-                async editBrand(item) {
-                    try {
-                        const response = await axios.post("myapi/EditBrand", item);
-                        console.log("Request data:", item);
-                        console.log("Response data:", response.data);
+        async editBrand(item) {
+          try {
+            const response = await axios.post("myapi/EditBrand", item);
+            console.log("Request data:", item);
+            console.log("Response data:", response.data);
 
-                        if (response.status >= 200 && response.status < 300) {
-                            console.log("Request successful");
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+              window.location.reload();
+            } else {
+              console.error("Unexpected response status:", response.status);
+            }
+          } catch (error) {
+            console.error("Error during request:", error);
+
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
+            }
+          }
+        }
+        , //ef
+
+        async deleteBrand() {
+          try {
+            const response = await axios.post(`/myapi/DeleteBrand?brandIdToDelete=${this.brandIdToDelete}`);
+
+            this.brandIdToDelete = 0;
             window.location.reload();
-                        } else {
-                            console.error("Unexpected response status:", response.status);
-                        }
-                    } catch (error) {
-                        console.error("Error during request:", error);
+            console.log("Delete response:", response.data);
 
-                        if (error.response?.data?.errors) {
-                            console.error("Validation errors:", error.response.data.errors);
-                        }
-                    }
-                }
-                , //ef
+            // Handle successful deletion
+          } catch (error) {
+            console.error("Error deleting brand:", error);
+            // Handle error
+          }
+        },
+        async addCollection() {
+          try {
+            console.log("Branch String:", this.newCollection);
 
-async deleteBrand() {
-    try {
-        const response = await axios.post(`/myapi/DeleteBrand?brandIdToDelete=${this.brandIdToDelete}`);
-          
-        this.brandIdToDelete = 0;
-        window.location.reload();
-        console.log("Delete response:", response.data);
+            // Make the API call
+            var response = await axios.post(`/myapi/AddCollection?brandId=${this.newCollectionBrandId}`, this.newCollection);
 
-        // Handle successful deletion
-    } catch (error) {
-        console.error("Error deleting brand:", error);
-        // Handle error
-    }
-},
-                async addCollection() {
-                    try {
-                        console.log("Branch String:", this.newCollection);
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful product addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Collection added successfully!'
+              });
+              this.closeCollectionDialog();
+              this.onReset();
+            } else {
+              // Log detailed error information
+              console.error(response);
 
-                        // Make the API call
-                        var response = await axios.post(`/myapi/AddCollection?brandId=${this.newCollectionBrandId}`, this.newCollection);
+              // Handle the case where the API call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Collection. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
 
-                        // Handle the response or perform any necessary logic
-                        if (response.status === 200) {
-                            // Additional logic after successful product addition
-                            this.$q.notify({
-                                color: 'green-4',
-                                textColor: 'white',
-                                icon: 'cloud_done',
-                                message: 'New Collection added successfully!'
-                            });
-                            this.closeCollectionDialog();
-                            this.onReset();
-                        } else {
-                            // Log detailed error information
-                            console.error(response);
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
 
-                            // Handle the case where the API call was not successful
-                            this.$q.notify({
-                                color: 'red-4',
-                                textColor: 'white',
-                                icon: 'error',
-                                message: 'Error adding Collection. Please check the console for details.'
-                            });
-                        }
-                    } catch (error) {
-                        // Log detailed error information
-                        console.error(error);
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Collection. Please check the console for details.'
+            });
+          }
+        }, //ef
 
-                        // Hide loading indicator in case of an error
-                        this.$q.loading.hide();
+        async editCollection(item) {
+          try {
+            console.log("Request data:", item);
+            const response = await axios.post("myapi/EditCollection", item);
+            console.log("Response data:", response.data);
 
-                        this.$q.notify({
-                            color: 'red-4',
-                            textColor: 'white',
-                            icon: 'error',
-                            message: 'Error adding Collection. Please check the console for details.'
-                        });
-                    }
-                }, //ef
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+              window.location.reload();
 
-                async editCollection(item) {
-                    try {
-                        console.log("Request data:", item);
-                        const response = await axios.post("myapi/EditCollection", item);
-                        console.log("Response data:", response.data);
+            } else {
+              console.error("Unexpected response status:", response.status);
+            }
+          } catch (error) {
+            console.error("Error during request:", error);
 
-                        if (response.status >= 200 && response.status < 300) {
-                            console.log("Request successful");
-                                        window.location.reload();
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
+            }
+          }
+        }
+        , //ef
 
-                        } else {
-                            console.error("Unexpected response status:", response.status);
-                        }
-                    } catch (error) {
-                        console.error("Error during request:", error);
-
-                        if (error.response?.data?.errors) {
-                            console.error("Validation errors:", error.response.data.errors);
-                        }
-                    }
-                }
-                , //ef
-
-async deleteCollection() {
+        async deleteCollection() {
           try {
             // Send the delete request
             const reponse = await axios.post(`/myapi/DeleteBrandWithCollection?brandWithCollectionId=${this.brandCollectionIdToDelete}`);
@@ -1072,42 +1111,42 @@ async deleteCollection() {
             });
           }
         },
-  
-                async onReset() {
-                    const notif = this.$q.notify({
-                        type: 'ongoing',
-                        message: 'Resetting...'
-                    });
 
-                    try {
-                        // Reset the brandRows array to an empty array
-                        this.brandRows = [];
+        async onReset() {
+          const notif = this.$q.notify({
+            type: 'ongoing',
+            message: 'Resetting...'
+          });
 
-                        // Call the API to get delivery services data again
-                        const brand = await axios.get("/myapi/GetBrands");
-                        this.brandRows = brand.data;
+          try {
+            // Reset the brandRows array to an empty array
+            this.brandRows = [];
 
-                        // Notify the user that the reset was successful
-                        notif({
-                            type: 'positive',
-                            message: 'Reset successful',
-                            timeout: 300
-                        });
-                    } catch (error) {
-                        // Notify the user if an error occurs during the reset process
-                        notif({
-                            type: 'negative',
-                            message: 'Failed to reset. Please try again.',
-                            timeout: 300
-                        });
-                        console.error('Error resetting deliveries data:', error);
-                    }
+            // Call the API to get delivery services data again
+            const brand = await axios.get("/myapi/GetBrands");
+            this.brandRows = brand.data;
+
+            // Notify the user that the reset was successful
+            notif({
+              type: 'positive',
+              message: 'Reset successful',
+              timeout: 300
+            });
+          } catch (error) {
+            // Notify the user if an error occurs during the reset process
+            notif({
+              type: 'negative',
+              message: 'Failed to reset. Please try again.',
+              timeout: 300
+            });
+            console.error('Error resetting deliveries data:', error);
+          }
 
 
-                }
-                , 
+        }
+        ,
 
-        
+
 
 
 
@@ -1115,17 +1154,18 @@ async deleteCollection() {
       , //ef
 
 
-      
-      
+
+
 
       //computed
       computed: {
-
       }
       ,
 
       //created
       async created() {
+
+
         try {
           var response = await axios.get("/api/GetProducts");
           this.originalProducts = response.data;
@@ -1136,17 +1176,36 @@ async deleteCollection() {
         }
 
 
-          try {
-                        var brand = await axios.get("/myapi/GetBrands");
-                        this.brandRows = brand.data;
-                        console.log(brand.data);
+        try {
+          var brand = await axios.get("/myapi/GetBrands");
+          this.brandRows = brand.data;
+          console.log(brand.data);
 
-                    }
-                    catch (error) {
-                        console.log(error);
-                    }
+        }
+        catch (error) {
+          console.log(error);
+        }
 
-      
+        try {
+  const response = await axios.get("/myapi/GetUserData");
+  const userData = response.data;
+
+  // Check user role
+  if (!userData.isAdmin) {
+    const index = this.visibleColumns.indexOf('costPrice');
+    if (index !== -1) {
+      this.visibleColumns.splice(index, 1);
+    }
+  }
+
+  // Further logic based on user data if needed
+
+} catch (error) {
+  console.error(error);
+}
+
+
+
       }//ecreated
       ,
       //mounted

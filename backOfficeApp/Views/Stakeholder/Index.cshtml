@@ -1,13 +1,16 @@
-<div id="app1">
+@{
+    ViewData["Title"] = "ຜູ້ກ່ຽວຂ້ອງ";
+}
 
+<div id="app1">
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
-            border-top-left-radius: 10px; /* Adjust the radius as needed */
-            border-top-right-radius: 10px; /* Adjust the radius as needed */">
-    Customer</div>
+            border-top-left-radius: 10px; 
+            border-top-right-radius: 10px;">
+    ລູກຄ້າ</div>
 
 
   <q-table class="bg-grey-2" title="Customer Information" :rows="customers" :columns="customerColumns"
-    :filter="searchText" row-key="customerId">
+    :filter="searchText" row-key="customerId" style="padding: 14px;">
 
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Customer Information</div>
@@ -22,30 +25,13 @@
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
-        <q-td key="actions" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
-            size="15px"></q-btn>
-          <q-dialog v-model="confirm" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
-                <span class="q-ml-sm">Are you sure you want to delete this customer?</span>
-              </q-card-section>
 
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="red-6" @@click="deleteCustomer(props.row)" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-        </q-td>
 
         <q-td key="index" :props="props">{{ customers.indexOf(props.row) + 1 }}</q-td>
         <q-td key="customerFirstname" :props="props">
           {{ props.row.customerFirstname }}
           <q-popup-edit v-model="props.row.customerFirstname">
-            <q-input v-model="props.row.customerFirstname" dense autofocus counter></q-input>
+            <q-input v-model="props.row.customerFirstname" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -58,7 +44,7 @@
         <q-td key="customerLastname" :props="props">
           {{ props.row.customerLastname }}
           <q-popup-edit v-model="props.row.customerLastname">
-            <q-input v-model="props.row.customerLastname" dense autofocus counter></q-input>
+            <q-input v-model="props.row.customerLastname" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -70,7 +56,7 @@
         <q-td key="gender" :props="props">
           {{ props.row.gender }}
           <q-popup-edit v-model="props.row.gender">
-            <q-input v-model="props.row.gender" dense autofocus counter></q-input>
+            <q-input v-model="props.row.gender" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -104,7 +90,7 @@
         <q-td key="email" :props="props">
           {{ props.row.email }}
           <q-popup-edit v-model="props.row.email">
-            <q-input v-model="props.row.email" dense autofocus counter></q-input>
+            <q-input v-model="props.row.email" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -128,7 +114,7 @@
         <q-td key="customerSocialLink" :props="props">
           {{ props.row.customerSocialLink }}
           <q-popup-edit v-model="props.row.customerSocialLink">
-            <q-input v-model="props.row.customerSocialLink" dense autofocus counter></q-input>
+            <q-input v-model="props.row.customerSocialLink" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editCustomer(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -137,6 +123,24 @@
           </q-popup-edit>
         </q-td>
 
+        <q-td key="actions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+            size="15px"></q-btn>
+          <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this customer?</span>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteCustomer(props.row)" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </q-td>
 
 
       </q-tr>
@@ -156,10 +160,10 @@
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */
             margin-top: 110px;">
-    Staff</div>
+    ພະນັກງານ</div>
 
   <q-table class="bg-grey-2" title="Staff Information" :rows="staffs" :columns="staffColumns" :filter="searchText"
-    row-key="staffId">
+    row-key="staffId" style="padding: 14px;">
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Staff Information</div>
       <q-separator vertical class="q-my-sm"></q-separator>
@@ -173,29 +177,12 @@
     </template>
     <template v-slot:body="props">
       <q-tr :props="props">
-        <q-td key="staffActions" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="staffConfirm = true" icon="delete_forever"
-            size="15px"></q-btn>
-          <q-dialog v-model="staffConfirm" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-                <span class="q-ml-sm">Are you sure you want to delete this product?</span>
-              </q-card-section>
-
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-        </q-td>
+        
         <q-td key="staffIndex" :props="props">{{ staffs.indexOf(props.row) + 1 }}</q-td>
         <q-td key="staffFirstname" :props="props">
           {{ props.row.staffFirstname }}
           <q-popup-edit v-model="props.row.staffFirstname">
-            <q-input v-model="props.row.staffFirstname" dense autofocus counter></q-input>
+            <q-input v-model="props.row.staffFirstname" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editStaff(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -207,7 +194,7 @@
         <q-td key="staffLastname" :props="props">
           {{ props.row.staffLastname }}
           <q-popup-edit v-model="props.row.staffLastname">
-            <q-input v-model="props.row.staffLastname" dense autofocus counter></q-input>
+            <q-input v-model="props.row.staffLastname" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editStaff(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -240,7 +227,7 @@
         <q-td key="staffEmail" :props="props">
           {{ props.row.email }}
           <q-popup-edit v-model="props.row.email">
-            <q-input v-model="props.row.email" dense autofocus counter></q-input>
+            <q-input v-model="props.row.email" dense autofocus></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editStaff(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -252,7 +239,7 @@
         <q-td key="staffPhoneNumber" :props="props">
           {{ props.row.staffPhoneNumber }}
           <q-popup-edit v-model="props.row.staffPhoneNumber">
-            <q-input v-model="props.row.staffPhoneNumber" dense autofocus counter></q-input>
+            <q-input v-model="props.row.staffPhoneNumber" dense autofocus mask="### #### ####"></q-input>
             <div class="justify-end row">
               <q-btn color="blue-grey-6" @@click="editStaff(props.row)" icon="edit" label="edit"
                 v-close-popup="cancelEnabled">
@@ -272,7 +259,24 @@
           </q-select>
 
         </q-td>
+<q-td key="staffActions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="staffConfirm = true" icon="delete_forever"
+            size="15px"></q-btn>
+          <q-dialog v-model="staffConfirm" persistent>
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="person_remove" color="grey-9" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this staff?</span>
+              </q-card-section>
 
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteStaff(props.row)" label="Yes"
+                  v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </q-td>
 
       </q-tr>
     </template>
@@ -297,12 +301,6 @@
           ,
           customerColumns: [
             {
-              name: 'actions',
-              label: 'Actions',
-              field: 'actions',
-              align: 'center'
-            },
-            {
               name: 'index',
               field: 'index',
               align: 'left',
@@ -314,21 +312,21 @@
               label: 'First Name',
               field: 'customerFirstname',
               sortable: true,
-              align: 'center',
+              align: 'left',
             },
             {
               name: 'customerLastname',
               label: 'Last Name',
               field: 'customerLastname',
               sortable: true,
-              align: 'center',
+              align: 'left',
             },
             {
               name: 'gender',
               label: 'Gender',
               field: 'gender',
               sortable: true,
-              align: 'center',
+              align: 'left',
             },
             {
               name: 'age',
@@ -349,7 +347,7 @@
               label: 'Email',
               field: 'email',
               sortable: true,
-              align: 'center',
+              align: 'left',
             },
 
             {
@@ -366,22 +364,22 @@
               label: 'Social URL',
               field: 'customerSocialLink',
               sortable: true,
-              align: 'center',
+              align: 'left',
             },
-
-          ],
-
-          staffconfirm: false,
-          searchText: "",
-          staffs: []
-          ,
-          staffColumns: [
             {
-              name: 'staffActions',
+              name: 'actions',
               label: 'Actions',
               field: 'actions',
               align: 'center'
             },
+          ],
+
+          staffConfirm: false,
+          searchText: "",
+          staffs: []
+          ,
+          staffColumns: [
+            
             {
               name: 'staffIndex',
               field: 'index',
@@ -395,14 +393,14 @@
               field: 'staffFirstname',
               required: true,
               sortable: true,
-              align: 'center'
+              align: 'left'
             },
             {
               name: 'staffLastname',
               label: 'Last Name',
               field: 'staffLastname',
               sortable: true,
-              align: 'center'
+              align: 'left'
             },
             {
               name: 'staffBirthday',
@@ -416,7 +414,7 @@
               label: 'Email',
               field: 'email',
               sortable: true,
-              align: 'center'
+              align: 'left'
             },
             {
               name: 'staffPhoneNumber',
@@ -433,7 +431,12 @@
               align: 'center',
               sortable: true,
             },
-
+{
+              name: 'staffActions',
+              label: 'Actions',
+              field: 'actions',
+              align: 'center'
+            }
           ],
           
           staffCompletedDialog: false,
@@ -482,6 +485,35 @@
           console.log("Finished editCustomer function!");
 
         },//ef
+        async deleteCustomer(item) {
+          console.log(item);
+          var url = "/myapi/DeleteCustomer";
+          var del = item;
+
+          try {
+            // Send the delete request
+            await axios.post(url, del);
+
+            // Use the correct property name in the filter callback
+            this.customers = this.customers.filter(x => x.customerId !== item.customerId);
+
+            // Set a flag in local storage indicating successful delete
+            localStorage.setItem('deleteSuccess', 'true');
+
+            // Refresh the page
+            window.location.reload();
+          } catch (error) {
+            console.error('Error deleting customer', error);
+
+            // Notify the user about the error
+            this.$q.notify({
+              type: 'negative',
+              color: 'red-8',
+              message: 'Error deleting customer'
+            });
+          }
+        },
+
         calculateAge(birthdate) {
           if (!birthdate) return ''; // Handle cases where birthdate is not provided
 
