@@ -23,13 +23,13 @@
   <template v-slot:body="props">
     <q-tr :props="props">
       <q-td key="actions" :props="props">
-        <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="confirm = true" icon="delete_forever"
+        <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="deleteProduct(props.row.productId)" icon="cancel"
           size="15px"></q-btn>
         <q-dialog v-model="confirm" persistent>
           <q-card>
             <q-card-section class="row items-center">
               <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-              <span class="q-ml-sm">Are you sure you want to cencel this order?</span>
+              <span class="q-ml-sm">Are you sure you want to cancel this order?</span>
             </q-card-section>
 
             <q-card-actions align="center">
@@ -273,6 +273,32 @@
         label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,
         value: { productWithSizeId: size.productWithSizeId, shoeSizeId: size.shoeSizeId, inventoryQty: size.inventoryQty } // Include inventoryQty in value
     }));
+},
+
+async deleteProduct(productId) {
+  console.log(productId);
+
+  // Find the index of the item with the matching productId
+  const indexToRemove = this.orderItems.findIndex(item => item.productId === productId);
+
+  // If the item is found, remove it from the orderItems array
+  if (indexToRemove !== -1) {
+    this.orderItems.splice(indexToRemove, 1);
+    this.$q.notify({
+      type: 'negative',
+      color: "red-8",
+      message: 'Order has been deleted'
+    });
+  } else {
+    // Notify the user that the order was not found
+    this.$q.notify({
+      type: 'warning',
+      message: 'Order not found'
+    });
+  }
+
+  // Close the confirmation dialog
+  this.confirm = false;
 }
 
 
@@ -296,11 +322,12 @@
 
     // Access inventoryQty from selectedShoeSize if available
     const inventoryQty = item.selectedShoeSize ? item.selectedShoeSize.inventoryQty : null;
-
+// Convert itemQty to a number
+    const itemQty = parseInt(item.qty);
     // Deduct itemQty from inventoryQty
-    if (inventoryQty !== null && item.qty !== null) {
-      if (item.qty <= inventoryQty) {
-        item.selectedShoeSize.inventoryQty -= item.qty;
+    if (inventoryQty !== null && itemQty !== null) {
+      if (itemQty <= inventoryQty) {
+        item.selectedShoeSize.inventoryQty -= itemQty;
       } else {
         // Notify user if item quantity exceeds inventory quantity
         this.$q.notify({
@@ -323,7 +350,7 @@
     return {
       shoeSizeId: shoeSizeId,
       productConditionId: item.selectedCondition,
-      itemQty: item.qty,
+      itemQty: itemQty,
       productId: item.productId,
       productWithSizeId: productWithSizeId,
       inventoryQty: inventoryQty
@@ -339,6 +366,37 @@
   console.log("customerId:", this.selectedCustomer.value);
 
   console.log("reBillItems:", reBillItems);
+// Check if the total quantity for each product exceeds the inventory quantity
+let stopCheckout = false;
+reBillItems.forEach(item => {
+  const totalQty = reBillItems.reduce((total, currentItem) => {
+    if (currentItem.productId === item.productId) {
+      // Convert itemQty to a number before summing
+      const qty = parseInt(currentItem.itemQty);
+      return total + qty; // Sum the item qty
+    }
+    return total;
+  }, 0);
+
+  console.log(`Total quantity for product with ID ${item.productId}: ${totalQty}`);
+  console.log(`Inventory quantity for product with ID ${item.productId}: ${item.inventoryQty}`);
+
+  if (totalQty > item.inventoryQty) {
+    this.$q.notify({
+      type: 'negative',
+      color: 'yellow-8',
+      message: `Not enough inventory for product with ID ${item.productId}`
+    });
+    // Set flag to stop the checkout process
+    stopCheckout = true;
+  }
+});
+
+// Stop checkout if any product has exceeded inventory
+if (stopCheckout) {
+  console.log('Checkout stopped due to insufficient inventory.');
+  return;
+}
 
   // Create sale object
   var bill = {

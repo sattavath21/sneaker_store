@@ -8,7 +8,7 @@
 
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md">Product Details <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
-          color="grey" @@click="onReset"></q-btn></div>
+          color="grey" @@click="onResetSearch"></q-btn></div>
       <q-separator vertical class="q-my-sm"></q-separator>
       <div class="q-pl-sm">
         <q-input debounce="200" dense v-model="searchText" type="text" @@change="searchProduct">
@@ -842,7 +842,7 @@
           }
         }
         , //ef
-        onReset() {
+        onResetSearch() {
           const notif = this.$q.notify({
             type: 'ongoing',
             message: 'Loading...'

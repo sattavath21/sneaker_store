@@ -5,95 +5,92 @@ build_property.UsingMicrosoftNETSdkWeb = true
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
-build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = backOfficeApp
 build_property.RootNamespace = backOfficeApp
-build_property.ProjectDir = C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = C:\Users\USER\Documents\sneaker_store\backOfficeApp\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp
+build_property.MSBuildProjectDirectory = C:\Users\USER\Documents\sneaker_store\backOfficeApp
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Delivery/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Delivery/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/AddDis.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Discount/AddDis.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRcQWRkRGlzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Discount/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/History/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/History/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGlzdG9yeVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/POS/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/POS/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUE9TXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Product/AddPro.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Product/AddPro.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxBZGRQcm8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Product/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Product/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Report/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Report/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Security/Login.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Security/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VjdXJpdHlcTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Shared/Error.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Shared/_LoginLayout.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Shared/_LoginLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Stakeholder/AddCus.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Stakeholder/AddCus.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3Rha2Vob2xkZXJcQWRkQ3VzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Stakeholder/AddStaf.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Stakeholder/AddStaf.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3Rha2Vob2xkZXJcQWRkU3RhZi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Stakeholder/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Stakeholder/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3Rha2Vob2xkZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Testing/Index.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Testing/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVzdGluZ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Testing/QuasarTabs.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Testing/QuasarTabs.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGVzdGluZ1xRdWFzYXJUYWJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/_ViewImports.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/_ViewStart.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Shared/_Layout.cshtml]
+[C:/Users/USER/Documents/sneaker_store/backOfficeApp/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-11srdu4yl7

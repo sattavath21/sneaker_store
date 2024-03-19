@@ -36,7 +36,8 @@
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
         <q-separator vertical class="q-my-md"></q-separator>
 
-        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 400px;">
+        <q-input class="q-px-sm" filled v-model="product.releaseDate" mask="date" style="width: 400px;"
+            label="Release Date">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -51,22 +52,32 @@
         </q-input>
 
         <q-separator vertical class="q-my-md"></q-separator>
-
-        <q-input class="q-px-sm" filled v-model="product.productWithSizes[0].inventoryQty" label="Inventory Quantity"
-            hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
-        <q-separator vertical class="q-my-md"></q-separator>
         <q-select class="q-px-sm" filled v-model="selectedShoeSizeId" :options="shoeSizeOptions"
             label="Select Shoe Size" lazy-rules :rules="[ val => !!val || 'Please select a shoe size']"
-            style="width: 400px;" emit-value></q-select>
+            style="width: 400px;" emit-value map-options></q-select>
+
         <q-separator vertical class="q-my-md"></q-separator>
 
+        <q-input class="q-px-sm" filled v-model="selectedInventoryQty"
+    :label="'Inventory QTY: ' + (selectedShoeSizeId ? shoeSizeOptions.find(size => size.value === selectedShoeSizeId)?.label || 'Inventory Quantity' : 'Inventory Quantity')"
+    hint="Number only" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"
+    v-if="selectedShoeSizeId">
+</q-input>
+
+
+
+        <q-separator vertical class="q-my-md"></q-separator>
+
+
+
         <q-select class="q-px-sm" filled v-model="selectedBrandId" :options="brandOptions" label="Select brand"
-            lazy-rules :rules="[ val => !!val || 'Please select a brand']" style="width: 400px;" emit-value></q-select>
+            lazy-rules :rules="[ val => !!val || 'Please select a brand']" style="width: 400px;" emit-value
+            map-options></q-select>
         <q-separator vertical class="q-my-md"></q-separator>
 
         <q-select class="q-px-sm" filled v-model="selectedCollectionId" :options="collectionOptions"
             label="Select Collection" lazy-rules :rules="[ val => !!val || 'Please select a collection']"
-            style="width: 400px;" emit-value></q-select>
+            style="width: 400px;" emit-value map-options></q-select>
         <q-separator vertical class="q-my-md"></q-separator>
 
         <q-input class="q-px-sm" filled v-model="product.productImageUrl" label="Product Image URLs"
@@ -130,6 +141,7 @@
             //data
             data() {
                 return {
+                    selectedInventoryQty: null,
                     selectedCollectionId: null,
                     selectedBrandId: null,
                     selectedShoeSizeId: null,
@@ -146,7 +158,7 @@
                         sku: "DH6927-017",
                         colorway: "BLACK/TOUR YELLOW",
                         releaseDate: "2023/12/03",
-                        amountSold: 1494,
+                        amountSold: 0,
                         productWithSizes: [
                             {
                                 inventoryQty: 20,
@@ -210,7 +222,13 @@
                         console.log("Product Object:", this.product);
                         // Make the API call
                         this.product.releaseDate = this.formatReleaseDate(this.product.releaseDate);
-                        this.product.productWithSizes[0].shoeSizeId = this.selectedShoeSizeId;
+                        this.product.productWithSizes.forEach(productWithSize => {
+    productWithSize.shoeSizeId = this.selectedShoeSizeId;
+});
+this.product.productWithSizes.forEach(productWithSize => {
+    productWithSize.inventoryQty = this.selectedInventoryQty;
+});
+
                         this.product.brandId = this.selectedBrandId;
                         this.product.collectionId = this.selectedCollectionId;
                         console.log("brandId:", this.selectedBrandId);

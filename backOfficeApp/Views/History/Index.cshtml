@@ -549,6 +549,7 @@
             if (response.status >= 200 && response.status < 300) {
               console.log("Request successful");
               row.isHandleSelected = false;
+              window.location.reload();
             } else {
               console.error("Unexpected response status:", response.status);
             }

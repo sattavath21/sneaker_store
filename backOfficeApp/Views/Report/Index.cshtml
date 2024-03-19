@@ -66,7 +66,7 @@
                             
                         </q-card-section>
                         <div v-if="filtersApplied3" class="q-ma-sm text-center">
-                            <h5 class="text-bold text-light-blue-10">
+                            <h5 class="text-bold text-light-blue-10" v-if="sale3 && sale3.length > 0">
                                 Total product sales
 
                                 <template v-if="selectedMonth3 && selectedYear3">
@@ -76,8 +76,9 @@
                                     for this year: {{ sumTotal }} THB
                                 </template>
                             </h5>
-                            <p class="text-bold text-light-blue-10">
+                            <p class="text-bold text-light-blue-10" v-if="sale3 && sale3.length > 0">
                                 Most profitable product: {{ mostProfitableProduct3 }}<br>
+                                
                                 Max sales: {{ maxSales3 }} THB
                             </p>
                         </div>
@@ -111,7 +112,7 @@
                                 style="position: relative; height:400px; width:400px; margin: 0 auto;">
                                 <canvas id="chart1"></canvas>
                             </div>
-                            <h5 class="text-bold text-light-blue-10">
+                            <h5 class="text-bold text-light-blue-10" v-if="sale1 && sale1.length > 0">
                                 Most profitable brand: {{ mostProfitableBrand1 }}<br>
                                 Max sales: {{ maxSales1 }} THB
                             </h5>
@@ -151,7 +152,7 @@
                         </q-card-section>
                         <!-- Conditional rendering based on applyFilters2 click -->
                         <div v-if="filtersApplied2" class="q-ma-sm text-center">
-                            <h5 class="text-bold text-light-blue-10">
+                            <h5 class="text-bold text-light-blue-10" v-if="sale2 && sale2.length > 0">
                                 Quantity sales
                                 <template v-if="selectedMonth2 && selectedYear2">
                                     for this month: {{ sumQty }}
@@ -191,6 +192,11 @@
                                 style="position: relative; height:400px; width:400px; margin: 0 auto;">
                                 <canvas id="chart4"></canvas>
                             </div>
+                            <h5 class="text-bold text-light-blue-10" v-if="sale4 && sale4.length > 0">
+                                Most purchased customer: {{ mostPurchasingCustomer4 }}<br>
+                                Max sales: {{ maxSales4 }} THB<br>
+                                {{mostPurchasedGender4}}
+                            </h5>
                         </q-card-section>
                         <q-card-actions align="right">
                             <q-btn label="export" @@click="export4" color="primary" />
@@ -210,6 +216,11 @@
             //data
             data() {
                 return {
+                    mostPurchasedGender4: '',
+                    maxSales4: 0,
+    mostPurchasingCustomer4: '',
+                    mostProfitableSizeType3: '',
+                    mostProfitableSizeNumber3: 0,
                     mostProfitableProduct3: '',
                     maxSales3: 0,
                     mostProfitableBrand1: '',
@@ -373,48 +384,88 @@
         // Access most profitable product and max sales from the response
         var mostProfitableProduct = data.mostProfitableProduct;
         var maxSales = data.maxSales;
-
+        var mostProfitableSizeType = data.mostProfitableSizeType;
+        var mostProfitableSizeNumber = data.mostProfitableSizeNumber;
         // Update Vue data properties with the most profitable product and max sales
         this.mostProfitableProduct3 = mostProfitableProduct;
         this.maxSales3 = maxSales;
+        this.mostProfitableSizeType3 = mostProfitableSizeType;
+        this.mostProfitableSizeNumber3 = mostProfitableSizeNumber;
     } else {
         console.error('Data received from the API does not contain the expected properties.');
     }
 }
 ,
                 // Method to fetch data for chart 4
-                async fetchChartData4() {
-                    // Check if chart1 already exists
-                    if (this.chart4) {
-                        // Destroy the existing chart
-                        this.chart4.destroy();
-                    }
-                    var res4 = await axios.get(`/api/Report4?month=${this.selectedMonth4}&year=${this.selectedYear4}`);
-                    data = res4.data;
-                    this.sale4 = data;
-                    // Parse and set data for chart 4
-                    var labels = data.map(x => {
-                        return x.name;
-                    });
-                    var values = data.map(x => {
-                        return x.sale;
-                    });
-                    console.log('Report4 labels', labels);
-                    console.log('Report4 values', values);
-                    var set4 = {
-                        labels: labels,
-                        datasets: [{
-                            label: '฿',
-                            data: values,
-                            borderWidth: 1
-                        }]
-                    };
-                    this.chart4 = new Chart('chart4', {
-                        type: 'pie',
-                        data: set4,
-                        options: this.options
-                    });
-                },
+               async fetchChartData4() {
+    // Check if chart4 already exists
+    if (this.chart4) {
+        // Destroy the existing chart
+        this.chart4.destroy();
+    }
+    
+    // Fetch data for chart 4
+    var res4 = await axios.get(`/api/Report4?month=${this.selectedMonth4}&year=${this.selectedYear4}`);
+    var data = res4.data.sales;
+    console.log("data from Report4", data);
+    this.sale4 = data;
+    
+    // Get the most purchasing gender object
+    var mostPurchasedGenderObject = res4.data.mostPurchasedGender;
+
+    // Check if mostPurchasedGenderObject exists
+    if (mostPurchasedGenderObject) {
+        // Extract the gender and totalSales from the object
+        var mostPurchasedGender = mostPurchasedGenderObject.gender;
+        var totalSales = mostPurchasedGenderObject.totalSales;
+
+        // Construct the string with both gender and total sales
+        var displayString = `Mostly ${mostPurchasedGender} (Total Sales: ${totalSales})`;
+
+        // Update mostPurchasedGender4 with the constructed display string
+        this.mostPurchasedGender4 = displayString;
+
+        // You can use mostPurchasedGender4 here as needed
+        console.log("Most purchasing gender:", mostPurchasedGender);
+        console.log("Total sales:", totalSales);
+    } else {
+        console.log("Most purchasing gender not available.");
+        // Set a default value or handle the absence of data as needed
+    }
+
+    // Parse and set data for chart 4
+    var labels = data.map(x => x.name);
+    var values = data.map(x => x.sale);
+    console.log('Report4 labels', labels);
+    console.log('Report4 values', values);
+    var set4 = {
+        labels: labels,
+        datasets: [{
+            label: '฿',
+            data: values,
+            borderWidth: 1
+        }]
+    };
+
+    // Create new chart instance
+    this.chart4 = new Chart('chart4', {
+        type: 'pie',
+        data: set4,
+        options: this.options
+    });
+
+    // Find the most purchasing customer
+    data.forEach(item => {
+        if (item.sale > this.maxSales4) {
+            this.maxSales4 = item.sale;
+            this.mostPurchasingCustomer4 = item.name;
+        }
+    });
+
+    console.log("Most purchasing customer:", this.mostPurchasingCustomer4);
+}
+
+,
                 async fetchChartData5() {
                     // Check if chart5 already exists
                     if (this.chart5) {

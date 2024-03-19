@@ -98,29 +98,57 @@ public class ApiController : ControllerBase
     }//ef
 
     [HttpPost]
-    public IActionResult AddProduct(Product product)
+public IActionResult AddProduct(Product product)
+{
+    // Add validation logic if needed
+    // if (product == null)
+    // {
+    //     return BadRequest("Invalid product data");
+    // }
+
+    try
     {
-        // Add validation logic if needed
-        // if (product == null)
-        // {
-        //     return BadRequest("Invalid product data");
-        // }
-
-        try
+        // Generate productWithSizes for all shoe sizes
+        List<ProductWithSize> productWithSizes = new List<ProductWithSize>();
+        for (int i = 1; i <= 35; i++)
         {
-            // Save the product information to the database
-            _db.Product.Add(product);
-            _db.SaveChanges();
+            int inventoryQty = (i == product.ProductWithSizes[0].ShoeSizeId) ?
+                product.ProductWithSizes[0].InventoryQty : 0;
 
-            return Ok(product);
+            // Adjust inventoryQty for selectedShoeSizeId and selectedInventoryQty
+            if (i == product.ProductWithSizes[0].ShoeSizeId)
+            {
+                inventoryQty = product.ProductWithSizes[0].InventoryQty;
+            }
+
+            ProductWithSize productWithSize = new ProductWithSize
+            {
+                InventoryQty = inventoryQty,
+                ShoeSizeId = i,
+                ProductId = product.ProductId // assuming ProductId is available in product
+            };
+
+            productWithSizes.Add(productWithSize);
         }
-        catch (Exception ex)
-        {
-            // Log the exception for debugging purposes
-            Console.Error.WriteLine(ex);
-            return StatusCode(500, "Internal Server Error");
-        }
+
+        // Set the productWithSizes for the product
+        product.ProductWithSizes = productWithSizes;
+
+        // Save the product information to the database
+        _db.Product.Add(product);
+        _db.SaveChanges();
+
+        return Ok(product);
     }
+    catch (Exception ex)
+    {
+        // Log the exception for debugging purposes
+        Console.Error.WriteLine(ex);
+        return StatusCode(500, "Internal Server Error");
+    }
+}
+
+
 
     [HttpGet]
     public IActionResult GetProductByBarcodeAdd(string barcode)
@@ -349,50 +377,52 @@ public class ApiController : ControllerBase
 
 
     [HttpGet]
-    public IActionResult Report1(string month, int year)
+public IActionResult Report1(string month, int year)
+{
+    IQueryable<BillItem> query = _db.BillItem
+                                      .Include(x => x.Product)
+                                      .ThenInclude(p => p.Brand)
+                                      .Include(x => x.ShoeSize) // Include ShoeSize
+                                      .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
+
+    if (!string.IsNullOrEmpty(month))
     {
-        IQueryable<BillItem> query = _db.BillItem
-                                          .Include(x => x.Product)
-                                          .ThenInclude(p => p.Brand)
-                                          .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
-
-        if (!string.IsNullOrEmpty(month))
-        {
-            // Convert month name to month number
-            int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
-            query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
-        }
-
-        var sales = query.GroupBy(x => x.Product.Brand.BrandName)
-                         .Select(g => new
-                         {
-                             name = g.Key,
-                             sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
-                         })
-                         .ToList();
-
-        // Compute the most profitable brand
-        string mostProfitableBrand = null;
-        decimal maxSales = 0;
-
-        foreach (var brandSale in sales)
-        {
-            if (brandSale.sale > maxSales)
-            {
-                maxSales = brandSale.sale;
-                mostProfitableBrand = brandSale.name;
-            }
-        }
-
-        var result = new
-        {
-            sales,
-            mostProfitableBrand,
-            maxSales
-        };
-
-        return Ok(result);
+        // Convert month name to month number
+        int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
+        query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
     }
+
+    var sales = query.GroupBy(x => new { x.Product.Brand.BrandName, x.ShoeSize.SizeType, x.ShoeSize.SizeNumber })
+                     .Select(g => new
+                     {
+                         name = $"{g.Key.BrandName} - Size {g.Key.SizeType} {g.Key.SizeNumber}",
+                         sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
+                     })
+                     .ToList();
+
+    // Compute the most profitable brand
+    string mostProfitableBrand = null;
+    decimal maxSales = 0;
+
+    foreach (var brandSale in sales)
+    {
+        if (brandSale.sale > maxSales)
+        {
+            maxSales = brandSale.sale;
+            mostProfitableBrand = brandSale.name;
+        }
+    }
+
+    var result = new
+    {
+        sales,
+        mostProfitableBrand,
+        maxSales
+    };
+
+    return Ok(result);
+}
+
 
 
     [HttpGet]
@@ -422,11 +452,12 @@ public class ApiController : ControllerBase
 
 
 
-    [HttpGet]
+   [HttpGet]
 public IActionResult Report3(string month, int year)
 {
     IQueryable<BillItem> query = _db.BillItem
                                       .Include(x => x.Product)
+                                      .Include(x => x.ShoeSize) // Include ShoeSize
                                       .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
 
     if (!string.IsNullOrEmpty(month))
@@ -436,10 +467,10 @@ public IActionResult Report3(string month, int year)
         query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
     }
 
-    var sales = query.GroupBy(x => x.Product.ProductName)
+    var sales = query.GroupBy(x => new { x.Product.ProductName, x.ShoeSize.SizeType, x.ShoeSize.SizeNumber })
                      .Select(g => new
                      {
-                         name = g.Key,
+                         name = $"{g.Key.ProductName} - Size {g.Key.SizeType} {g.Key.SizeNumber}",
                          sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
                      })
                      .ToList();
@@ -468,31 +499,54 @@ public IActionResult Report3(string month, int year)
 }
 
 
+
+
+
     [HttpGet]
-    public IActionResult Report4(string month, int year)
+public IActionResult Report4(string month, int year)
+{
+    IQueryable<BillItem> query = _db.BillItem
+                                      .Include(p => p.Bill)
+                                      .ThenInclude(st => st.Customer)
+                                      .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
+
+    if (!string.IsNullOrEmpty(month))
     {
-        IQueryable<BillItem> query = _db.BillItem
-                                          .Include(p => p.Bill)
-                                          .ThenInclude(st => st.Customer)
-                                          .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
-
-        if (!string.IsNullOrEmpty(month))
-        {
-            // Convert month name to month number
-            int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
-            query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
-        }
-
-        var sales = query.GroupBy(x => x.Bill.Customer.CustomerFirstname)
-                         .Select(g => new
-                         {
-                             name = g.Key,
-                             sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
-                         })
-                         .ToList();
-
-        return Ok(sales);
+        // Convert month name to month number
+        int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
+        query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
     }
+
+    var sales = query.GroupBy(x => new { 
+                            x.Bill.Customer.CustomerFirstname, 
+                            x.Bill.Customer.CustomerLastname, 
+                            x.Bill.Customer.Gender 
+                        })
+                     .Select(g => new
+                     {
+                         name = $"{g.Key.CustomerFirstname} {g.Key.CustomerLastname} ({g.Key.Gender})",
+                         sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
+                         gender = g.Key.Gender
+                     })
+                     .ToList();
+
+    // Compute the total sales for each gender
+    var totalSalesByGender = sales.GroupBy(x => x.gender)
+                                   .Select(g => new
+                                   {
+                                       gender = g.Key,
+                                       totalSales = g.Sum(s => s.sale)
+                                   })
+                                   .ToList();
+
+    // Find the most purchased gender
+    var mostPurchasedGender = totalSalesByGender.OrderByDescending(x => x.totalSales)
+                                                .FirstOrDefault();
+
+    return Ok(new { mostPurchasedGender, sales });
+}
+
+
 
     [HttpGet]
     public IActionResult Report5(int year)
