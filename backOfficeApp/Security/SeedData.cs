@@ -28,22 +28,22 @@ public class SeedUserAccount
         }
         var jameUser = new AppUser
         {
-            UserName = "jame.yod.i",
-            Email = "root@localhost.com",
+            UserName = "jame.yod.i@localhost.com",
+            Email = "jame.yod.i@localhost.com",
             firstName = "JY",
             lastName = "Yodsaphon"
         };
         var taUser = new AppUser
         {
-            UserName = "ta_rock_8",
-            Email = "ta@localhost.com",
+            UserName = "ta_rock_8@localhost.com",
+            Email = "ta_rock_8@localhost.com",
             firstName = "Ta",
             lastName = "Xayyadeth"
         };
         var muayUser = new AppUser
         {
-            UserName = "manymuay",
-            Email = "muay@localhost.com",
+            UserName = "manymuay@localhost.com",
+            Email = "manymuay@localhost.com",
             firstName = "Rmuay",
             lastName = "Arisara"
         };

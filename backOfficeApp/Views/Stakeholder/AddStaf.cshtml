@@ -34,6 +34,19 @@
         <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.email" label="Email" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
+
+        <q-input class="q-px-sm q-mb-sm" v-model="newStaff.password" filled :type="isPwd ? 'password' : 'text'" label="Password" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']">
+            <template v-slot:append>
+          <q-icon
+            :name="isPwd ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @@click="isPwd = !isPwd"
+          />
+        </template>
+            </q-input>
+
+
         <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffPhoneNumber" label="Phone Number" lazy-rules mask="### #### ####"
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
@@ -95,6 +108,7 @@
             data() {
                 return {
                     //your data go here
+                    isPwd: true,
                     newStaff: {
                         staffFirstName: "",
                         staffLastName: "",

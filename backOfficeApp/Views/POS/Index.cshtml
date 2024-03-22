@@ -7,6 +7,8 @@
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
     ໜ້າກະຕ່າ</div>
+            <span>@User.Identity.Name</span>
+
   <q-form class=" q-pa-lg" style="background-color: #f2f2f2;">
     <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
       <div style="display: flex; flex-direction: column; width: 450px;">
@@ -288,6 +290,20 @@
         ,
         async checkOut() {
 
+          try {
+    const userEmail = '@User.Identity.Name'; // Replace with the correct syntax to access the user's email
+    const response = await axios.get('/myapi/GetStaffId', {
+      params: {
+        userEmail: userEmail
+      }
+    });
+    const responseStaffId = response.data; // Assuming the API returns the staff ID
+    console.log('Staff ID:', staffId);
+    // Proceed with your checkout logic using the staff ID
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
 
           if (this.orderItems.length === 0) {
             this.$q.notify({
@@ -318,10 +334,6 @@
             };
           });
 
-
-
-
-
           console.log("shippingMethodId:", this.selectedShippingMethod.value);
           console.log("customerTransferPicPath:", this.customerTransferPic);
           console.log("discountId:", this.selectedDiscount.value);
@@ -340,7 +352,7 @@
             discountId: this.selectedDiscount.value,
             deliveryServiceId: this.selectedDeliveryService.value,
             branchId: this.selectedBranch.value,
-            staffId: this.selectedStaff.value,
+            staffId: responseStaffId,
             customerId: this.selectedCustomer.value,
             billItems: reBillItems
           };

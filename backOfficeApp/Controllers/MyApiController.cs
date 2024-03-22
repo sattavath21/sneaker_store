@@ -764,7 +764,23 @@ public IActionResult GetUserData()
             return StatusCode(500, "Internal Server Error");
         }
     }
-
+[HttpGet]
+public async Task<IActionResult> GetStaffId(string userEmail)
+{
+    try
+    {
+        var staff = await _db.Staff.SingleOrDefaultAsync(s => s.Email == userEmail);
+        if (staff == null)
+        {
+            return NotFound("Staff not found for the provided email");
+        }
+        return Ok(staff.StaffId);
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Internal server error: {ex.Message}");
+    }
+}
     #endregion
 
 }//ec
