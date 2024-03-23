@@ -271,18 +271,32 @@ public IActionResult AddProduct(Product product)
     }
 
     [HttpGet]
-    public IActionResult GetDeliveryServicesSelection()
-    {
-        var deliveryServices = _db.DeliveryService.ToList();
-        return Ok(deliveryServices);
-    }
+public IActionResult GetDeliveryServicesSelection()
+{
+    var deliveryServices = _db.DeliveryService.ToList();
 
-    [HttpGet]
-    public IActionResult GetBranchesSelection()
+    return Ok(deliveryServices);
+}
+
+[HttpGet]
+public IActionResult GetBranchesSelection(int selectedDeliveryServiceId)
+{
+    try
     {
-        var branches = _db.Branch.ToList();
+        // Assuming _db is your DbContext instance
+        var branches = _db.DeliveryBranch
+                          .Where(db => db.DeliveryServiceId == selectedDeliveryServiceId)
+                          .Select(db => db.Branch)
+                          .ToList();
+
         return Ok(branches);
     }
+    catch (Exception ex)
+    {
+        // Handle exceptions appropriately
+        return StatusCode(500, "An error occurred while fetching branches.");
+    }
+}
 
     [HttpGet]
     public IActionResult GetOrderStatusesSelection()
@@ -291,45 +305,77 @@ public IActionResult AddProduct(Product product)
         return Ok(statuses);
     }
 
-    [HttpPost]
-    public IActionResult AddSale(Bill bill)
+[HttpGet]
+public async Task<IActionResult> GetStaffId(string userEmail)
+{
+    try
     {
-        try
+        var staff = await _db.Staff.SingleOrDefaultAsync(s => s.Email == userEmail);
+        if (staff == null)
         {
-            bill.OrderDate = DateTime.Now;
-
-            // Save the bill to the database
-            _db.Bill.Add(bill);
-            _db.SaveChanges();
-
-            // Update inventory quantities
-            foreach (var item in bill.BillItems)
-            {
-                // Fetch the ProductWithSize entity associated with the current BillItem
-                var productWithSize = _db.ProductWithSize
-                    .Include(pws => pws.Product)
-                    .FirstOrDefault(pws => pws.ProductId == item.ProductId && pws.ShoeSizeId == item.ShoeSizeId);
-
-                if (productWithSize != null)
-                {
-                    // Deduct itemQty from inventoryQty
-                    productWithSize.InventoryQty -= item.ItemQty;
-                    _db.SaveChanges();
-                }
-            }
-
-            // Return the newly created bill as a response
-            return Ok(bill);
+            return NotFound("Staff not found for the provided email");
         }
-        catch (Exception ex)
-        {
-            // Log any errors
-            Console.WriteLine(ex.Message);
-
-            // Return an error response
-            return StatusCode(500, "An error occurred while adding sale");
-        }
+        return Ok(staff.StaffId);
     }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Internal server error: {ex.Message}");
+    }
+}
+
+   [HttpPost]
+public IActionResult AddSale(Bill bill)
+{
+    try
+    {
+        bill.OrderDate = DateTime.Now;
+
+        // Save the bill to the database
+        _db.Bill.Add(bill);
+        _db.SaveChanges();
+
+        // Update inventory quantities and amountSold
+        foreach (var item in bill.BillItems)
+        {
+            // Fetch the ProductWithSize entity associated with the current BillItem
+            var productWithSize = _db.ProductWithSize
+                .Include(pws => pws.Product)
+                .FirstOrDefault(pws => pws.ProductId == item.ProductId && pws.ShoeSizeId == item.ShoeSizeId);
+
+            if (productWithSize != null)
+            {
+                // Deduct itemQty from inventoryQty
+                productWithSize.InventoryQty -= item.ItemQty;
+                // Update amountSold
+                productWithSize.Product.Amountsold += item.ItemQty;
+                _db.SaveChanges();
+            }
+        }
+
+        // Deduct -1 amount from the selected discount
+        if (bill.DiscountId != null)
+        {
+            var discount = _db.Discount.FirstOrDefault(d => d.DiscountId == bill.DiscountId);
+            if (discount != null)
+            {
+                discount.Amount -= 1;
+                _db.SaveChanges();
+            }
+        }
+
+        // Return the newly created bill as a response
+        return Ok(bill);
+    }
+    catch (Exception ex)
+    {
+        // Log any errors
+        Console.WriteLine(ex.Message);
+
+        // Return an error response
+        return StatusCode(500, "An error occurred while adding sale");
+    }
+}
+
 
 
 

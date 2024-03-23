@@ -3,12 +3,14 @@
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */">
     Order Item</div>
-  <q-form class=" q-pa-lg" style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+  <q-form class=" q-pa-lg"
+    style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
     <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
       <div style="display: flex; flex-direction: column; width: 450px;">
         <q-select v-model="selectedOrderStatus" :options="orderStatus" label="Select Order Type"></q-select>
         <q-separator vertical class="q-my-sm"></q-separator>
-
+        <q-input v-model="depositMoney" label="Deposit Money"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
       </div>
     </q-card-actions>
     <q-input ref="input1" v-model="item.barcode" label="Input Barcode" @@change="item_change">
@@ -18,140 +20,150 @@
 
     </div>
 
-<q-separator vertical class="q-my-xl"></q-separator>
-<q-table class="bg-grey-2" title="Order Cart" :rows="orderItems" :columns="columns">
-  <template v-slot:body="props">
-    <q-tr :props="props">
-      <q-td key="actions" :props="props">
-        <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="deleteProduct(props.row.productId)" icon="cancel"
-          size="15px"></q-btn>
-        <q-dialog v-model="confirm" persistent>
-          <q-card>
-            <q-card-section class="row items-center">
-              <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
-              <span class="q-ml-sm">Are you sure you want to cancel this order?</span>
-            </q-card-section>
+    <q-separator vertical class="q-my-xl"></q-separator>
+    <q-table class="bg-grey-2" title="Order Cart" :rows="orderItems" :columns="columns">
+      <template v-slot:body="props">
+        <q-tr :props="props">
+          <q-td key="actions" :props="props">
+            <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="deleteProduct(props.row.productId)"
+              icon="cancel" size="15px"></q-btn>
+            <q-dialog v-model="confirm" persistent>
+              <q-card>
+                <q-card-section class="row items-center">
+                  <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                  <span class="q-ml-sm">Are you sure you want to cancel this order?</span>
+                </q-card-section>
 
-            <q-card-actions align="center">
-              <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes" v-close-popup></q-btn>
-              <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
-      </q-td>
-      <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
-      <q-td key="qty" :props="props">
-        {{ props.row.qty }}
+                <q-card-actions align="center">
+                  <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
+                    v-close-popup></q-btn>
+                  <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
+          </q-td>
+          <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
+          <q-td key="qty" :props="props">
+            {{ props.row.qty }}
 
-        <q-popup-edit v-model="props.row.qty" buttons v-slot="scope">
-          <q-input v-model="scope.value" dense autofocus counter type="number" :rules="[val => val >= 0 || 'Value must be non-negative']" @@keyup.enter="scope.set" />
+            <q-popup-edit v-model="props.row.qty" buttons v-slot="scope">
+              <q-input v-model="scope.value" dense autofocus counter type="number"
+                :rules="[val => val >= 0 || 'Value must be non-negative']" @@keyup.enter="scope.set" />
 
-        </q-popup-edit>
-      </q-td>
-
-
-      <q-td key="productImageUrl" :props="props">
-        <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
-        <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
-          <div style="text-align: center;">
-            <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
-          </div>
-        </q-dialog>
-      </q-td>
-      <q-td key="productName" :props="props">
-        {{ props.row.productName }}
-      </q-td>
-
-      <q-td key="sellingPrice" :props="props">
-        {{ props.row.sellingPrice }}
-      </q-td>
-      <q-td key="shoeSize" :props="props">
-        <q-select v-model="props.row.selectedShoeSize" :options="formattedShoeSizes(props.row.shoeSizes)"
-          label="Select Size" dense outlined emit-value map-options>
-        </q-select>
-
-      </q-td>
+            </q-popup-edit>
+          </q-td>
 
 
-      <q-td key="conditionName" :props="props">
-        <q-select v-model="props.row.selectedCondition" :options="conditionOptions" dense outlined emit-value
-          map-options />
-      </q-td>
+          <q-td key="productImageUrl" :props="props">
+            <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
+            <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
+              <div style="text-align: center;">
+                <img :src="props.row.productImageUrl" style="max-width: 100%; max-height: 100%;" />
+              </div>
+            </q-dialog>
+          </q-td>
+          <q-td key="productName" :props="props">
+            {{ props.row.productName }}
+          </q-td>
 
-      <q-td key="colorway" :props="props">
-        {{ props.row.colorway }}
-      </q-td>
-    </q-tr>
-  </template>
-</q-table>
-<div class="bg-grey-9 q-pa-sm"></div>
-<q-card-actions align="right" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
-  <div style="display: flex; flex-direction: column; padding: 10px; width: 450px;">
-    <q-select v-model="selectedDiscount" :options="discounts" label="Select Discount"></q-select>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-select v-model="selectedStaff" :options="staffOptions" label="Select Staff"></q-select>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-select v-model="selectedCustomer" :options="customerOptions" label="Select Customer"></q-select>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-select v-model="selectedShippingMethod" :options="shippingMethods" label="Select Shipping Method"></q-select>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-select v-model="selectedDeliveryService" :options="deliveryServices" label="Select Delivery Service"></q-select>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-select v-model="selectedBranch" :options="branches" label="Select Branch"></q-select>
-    <q-separator vertical class="q-my-sm"></q-separator>
-    <q-input v-model="customerTransferPic" label="Customer Transfer Pic"></q-input>
-    <q-separator vertical class="q-my-sm"></q-separator>
-  </div>
-</q-card-actions>
-<q-card-actions align="right">
-  <q-btn label="Submit" size="lg" icon="arrow_downward" color="primary" class="text-h7 q-mx-sm q-my-lg"
-    style="width: 240px; height: 80px;" @@click="confirm2 = true"></q-btn>
-  <q-dialog v-model="confirm2" persistent transition-show="scale" transition-hide="scale">
-    <q-card class="bg-teal-8 text-white" style="width: 800px; max-width: 100vw;">
-      <q-card-section>
-        <q-icon name="receipt_long" color="white" size="60px"></q-icon>
-      </q-card-section>
-      <q-card-section align="left" class="bg-teal-6">
-  <h6 class="text-bold q-ma-md">Customer name : {{ selectedCustomer.label }}</h6>
-</q-card-section>
+          <q-td key="sellingPrice" :props="props">
+            {{ props.row.sellingPrice }}
+          </q-td>
+          <q-td key="shoeSize" :props="props">
+            <q-select v-model="props.row.selectedShoeSize" :options="formattedShoeSizes(props.row.shoeSizes)"
+              label="Select Size" dense outlined emit-value map-options>
+            </q-select>
+
+          </q-td>
 
 
-      <q-card-section align="right" class="bg-teal-4 q-pt-none q-pa-sm">
-        <h6 v-for="item in orderItems">{{item.productName}} : {{item.qty}} x {{item.sellingPrice}} THB =
-          {{item.qty*item.sellingPrice}} ฿</h6>
-        <q-separator horizontal class="q-my-sm"></q-separator>
-        <h6>Subtotal : {{sumSubTotal}} ฿</h6>
-        <h6>Discount : {{ selectedDiscount ? selectedDiscount.label : 'None' }}</h6>
+          <q-td key="conditionName" :props="props">
+            <q-select v-model="props.row.selectedCondition" :options="conditionOptions" dense outlined emit-value
+              map-options />
+          </q-td>
 
-        <h6>Total : {{sumTotal}} ฿</h6>
-      </q-card-section>
+          <q-td key="colorway" :props="props">
+            {{ props.row.colorway }}
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
+    <div class="bg-grey-9 q-pa-sm"></div>
+    <q-card-actions align="right" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
+      <div style="display: flex; flex-direction: column; padding: 10px; width: 450px;">
+        <q-select v-model="selectedDiscount" :options="discounts" label="Select Discount"></q-select>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <q-select v-model="selectedCustomer" :options="customerOptions" label="Select Customer"></q-select>
+        <q-separator vertical class="q-my-sm"></q-separator>
+        <q-select v-if="selectedOrderStatus && selectedOrderStatus.label !== 'Delivery'"
+          v-model="selectedShippingMethod" :options="shippingMethods" label="Select Shipping Method"></q-select>
+        <q-separator v-if="selectedOrderStatus && selectedOrderStatus.label !== 'Delivery'" vertical
+          class="q-my-sm"></q-separator>
+        <q-select v-if="selectedShippingMethod && selectedShippingMethod.label !== 'In-store'"
+          v-model="selectedDeliveryService" :options="deliveryServices" label="Select Delivery Service"
+          @@update:model-value="fetchDeliveryBranch"></q-select>
+        <q-separator v-if="selectedShippingMethod && selectedShippingMethod.label !== 'In-store'" vertical
+          class="q-my-sm"></q-separator>
+        <q-select
+          v-if="selectedShippingMethod && selectedShippingMethod.label !== 'In-store' && selectedDeliveryService"
+          v-model="selectedBranch" :options="branches" label="Select Branch"></q-select>
+        <q-separator v-if="selectedShippingMethod && selectedShippingMethod.label !== 'In-store' && selectedDeliveryService" vertical
+          class="q-my-sm"></q-separator>
+        <q-input v-model="customerTransferPic" label="Customer Transfer Pic"></q-input>
+        <q-separator vertical class="q-my-sm"></q-separator>
+      </div>
+    </q-card-actions>
+    <q-card-actions align="right">
+      <q-btn label="Submit" size="lg" icon="arrow_downward" color="primary" class="text-h7 q-mx-sm q-my-lg"
+        style="width: 240px; height: 80px;" @@click="confirm2 = true"></q-btn>
+      <q-dialog v-model="confirm2" persistent transition-show="scale" transition-hide="scale">
+        <q-card class="bg-teal-8 text-white" style="width: 800px; max-width: 100vw;">
+          <q-card-section>
+            <q-icon name="receipt_long" color="white" size="60px"></q-icon>
+          </q-card-section>
+          <q-card-section align="left" class="bg-teal-6">
+            <h6 class="text-bold q-ma-md">Customer name : {{ selectedCustomer.label }}</h6>
+          </q-card-section>
 
-      <q-card-actions align="right" class="bg-white text-teal">
-        <q-btn class="q-mb-lg q-mt-lg q-mr-sm" size="lg" icon="arrow_downward" color="teal" @@click="confirm3 = true"
-          label="checkOut" v-close-popup></q-btn>
-        <q-btn class="q-mb-lg q-mt-lg q-mr-md" size="lg" icon="close" label="Cancel" color="grey" v-close-popup></q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
-  <q-dialog v-model="confirm3" persistent>
-    <q-card style="width: 520px; max-width: 30vw;">
-      <q-card-section align="center" class="bg-teal-6" class="row items-center">
-        <div align="left" class="q-pa-sm">
-          <q-icon align="center" name="verified" color="white" size="60px"></q-icon>
-        </div>
 
-        <h4 class="text-bold text-h4 text-teal-12">Proceed?</h4>
-      </q-card-section>
+          <q-card-section align="right" class="bg-teal-4 q-pt-none q-pa-sm">
+            <h6 v-for="item in orderItems">{{item.productName}} : {{item.qty}} x {{item.sellingPrice}} THB =
+              {{item.qty*item.sellingPrice}} ฿</h6>
+            <q-separator horizontal class="q-my-sm"></q-separator>
+            <h6>total : {{sumTotal}} ฿</h6>
+            <h6>deducted deposit money : {{sumTotalDeductDeposit }} ฿</h6>
+            <h6>Discount : {{ selectedDiscount ? selectedDiscount.label : 'None' }}</h6>
+            <h6>Grand Total : {{sumGrandTotal}} ฿</h6>
+          </q-card-section>
 
-      <q-card-actions align="center">
-        <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="teal" @@click="checkOut" label="Yes"
-          v-close-popup></q-btn>
-        <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey" v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
-</q-card-actions>
-</q-form>
+          <q-card-actions align="right" class="bg-white text-teal">
+            <q-btn class="q-mb-lg q-mt-lg q-mr-sm" size="lg" icon="arrow_downward" color="teal"
+              @@click="confirm3 = true" label="checkOut" v-close-popup></q-btn>
+            <q-btn class="q-mb-lg q-mt-lg q-mr-md" size="lg" icon="close" label="Cancel" color="grey"
+              v-close-popup></q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-dialog v-model="confirm3" persistent>
+        <q-card style="width: 520px; max-width: 30vw;">
+          <q-card-section align="center" class="bg-teal-6" class="row items-center">
+            <div align="left" class="q-pa-sm">
+              <q-icon align="center" name="verified" color="white" size="60px"></q-icon>
+            </div>
+
+            <h4 class="text-bold text-h4 text-teal-12">Proceed?</h4>
+          </q-card-section>
+
+          <q-card-actions align="center">
+            <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="teal" @@click="checkOut"
+              label="Yes" v-close-popup></q-btn>
+            <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey"
+              v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </q-card-actions>
+  </q-form>
 </div>
 
 @section code {
@@ -160,21 +172,25 @@
       //data
       data() {
         return {
-          customerTransferPic: "",
 
+          customerTransferPic: "",
+          depositMoney: 0,
           selectedOrderStatus: null,
           selectedDiscount: null,
-          selectedShippingMethod: null,
+          selectedShippingMethod: {
+            label: "Delivery",
+            value: 2
+          },
           selectedDeliveryService: null,
           selectedBranch: null,
-          selectedStaff: null,
+
           selectedCustomer: null,
           discounts: [],
           orderStatus: [],
           shippingMethods: [],
           deliveryServices: [],
           branches: [],
-          staffOptions: [],
+
           customerOptions: [],
           conditionOptions: [], // Initialize conditionOptions array
           showImageDialog: false, // Add showImageDialog variable
@@ -268,186 +284,141 @@
       //methods
       methods: {
         formattedShoeSizes(shoeSizes) {
-    console.log('Shoe sizes:', shoeSizes); // Log shoe sizes
-    return shoeSizes.map(size => ({
-        label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,
-        value: { productWithSizeId: size.productWithSizeId, shoeSizeId: size.shoeSizeId, inventoryQty: size.inventoryQty } // Include inventoryQty in value
-    }));
-},
+          console.log('Shoe sizes:', shoeSizes); // Log shoe sizes
+          return shoeSizes.map(size => ({
+            label: `${size.sizeNumber} - ${size.sizeType} - QTY: ${size.inventoryQty}`,
+            value: { productWithSizeId: size.productWithSizeId, shoeSizeId: size.shoeSizeId, inventoryQty: size.inventoryQty } // Include inventoryQty in value
+          }));
+        },
 
-async deleteProduct(productId) {
-  console.log(productId);
+        async deleteProduct(productId) {
+          console.log(productId);
 
-  // Find the index of the item with the matching productId
-  const indexToRemove = this.orderItems.findIndex(item => item.productId === productId);
+          // Find the index of the item with the matching productId
+          const indexToRemove = this.orderItems.findIndex(item => item.productId === productId);
 
-  // If the item is found, remove it from the orderItems array
-  if (indexToRemove !== -1) {
-    this.orderItems.splice(indexToRemove, 1);
-    this.$q.notify({
-      type: 'negative',
-      color: "red-8",
-      message: 'Order has been deleted'
-    });
-  } else {
-    // Notify the user that the order was not found
-    this.$q.notify({
-      type: 'warning',
-      message: 'Order not found'
-    });
-  }
+          // If the item is found, remove it from the orderItems array
+          if (indexToRemove !== -1) {
+            this.orderItems.splice(indexToRemove, 1);
+            this.$q.notify({
+              type: 'negative',
+              color: "red-8",
+              message: 'Order has been deleted'
+            });
+          } else {
+            // Notify the user that the order was not found
+            this.$q.notify({
+              type: 'warning',
+              message: 'Order not found'
+            });
+          }
 
-  // Close the confirmation dialog
-  this.confirm = false;
-}
+          // Close the confirmation dialog
+          this.confirm = false;
+        }
 
 
 
         ,
         async checkOut() {
-  if (this.orderItems.length === 0) {
-    this.$q.notify({
-      type: 'negative',
-      color: "yellow-8",
-      message: 'No items in the cart'
-    });
-    return;
-  }
-
-   // Restructure order items
-  var reBillItems = this.orderItems.map(item => {
-    // Access shoeSizeId and productWithSizeId through selectedShoeSize
-    const shoeSizeId = item.selectedShoeSize ? item.selectedShoeSize.shoeSizeId : null;
-    const productWithSizeId = item.selectedShoeSize ? item.selectedShoeSize.productWithSizeId : null;
-
-    // Access inventoryQty from selectedShoeSize if available
-    const inventoryQty = item.selectedShoeSize ? item.selectedShoeSize.inventoryQty : null;
-// Convert itemQty to a number
-    const itemQty = parseInt(item.qty);
-    // Deduct itemQty from inventoryQty
-    if (inventoryQty !== null && itemQty !== null) {
-      if (itemQty <= inventoryQty) {
-        item.selectedShoeSize.inventoryQty -= itemQty;
-      } else {
-        // Notify user if item quantity exceeds inventory quantity
-        this.$q.notify({
-          type: 'negative',
-          color: 'yellow-8',
-          message: 'Not enough item in inventory'
-        });
-        // Optionally, you can handle this case further as needed
-        return; // Exit the function here
-      }
-    }
-
-
-
-    console.log('Item:', item); // Log the item object
-    console.log('Selected shoe size:', item.selectedShoeSize); // Log selected shoe size
-    console.log('Inventory quantity:', inventoryQty); // Log inventory quantity
-
-    // Return the restructured item object
-    return {
-      shoeSizeId: shoeSizeId,
-      productConditionId: item.selectedCondition,
-      itemQty: itemQty,
-      productId: item.productId,
-      productWithSizeId: productWithSizeId,
-      inventoryQty: inventoryQty
-    };
-  });
-
-  console.log("shippingMethodId:", this.selectedShippingMethod.value);
-  console.log("customerTransferPicPath:", this.customerTransferPic);
-  console.log("discountId:", this.selectedDiscount.value);
-  console.log("deliveryServiceId:", this.selectedDeliveryService.value);
-  console.log("branchId:", this.selectedBranch.value);
-  console.log("staffId:", this.selectedStaff.value);
-  console.log("customerId:", this.selectedCustomer.value);
-
-  console.log("reBillItems:", reBillItems);
-// Check if the total quantity for each product exceeds the inventory quantity
-let stopCheckout = false;
-reBillItems.forEach(item => {
-  const totalQty = reBillItems.reduce((total, currentItem) => {
-    if (currentItem.productId === item.productId) {
-      // Convert itemQty to a number before summing
-      const qty = parseInt(currentItem.itemQty);
-      return total + qty; // Sum the item qty
-    }
-    return total;
-  }, 0);
-
-  console.log(`Total quantity for product with ID ${item.productId}: ${totalQty}`);
-  console.log(`Inventory quantity for product with ID ${item.productId}: ${item.inventoryQty}`);
-
-  if (totalQty > item.inventoryQty) {
-    this.$q.notify({
-      type: 'negative',
-      color: 'yellow-8',
-      message: `Not enough inventory for product with ID ${item.productId}`
-    });
-    // Set flag to stop the checkout process
-    stopCheckout = true;
-  }
-});
-
-// Stop checkout if any product has exceeded inventory
-if (stopCheckout) {
-  console.log('Checkout stopped due to insufficient inventory.');
-  return;
-}
-
-  // Create sale object
-  var bill = {
-    orderDate: new Date(),
-    orderStatusId: this.selectedOrderStatus.value,
-    shippingMethodId: this.selectedShippingMethod.value,
-    customerTransferPicPath: this.customerTransferPic,
-    discountId: this.selectedDiscount.value,
-    deliveryServiceId: this.selectedDeliveryService.value,
-    branchId: this.selectedBranch.value,
-    staffId: this.selectedStaff.value,
-    customerId: this.selectedCustomer.value,
-    billItems: reBillItems
-  };
-  console.log("Bill:", bill);
-
-  var url = "/api/AddSale";
-  try {
-    var res = await axios.post(url, bill);
-    this.orderItems = [];
-    this.selectedDiscount = null;
-    this.selectedShippingMethod = null;
-    this.selectedDeliveryService = null;
-    this.selectedBranch = null;
-    this.selectedStaff = null;
-    this.selectedCustomer = null;
-    this.$q.notify({
-      color: 'green-4',
-      textColor: 'white',
-      icon: 'cloud_done',
-      message: 'Order completed'
-    });
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-
-        ,
-        // Function to fetch staff data
-        async fetchStaffData() {
-          try {
-            const response = await axios.get("/api/GetStaffSelection");
-            // Mapping the response data to objects with 'label' and 'value' properties
-            this.staffOptions = response.data.map(staff => ({ label: `${staff.staffFirstname} ${staff.staffLastname}`, value: staff.staffId }));
-            console.log("Staff Options:", this.staffOptions);
-          } catch (error) {
-            console.error("Error fetching staff data:", error);
+          if (this.orderItems.length === 0) {
+            this.$q.notify({
+              type: 'negative',
+              color: "yellow-8",
+              message: 'No items in the cart'
+            });
+            return;
           }
-        },
+
+          try {
+            const userEmail = '@User.Identity.Name'; // Replace with the correct syntax to access the user's email
+                        console.log('userEmail: ', userEmail);
+
+            const response = await axios.get(`/api/GetStaffId?userEmail=${userEmail.toString()}`);
+
+            const responseStaffId = response.data; // Assuming the API returns the staff ID
+            console.log('Staff ID:', responseStaffId);
+
+            // Proceed with your checkout logic using the staff ID
+            // Restructure order items
+            var reBillItems = this.orderItems.map(item => {
+              // Access shoeSizeId and productWithSizeId through selectedShoeSize
+              const shoeSizeId = item.selectedShoeSize ? item.selectedShoeSize.shoeSizeId : null;
+              const productWithSizeId = item.selectedShoeSize ? item.selectedShoeSize.productWithSizeId : null;
+
+              // Access inventoryQty from selectedShoeSize if available
+              const inventoryQty = item.selectedShoeSize ? item.selectedShoeSize.inventoryQty : null;
+
+              // Convert itemQty to a number
+              const itemQty = parseInt(item.qty);
+              // Return the restructured item object
+              return {
+                shoeSizeId: shoeSizeId,
+                productConditionId: item.selectedCondition,
+                itemQty: itemQty,
+                productId: item.productId,
+                productWithSizeId: productWithSizeId,
+                inventoryQty: inventoryQty
+              };
+            });
+
+            console.log("shippingMethodId:", this.selectedShippingMethod.value);
+            console.log("customerTransferPicPath:", this.customerTransferPic);
+            console.log("discountId:", this.selectedDiscount.value);
+            //console.log("deliveryServiceId:", this.selectedDeliveryService.value);
+            //console.log("branchId:", this.selectedBranch.value);
+            //console.log("staffId:", this.selectedStaff.value);
+            console.log("customerId:", this.selectedCustomer.value);
+
+            console.log("reBillItems:", reBillItems);
+
+            // Create sale object
+            var bill = {
+              orderDate: new Date(),
+              orderStatusId: this.selectedOrderStatus.value,
+              shippingMethodId: this.selectedOrderStatus.value === 2 ? 2 : this.selectedShippingMethod.value,
+              customerTransferPicPath: this.customerTransferPic,
+              shippingReceipt: null,
+              depositMoney: this.depositMoney,
+              discountId: this.selectedDiscount.value,
+              deliveryServiceId: this.selectedShippingMethod.value === 1 ? 5 : this.selectedDeliveryService.value,
+              branchId: this.selectedShippingMethod.value === 1 ? 12 : this.selectedBranch.value,
+              staffId: responseStaffId,
+              customerId: this.selectedCustomer.value,
+              billItems: reBillItems
+            };
+            console.log("Bill:", bill);
+
+            var url = "/api/AddSale";
+            try {
+              var res = await axios.post(url, bill);
+              this.orderItems = [];
+              this.selectedDiscount = null;
+              this.selectedShippingMethod = {
+                label: "Delivery",
+                value: 2
+              };
+              this.selectedDeliveryService = null;
+              this.selectedBranch = null;
+
+              this.selectedCustomer = null;
+              this.customerTransferPic = "";
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Order completed'
+              });
+              console.log(res.data);
+            } catch (error) {
+              console.log(error);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+        ,
+
         async fetchCustomerData() {
           try {
             const response = await axios.get("/api/GetCustomersSelection");
@@ -464,13 +435,17 @@ if (stopCheckout) {
             // Map the response data to create options with meaningful labels
             this.discounts = response.data.map(discount => ({
               label: `${discount.discountPercentage}% Discount - ${discount.description}`,
-              value: discount.discountId
+              value: discount.discountId,
+              minSpend: discount.minSpend,
+              maxDiscountAmount: discount.maxDiscountAmount,
+              amount: discount.amount
             }));
             console.log("Discounts:", this.discounts); // Add this line to log the discounts
           } catch (error) {
             console.error("Error fetching discounts:", error);
           }
         },
+
 
 
 
@@ -487,38 +462,35 @@ if (stopCheckout) {
         async fetchDeliveryServices() {
           try {
             const response = await axios.get("/api/GetDeliveryServicesSelection");
-            // Map the data to the format required by q-select
-            this.deliveryServices = response.data.map(service => ({ label: service.deliveryCompanyName, value: service.deliveryServiceId }));
+
+            // Map delivery services to the format required by q-select
+            this.deliveryServices = response.data.map(service => ({
+              label: service.deliveryCompanyName,
+              value: service.deliveryServiceId
+            }));
+
+
             console.log("Delivery Services:", this.deliveryServices);
           } catch (error) {
             console.error("Error fetching delivery services:", error);
           }
         },
-        async fetchBranches() {
+
+        async fetchOrderStatus() {
           try {
-            const response = await axios.get("/api/GetBranchesSelection");
+            const response = await axios.get("/api/GetOrderStatusesSelection");
             // Map the data to the format required by q-select
-            this.branches = response.data.map(branch => ({ label: branch.branchName, value: branch.branchId }));
-            console.log("Branches:", this.branches);
+            this.orderStatus = response.data.map(status => ({
+              label: this.mapStatusLabel(status.statusName), // Map the label here
+              value: status.orderStatusId
+            }));
+            console.log("Order status:", this.orderStatus);
+            // Set selectedOrderStatus to the label "Pre-order"
+            this.selectedOrderStatus = this.orderStatus.find(status => status.label === 'Pre-order');
           } catch (error) {
-            console.error("Error fetching branches:", error);
+            console.error("Error fetching orderStatus:", error);
           }
         },
-        async fetchOrderStatus() {
-  try {
-    const response = await axios.get("/api/GetOrderStatusesSelection");
-    // Map the data to the format required by q-select
-    this.orderStatus = response.data.map(status => ({ 
-      label: this.mapStatusLabel(status.statusName), // Map the label here
-      value: status.orderStatusId 
-    }));
-    console.log("Order status:", this.orderStatus);
-    // Set selectedOrderStatus to the label "Pre-order"
-    this.selectedOrderStatus = this.orderStatus.find(status => status.label === 'Pre-order');
-  } catch (error) {
-    console.error("Error fetching orderStatus:", error);
-  }
-},
 
 
 
@@ -547,38 +519,38 @@ if (stopCheckout) {
             var res = await axios.get(url);
 
             if (res.data.result !== undefined) {
-    console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
+              console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
 
-    if (res.data.status != -1) {
-        var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
+              if (res.data.status != -1) {
+                var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
 
-        if (index !== -1) {
-            // If the product is already in orderItems, create a new row with the same product details
-            var newProduct = { ...res.data.result }; // Create a new object to avoid modifying the original
-            newProduct.qty = 1; // Set initial quantity
-            newProduct.shoeSizes = res.data.result.productWithSizes.map(pws => ({
-                shoeSizeId: pws.shoeSize.shoeSizeId,
-                productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
-                inventoryQty: pws.inventoryQty, // Include inventoryQty
-                sizeNumber: pws.shoeSize.sizeNumber,
-                sizeType: pws.shoeSize.sizeType
-            })); // Populate shoe sizes
+                if (index !== -1) {
+                  // If the product is already in orderItems, create a new row with the same product details
+                  var newProduct = { ...res.data.result }; // Create a new object to avoid modifying the original
+                  newProduct.qty = 1; // Set initial quantity
+                  newProduct.shoeSizes = res.data.result.productWithSizes.map(pws => ({
+                    shoeSizeId: pws.shoeSize.shoeSizeId,
+                    productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
+                    inventoryQty: pws.inventoryQty, // Include inventoryQty
+                    sizeNumber: pws.shoeSize.sizeNumber,
+                    sizeType: pws.shoeSize.sizeType
+                  })); // Populate shoe sizes
 
-            console.log('New Product Shoe Sizes:', newProduct.shoeSizes); // Log the shoeSizes array
+                  console.log('New Product Shoe Sizes:', newProduct.shoeSizes); // Log the shoeSizes array
 
-            this.orderItems.push(newProduct);
-        } else {
-            // Add new product to orderItems array
-            res.data.result.qty = 1; // Set initial quantity
-            res.data.result.shoeSizes = res.data.result.productWithSizes.map(pws => ({
-                shoeSizeId: pws.shoeSize.shoeSizeId,
-                productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
-                inventoryQty: pws.inventoryQty, // Include inventoryQty
-                sizeNumber: pws.shoeSize.sizeNumber,
-                sizeType: pws.shoeSize.sizeType
-            })); // Populate shoe sizes
+                  this.orderItems.push(newProduct);
+                } else {
+                  // Add new product to orderItems array
+                  res.data.result.qty = 1; // Set initial quantity
+                  res.data.result.shoeSizes = res.data.result.productWithSizes.map(pws => ({
+                    shoeSizeId: pws.shoeSize.shoeSizeId,
+                    productWithSizeId: pws.productWithSizeId, // Include ProductWithSizeId
+                    inventoryQty: pws.inventoryQty, // Include inventoryQty
+                    sizeNumber: pws.shoeSize.sizeNumber,
+                    sizeType: pws.shoeSize.sizeType
+                  })); // Populate shoe sizes
 
-            console.log('New Product Shoe Sizes:', res.data.result.shoeSizes); // Log the shoeSizes array
+                  console.log('New Product Shoe Sizes:', res.data.result.shoeSizes); // Log the shoeSizes array
 
                   this.orderItems.push(res.data.result);
                 }
@@ -604,20 +576,37 @@ if (stopCheckout) {
           }
         }
         ,
-mapStatusLabel(statusName) {
-    switch(statusName) {
-      case 'Pending':
-        return 'Pre-order';
-      case 'Shipped':
-        return 'Delivery';
-      case 'Success':
-        return 'In-store';
-      default:
-        return statusName;
-    }
-  }
+        mapStatusLabel(statusName) {
+          switch (statusName) {
+            case 'Pending':
+              return 'Pre-order';
+            case 'Shipped':
+              return 'Delivery';
+            case 'Success':
+              return 'In-store';
+            default:
+              return statusName;
+          }
+        },
+        async fetchDeliveryBranch() {
+          try {
+            const selectedDeliveryServiceId = this.selectedDeliveryService.value;
 
+            const response = await axios.get(`/api/GetBranchesSelection?selectedDeliveryServiceId=${selectedDeliveryServiceId}`);
 
+            // Map branches to the format required
+            this.branches = response.data.map(branch => ({
+              label: branch.branchName, // Assuming branchName is the property name for branch name
+              value: branch.branchId // Assuming branchId is the property name for branch ID
+            }));
+            this.selectedBranch = null;
+            console.log("Delivery Branches:", this.branches);
+          } catch (error) {
+            console.error("Error fetching delivery branches:", error);
+          }
+        }
+
+        ,
 
 
 
@@ -625,33 +614,57 @@ mapStatusLabel(statusName) {
       ,
       //computed
       computed: {
-        sumSubTotal() {
-          let sumSubTotal = 0; // initialize sum variable to 0
-
-          for (let i = 0; i < this.orderItems.length; i++) {
-            sumSubTotal += this.orderItems[i].qty * this.orderItems[i].sellingPrice; // add current element to sum
-          }
-          console.log("orderItems", this.orderItems);
-          return sumSubTotal;
-        },
         sumTotal() {
           let sumTotal = 0; // initialize sum variable to 0
 
           for (let i = 0; i < this.orderItems.length; i++) {
             sumTotal += this.orderItems[i].qty * this.orderItems[i].sellingPrice; // add current element to sum
           }
+          console.log("orderItems", this.orderItems);
+          return sumTotal;
+        },
+        sumTotalDeductDeposit() {
+          // Deduct depositMoney from sumTotal
+          const totalAfterDeposit = this.sumTotal - this.depositMoney;
+
+          // Further calculations for sumTotalDeductDeposit if needed
+
+          return totalAfterDeposit;
+        },
+        sumGrandTotal() {
+          let sumGrandTotal = this.sumTotalDeductDeposit; // Initialize sum variable to 0
+
+
 
           console.log("Selected Discount:", this.selectedDiscount);
 
           if (this.selectedDiscount && this.selectedDiscount.value != null) {
-            // Parse the discount percentage from the label
             const labelParts = this.selectedDiscount.label.split(' ');
             const discountPercentage = parseInt(labelParts[0]); // Extract the percentage part and parse it as an integer
-            sumTotal -= (sumTotal * discountPercentage / 100); // Apply discount
+
+            // Apply discount only if total purchase amount meets MinSpend requirement
+            if (sumGrandTotal >= this.selectedDiscount.minSpend) {
+              let discountAmount = sumGrandTotal * discountPercentage / 100;
+
+              // Check if discount amount exceeds MaxDiscountAmount
+              if (this.selectedDiscount.maxDiscountAmount && discountAmount > this.selectedDiscount.maxDiscountAmount) {
+                discountAmount = this.selectedDiscount.maxDiscountAmount; // Apply maximum discount amount
+              }
+
+              sumGrandTotal -= discountAmount; // Subtract discount amount from total
+            } else {
+              // Notify user that minimum spending requirement is not met
+              this.$q.notify({
+                type: 'negative',
+                color: 'yellow-8',
+                message: `Minimum spending requirement of ${this.selectedDiscount.minSpend} not met for selected discount`
+              });
+            }
           }
 
-          return sumTotal;
-        },
+          return sumGrandTotal;
+        }
+        ,
 
       }
       ,
@@ -660,17 +673,22 @@ mapStatusLabel(statusName) {
         this.fetchOrderStatus();
         this.fetchDiscounts();
         this.fetchProductConditions();
-        this.fetchStaffData();
+
         this.fetchCustomerData();
         this.fetchShippingMethods();
         this.fetchDeliveryServices();
-        this.fetchBranches();
+
       }//ecreated
       ,
       //mounted
       mounted() {
         this.$refs.input1.$el.focus();
         //this.selectedDiscountDrop.discountPercentage = null;
+      },
+      watch: {
+        selectedOrderStatus(newVal, oldVal) {
+          console.log('selectedOrderStatus changed:', newVal);
+        }
       }
 
     };

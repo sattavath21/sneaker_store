@@ -14,14 +14,14 @@
           @@click="onReset"></q-btn></div>
       <q-separator vertical class="q-my-sm"></q-separator>
       <div class="q-pl-sm">
-        <q-input debounce="200" dense v-model="searchText" type="text" @@change="searchBill">
+        <q-input debounce="200" dense v-model="searchText" type="text" @@change="filterBills">
           <template v-slot:prepend>
             <q-icon name="search"></q-icon>
           </template>
         </q-input>
         <q-separator vertical class="q-my-sm"></q-separator>
         <q-select v-model="orderStatusSelected" :options="orderStatusSelection" label="Filter by Order Status" outlined
-          emit-value map-options @@update:model-value="selectedOrderStatus">
+          emit-value map-options @@update:model-value="filterBills">
 
         </q-select>
 
@@ -410,6 +410,46 @@
       // You may want to do additional processing here if needed
     }
   },
+  filterBills() {
+  let filteredBills = [...this.originalBills];
+
+  if (this.searchText !== "") {
+    const searchTerms = this.searchText.toLowerCase().split(" ");
+
+    filteredBills = filteredBills.filter(x => {
+      const fullName = `${x.customer.customerFirstname.toLowerCase()} ${x.customer.customerLastname.toLowerCase()}`;
+      return searchTerms.every(term => fullName.includes(term));
+    });
+  }
+
+  if (typeof this.orderStatusSelected === 'string' && this.orderStatusSelected !== "") {
+    filteredBills = filteredBills.filter(x =>
+      x.orderStatus.statusName.toLowerCase() === this.orderStatusSelected.toLowerCase()
+    );
+  }
+
+  this.bills = filteredBills;
+  console.log("Filtered Bills:", this.bills);
+
+  if (this.searchText === "" && (typeof this.orderStatusSelected !== 'string' || this.orderStatusSelected === "")) {
+    const notif = this.$q.notify({
+      type: 'ongoing',
+      message: 'Loading...'
+    });
+
+    // simulate delay
+    setTimeout(() => {
+      notif({
+        type: 'positive',
+        message: 'Reseted',
+        timeout: 300
+      });
+    }, 600);
+  }
+}
+
+
+,
         selectedOrderStatus(newValue) {
           if (newValue !== null) {
             this.bills = this.originalBills.filter(x => x.customer.customerFirstname.toLowerCase().includes(this.orderStatusSelected.toLowerCase()) ||
