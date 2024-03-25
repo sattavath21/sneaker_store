@@ -15,7 +15,7 @@
         <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffLastName" label="Last Name" lazy-rules
             :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
 
-        <q-input class="q-px-sm" filled v-model="newStaff.staffBirthday" mask="date" style="width: 300px;">
+        <q-input class="q-px-sm" filled v-model="newStaff.staffBirthday" mask="date" style="width: 300px;" label="Birthday">
             <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -74,6 +74,8 @@
                     </q-card-actions>
                 </q-card>
             </q-dialog>
+            <q-btn icon="arrow_back" label="Back" color="grey-7" class="text-h7 text-white" size="lg"
+                onclick='window.location="/stakeholder"'></q-btn>
             <q-dialog v-model="staffCompletedDialog">
                 <q-card class="bg-indigo-1">
                     <q-card-section>
@@ -163,7 +165,7 @@
                             });
 
                             // Clear form fields and reset data after successful addition
-
+                            this.onResetStaff();
                             // Show the completed dialog
                             this.completedDialog = true;
                         } else {
@@ -193,8 +195,39 @@
                         });
                     }
                 }
-
                 ,
+                onResetStaff() {
+                    // Show an ongoing notification
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Resetting...'
+                    });
+
+                    // Simulate delay for 715 milliseconds
+                    setTimeout(() => {
+                        notif({
+                            type: 'positive',
+                            message: 'Reset complete',
+                            timeout: 215
+                        });
+
+                        // Reset the form fields and data
+                        this.newStaff = {
+                        staffFirstName: "",
+                        staffLastName: "",
+                        password: "",
+                        staffBirthday: "",
+                        email: "",
+                        staffPhoneNumber: "",
+                        permissionId: null,
+                    };
+
+                    this.permissionOptions = [];
+                              
+
+
+                    }, 200);
+                }
 
             }
             ,

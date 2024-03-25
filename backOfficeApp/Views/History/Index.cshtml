@@ -9,6 +9,7 @@
             border-top-left-radius: 10px; /* Adjust the radius as needed */
             border-top-right-radius: 10px; /* Adjust the radius as needed */;
             ">
+    
     ໜ້າປະຫວັດການຂາຍ
   </div>
   <q-table 
@@ -19,18 +20,19 @@
   row-key="billId">
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md"> Bills History <q-btn icon="restart_alt" round class="q-mx-lg" size="md" color="grey"
+     
           @@click="onReset"></q-btn>
       </div>
       <q-separator vertical class="q-my-sm"></q-separator>
       <div class="q-pl-sm">
-        <q-input debounce="200" dense v-model="searchText" type="text" @@change="searchBill">
+        <q-input debounce="200" dense v-model="searchText" type="text" @@change="filterBills">
           <template v-slot:prepend>
             <q-icon name="search"></q-icon>
           </template>
         </q-input>
         <q-separator vertical class="q-my-sm"></q-separator>
         <q-select v-model="orderStatusSelected" :options="orderStatusSelection" label="Filter by Order Status" outlined
-          emit-value map-options @@update:model-value="selectedOrderStatus">
+          emit-value map-options @@update:model-value="filterBills">
 
         </q-select>
 
@@ -154,17 +156,21 @@
           <q-btn class="q-ma-sm q-px-lg q-py-sm" size="15px" icon="print" color="primary"
             @@click="printContent(props.row)"></q-btn>
 
+
           <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteBillDialog(props.row.billId)" icon="delete_forever"
             size="15px"></q-btn>
+
 
           <q-dialog v-model="deleteBillVisible" persistent>
             <q-card>
               <q-card-section class="row items-center">
+
                 <q-avatar icon="list" color="grey-9" text-color="white"></q-avatar>
                 <span class="q-ml-sm">Are you sure you want to delete this history?</span>
               </q-card-section>
 
               <q-card-actions align="center">
+        
                 <q-btn class="q-ma-sm" color="red-6" @@click="deleteBill" label="Yes" v-close-popup></q-btn>
                 <q-btn class="q-ma-sm" label="No" @@click="closeDeleteBillDialog" color="grey" v-close-popup />
               </q-card-actions>
@@ -182,6 +188,7 @@
       @* Expanded section *@
       <q-tr :props="props" v-show="props.expand">
         <q-td colspan="100%">
+
           <div class="custom-expandable-table-wrapper">
 <q-table title="Order Details" :rows="props.row.billItems" :columns="orderDetailColumns" row-key="billItemId"
             separator="none" style="padding: 12px;">
@@ -201,18 +208,22 @@
                   {{ props.row.shoeSize.sizeNumber }}
                 </q-td>
 
+      
                 <q-td key="itemQty" :props="props" class="fourth-column">
                   {{ props.row.itemQty }}
                 </q-td>
 
                 <q-td key="productCondition" :props="props">
+     
   <q-chip
     :color="getChipColor(props.row.productCondition.conditionName)"
     :text-color="getTextColor(props.row.productCondition.conditionName)"
 
+         
   >{{ props.row.productCondition.conditionName }}</q-chip>
 </q-td>
                 <q-td key="sellingPrice" :props="props">
+            
                   &#3647;{{ formatPrice(props.row.product.sellingPrice) }}
 
                 </q-td>
@@ -225,6 +236,7 @@
             </template>
 
           </q-table>
+
           </div>
         
           @* Dialog when add branch *@
@@ -259,7 +271,6 @@
         return {
           deleteBillVisible: false,
           billIdToDelete: 0,
-
           selectedRows: new Map(),
           selectedOrderStatusOptions: [],
           orderStatusOptions: [],
@@ -283,9 +294,10 @@
               sortable: true,
               label: 'No'
             },
-            {
+ 
               name: 'customerName',
               label: 'Customer',
+
               align: 'left',
               sortable: true,
               field: row => `${row.customer.customerFirstname} ${row.customer.customerLastname}`
@@ -295,6 +307,7 @@
               name: 'orderDate',
               label: 'Ordered date',
               field: 'orderDate',
+
               align: 'left',
               sortable: true,
             },
@@ -309,10 +322,12 @@
               name: 'methodName',
               label: 'Shipping method',
               field: 'shippingMethod.methodName',
+
               align: 'left',
               sortable: true,
             },
             {
+   
               name: 'total',
               label: 'Total',
               field: 'total',
@@ -320,6 +335,7 @@
               sortable: true,
             },
             {
+
               name: 'depositMoney',
               label: 'Deposit Money',
               field: 'depositMoney',
@@ -330,11 +346,13 @@
               name: 'description',
               label: 'Discount name',
               field: 'discount.description',
+
               align: 'left',
               sortable: true,
             },
             {
               name: 'discountPercentage',
+
               label: 'Discount (%)',
               field: 'discount.discountPercentage',
               align: 'center',
@@ -365,6 +383,7 @@
               name: 'deliveryCompanyName',
               label: 'Delivery company name',
               field: 'deliveryService.deliveryCompanyName',
+
               align: 'left',
               sortable: true,
             },
@@ -373,6 +392,7 @@
               name: 'branchName',
               label: 'Deliver branch',
               field: 'branch.branchName',
+
               align: 'left',
               sortable: true,
             },
@@ -380,6 +400,7 @@
             {
               name: 'staffName',
               label: 'Responsible staff',
+
               align: 'left',
               sortable: true,
               field: row => `${row.staff.staffFirstname} ${row.staff.staffLastname}`
@@ -402,6 +423,7 @@
               name: 'barcode',
               label: 'Product barcode',
               field: 'product.barcode',
+
               align: 'left',
               sortable: true
             },
@@ -409,6 +431,7 @@
               name: 'productName',
               label: 'Product name',
               field: 'product.productName',
+
               align: 'left',
               sortable: true
             },
@@ -437,6 +460,7 @@
               name: 'sellingPrice',
               label: 'Price',
               field: 'product.sellingPrice',
+
               align: 'right',
               sortable: true
             },
@@ -520,6 +544,46 @@ calculateGrandTotal(item) {
       // You may want to do additional processing here if needed
     }
   },
+  filterBills() {
+  let filteredBills = [...this.originalBills];
+
+  if (this.searchText !== "") {
+    const searchTerms = this.searchText.toLowerCase().split(" ");
+
+    filteredBills = filteredBills.filter(x => {
+      const fullName = `${x.customer.customerFirstname.toLowerCase()} ${x.customer.customerLastname.toLowerCase()}`;
+      return searchTerms.every(term => fullName.includes(term));
+    });
+  }
+
+  if (typeof this.orderStatusSelected === 'string' && this.orderStatusSelected !== "") {
+    filteredBills = filteredBills.filter(x =>
+      x.orderStatus.statusName.toLowerCase() === this.orderStatusSelected.toLowerCase()
+    );
+  }
+
+  this.bills = filteredBills;
+  console.log("Filtered Bills:", this.bills);
+
+  if (this.searchText === "" && (typeof this.orderStatusSelected !== 'string' || this.orderStatusSelected === "")) {
+    const notif = this.$q.notify({
+      type: 'ongoing',
+      message: 'Loading...'
+    });
+
+    // simulate delay
+    setTimeout(() => {
+      notif({
+        type: 'positive',
+        message: 'Reseted',
+        timeout: 300
+      });
+    }, 600);
+  }
+}
+
+
+,
         selectedOrderStatus(newValue) {
           if (newValue !== null) {
             this.bills = this.originalBills.filter(x => x.customer.customerFirstname.toLowerCase().includes(this.orderStatusSelected.toLowerCase()) ||
@@ -586,9 +650,11 @@ calculateGrandTotal(item) {
           }
         }
         ,
+
         async editTransferEvi(evidencePic, billId) {
           console.log("Start of ediTransEvi", evidencePic, billId);
           try {
+
             const response = await axios.post(`/myapi/EditCustomerTransfer?billId=${billId}&newTransfer=${evidencePic}`);
 
             console.log("Response data:", response.data);
@@ -613,9 +679,11 @@ calculateGrandTotal(item) {
           }
         }
         ,
+
         async editShippingReceipt(shippingReceipt, billId) {
 
           try {
+
             const response = await axios.post(`/myapi/EditShippingReceipt?billId=${billId}&newTransfer=${shippingReceipt}`);
 
             console.log("Response data:", response.data);
@@ -638,12 +706,14 @@ calculateGrandTotal(item) {
               console.error("Validation errors:", error.response.data.errors);
             }
           }
+
         },
         async editOrderStatus(orderStatusId, billId, row) {
           const selectedStatusValue = orderStatusId.value;
           console.log('Status Id:', selectedStatusValue);
           console.log('Bill ID:', billId);
           try {
+
             const response = await axios.post(`/myapi/EditOrderStatus?billId=${billId}&newTransfer=${selectedStatusValue}`);
 
             console.log("Response data:", response.data);
@@ -668,21 +738,25 @@ calculateGrandTotal(item) {
             }
           }
         },
+
   async editDepositMoney(newDepositMoney, billId) {
           console.log("Start of ediTransEvi", newDepositMoney, billId);
           try {
+
             const response = await axios.post(`/myapi/EditDepositMoney?billId=${billId}&newDepositMoney=${newDepositMoney}`);
 
             console.log("Response data:", response.data);
 
             if (response.status >= 200 && response.status < 300) {
               console.log("Request successful");
+
               this.$q.notify({
                 color: 'green-4',
                 textColor: 'white',
                 icon: 'cloud_done',
                 message: 'History Modified!'
               });
+              window.location.reload();
             } else {
               console.error("Unexpected response status:", response.status);
             }
@@ -693,14 +767,17 @@ calculateGrandTotal(item) {
               console.error("Validation errors:", error.response.data.errors);
             }
           }
+
         }
         ,
         async deleteBill() {
           try {
             // Send the delete request
+
             const reponse = await axios.post(`/myapi/DeleteBill?billIdToDelete=${this.billIdToDelete}`);
 
             // Use the correct property name in the filter callback
+   
             this.bills = this.bills.filter(x => x.billId !== this.billIdToDelete);
             if (reponse.status === 200) {
               // Additional logic after successful product addition
@@ -717,12 +794,14 @@ calculateGrandTotal(item) {
             }
 
           } catch (error) {
+
             console.error('Error deleting bill:', error);
 
             // Notify the user about the error
             this.$q.notify({
               type: 'negative',
               color: 'red-8',
+
               message: 'Error deleting bill'
             });
           }
@@ -783,6 +862,7 @@ calculateGrandTotal(item) {
   },
         printContent(item) {
           const todayDate = new Date();
+
         const formattedTodayDate = `${todayDate.getDate().toString().padStart(2, '0')}/${(todayDate.getMonth() + 1).toString().padStart(2, '0')}/${todayDate.getFullYear()}`;
 
           // Function to format date to DD/MM/YYYY
@@ -796,28 +876,36 @@ calculateGrandTotal(item) {
 
     const formattedOrderDate = formatDate(item.orderDate);
 
+
           // Mock data list
+
           let dataList = [
           @*  *@
           ];
 
 
+
   // Iterate through each bill item
 item.billItems.forEach(billItem => {
     // Calculate total price
+
     const subTotal = (billItem.itemQty * billItem.product.sellingPrice);
     // Push new data object to dataList array
     dataList.push({
         qty: billItem.itemQty, // Quantity from billItem.itemQty
         productName: billItem.product.productName, // Product name from billItem.product.productName
         size: billItem.shoeSize.sizeNumber, // Size from billItem.shoeSize.sizeNumber
+
         pricePerUnit: billItem.product.sellingPrice.toLocaleString(),
         price: subTotal.toLocaleString(), // Price from billItem.product.sellingPrice with commas
     });
+
 });
+
 
   const total = this.calculateTotal(item);
 console.log('Subtotal:', total);
+
 
 const result = this.calculateGrandTotal(item);
 
@@ -921,6 +1009,7 @@ console.log('Grand Total:', grandTotal);
         top: 40%; /* Center vertically */
         left: 50%; /* Center horizontally */
         transform: translate(-50%, -50%); /* Center the watermark */
+
         width: 45%; /* Reduce width to half */
         height: auto; /* Automatically adjust height */
         pointer-events: none; /* Ensure the watermark doesn't interfere with click events */
@@ -961,6 +1050,7 @@ console.log('Grand Total:', grandTotal);
           width: 5%; /* Small width for 1st column */
         }
         th:nth-child(2), td:nth-child(2) {
+
           width: 40%; /* Widest width for 2nd column */
         }
         th:nth-child(3), td:nth-child(3) {
@@ -991,6 +1081,7 @@ console.log('Grand Total:', grandTotal);
         <!-- Watermark container -->
         <div class="watermark-container">
       <!-- Watermark image -->
+
       <img class="watermark" src="/asset/image/99th_croped.png" alt="Watermark">
     </div>
             <!-- Header -->
@@ -1017,6 +1108,7 @@ console.log('Grand Total:', grandTotal);
       <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ຈຳນວນ</th>
       <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຍການສິນຄ້າ</th>
       <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ໄຊສ໌</th>
+
       <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຄາ (ບາດ)</th>
       <th style="padding: 10px; font-weight: bold;">ເປັນເງິນ</th>
     </tr>
@@ -1031,6 +1123,7 @@ console.log('Grand Total:', grandTotal);
               <div class="box4">
     <div class="row">
       <div class="cell">ທັງໝົດ</div>
+
       <div class="cell" style="font-weight: bold;">${total.toLocaleString()}</div>
     </div>
     <div class="row">
@@ -1039,6 +1132,7 @@ console.log('Grand Total:', grandTotal);
     </div>
     <div class="row">
       <div class="cell">ມັດຈຳ</div>
+
       <div class="cell" style="font-weight: bold;">${item.depositMoney.toLocaleString()}</div>
     </div>
     <div class="row">
