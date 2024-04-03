@@ -216,7 +216,28 @@ public class SeedApiController : ControllerBase
 
         };
 
-        _db.DeliveryService.AddRange(mixayDeliveryService, halDeliveryService);
+        DeliveryService blankService = new DeliveryService
+        {
+            DeliveryServiceId = 5,
+            DeliveryCompanyName = "-",
+            DeliveryBranches = new List<DeliveryBranch> {
+        new DeliveryBranch {
+            Branch = new Branch{
+                BranchId = 12,
+                BranchName = "-",
+     BranchTelNumbers = new List<BranchTelNumber>{
+        new BranchTelNumber{
+            TelNumber = "-"
+        },
+}
+
+            }
+        }
+    },
+
+        };
+
+        _db.DeliveryService.AddRange(mixayDeliveryService, halDeliveryService, blankService);
 
 
 
@@ -290,7 +311,7 @@ public class SeedApiController : ControllerBase
             Description = "Lunar New Year Discount"
         };
 
-               Discount discount6 = new Discount
+        Discount discount6 = new Discount
         {
             DiscountId = 6,
             MinSpend = 0,
@@ -310,30 +331,42 @@ public class SeedApiController : ControllerBase
         Permission ownerPermissopn = new Permission
         {
             PermissionId = 1,
-            PermissionName = "Owner"
+            PermissionName = "Manager"
         };
 
         Permission viceOwnerPermission = new Permission
         {
             PermissionId = 2,
-            PermissionName = "Vice-owner"
+            PermissionName = "Admin"
         };
 
         Permission staffPermission = new Permission
         {
             PermissionId = 3,
-            PermissionName = "Staff"
+            PermissionName = "User"
         };
 
         _db.Permission.AddRange(ownerPermissopn, viceOwnerPermission, staffPermission);
 
-        Staff taStaff = new Staff
+        Staff jameOwner = new Staff
         {
             StaffId = 1,
+            StaffFirstname = "Yodsaphon",
+            StaffLastname = "Lousomboune",
+            StaffBirthday = new DateTime(1999, 1, 2),
+            Email = "jy@hotmail.com",
+            StaffPhoneNumber = "65498463541",
+            Permission = ownerPermissopn
+
+        };
+
+        Staff taStaff = new Staff
+        {
+            StaffId = 2,
             StaffFirstname = "Ta",
             StaffLastname = "Xayyadeth",
             StaffBirthday = new DateTime(1999, 7, 8),
-            Email = "tasmth@hotmail.com",
+            Email = "ta@hotmail.com",
             StaffPhoneNumber = "65498463541",
             Permission = viceOwnerPermission
 
@@ -341,20 +374,19 @@ public class SeedApiController : ControllerBase
 
         Staff muayStaff = new Staff
         {
-            StaffId = 2,
+            StaffId = 3,
             StaffFirstname = "Rmuay",
             StaffLastname = "Arisara",
             StaffBirthday = new DateTime(2000, 10, 26),
-            Email = "muaysmth@hotmail.com",
+            Email = "muay@hotmail.com",
             StaffPhoneNumber = "275781578",
             Permission = viceOwnerPermission
 
 
         };
 
-        // _db.Staff.AddRange(taStaff, muayStaff);
 
-        List<Staff> staffList = new List<Staff> { taStaff, muayStaff };
+        List<Staff> staffList = new List<Staff> { jameOwner, taStaff, muayStaff, };
 
         List<Customer> customers = new List<Customer>();
 
@@ -390,6 +422,16 @@ public class SeedApiController : ControllerBase
             customers.Add(customer);
         }
 
+    Customer annoCustomer = new Customer
+            {
+                CustomerFirstname = "-",
+                CustomerLastname = "-",
+                CustomerBirthday = DateTime.Now.AddDays(-random.Next(365 * 90)),
+                CustomerPhoneNumber = "-",
+                CustomerSocialLink = "-",
+                Gender = "-",
+                Email = "-"
+            };
         // _db.Customer.AddRange(customers);
 
 
@@ -842,7 +884,7 @@ public class SeedApiController : ControllerBase
                 {
                     ShoeSize = shoeSizes[random.Next(shoeSizes.Count)], // Random shoe size
                     ProductCondition = productConditionList[random.Next(productConditionList.Count)], // Random product condition
-                    ItemQty = random.Next(6),
+                    ItemQty = random.Next(1, 6), // Generates a random number between 1 and 5 (inclusive)
                     Product = mockProducts[random.Next(mockProducts.Count)] // Random product from mockProducts list
                 };
 

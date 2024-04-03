@@ -158,11 +158,11 @@
             </div>
                 <div class="user-info">
         <span>@User.Identity.Name</span>
-    @if (User.IsInRole("admin"))
+    @if (User.IsInRole("manager"))
     {
         <i class="fa-solid fa-user-tie fa-2x"></i>
     }
-    else if (User.IsInRole("manager"))
+    else if (User.IsInRole("admin"))
     {
         <i class="fa-solid fa-user-gear fa-2x"></i>
     }
@@ -185,14 +185,13 @@
                             <hr> 
 
                 <a id="stakeholder" href="/stakeholder"><i class="fa fa-users" aria-hidden="true"></i>ຜູ້ກ່ຽວຂ້ອງ</a>
-                <hr>
-                @if (User.IsInRole("admin"))
+                                    <hr>
+
+                @if (User.IsInRole("manager"))
                 {
                     <a id="report" href="/report" ><i class="fas fa-chart-bar"></i> ລາຍງານສະລຸບ</a>
+                      <hr>
                 }
-                <a id="testing" href="/testing" ><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-    TESTING</a>
-                <hr>
                 <a href="/security/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a>
             </div>
 
@@ -210,7 +209,7 @@
         <script src="https://cdn.jsdelivr.net/npm/quasar@2.11.2/dist/quasar.umd.js"></script>
 
         <!-- chart js -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        @* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> *@
 
                 <script>
 function toggleNav() {

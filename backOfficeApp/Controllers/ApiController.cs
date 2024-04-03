@@ -308,17 +308,48 @@ public IActionResult GetBranchesSelection(int selectedDeliveryServiceId)
         var statuses = _db.OrderStatus.ToList();
         return Ok(statuses);
     }
-
+ [HttpPost]
+public IActionResult AddSale(Bill bill)
+{
+    try
     {
+        bill.OrderDate = DateTime.Now;
 
-                if (productWithSize != null)
-                {
-                    // Deduct itemQty from inventoryQty
-                    productWithSize.InventoryQty -= item.ItemQty;
-                    _db.SaveChanges();
-                }
+        // Save the bill to the database
+        _db.Bill.Add(bill);
+        _db.SaveChanges();
+
+        // Update inventory quantities and amountSold
+        foreach (var item in bill.BillItems)
+        {
+            // Fetch the ProductWithSize entity associated with the current BillItem
+            var productWithSize = _db.ProductWithSize
+                .Include(pws => pws.Product)
+                .FirstOrDefault(pws => pws.ProductId == item.ProductId && pws.ShoeSizeId == item.ShoeSizeId);
+
+            if (productWithSize != null)
+            {
+                // Deduct itemQty from inventoryQty
+                productWithSize.InventoryQty -= item.ItemQty;
+                // Update amountSold
+                productWithSize.Product.Amountsold += item.ItemQty;
+                _db.SaveChanges();
             }
+        }
 
+        // Deduct -1 amount from the selected discount
+        if (bill.DiscountId != null)
+        {
+            var discount = _db.Discount.FirstOrDefault(d => d.DiscountId == bill.DiscountId);
+            if (discount != null)
+            {
+                discount.Amount -= 1;
+                _db.SaveChanges();
+            }
+        }
+
+        // Return the newly created bill as a response
+        return Ok(bill);
     }
     catch (Exception ex)
     {
@@ -329,6 +360,7 @@ public IActionResult GetBranchesSelection(int selectedDeliveryServiceId)
         return StatusCode(500, "An error occurred while adding sale");
     }
 }
+
 
 
 
@@ -391,11 +423,12 @@ public IActionResult Report1(string month, int year)
         query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
     }
 
-    var sales = query.GroupBy(x => new { x.Product.Brand.BrandName, x.ShoeSize.SizeType, x.ShoeSize.SizeNumber })
+    var sales = query.GroupBy(x => new { x.Product.Brand.BrandName })
                      .Select(g => new
                      {
-                         name = $"{g.Key.BrandName} - Size {g.Key.SizeType} {g.Key.SizeNumber}",
+                         name = $"{g.Key.BrandName}",
                          sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
+                         itemQty = g.Sum(s => s.ItemQty) // Add itemQty to calculate total quantity
                      })
                      .ToList();
 
@@ -425,28 +458,34 @@ public IActionResult Report1(string month, int year)
 
 
     [HttpGet]
-    public IActionResult Report2(string month, int year)
+    public IActionResult EmployeeReport(string month, int year)
     {
         IQueryable<BillItem> query = _db.BillItem
-                                          .Include(x => x.Product)
-                                          .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
+                                      .Include(p => p.Bill)
+                                      .ThenInclude(st => st.Staff)
+                                      .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
 
-        if (!string.IsNullOrEmpty(month))
-        {
-            // Convert month name to month number
-            int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
-            query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
-        }
+    if (!string.IsNullOrEmpty(month))
+    {
+        // Convert month name to month number
+        int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
+        query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
+    }
 
-        var sales = query.GroupBy(x => x.Product.ProductName)
-                         .Select(g => new
-                         {
-                             name = g.Key,
-                             saleQty = g.Sum(s => s.ItemQty),
-                         })
-                         .ToList();
+    var sales = query.GroupBy(x => new { 
+                            x.Bill.Staff.StaffFirstname, 
+                            x.Bill.Staff.StaffLastname
+                        })
+                     .Select(g => new
+                     {
+                         name = $"{g.Key.StaffFirstname} {g.Key.StaffLastname}",
+                         sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
+                     })
+                     .ToList();
 
-        return Ok(sales);
+
+
+    return Ok(sales);
     }
 
 
@@ -466,11 +505,12 @@ public IActionResult Report3(string month, int year)
         query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
     }
 
-    var sales = query.GroupBy(x => new { x.Product.ProductName, x.ShoeSize.SizeType, x.ShoeSize.SizeNumber })
+    var sales = query.GroupBy(x => new { x.Product.ProductName })
                      .Select(g => new
                      {
-                         name = $"{g.Key.ProductName} - Size {g.Key.SizeType} {g.Key.SizeNumber}",
+                         name = $"{g.Key.ProductName}",
                          sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
+                        itemQty = g.Sum(s => s.ItemQty) // Add itemQty to calculate total quantity
                      })
                      .ToList();
 
@@ -496,6 +536,52 @@ public IActionResult Report3(string month, int year)
 
     return Ok(result);
 }
+
+   [HttpGet]
+public IActionResult SizeReport(string month, int year)
+{
+    IQueryable<BillItem> query = _db.BillItem
+                                      .Include(x => x.Product)
+                                      .Include(x => x.ShoeSize) // Include ShoeSize
+                                      .Where(x => x.Bill.OrderDate.Year == year); // Filter by year
+
+    if (!string.IsNullOrEmpty(month))
+    {
+        // Convert month name to month number
+        int monthNumber = DateTime.ParseExact(month, "MMMM", CultureInfo.InvariantCulture).Month;
+        query = query.Where(x => x.Bill.OrderDate.Month == monthNumber); // Filter by month
+    }
+
+    var sales = query.GroupBy(x => new { x.ShoeSize.SizeType, x.ShoeSize.SizeNumber })
+                     .Select(g => new
+                     {
+                         name = $"{g.Key.SizeType} - {g.Key.SizeNumber}",
+                         sale = g.Sum(s => s.Product.SellingPrice * s.ItemQty),
+                        itemQty = g.Sum(s => s.ItemQty) // Add itemQty to calculate total quantity
+                     })
+                     .ToList();
+
+    // Compute the most profitable product
+    string mostProfitableSize = null;
+    decimal maxSales = 0;
+
+    foreach (var productSale in sales)
+    {
+        if (productSale.sale > maxSales)
+        {
+            mostProfitableSize = productSale.name;
+        }
+    }
+
+    var result = new
+    {
+        sales,
+        mostProfitableSize,
+    };
+
+    return Ok(result);
+}
+
 
 
 
@@ -584,6 +670,84 @@ public async Task<IActionResult> GetStaffId(string userEmail)
         return StatusCode(500, $"Internal server error: {ex.Message}");
     }
 }
+[HttpGet]
+public IActionResult GetProductBySearchName(string searchProductName)
+{
+
+    try
+    {
+        var result = _db.Product
+            .Where(x => x.ProductName == searchProductName)
+            .Select(x => new
+            {
+                x.ProductId, // Include the productId property
+                x.Barcode,
+                x.ProductName,
+                x.CostPrice,
+                x.SellingPrice,
+                x.Sku,
+                x.Colorway,
+                x.Releasedate,
+                qty = 1,
+                x.Amountsold, // Use directly from Product model
+                ProductWithSizes = x.ProductWithSizes.Select(pws => new
+                {
+                    pws.ProductWithSizeId, // Include ProductWithSizeId property
+                    pws.InventoryQty,
+                    ShoeSize = new
+                    {
+                        pws.ShoeSizeId, // Include the ShoeSizeId property
+                        pws.ShoeSize.SizeType,
+                        pws.ShoeSize.SizeNumber
+                    }
+                }),
+                Brand = new
+                {
+                    x.Brand.BrandName // Use directly from Brand model
+                },
+                Collection = new
+                {
+                    x.Collection.CollectionName // Use directly from Collection model
+
+                },
+                x.ProductImageUrl
+            })
+            .FirstOrDefault();
+
+        if (result != null)
+        {
+            return Ok(new
+            {
+                result,
+                status = 1
+            });
+        }
+        else
+        {
+            return Ok(new
+            {
+                result,
+                status = -1
+            });
+        }
+    }
+    catch (Exception ex)
+    {
+        // Log the exception for troubleshooting
+        Console.WriteLine($"Error in GetProductBySearchName: {ex.Message}");
+        return StatusCode(500, "Internal Server Error");
+    }
+}
+
+[HttpGet]
+    public IActionResult GetProductName()
+    {
+        var productName = _db.Product
+            .Select(product => product.ProductName)
+            .ToList();
+
+        return Ok(productName);
+    }
     #endregion
 
 }//ec

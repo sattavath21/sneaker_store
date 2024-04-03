@@ -14,13 +14,13 @@ public class SeedUserAccount
     {
 
         //create role here
-        if (!await _roleManager.RoleExistsAsync("admin"))
-        {
-            await _roleManager.CreateAsync(new AppRole("admin"));
-        }
         if (!await _roleManager.RoleExistsAsync("manager"))
         {
             await _roleManager.CreateAsync(new AppRole("manager"));
+        }
+        if (!await _roleManager.RoleExistsAsync("admin"))
+        {
+            await _roleManager.CreateAsync(new AppRole("admin"));
         }
         if (!await _roleManager.RoleExistsAsync("user"))
         {
@@ -28,22 +28,22 @@ public class SeedUserAccount
         }
         var jameUser = new AppUser
         {
-            UserName = "jame.yod.i@localhost.com",
-            Email = "jame.yod.i@localhost.com",
+            UserName = "jy@hotmail.com",
+            Email = "jy@hotmail.com",
             firstName = "JY",
             lastName = "Yodsaphon"
         };
         var taUser = new AppUser
         {
-            UserName = "ta_rock_8@localhost.com",
-            Email = "ta_rock_8@localhost.com",
+            UserName = "ta@hotmail.com",
+            Email = "ta@hotmail.com",
             firstName = "Ta",
             lastName = "Xayyadeth"
         };
         var muayUser = new AppUser
         {
-            UserName = "manymuay@localhost.com",
-            Email = "manymuay@localhost.com",
+            UserName = "muay@hotmail.com",
+            Email = "muay@hotmail.com",
             firstName = "Rmuay",
             lastName = "Arisara"
         };
@@ -67,34 +67,34 @@ public class SeedUserAccount
             Console.WriteLine("taUser account has been created.");
         }
 
-        jameUser = await _userManager.FindByEmailAsync("root@localhost.com");
-        taUser = await _userManager.FindByEmailAsync("taUser@localhost.com");
-        muayUser = await _userManager.FindByEmailAsync("muay@localhost.com");
+        jameUser = await _userManager.FindByEmailAsync("jy@hotmail.com");
+        taUser = await _userManager.FindByEmailAsync("ta@hotmail.com");
+        muayUser = await _userManager.FindByEmailAsync("muay@hotmail.com");
 
 
         //insert role for super user  
-        if (!await _userManager.IsInRoleAsync(jameUser, "admin"))
+        if (!await _userManager.IsInRoleAsync(jameUser, "manager"))
         {
-            await _userManager.AddToRoleAsync(jameUser, "admin");
-            Console.WriteLine("apply admin role to root");
+            await _userManager.AddToRoleAsync(jameUser, "manager");
+            Console.WriteLine("apply manager role to root");
         }
         else
         {
             Console.WriteLine("admin user  exist");
         }
         //inser role for taUser
-        if (!await _userManager.IsInRoleAsync(taUser, "manager"))
+        if (!await _userManager.IsInRoleAsync(taUser, "admin"))
         {
-            await _userManager.AddToRoleAsync(taUser, "manager");
-            Console.WriteLine("apply manager role to taUser");
+            await _userManager.AddToRoleAsync(taUser, "admin");
+            Console.WriteLine("apply admin role to taUser");
         }
         else
         {
             Console.WriteLine("taUser exist");
         }
-if (!await _userManager.IsInRoleAsync(muayUser, "manager"))
+if (!await _userManager.IsInRoleAsync(muayUser, "admin"))
         {
-            await _userManager.AddToRoleAsync(muayUser, "manager");
+            await _userManager.AddToRoleAsync(muayUser, "admin");
             Console.WriteLine("apply manager role to muayUser");
         }
         else

@@ -154,7 +154,7 @@
     label="Add new customer" size="md" onclick='window.location="/Stakeholder/AddCus"'></q-btn>
 
   @* Staff Section *@
-   @if (User.IsInRole("admin") || User.IsInRole("manager"))
+   @if (User.IsInRole("manager") || User.IsInRole("admin"))
             {
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
             border-top-left-radius: 10px; /* Adjust the radius as needed */

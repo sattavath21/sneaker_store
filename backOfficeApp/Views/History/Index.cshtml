@@ -294,7 +294,7 @@
               sortable: true,
               label: 'No'
             },
- 
+ {
               name: 'customerName',
               label: 'Customer',
 
@@ -551,9 +551,13 @@ calculateGrandTotal(item) {
     const searchTerms = this.searchText.toLowerCase().split(" ");
 
     filteredBills = filteredBills.filter(x => {
-      const fullName = `${x.customer.customerFirstname.toLowerCase()} ${x.customer.customerLastname.toLowerCase()}`;
-      return searchTerms.every(term => fullName.includes(term));
-    });
+      const customerFullName = `${x.customer.customerFirstname.toLowerCase()} ${x.customer.customerLastname.toLowerCase()}`;
+      const staffFullName = `${x.staff.staffFirstname.toLowerCase()} ${x.staff.staffLastname.toLowerCase()}`;
+
+     return searchTerms.some(term => 
+        customerFullName.includes(term) || staffFullName.includes(term)
+      );    
+      });
   }
 
   if (typeof this.orderStatusSelected === 'string' && this.orderStatusSelected !== "") {

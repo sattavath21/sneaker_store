@@ -722,10 +722,10 @@ public class MyApiController : ControllerBase
             return StatusCode(500, "Internal Server Error");
         }
     }
-    [HttpGet]
+[HttpGet]
 public IActionResult GetUserData()
 {
-    var isAdmin = User.IsInRole("admin");
+    var isAdmin = User.IsInRole("manager") || User.IsInRole("admin");
     var responseData = new { isAdmin };
     return Ok(responseData);
 }

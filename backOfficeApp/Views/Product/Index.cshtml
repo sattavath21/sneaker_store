@@ -126,6 +126,7 @@
             </div>
           </q-popup-edit>
         </q-td>
+
         <q-td key="costPrice" :props="props">
           &#3647;{{ formatPrice(props.row.costPrice) }}
           <q-popup-edit v-model="props.row.costPrice">
@@ -1187,8 +1188,8 @@
         }
 
         try {
-  const response = await axios.get("/myapi/GetUserData");
-  const userData = response.data;
+          const response = await axios.get("/myapi/GetUserData");
+          const userData = response.data;
 
   // Check user role
   if (!userData.isAdmin) {
