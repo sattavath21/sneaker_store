@@ -23,34 +23,66 @@
     },
     "Delivery_Service": {
         "Delivery_Company_Name": "Anousith Express",
-        "Delivery_Branches": [
+        "Delivery_Provinces": [
             {
-                "Branch": {
-                    "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
-                    "Branch_Tel_Numbers": [
+                "Province": {
+                    "Province_Name": "Savannakhet",
+                    "Province_Cities": [
                         {
-                            "Tel_Number": "020-95960461"
+                            "City": {
+                                "City_Name": "Kaiysone Phomvihane",
+                                "City_Villages": [
+                                    {
+                                        "Village": {
+                                            "Village_Name": "Phonesaiy Village"
+                                        }
+                                    }
+                                ]
+                            }
                         }
                     ]
                 }
             }
         ]
     },
-    "Branch": {
-        "Branch_Name": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
-        "Branch_Tel_Numbers": [
+    "Province": {
+        "Province_Name": "Savannakhet",
+        "Province_Cities": [
             {
-                "Tel_Number": "020-95960461"
+                "City": {
+                    "City_Name": "Kaiysone Phomvihane",
+                    "City_Villages": [
+                        {
+                            "Village": {
+                                "Village_Name": "Phonesaiy Village"
+                            }
+                        }
+                    ]
+                }
             }
         ]
     },
+    "City": {
+        "City_Name": "Kaiysone Phomvihane",
+        "City_Villages": [
+            {
+                "Village": {
+                    "Village_Name": "Phonesaiy Village"
+                }
+            }
+        ]
+    },
+    "Village": {
+        "Village_Name": "Phonesaiy Village"
+    },
+    "Additional_Address_Info": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
     "Staff": {
         "Staff_Firstname": "andy",
         "Staff_Lastname": "asdasdo",
         "Staff_Birthday": "2023/12/03",
         "Email": "huangguifu21@gmail.com",
-        "Password":"lmao123123123",
-        "Staff_Phone_Number": "",
+        "Password": "lmao123123123",
+        "Staff_Phone_Number": "asdasd",
         "Permission": {
             "Permission_Name": "Admin"
         }
@@ -62,7 +94,37 @@
         "Customer_Birthday": "2023/12/03",
         "Email": "huangguifu21@gmail.com",
         "Customer_Phone_Number": "asdasdasdasd",
-        "Customer_Social_Link": "axdasdasdasd"
+        "Customer_Social_Link": "axdasdasdasd",
+        "Province": {
+            "Province_Name": "Savannakhet",
+            "Province_Cities": [
+                {
+                    "City": {
+                        "City_Name": "Kaiysone Phomvihane",
+                        "City_Villages": [
+                            {
+                                "Village": {
+                                    "Village_Name": "Phonesaiy Village"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "City": {
+            "City_Name": "Kaiysone Phomvihane",
+            "City_Villages": [
+                {
+                    "Village": {
+                        "Village_Name": "Phonesaiy Village"
+                    }
+                }
+            ]
+        },
+        "Village": {
+            "Village_Name": "Phonesaiy Village"
+        }
     },
     "Bill_Items": [
         {
@@ -73,7 +135,6 @@
             "Product_Condition": {
                 "condition_Name": "Brand New"
             },
-
             "Item_Qty": 2,
             "Product": {
                 "Barcode": "asdasdasdasd",
