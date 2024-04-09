@@ -36,32 +36,72 @@ create table `Discount` (
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `BranchTelNumber` (
- BranchTelNumberId int(11) not null,
- TelNumber varchar(255)  default null,
- BranchId int(11) not null,
- primary key (BranchTelNumberId),
- KEY IX_BranchTelNumber_BranchId (BranchId),
- CONSTRAINT FK_BranchTelNumber_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE    
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `Branch` (
- BranchId int(11) not null,
- BranchName varchar(255)  default null,
- primary key (BranchId)    
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `DeliveryBranch` (
- DeliveryBranchId int(11) not null,
- BranchId int(11) not null,
+create table `City` (
+ CityId int(11) not null,
+ CityName varchar(255)  default null,
+ ProvinceId int(11) not null,
+ primary key (CityId),
+ KEY IX_City_ProvinceId (ProvinceId),
+ CONSTRAINT FK_City_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `City` (
+ CityId int(11) not null,
+ CityName varchar(255)  default null,
+ ProvinceId int(11) not null,
+ primary key (CityId),
+ KEY IX_City_ProvinceId (ProvinceId),
+ CONSTRAINT FK_City_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Village` (
+ VillageId int(11) not null,
+ VillageName varchar(255)  default null,
+ CityId int(11) not null,
+ primary key (VillageId),
+ KEY IX_Village_CityId (CityId),
+ CONSTRAINT FK_Village_City_CityId FOREIGN KEY (CityId) REFERENCES `City` (CityId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `BranchLocation` (
+ BranchLocationId int(11) not null,
+ ProvinceId int(11) not null,
+ CityId int(11) not null,
+ VillageId int(11) not null,
  DeliveryServiceId int(11) not null,
- primary key (DeliveryBranchId),
- KEY IX_DeliveryBranch_BranchId (BranchId),
- KEY IX_DeliveryBranch_DeliveryServiceId (DeliveryServiceId),
- CONSTRAINT FK_DeliveryBranch_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE,
- CONSTRAINT FK_DeliveryBranch_DeliveryService_DeliveryServiceId FOREIGN KEY (DeliveryServiceId) REFERENCES `DeliveryService` (DeliveryServiceId) ON DELETE CASCADE    
+ primary key (BranchLocationId),
+ KEY IX_BranchLocation_ProvinceId (ProvinceId),
+ KEY IX_BranchLocation_CityId (CityId),
+ KEY IX_BranchLocation_VillageId (VillageId),
+ KEY IX_BranchLocation_DeliveryServiceId (DeliveryServiceId),
+ CONSTRAINT FK_BranchLocation_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE,
+ CONSTRAINT FK_BranchLocation_City_CityId FOREIGN KEY (CityId) REFERENCES `City` (CityId) ON DELETE CASCADE,
+ CONSTRAINT FK_BranchLocation_Village_VillageId FOREIGN KEY (VillageId) REFERENCES `Village` (VillageId) ON DELETE CASCADE,
+ CONSTRAINT FK_BranchLocation_DeliveryService_DeliveryServiceId FOREIGN KEY (DeliveryServiceId) REFERENCES `DeliveryService` (DeliveryServiceId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;
 
 
@@ -72,20 +112,54 @@ create table `DeliveryService` (
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `BranchTelNumber` (
- BranchTelNumberId int(11) not null,
- TelNumber varchar(255)  default null,
- BranchId int(11) not null,
- primary key (BranchTelNumberId),
- KEY IX_BranchTelNumber_BranchId (BranchId),
- CONSTRAINT FK_BranchTelNumber_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE    
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
 
-create table `Branch` (
- BranchId int(11) not null,
- BranchName varchar(255)  default null,
- primary key (BranchId)    
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `City` (
+ CityId int(11) not null,
+ CityName varchar(255)  default null,
+ ProvinceId int(11) not null,
+ primary key (CityId),
+ KEY IX_City_ProvinceId (ProvinceId),
+ CONSTRAINT FK_City_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `City` (
+ CityId int(11) not null,
+ CityName varchar(255)  default null,
+ ProvinceId int(11) not null,
+ primary key (CityId),
+ KEY IX_City_ProvinceId (ProvinceId),
+ CONSTRAINT FK_City_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Village` (
+ VillageId int(11) not null,
+ VillageName varchar(255)  default null,
+ CityId int(11) not null,
+ primary key (VillageId),
+ KEY IX_Village_CityId (CityId),
+ CONSTRAINT FK_Village_City_CityId FOREIGN KEY (CityId) REFERENCES `City` (CityId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;
 
 
@@ -108,6 +182,75 @@ create table `Staff` (
  primary key (StaffId),
  KEY IX_Staff_PermissionId (PermissionId),
  CONSTRAINT FK_Staff_Permission_PermissionId FOREIGN KEY (PermissionId) REFERENCES `Permission` (PermissionId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `City` (
+ CityId int(11) not null,
+ CityName varchar(255)  default null,
+ ProvinceId int(11) not null,
+ primary key (CityId),
+ KEY IX_City_ProvinceId (ProvinceId),
+ CONSTRAINT FK_City_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Province` (
+ ProvinceId int(11) not null,
+ ProvinceName varchar(255)  default null,
+ primary key (ProvinceId)    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `City` (
+ CityId int(11) not null,
+ CityName varchar(255)  default null,
+ ProvinceId int(11) not null,
+ primary key (CityId),
+ KEY IX_City_ProvinceId (ProvinceId),
+ CONSTRAINT FK_City_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Village` (
+ VillageId int(11) not null,
+ VillageName varchar(255)  default null,
+ CityId int(11) not null,
+ primary key (VillageId),
+ KEY IX_Village_CityId (CityId),
+ CONSTRAINT FK_Village_City_CityId FOREIGN KEY (CityId) REFERENCES `City` (CityId) ON DELETE CASCADE    
+) engine=InnoDB default charset=utf8mb4;
+
+
+create table `Location` (
+ LocationId int(11) not null,
+ ProvinceId int(11) not null,
+ CityId int(11) not null,
+ VillageId int(11) not null,
+ CustomerId int(11) not null,
+ primary key (LocationId),
+ KEY IX_Location_ProvinceId (ProvinceId),
+ KEY IX_Location_CityId (CityId),
+ KEY IX_Location_VillageId (VillageId),
+ KEY IX_Location_CustomerId (CustomerId),
+ CONSTRAINT FK_Location_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE,
+ CONSTRAINT FK_Location_City_CityId FOREIGN KEY (CityId) REFERENCES `City` (CityId) ON DELETE CASCADE,
+ CONSTRAINT FK_Location_Village_VillageId FOREIGN KEY (VillageId) REFERENCES `Village` (VillageId) ON DELETE CASCADE,
+ CONSTRAINT FK_Location_Customer_CustomerId FOREIGN KEY (CustomerId) REFERENCES `Customer` (CustomerId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;
 
 
@@ -244,7 +387,10 @@ create table `Bill` (
  DepositMoney int(11) not null,
  DiscountId int(11) not null,
  DeliveryServiceId int(11) not null,
- BranchId int(11) not null,
+ ProvinceId int(11) not null,
+ CityId int(11) not null,
+ VillageId int(11) not null,
+ AdditionalAddressInfo varchar(255)  default null,
  StaffId int(11) not null,
  CustomerId int(11) not null,
  primary key (BillId),
@@ -252,14 +398,18 @@ create table `Bill` (
  KEY IX_Bill_ShippingMethodId (ShippingMethodId),
  KEY IX_Bill_DiscountId (DiscountId),
  KEY IX_Bill_DeliveryServiceId (DeliveryServiceId),
- KEY IX_Bill_BranchId (BranchId),
+ KEY IX_Bill_ProvinceId (ProvinceId),
+ KEY IX_Bill_CityId (CityId),
+ KEY IX_Bill_VillageId (VillageId),
  KEY IX_Bill_StaffId (StaffId),
  KEY IX_Bill_CustomerId (CustomerId),
  CONSTRAINT FK_Bill_OrderStatus_OrderStatusId FOREIGN KEY (OrderStatusId) REFERENCES `OrderStatus` (OrderStatusId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_ShippingMethod_ShippingMethodId FOREIGN KEY (ShippingMethodId) REFERENCES `ShippingMethod` (ShippingMethodId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Discount_DiscountId FOREIGN KEY (DiscountId) REFERENCES `Discount` (DiscountId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_DeliveryService_DeliveryServiceId FOREIGN KEY (DeliveryServiceId) REFERENCES `DeliveryService` (DeliveryServiceId) ON DELETE CASCADE,
- CONSTRAINT FK_Bill_Branch_BranchId FOREIGN KEY (BranchId) REFERENCES `Branch` (BranchId) ON DELETE CASCADE,
+ CONSTRAINT FK_Bill_Province_ProvinceId FOREIGN KEY (ProvinceId) REFERENCES `Province` (ProvinceId) ON DELETE CASCADE,
+ CONSTRAINT FK_Bill_City_CityId FOREIGN KEY (CityId) REFERENCES `City` (CityId) ON DELETE CASCADE,
+ CONSTRAINT FK_Bill_Village_VillageId FOREIGN KEY (VillageId) REFERENCES `Village` (VillageId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Staff_StaffId FOREIGN KEY (StaffId) REFERENCES `Staff` (StaffId) ON DELETE CASCADE,
  CONSTRAINT FK_Bill_Customer_CustomerId FOREIGN KEY (CustomerId) REFERENCES `Customer` (CustomerId) ON DELETE CASCADE    
 ) engine=InnoDB default charset=utf8mb4;

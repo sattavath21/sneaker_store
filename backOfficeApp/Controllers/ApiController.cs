@@ -282,25 +282,25 @@ public IActionResult GetDeliveryServicesSelection()
     return Ok(deliveryServices);
 }
 
-[HttpGet]
-public IActionResult GetBranchesSelection(int selectedDeliveryServiceId)
-{
-    try
-    {
-        // Assuming _db is your DbContext instance
-        var branches = _db.DeliveryBranch
-                          .Where(db => db.DeliveryServiceId == selectedDeliveryServiceId)
-                          .Select(db => db.Branch)
-                          .ToList();
+// [HttpGet]
+// public IActionResult GetBranchesSelection(int selectedDeliveryServiceId)
+// {
+//     try
+//     {
+//         // Assuming _db is your DbContext instance
+//         var branches = _db.DeliveryBranch
+//                           .Where(db => db.DeliveryServiceId == selectedDeliveryServiceId)
+//                           .Select(db => db.Branch)
+//                           .ToList();
 
-        return Ok(branches);
-    }
-    catch (Exception ex)
-    {
-        // Handle exceptions appropriately
-        return StatusCode(500, "An error occurred while fetching branches.");
-    }
-}
+//         return Ok(branches);
+//     }
+//     catch (Exception ex)
+//     {
+//         // Handle exceptions appropriately
+//         return StatusCode(500, "An error occurred while fetching branches.");
+//     }
+// }
 
     [HttpGet]
     public IActionResult GetOrderStatusesSelection()

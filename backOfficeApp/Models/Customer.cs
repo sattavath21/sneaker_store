@@ -10,6 +10,8 @@ public class Customer {
   public String Email {get;set;}//label="Email"
   public String CustomerPhoneNumber {get;set;}//label="Customer_ Phone_ Number"
   public String CustomerSocialLink {get;set;}//label="Customer_ Social_ Link"
+  public List<Location> Locations {get;set;}
+//label="Locations"
 
 }//ec
 

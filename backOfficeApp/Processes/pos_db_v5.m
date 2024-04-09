@@ -21,61 +21,56 @@
             "Method_Name": "In-store Pickup"
         }
     },
+
     "Delivery_Service": {
         "Delivery_Company_Name": "Anousith Express",
-        "Delivery_Provinces": [
+        "Branch_Locations": [
             {
                 "Province": {
-                    "Province_Name": "Savannakhet",
-                    "Province_Cities": [
-                        {
-                            "City": {
-                                "City_Name": "Kaiysone Phomvihane",
-                                "City_Villages": [
-                                    {
-                                        "Village": {
-                                            "Village_Name": "Phonesaiy Village"
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            }
-        ]
-    },
-    "Province": {
-        "Province_Name": "Savannakhet",
-        "Province_Cities": [
-            {
+                    "Province_Name": "Savannakhet"
+                },
                 "City": {
                     "City_Name": "Kaiysone Phomvihane",
-                    "City_Villages": [
-                        {
-                            "Village": {
-                                "Village_Name": "Phonesaiy Village"
-                            }
+                    "Province": {
+                        "Province_Name": "Savannakhet"
+                    }
+                },
+                "Village": {
+                    "Village_Name": "asdasd",
+                    "City": {
+                        "City_Name": "Kaiysone Phomvihane",
+                        "Province": {
+                            "Province_Name": "Savannakhet"
                         }
-                    ]
+                    }
                 }
             }
         ]
     },
+
+    "Province": {
+        "Province_Name": "Savannakhet"
+    },
+
     "City": {
         "City_Name": "Kaiysone Phomvihane",
-        "City_Villages": [
-            {
-                "Village": {
-                    "Village_Name": "Phonesaiy Village"
-                }
-            }
-        ]
+        "Province": {
+            "Province_Name": "Savannakhet"
+        }
     },
+
     "Village": {
-        "Village_Name": "Phonesaiy Village"
+        "Village_Name": "asdasd",
+        "City": {
+            "City_Name": "Kaiysone Phomvihane",
+            "Province": {
+                "Province_Name": "Savannakhet"
+            }
+        }
     },
+
     "Additional_Address_Info": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
+
     "Staff": {
         "Staff_Firstname": "andy",
         "Staff_Lastname": "asdasdo",
@@ -95,36 +90,29 @@
         "Email": "huangguifu21@gmail.com",
         "Customer_Phone_Number": "asdasdasdasd",
         "Customer_Social_Link": "axdasdasdasd",
-        "Province": {
-            "Province_Name": "Savannakhet",
-            "Province_Cities": [
-                {
-                    "City": {
-                        "City_Name": "Kaiysone Phomvihane",
-                        "City_Villages": [
-                            {
-                                "Village": {
-                                    "Village_Name": "Phonesaiy Village"
-                                }
-                            }
-                        ]
+      "Locations": [
+        {
+            "Province": {
+                "Province_Name": "Savannakhet"
+            },
+            "City": {
+                "City_Name": "Kaiysone Phomvihane",
+                "Province": {
+                    "Province_Name": "Savannakhet"
+                }
+            },
+            "Village": {
+                "Village_Name": "asdasd",
+                "City": {
+                    "City_Name": "Kaiysone Phomvihane",
+                    "Province": {
+                        "Province_Name": "Savannakhet"
                     }
                 }
-            ]
-        },
-        "City": {
-            "City_Name": "Kaiysone Phomvihane",
-            "City_Villages": [
-                {
-                    "Village": {
-                        "Village_Name": "Phonesaiy Village"
-                    }
-                }
-            ]
-        },
-        "Village": {
-            "Village_Name": "Phonesaiy Village"
+            }
         }
+    ]
+
     },
     "Bill_Items": [
         {

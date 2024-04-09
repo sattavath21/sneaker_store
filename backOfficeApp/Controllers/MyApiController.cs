@@ -38,10 +38,16 @@ public class MyApiController : ControllerBase
     public IActionResult GetDeliveryServices()
     {
         var list1 = _db.DeliveryService
-            .Include(db => db.DeliveryBranches).ThenInclude(db => db.Branch).ThenInclude(db => db.BranchTelNumbers)
+            .Include(db => db.BranchLocations)
+                .ThenInclude(db => db.Province)
+            .Include(db => db.BranchLocations)
+                .ThenInclude(db => db.City)
+            .Include(db => db.BranchLocations)
+                .ThenInclude(db => db.Village)
             .ToList();
         return Ok(list1);
     }
+
     [HttpPost]
     public IActionResult AddDeliveryService(DeliveryService newDeliveryService)
     {
@@ -194,8 +200,7 @@ public class MyApiController : ControllerBase
         {
             // Find the delivery service entity to delete based on the ID
             var deliveryToDelete = _db.DeliveryService
-                .Include(ds => ds.DeliveryBranches)
-                    .ThenInclude(db => db.Branch)
+                .Include(ds => ds.BranchLocations)
                 .FirstOrDefault(x => x.DeliveryServiceId == deliveryServiceIdToDelete);
 
             if (deliveryToDelete == null)
@@ -204,11 +209,9 @@ public class MyApiController : ControllerBase
             }
 
             // Remove the associated delivery branches and branches
-            foreach (var deliveryBranch in deliveryToDelete.DeliveryBranches)
+            foreach (var branchLocation in deliveryToDelete.BranchLocations)
             {
-                _db.DeliveryBranch.Remove(deliveryBranch);
-                // Also remove the associated branch
-                _db.Branch.Remove(deliveryBranch.Branch);
+                _db.BranchLocation.Remove(branchLocation);
             }
 
             // Remove the delivery service from the database
@@ -225,73 +228,73 @@ public class MyApiController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public IActionResult AddBranch(Branch newBranch, int deliveryServiceId)
-    {
-        try
-        {
-            // Add the new branch to the Branch table
-            _db.Branch.Add(newBranch);
-            _db.SaveChanges();
+    // [HttpPost]
+    // public IActionResult AddBranch(Branch newBranch, int deliveryServiceId)
+    // {
+    //     try
+    //     {
+    //         // Add the new branch to the Branch table
+    //         _db.Branch.Add(newBranch);
+    //         _db.SaveChanges();
 
-            // Create a new DeliveryBranch object and associate it with the new branch and delivery service
-            var deliveryBranch = new DeliveryBranch
-            {
-                BranchId = newBranch.BranchId,
-                DeliveryServiceId = deliveryServiceId
-            };
+    //         // Create a new DeliveryBranch object and associate it with the new branch and delivery service
+    //         var deliveryBranch = new DeliveryBranch
+    //         {
+    //             BranchId = newBranch.BranchId,
+    //             DeliveryServiceId = deliveryServiceId
+    //         };
 
-            // Add the new delivery branch to the DeliveryBranch table
-            _db.DeliveryBranch.Add(deliveryBranch);
-            _db.SaveChanges();
+    //         // Add the new delivery branch to the DeliveryBranch table
+    //         _db.DeliveryBranch.Add(deliveryBranch);
+    //         _db.SaveChanges();
 
-            return Ok(newBranch);
-        }
-        catch (Exception ex)
-        {
-            // Log the exception for debugging purposes
-            Console.Error.WriteLine(ex);
-            return StatusCode(500, "Internal Server Error");
-        }
-    }
-    [HttpPost]
-    public IActionResult EditBranch(Branch b)
-    {
-        //update product
-        _db.Branch.Update(b);
-        _db.SaveChanges();
-        return Ok(b);
-    }//ef
-    [HttpPost]
-    public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
-    {
-        try
-        {
-            // Find the delivery service entity to delete based on the ID
-            var deliveryBranchToDelete = _db.DeliveryBranch
-                .Include(ds => ds.Branch)
-                .FirstOrDefault(x => x.DeliveryBranchId == deliveryBranchId);
+    //         return Ok(newBranch);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Log the exception for debugging purposes
+    //         Console.Error.WriteLine(ex);
+    //         return StatusCode(500, "Internal Server Error");
+    //     }
+    // }
+    // [HttpPost]
+    // public IActionResult EditBranch(Branch b)
+    // {
+    //     //update product
+    //     _db.Branch.Update(b);
+    //     _db.SaveChanges();
+    //     return Ok(b);
+    // }//ef
+    // [HttpPost]
+    // public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
+    // {
+    //     try
+    //     {
+    //         // Find the delivery service entity to delete based on the ID
+    //         var deliveryBranchToDelete = _db.DeliveryBranch
+    //             .Include(ds => ds.Branch)
+    //             .FirstOrDefault(x => x.DeliveryBranchId == deliveryBranchId);
 
-            if (deliveryBranchToDelete == null)
-            {
-                return NotFound("DeliveryBranch not found");
-            }
+    //         if (deliveryBranchToDelete == null)
+    //         {
+    //             return NotFound("DeliveryBranch not found");
+    //         }
 
-            _db.Branch.Remove(deliveryBranchToDelete.Branch);
+    //         _db.Branch.Remove(deliveryBranchToDelete.Branch);
 
-            // Remove the delivery service from the database
-            _db.DeliveryBranch.Remove(deliveryBranchToDelete);
-            _db.SaveChanges();
+    //         // Remove the delivery service from the database
+    //         _db.DeliveryBranch.Remove(deliveryBranchToDelete);
+    //         _db.SaveChanges();
 
-            return Ok(new { message = "DeliveryBranch and associated branches deleted successfully" });
-        }
-        catch (Exception ex)
-        {
-            // Log the exception for debugging purposes
-            Console.Error.WriteLine(ex);
-            return StatusCode(500, "Internal Server Error");
-        }
-    }
+    //         return Ok(new { message = "DeliveryBranch and associated branches deleted successfully" });
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Log the exception for debugging purposes
+    //         Console.Error.WriteLine(ex);
+    //         return StatusCode(500, "Internal Server Error");
+    //     }
+    // }
 
 
     [HttpGet]
@@ -302,7 +305,9 @@ public class MyApiController : ControllerBase
         .Include(b => b.ShippingMethod)
         .Include(b => b.Discount)
         .Include(b => b.DeliveryService)
-        .Include(b => b.Branch)
+        .Include(b => b.Province)
+        .Include(b => b.City)
+        .Include(b => b.Village)
         .Include(b => b.Staff)
         .Include(b => b.Customer)
         .Include(b => b.BillItems)

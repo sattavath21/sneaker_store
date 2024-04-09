@@ -15,8 +15,13 @@ public class Bill {
   public Discount Discount {get;set;} //np
   public int DeliveryServiceId {get;set;}//fk="DeliveryService"
   public DeliveryService DeliveryService {get;set;} //np
-  public int BranchId {get;set;}//fk="Branch"
-  public Branch Branch {get;set;} //np
+  public int ProvinceId {get;set;}//fk="Province"
+  public Province Province {get;set;} //np
+  public int CityId {get;set;}//fk="City"
+  public City City {get;set;} //np
+  public int VillageId {get;set;}//fk="Village"
+  public Village Village {get;set;} //np
+  public String AdditionalAddressInfo {get;set;}//label="Additional_ Address_ Info"
   public int StaffId {get;set;}//fk="Staff"
   public Staff Staff {get;set;} //np
   public int CustomerId {get;set;}//fk="Customer"
