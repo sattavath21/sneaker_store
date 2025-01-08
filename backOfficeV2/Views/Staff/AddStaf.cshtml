@@ -1,0 +1,265 @@
+@{
+    ViewData["Title"] = "ເພິ່ມພະນັກງານ";
+}
+<div id="app1">
+
+  <div class="text-h4 text-weight-bold text-white bg-grey-9 q-pa-lg">ເພີ່ມພະນັກງານໃໝ່</div>
+    <q-card class="my-card bg-grey-2">
+        <q-card-section class="bg-cyan text-white">
+            <div class="text-h6">ຂໍ້ມູນພະນັກງານ</div>
+        </q-card-section>
+        <div class="text-h6 q-pa-lg">ຂໍ້ມູນທົ່ວໄປ</div>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffFirstName" label="ຊື່ແທ້" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffLastName" label="ນາມສະກຸນ" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+
+        <q-input class="q-px-sm" filled v-model="newStaff.staffBirthday" mask="date" style="width: 300px;" label="ວັນເກີດ">
+            <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="newStaff.staffBirthday" landscape color="red">
+                            <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="grey" flat></q-btn>
+                            </div>
+                        </q-date>
+
+                    </q-popup-proxy>
+                </q-icon>
+            </template>
+        </q-input>
+
+        <q-separator vertical class="q-my-md"></q-separator>
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.email" label="ອີເມລ" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+
+
+        <q-input class="q-px-sm q-mb-sm" v-model="newStaff.password" filled :type="isPwd ? 'password' : 'text'" label="ລະຫັດ" lazy-rules
+            :rules="[ val => val && val.length > 0 || 'Please type something']">
+            <template v-slot:append>
+          <q-icon
+            :name="isPwd ? 'visibility_off' : 'visibility'"
+            class="cursor-pointer"
+            @@click="isPwd = !isPwd"
+          />
+        </template>
+            </q-input>
+
+
+        <q-input class="q-px-sm q-mb-sm" filled v-model="newStaff.staffPhoneNumber" label="ເບີໂທລະສັບ" lazy-rules mask="### #### ####"
+            :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+
+        <q-select class="q-px-sm q-mb-md" filled v-model="newStaff.permissionId"
+            style="min-width: 300px; height: 10px margin: 10px; padding: 5px;" emit-value :options="permissionOptions"
+            label="ເລືອກສິດທິ" options-cover map-options> </q-select>
+
+        <q-separator vertical class="q-my-md"></q-separator>
+        <div class="justify-end row">
+            <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onResetStaff" size="lg"></q-btn>
+        </div>
+        <q-card-actions align="left">
+            <q-btn icon="arrow_downward" label="ບັນທຶກ" type="submit" color="primary" class="text-h7 q-ma-lg"
+                @@click="staffConfirm2 = true" size="lg"></q-btn>
+            <q-dialog v-model="staffConfirm2" persistent>
+                <q-card>
+                    <q-card-section class="row items-center">
+                        <q-avatar icon="groups" color="brown-10" text-color="white"></q-avatar>
+                        <span class="q-ml-sm">ເພີ່ມພະນັກງານໃໝ່?</span>
+                    </q-card-section>
+
+                    <q-card-actions align="center">
+                        <q-btn class="q-ma-sm" color="brown-10" @@click="addStaff" label="Yes" v-close-popup></q-btn>
+                        <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+            <q-btn icon="arrow_back" label="ກັບຄືນ" color="grey-7" class="text-h7 text-white" size="lg"
+                onclick='window.location="/staff"'></q-btn>
+            <q-dialog v-model="staffCompletedDialog">
+                <q-card class="bg-indigo-1">
+                    <q-card-section>
+
+                        <div class="text-h6">
+                            ແລ້ວ!
+                            <q-icon name="done">
+                            </q-icon>
+
+                        </div>
+                    </q-card-section>
+
+                    <q-card-section class="q-pt-none">
+                        ຂໍ້ມູນພະນັກງານໄດ້ຖືກເພີ່ມຮຽບຮ້ອຍແລ້ວ!
+                    </q-card-section>
+
+                    <q-card-actions align="right">
+                        <q-btn flat label="Ok" color="indigo" v-close-popup></q-btn>
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+        </q-card-actions>
+    </q-card>
+
+
+</div>
+
+@section code {
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    //your data go here
+                    isPwd: true,
+                    newStaff: {
+                        staffFirstName: "",
+                        staffLastName: "",
+                        password: "99thcentury1234",
+                        staffBirthday: "",
+                        email: "",
+                        staffPhoneNumber: "",
+                        permissionId: null,
+                    },
+
+                    permissionOptions: [],
+                              staffConfirm2: false
+
+
+                };
+            }
+            ,
+            //methods
+            methods: {
+                formatAddStaffDate(birthdate) {
+                    // Assuming item.staffBirthday is a string in the format "yyyy/MM/dd"
+                    const inputDateString = birthdate;
+                    const inputDate = new Date(inputDateString);
+                    const year = inputDate.getFullYear();
+                    const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(inputDate.getDate()).padStart(2, '0');
+                    const formattedDateString = `${year}-${month}-${day}T00:00:00Z`;
+                    return formattedDateString;
+                },
+
+                async addStaff() {
+                    console.log("Function Started");
+
+                    try {
+                        this.newStaff.staffBirthday = this.formatAddStaffDate(this.newStaff.staffBirthday);
+                        console.log("Staff Object:", this.newStaff);
+                        // Make the API call
+                        @* var response = await axios.post("/bossapi/AddStaff", this.newStaff);
+                        console.log("Reponse Object:", response); *@
+
+                        var registerStaffResponse = await axios.post("/bossapi/RegisterStaff", this.newStaff);
+                        console.log("Reponse Register Object:", registerStaffResponse);
+
+                        // Handle the response or perform any necessary logic
+                        if (registerStaffResponse.status === 200) {
+                            // Additional logic after successful discount addition
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Staff added successfully!'
+                            });
+
+                            // Clear form fields and reset data after successful addition
+                            this.onResetStaff();
+                            // Show the completed dialog
+                            this.completedDialog = true;
+                        } else {
+                            // Log detailed error information
+                            console.error(registerStaffResponse);
+
+                            // Handle the case where the API call was not successful
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Error adding Staff. Please check the console for details.'
+                            });
+                        }
+                    } catch (error) {
+                        // Log detailed error information
+                        console.error(error);
+
+                        // Hide loading indicator in case of an error
+                        this.$q.loading.hide();
+
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error adding Staff. Please check the console for details.'
+                        });
+                    }
+                }
+                ,
+                onResetStaff() {
+                    // Show an ongoing notification
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Resetting...'
+                    });
+
+                    // Simulate delay for 715 milliseconds
+                    setTimeout(() => {
+                        notif({
+                            type: 'positive',
+                            message: 'ລີເຊັດຮຽບຮ້ອຍ!',
+                            timeout: 215
+                        });
+
+                        // Reset the form fields and data
+                        this.newStaff = {
+                        staffFirstName: "",
+                        staffLastName: "",
+                        password: "",
+                        staffBirthday: "",
+                        email: "",
+                        staffPhoneNumber: "",
+                        permissionId: null,
+                    };
+
+                    this.permissionOptions = [];
+                              
+
+
+                    }, 200);
+                }
+
+            }
+            ,
+            //computed
+            computed: {
+
+            }
+            ,
+            //created
+            async created() {
+                try {
+                    var res = await axios.get("/bossapi/GetPermissions");
+                    this.permissionOptions = res.data.map(permission => ({
+                        label: permission.permissionName,
+                        value: permission.permissionId
+                    }));
+                    console.log(this.permissionOptions);
+                }
+                catch (ex) {
+                    console.error('Error fetching permission Options:', ex);
+                }
+            }
+            ,
+            //mounted
+            mounted() {
+
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}

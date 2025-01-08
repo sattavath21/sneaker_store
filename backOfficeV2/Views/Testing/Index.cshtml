@@ -1,0 +1,97 @@
+<div id="app1">
+    <div>
+        <!-- Button to trigger file input -->
+        <button @@click="triggerFileInput">Choose File</button>
+
+        <!-- Hidden file input -->
+        <input type="file" accept="image/*" ref="fileInput" style="display: none;" @@change="handleFileChange" />
+
+        <!-- Display the selected image -->
+        <div v-if="filePreview">
+            <img :src="filePreview" alt="Selected Product" style="max-width: 250px;" />
+        </div>
+
+        <!-- Upload button -->
+        <button @@click="uploadImage">Upload</button>
+
+
+<img v-if="imageString" :src="imageString" alt="Uploaded Image" />
+
+    </div>
+</div>
+
+@section code {
+    <script>
+        var app1 = {
+            // Data
+            data() {
+                return {
+                    selectedFile: null,
+                    filePreview: null,  // For displaying the image preview
+                    imageString: "null"
+                };
+            },
+            // Methods
+            methods: {
+                // Trigger file input click
+                triggerFileInput() {
+                    this.$refs.fileInput.click();
+                },
+
+                // Handle file selection
+                handleFileChange(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.selectedFile = file;
+                        this.filePreview = URL.createObjectURL(file);  // Create preview URL for image
+                    }
+                },
+
+                // Upload image to server using axios
+                async uploadImage() {
+                    if (!this.selectedFile) {
+                        alert('Please select an image to upload');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('file', this.selectedFile);
+
+                    try {
+                        // Using axios to send the image to the server
+                        const response = await axios.post('/bossapi/UploadProductImage', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+
+                       console.log("Response:", response); // Log the full response object
+                        console.log("Response Data:", response.data); // Log the actual response data
+
+                        this.imageString = response.data.imageUrl; // Use the image URL
+
+                        // Handling server response
+                        if (response.data.success) {
+                            alert('Image uploaded successfully');
+                        } else {
+                            alert('Failed to upload image');
+                            console.debug(response.data)
+
+                        }
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                        alert('An error occurred while uploading the image');
+                    }
+                }
+            },
+            // Mounted hook
+            mounted() {
+                // Any initialization can go here if needed
+            }
+        };
+
+        const app = Vue.createApp(app1);
+        app.use(Quasar);
+        app.mount('#app1');
+    </script>
+}

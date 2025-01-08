@@ -1,0 +1,97 @@
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+@{
+    ViewData["Title"] = "ລັອກອິນ";
+}
+<div id="app1">
+    <div class="row" style="margin-top: 150px;">
+        <div class="col-4"></div>
+<div class="col-3 bg-white q-ma-xl" style="border-radius: 10px; box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.3);">
+            <q-form ref="form" class="q-px-lg q-pb-lg" @@submit.prevent="login">
+                <div align="center" class="text-h5 text-weight-bold text-white bg-red-14 q-pa-md q-mb-lg q-mx-lg" >SIGN IN</div>
+                <div align="center" class="q-pb-md">
+                    <q-icon name="account_box" size="6em" color="grey-8"></q-icon>
+                </div>
+                <q-input v-model="signin.email" rounded standout="bg-grey text-white" label="Email" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
+                    <div align="right" class="q-py-md">
+                        <q-icon name="account_circle" size="2em" color="grey-7"></q-icon>
+                    </div>
+                </q-input>
+                
+                <q-input v-model="signin.password" :type="isPwd ? 'password' : 'text'" rounded standout="bg-grey text-white" label="Password" lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']">
+                    <template v-slot:append>
+                        <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
+                        @@click="isPwd = !isPwd"></q-icon>
+                    </template>
+                </q-input>
+                
+                <div class="q-my-md" style="display: flex; justify-content: center;">
+                    <q-btn ripple="{ center: true }" rounded class="text-blue-1 bg-red-14 q-pa-sm" type="submit" label="Login" icon="login" style="min-width: 180px; height: 45px;">
+                    </q-btn>
+            </q-form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+@section code{
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    isPwd: true,
+                    //your data go here
+
+                    signin: {
+                        email: '',
+                        password: '',
+                        returnUrl: '@ViewBag.ReturnUrl'
+                    }
+
+                };
+            }
+            ,
+            //methods
+            methods: {
+                async login() {
+                    //data is object notation
+                    try {
+                        var res = await axios.post('/security/login', this.signin);
+                        var result = res.data;
+                        if (result.code == 1) {
+                            window.location.href = result.path || '/Cart/Index';
+                        }
+                        
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+
+
+                }
+            }
+            ,
+            //computed
+            computed: {
+
+            }
+            ,
+            //created
+            created() {
+                console.log(this.signin.returnUrl);
+            }
+            ,
+            //mounted
+            mounted() {
+
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}

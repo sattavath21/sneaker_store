@@ -1,0 +1,146 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+
+* {
+  font-family: 'Noto Sans Lao', sans-serif;
+  /* Change the font-family to Noto Sans */
+  font-style: normal;
+  font-weight: 400;
+}
+
+
+/* Adjust the font size of the table content */
+.q-table tbody tr td {
+  font-size: 13px;
+  /* Adjust the font size as needed */
+}
+
+.custom-expandable-table-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding-left: 1%;
+  /* Adjust left padding as needed */
+  padding-right: 1%;
+  /* Adjust right padding as needed */
+}
+
+.deposit-money {
+  color: #ff4d4d; /* Bright red for deductions */
+  font-weight: bold; /* Optional: Make it stand out */
+}
+
+.grand-total {
+  color: #4caf50; /* Bright green for positive balance */
+  font-weight: bold; /* Optional: Make it stand out */
+}
+
+.total {
+  color: #2196f3; /* Neutral blue for totals */
+  font-weight: bold;
+}
+.dark-background {
+  background-color: #c9c9c9; /* Dark background color */
+}
+
+.brand-info {
+  display: flex;
+  align-items: center; /* Align image and text vertically */
+}
+
+
+.brand-logo {
+  width: 26px;
+  height: 26px;
+  margin-right: 8px; /* Space between image and text */
+  display: inline-block; /* Ensure image doesn't behave block-like */
+}
+
+.brand-name {
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.my-sticky-column-table {
+  background-color: grey-2;
+}
+
+/* Style for the 4th column header */
+.my-sticky-column-table thead tr:first-child th:nth-child(4) {
+  background-color: #fff;
+  opacity: 1;
+}
+
+/* Style for the 4th column cells */
+.my-sticky-column-table td:nth-child(4) {
+  background-color: #ffffff;
+  /* Set the background color */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* Apply elevation effect */
+}
+
+/* Making the 4th column sticky */
+.my-sticky-column-table td:nth-child(4),
+.my-sticky-column-table th:nth-child(4) {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+/* Color the cells in the 4th column as white */
+.q-table .fourth-column {
+  background-color: #fff !important;
+  /* Ensure that the background color is white */
+}
+
+
+.product-sticky-column-table {
+  background-color: grey-2;
+}
+
+/* Style for the 4th column header */
+.product-sticky-column-table thead tr:first-child th:nth-child(3) {
+  background-color: #fff;
+  opacity: 1;
+}
+
+/* Style for the 4th column cells */
+.product-sticky-column-table td:nth-child(3) {
+  background-color: #ffffff;
+  /* Set the background color */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* Apply elevation effect */
+}
+
+/* Making the 4th column sticky */
+.product-sticky-column-table td:nth-child(3),
+.product-sticky-column-table th:nth-child(3) {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.my-card-dashboard{
+  height: 220px;
+  width: 100%;
+
+}
+
+

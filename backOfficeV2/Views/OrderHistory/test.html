@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill</title>
+  <style nonce="undefined">
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .center {
+      text-align: center;
+    }
+    .left {
+      text-align: left;
+    }
+    .right {
+      text-align: right;
+    }
+    .bold {
+      font-weight: bold;
+    }
+    .line {
+      border-top: 1px solid #000;
+      margin: 10px 0;
+    }
+    .bill-details, .items, .totals, .payment-method {
+      margin: 10px 0;
+    }
+    .padding{
+      padding: 2px;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .table th, .table td {
+      padding: 2px;
+    }
+    .table th:nth-child(1), .table td:nth-child(1) {
+      text-align: left;
+    }
+    .table th:nth-child(2), .table td:nth-child(2),
+    .table th:nth-child(3), .table td:nth-child(3) {
+      text-align: center;
+    }
+    .table th:nth-child(4), .table td:nth-child(4) {
+      text-align: right;
+    }
+    .logo {
+      width: 100px;
+      margin-top: 20px;
+    }
+    .flex {
+      display: flex;
+      justify-content: space-between;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="center">
+    <img src="logo.png" alt="Logo" class="logo"/>
+    <div class="padding">ຮ້ານ Jame Sec Shoe</div>
+    <div>ສາຂາສະຫວັນນະເຂດ</div>
+    <div>ໃບເກັບເງິນ</div>
+    </div>
+    <div class="left bill-details">
+    <div class="padding">Bill No: 123456</div>
+    <div class="padding">Date: 2023-10-01</div>
+    <div class="padding">Staff: John Doe</div>
+    </div>
+    <div class="line"></div>
+    <div class="items">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Size</th>
+        <th>Qty</th>
+        <th>Price</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Product 2</td>
+        <td>40</td>
+        <td>2</td>
+        <td>2,700,000</td>
+      </tr>
+      <tr>
+        <td>Product 3</td>
+        <td>38</td>
+        <td>1</td>
+        <td>1,350,000</td>
+      </tr>
+      <tr>
+        <td>Product 1</td>
+        <td>42</td>
+        <td>1</td>
+        <td>1,350,000</td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+  <div class="line"></div>
+  <div class="totals">
+    <div class="left bold">Total items: 3</div>
+    <div class="right bold">4,050,000</div>
+  </div>
+  <div class="line"></div>
+  <div class="payment-method">
+    <div>ຮຼບແບບການຊຳລະ:</div>
+    <div class="flex bold padding">
+      <span>Cash-Lao kip</span>
+      <span class="right">4,100,000</span>
+    </div>
+    <div class="flex bold padding">
+      <span>Change-Lao kip</span>
+      <span class="right">50,000</span>
+    </div>
+  </div>
+  <div class="line"></div>
+  <div class="center">ຂໍຂອບໃຈທຸກທ່ານທີ່ມາອຸດໜູນ</div>
+</body>
+</html>

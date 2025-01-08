@@ -1,0 +1,377 @@
+@{
+    ViewData["Title"] = "ໜ້າແລກ";
+}
+<div id="app1" class="q-pa-sm column">
+    <div class="row no-wrap q-mx-sm q-my-md">
+        <!-- First Card -->
+        <q-card dark bordered class="bg-pink-1 my-card-dashboard col q-mx-sm justify-center items-start"
+        style="border-radius: 20px;"
+        >
+            <q-card-section class="row items-center q-ma-md">
+                <q-icon name="attach_money" class="q-mr-md text-green" size="md"></q-icon>
+                <div class="text-h5 text-black ">ຍອດການຂາຍ</div>
+            </q-card-section>
+            <q-card-section class="row items-center q-mx-md q-py-none">
+                <div class="text-h5 text-black text-bold q-mr-sm">{{ totalBillSales }}</div>
+                <div class="text-subtitle-2 text-grey-7 ">ບິນ</div>
+            </q-card-section>
+            <q-card-section class="row items-center q-mx-md q-py-none">
+                <div class="text-h6 text-black text-bold q-mr-sm">{{ totalProductSales }}</div>
+                <div class="text-subtitle-2 text-grey-7 ">ໜ່ວຍ</div>
+            </q-card-section>
+        </q-card>
+
+        <!-- Second Card -->
+        <q-card dark bordered class="bg-orange-1 my-card-dashboard col q-mx-sm"
+        style="border-radius: 20px;">
+            <q-card-section class="row items-center q-ma-md">
+                <q-icon name="favorite" class="q-mr-md text-red" size="md"></q-icon>
+                <div class="text-h5 text-black ">ສິນຄ້າຂາຍດີ</div>
+            </q-card-section>
+            <q-card-section class="row items-center q-mx-md q-py-none">
+                <div class="text-h5 text-black text-bold q-mr-sm">{{ topProduct.quantity }}</div>
+                <div class="text-subtitle-2 text-grey-7 ">ໜ່ວຍ</div>
+            </q-card-section>
+            <q-card-section class="q-ma-md q-py-none">
+                <div class="text-h6 text-black">{{ topProduct.productName }}</div>
+            </q-card-section>
+        </q-card>
+
+        <!-- Third Card -->
+        <q-card dark bordered class="bg-light-green-1 my-card-dashboard col q-mx-sm"
+        style="border-radius: 20px;">
+            <q-card-section class="row items-center q-ma-md">
+                <q-icon name="star" class="q-mr-md text-yellow" size="md"></q-icon>
+                <div class="text-h5 text-black ">ແບຣນຂາຍດີ</div>
+            </q-card-section>
+            <q-card-section class="row items-center q-mx-md q-py-none">
+                <div class="text-h5 text-black text-bold q-mr-sm">{{ topBrand.quantity }}</div>
+                <div class="text-subtitle-2 text-grey-7 ">ໜ່ວຍ</div>
+            </q-card-section>
+            <q-card-section class="q-ma-md q-py-none">
+                <div class="text-h6 text-black">{{ topBrand.brandName }}</div>
+            </q-card-section>
+        </q-card>
+    </div>
+
+
+    <div class="row q-ma-sm">
+        <q-card dark bordered class="bg-grey-1 col q-mx-md" style=" box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+            <q-card-section class="row items-center">
+                <q-icon name="straighten" class="q-mr-md text-blue" size="md"></q-icon>
+                <div class="text-h5 text-black ">Size ໃນສາງ</div>
+            </q-card-section>
+            <q-card-section class="items-center">
+                <q-table class="q-mx-md " :rows="shoeSizes" :columns="columnsShoeSize" :pagination="{ rowsPerPage: 0 }">
+                    <template v-slot:body="props">
+                        <q-tr :props="props">
+                            <q-td key="index" :props="props">{{ shoeSizes.indexOf(props.row) + 1 }}</q-td>
+                            <q-td key="shoeSize" :props="props">
+                                {{ props.row.shoeSize}}
+                            </q-td>
+                            <q-td key="quantity" :props="props">
+                                {{ props.row.quantity }}
+                            </q-td>
+
+                            <q-td key="view" :props="props">
+                                <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                                    @@click="openProductsSize(props.row)" icon="list" size="15px"></q-btn>
+                            </q-td>
+                        </q-tr>
+                    </template>
+                </q-table>
+                <!-- GridView dialog for all products size -->
+                <q-dialog v-model="isDialogOpen" auto-close>
+                    <q-card class="q-pa-md" style="width: 80%;">
+                        <q-card-section>
+                            <div class="text-h6">ສິນຄ້າໃນສາງ ໄຊ້ {{ selectedRow.shoeSize }}</div>
+                        </q-card-section>
+                        <q-separator class="q-ma-md"></q-separator>
+
+                        <!-- GridView Layout -->
+                        <div class="row q-col-gutter-md q-row-gutter-md">
+                            <!-- Loop through sizeProducts to generate cards dynamically -->
+                            <div v-for="(product, index) in sizeProducts" :key="index" class="col-6">
+                                <q-card>
+                                    <!-- Product Image -->
+                                    <q-card-section>
+                                        <q-img :src="product.productImagePath">
+                                            <template v-slot:error>
+                                                <div class="absolute-full flex flex-center bg-negative text-white">
+                                                    Cannot load image
+                                                </div>
+                                            </template>
+                                        </q-img>
+                                    </q-card-section>
+
+                                    <!-- Product Information -->
+                                    <q-card-section>
+                                        <div class="q-mb-sm">
+                                            <div class="text-h6 text-weight-medium">{{ product.productName.name }}</div>
+                                        </div>
+                                        <div class="q-mb-sm">
+                                            <span class="text-caption text-grey">Barcode:</span>
+                                            <div class="text-body1">{{ product.barcode }}</div>
+                                        </div>
+
+                                        <div class="q-mb-sm">
+                                            <span class="text-caption text-grey">Selling Price:</span>
+                                            <div class="text-body1 text-green">{{ product.sellingPrice }} ບາດ</div>
+                                        </div>
+                                        <div class="q-mb-sm">
+                                            <span class="text-caption text-grey">SKU:</span>
+                                            <div class="text-body1">{{ product.sku }}</div>
+                                        </div>
+                                        <div class="q-mb-sm flex items-center">
+                                            <span class="text-caption text-grey">Brand:</span>
+                                            <q-img :src="product.brand.brandLogoUrl" class="q-ml-sm"
+                                                style="width: 54px; height: 54px;"
+                                                    :ratio="1"
+                                                    fit="contain"
+                                                :alt="product.brand.name">
+                                                <template v-slot:error>
+                                                    <div class="absolute-full flex flex-center bg-negative text-white">
+                                                        Error
+                                                    </div>
+                                                </template>
+                                            </q-img>
+                                        </div>
+                                        <div class="q-mb-sm">
+                                            <span class="text-caption text-grey">Condition:</span>
+                                            <div class="text-body1">{{ product.conditionDescription || 'N/A' }}</div>
+                                        </div>
+                                        <div class="q-mb-sm">
+                                            <span class="text-caption text-grey">Box Condition:</span>
+                                            <div class="text-body1">{{ product.boxDescription || 'N/A' }}</div>
+                                        </div>
+                                    </q-card-section>
+                                </q-card>
+                            </div>
+                        </div>
+
+
+                    </q-card>
+                </q-dialog>
+
+            </q-card-section>
+        </q-card>
+
+        <q-card dark bordered class="bg-grey-1 col q-mx-sm" style="box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+            <q-card-section class="row items-center">
+                <q-icon name="inventory" class="q-mr-md text-blue" size="md"></q-icon>
+                <div class="text-h5 text-black ">ສິນຄ້າໃນສາງ</div>
+            </q-card-section>
+            <q-card-section class="items-center">
+                <q-table class="q-mx-md " :rows="products" :columns="columnsProduct" :pagination="{ rowsPerPage: 0 }">
+                    <template v-slot:body="props">
+                        <q-tr :props="props">
+                            <q-td key="index" :props="props">{{ products.indexOf(props.row) + 1 }}</q-td>
+                            <q-td key="productName" :props="props">
+                                {{ props.row.productName}}
+                            </q-td>
+                            <q-td key="quantity" :props="props">
+                                {{ props.row.quantity }}
+                            </q-td>
+                        </q-tr>
+                    </template>
+                </q-table>
+            </q-card-section>
+        </q-card>
+
+    </div>
+</div>
+
+@section code {
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    // Top Card Section
+                    totalBillSales: 0,
+                    totalProductSales: 0,
+
+                    topProduct: {
+                        productName: "",
+                        quantity: 0
+                    },
+
+                    topBrand: {
+                        brandName: "",
+                        brandUrl: "",
+                        quantity: 0
+                    },
+                    // ShoeSize Section
+                    columnsShoeSize: [
+                        {
+                            name: 'index',
+                            field: 'index',
+                            align: 'left',
+                            sortable: true,
+                            label: 'No'
+                        },
+                        {
+                            name: 'shoeSize',
+                            label: 'ໄຊ້',
+                            field: 'shoeSize',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+                        {
+                            name: 'quantity',
+                            label: 'ຈຳນວນ',
+                            field: 'quantity',
+                            align: 'center',
+                            sortable: true,
+                        },
+                        {
+                            name: 'view',
+                            label: 'ເບິ່ງສິນຄ້າໃນສາງ',
+                            field: 'view',
+                            align: 'center',
+                            sortable: true,
+                        },
+                    ],
+                    shoeSizes: [],
+                    // Product Section
+                    columnsProduct: [
+                        {
+                            name: 'index',
+                            field: 'index',
+                            align: 'left',
+                            sortable: true,
+                            label: 'No'
+                        },
+                        {
+                            name: 'productName',
+                            label: 'ຊື່ສິນຄ້າ',
+                            field: 'productName',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+                        {
+                            name: 'quantity',
+                            label: 'ຈຳນວນ',
+                            field: 'quantity',
+                            align: 'center',
+                            sortable: true,
+                        },
+                    ],
+                    products: [],
+                    sizeProducts: [],
+                    isDialogOpen: false,
+                    selectedRow: "",
+
+                };
+            }
+            ,
+            //methods
+            methods: {
+                async getShoeSize() {
+                    try {
+                        var response = await axios.get("/bossapi/GetShoeSizesWithQuantity");
+                        this.shoeSizes = response.data;
+
+                        console.log(this.shoeSizes);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+                async getProductName() {
+                    try {
+                        var response = await axios.get("/bossapi/GetProductsWithQuantity");
+                        this.products = response.data;
+
+                        console.log(this.products);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+                async getTopSaleProduct() {
+                    try {
+                        var response = await axios.get("/bossapi/GetTopSaleProduct");
+                        this.topProduct = response.data;
+
+                        console.log(this.topProduct);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+                async getTopSaleBrand() {
+                    try {
+                        var response = await axios.get("/bossapi/GetTopSaleBrand");
+                        this.topBrand = response.data;
+                        console.log(this.topBrand);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+
+                async getBillAndBillItemCount() {
+                    try {
+                        var response = await axios.get("/bossapi/GetBillAndBillItemCount");
+                        this.totalBillSales = response.data.totalBills;
+                        this.totalProductSales = response.data.totalBillItems;
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                },
+
+                async openProductsSize(row) {
+                    this.selectedRow = row; // Pass the clicked row to the dialog
+                    const [sizeType, sizeNumber] = this.selectedRow.shoeSize.split(" - ");
+                    const shoeSize = {
+                        sizeType: sizeType || "",
+                        sizeNumber: sizeNumber || ""
+                    };
+
+                    console.log("openPructSizeFunction: ", shoeSize);
+
+                    try {
+                        // Use the extracted sizeNumber for API call
+                        const response = await axios.get("/bossapi/GetProductsBySize", {
+                            params: { sizeType, sizeNumber }
+                        });
+                        console.log("Matching products: ", response.data);
+                        this.sizeProducts = response.data;
+                        this.isDialogOpen = true;
+
+                    } catch (error) {
+                        console.error("Error fetching products by size: ", error.response?.data || error.message);
+                    }
+
+                },
+
+
+
+            }
+            ,
+            //computed
+            computed: {
+
+            }
+            ,
+            //created
+            created() {
+
+            }
+            ,
+            //mounted
+            mounted() {
+                this.getShoeSize();
+                this.getProductName();
+                this.getTopSaleProduct();
+                this.getTopSaleBrand();
+                this.getBillAndBillItemCount();
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}

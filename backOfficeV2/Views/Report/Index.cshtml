@@ -1,0 +1,817 @@
+@{
+    ViewData["Title"] = "ລາຍງານສະລຸບ";
+}
+<div id="app1">
+
+    <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */">
+        ໜ້າລາຍງາຍສະລຸບ</div>
+</div>
+<q-form class="q-pa-lg"
+    style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+    <div class="row q-mb-lg">
+        <!-- Chart 5 (Total sale for this year) -->
+        <div class="col-md-12">
+            <div class="q-mr-md">
+                <!-- Total sale filters -->
+
+                <div class="q-ml-lg " style=" width: 580px;">
+                    <q-select v-model="selectedYearTotalSale" :options="years" label="ປີ"></q-select>
+                </div>
+                <div class="q-mt-md q-ml-lg row justify-left">
+                    <q-btn class="q-mr-md" label="ນຳໃຊ້ໂຕກອງ" color="primary"
+                        @@click="applyFiltersTotalSale"></q-btn>
+                    <q-btn label="clear" icon="clear" color="grey" @@click="clearFilterTotalSale"></q-btn>
+
+                </div>
+
+                <q-card class="my-card q-ma-lg">
+                    <q-card-section class="q-ma-sm text-center"> <!-- Center align text content -->
+                        <div class="text-h4 text-weight-bold q-pa-lg">ຍອດຂາຍຂອງປີນີ້: &#3647;{{
+                            sumTotalSale }}
+                        </div>
+                        <div class="chart-container text-center"
+                            style="position: relative; height: 70vh; width: 70vw; margin: 0 auto;">
+                            <canvas id="totalSaleChart"></canvas>
+                        </div>
+
+                    </q-card-section>
+                    <q-card-actions align="right">
+    <q-btn label="Export Total Sales" @@click="exportCsv(totalSale, 'totalSale.csv')" color="primary" />
+                    </q-card-actions>
+                </q-card>
+
+            </div>
+        </div>
+
+    </div>
+
+    <hr style="width: 100%; border-top: 1px solid #ccc; margin-bottom: 20px;">
+
+    <!-- Sale Distribution by Product Name -->
+    <div class="col-md-6">
+        <div class="q-mr-md">
+            <!-- filters -->
+            <div class="q-ml-lg " style=" width: 580px;">
+                <q-select v-model="selectedMonthProductName" :options="months" label="ເດືອນ"></q-select>
+                <q-select v-model="selectedYearProductName" :options="years" label="ປີ"></q-select>
+            </div>
+            <div class="q-mt-md q-ml-lg row justify-left">
+                <q-btn class="q-mr-md" label="ນຳໃຊ້ໂຕກອງ" color="primary" @@click="applyFiltersProductName"></q-btn>
+                <q-btn label="clear" icon="clear" color="grey" @@click="clearFilterProductName"></q-btn>
+                <!-- Button to clear the selected month -->
+            </div>
+            <q-card class="my-card q-ma-lg">
+
+                <q-card-section class="q-ma-sm text-center">
+                    <div class="text-h4 text-weight-bold  q-pa-lg">ຍອດການຂາຍຕາມຊື່ສິນຄ້າ 
+                      </div>
+                    <div class="chart-container" style="position: relative; height: 60vh; width: 60vw; margin: 0 auto;">
+                        <canvas id="productNameChart"></canvas>
+                    </div>
+                </q-card-section>
+
+            
+
+                <q-card-actions align="right">
+    <q-btn label="Export Product Sales" @@click="exportCsv(productNameSale, 'productNameSale.csv')" color="primary" />
+                </q-card-actions>
+            </q-card>
+
+        </div>
+    </div>
+    <hr style="width: 100%; border-top: 1px solid #ccc; margin-bottom: 20px; margin-top: 50px;">
+
+    <!-- Sale Distribution by Brand -->
+    <div class="col-md-6">
+        <div class="q-mr-md">
+            <!-- filters -->
+
+            <div class="q-ml-lg" style=" width: 580px;">
+                <q-select v-model="selectedMonthBrand" :options="months" label="ເດືອນ"></q-select>
+                <q-select v-model="selectedYearBrand" :options="years" label="ປີ"></q-select>
+            </div>
+            <div class="q-mt-md q-ml-lg row justify-left">
+                <q-btn class="q-mr-md" label="ນຳໃຊ້ໂຕກອງ" color="primary" @@click="applyFilterBrand"></q-btn>
+                <q-btn label="Clear" icon="clear" color="grey" @@click="clearFilterBrand"></q-btn>
+                <!-- Button to clear the selected month -->
+            </div>
+
+            <q-card class="my-card q-ma-lg">
+                <q-card-section class="q-ma-sm text-center"> <!-- Center align text content -->
+                    <div class="text-h4 text-weight-bold q-pa-lg">ຍອດການຂາຍຕາມແບຣນ
+                    </div>
+                    <div class="chart-container text-center"
+                        style="position: relative; height:500px; width:1000px; margin: 0 auto;">
+                        <canvas id="brandChart"></canvas>
+                    </div>
+                    <h5 class="text-bold" style="color: #717171;" v-if="brandSales && brandSales.length > 0">
+                        ແບຣນທີ່ຂາຍໄດ້ຫຼາຍສຸດ: {{ mostProfitableBrand1 }}<br>
+                        ຂາຍໄດ້ເປັນເງິນ: &#3647;{{ callFormatPrice(maxSalesBrand) }}
+                    </h5>
+
+
+                </q-card-section>
+                <q-card-actions align="right">
+                    <q-btn label="Export Brand Sales" @@click="exportCsv(brandSales, 'brandSales.csv')" color="primary" />
+                </q-card-actions>
+            </q-card>
+
+        </div>
+    </div>
+
+    <hr style="width: 100%; border-top: 1px solid #ccc;  margin-bottom: 20px; margin-top: 50px;">
+
+    <!-- Size Chart -->
+    <div class="col-md-6">
+        <div class="q-mr-md">
+            <!-- Size Chart filters -->
+
+            <div class="q-ml-lg" style=" width: 580px;">
+                <q-select v-model="sizeSelectedMonth" :options="months" label="ເດືອນ"></q-select>
+                <q-select v-model="sizeSelectedYear" :options="years" label="ປີ"></q-select>
+            </div>
+            <div class="q-mt-md q-ml-lg row justify-left">
+                <q-btn class="q-mr-md" label="ນຳໃຊ້ໂຕກອງ" color="primary" @@click="applySizeFilters"></q-btn>
+                <q-btn label="Clear" icon="clear" color="grey" @@click="clearSizeFilter"></q-btn>
+                <!-- Button to clear the selected month -->
+            </div>
+
+            <q-card class="my-card q-ma-lg">
+                <q-card-section class="q-ma-sm text-center"> <!-- Center align text content -->
+                    <div class="text-h4 text-weight-bold q-pa-lg">ຍອດການຂາຍຕາມຂະໜາດ
+                    </div>
+                    <div class="chart-container text-center"
+                        style="position: relative; height:500px; width:1000px; margin: 0 auto;">
+                        <canvas id="sizeChart"></canvas>
+                    </div>
+                    <h5 class="text-bold" style="color: #717171;" v-if="sizeSale && sizeSale.length > 0">
+                        ໄຊ້ທີ່ຂາຍໄດ້ດີສຸດ: {{ mostProfitableSize }}<br>
+                        ຂາຍໄດ້ເປັນເງິນ: &#3647;{{ callFormatPrice(maxSalesSize) }}
+                        <br>
+                    </h5>
+
+
+                </q-card-section>
+                <q-card-actions align="right">
+    <q-btn label="Export Size Sales" @@click="exportCsv(sizeSale, 'sizeSale.csv')" color="primary" />
+                </q-card-actions>
+            </q-card>
+
+        </div>
+    </div>
+
+    <hr style="width: 100%; border-top: 1px solid #ccc;  margin-bottom: 20px; margin-top: 50px;">
+
+
+        <!-- Employee Performance Chart -->
+        <div class="col-md-6">
+            <div class="q-ml-md">
+                <!-- employeeChart -->
+                <div class="q-ml-lg" style=" width: 580px;">
+                    <q-select v-model="selectedMonthEmp" :options="months" label="ເດືອນ"></q-select>
+                    <q-select v-model="selectedYearEmp" :options="years" label="ປີ"></q-select>
+                </div>
+                <div class="q-mt-md q-ml-lg row justify-left">
+                    <q-btn class="q-mr-md" label="ນຳໃຊ້ໂຕກອງ" color="primary" @@click="applyFiltersEmployee"></q-btn>
+                    <q-btn label="Clear" icon="clear" color="grey" @@click="clearFilterEmployee"></q-btn>
+                    <!-- Button to clear the selected month -->
+                </div>
+
+                <q-card class="my-card q-ma-lg">
+
+                    <q-card-section class="q-ma-sm text-center">
+                        <div class="text-h4 text-weight-bold q-pa-lg">ຍອດການຂາຍຕາມພະນັກງານ
+                        </div>
+                        <div class="chart-container"
+                            style="position: relative; height:500px; width:1000px; margin: 0 auto;">
+                            <canvas id="employeeChart"></canvas>
+                        </div>
+                    </q-card-section>
+                    <div v-if="empFiltersApplied" class="q-ma-sm text-center">
+                        <h5 class="text-bold" style="color: #717171;" v-if="employeeSale && employeeSale.length > 0">
+                            ພະນັກງານທີ່ຂາຍໄດ້ຫຼາຍສຸດ: {{ mostSaleEmployee }}<br>
+                            ຂາຍໄດ້ເປັນເງິນ: &#3647;{{ callFormatPrice(maxEmployeeSale) }}
+                            <br>
+                        </h5>
+                    </div>
+
+
+                    <q-card-actions align="right">
+    <q-btn label="Export Employee Sales" @@click="exportCsv(employeeSale, 'employeeSale.csv')" color="primary" />
+                    </q-card-actions>
+                </q-card>
+            </div>
+        </div>
+  
+</q-form>
+</div>
+
+
+@section code {
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    maxEmployeeSale: 0,
+                    mostSaleEmployee: '',
+                    
+                    mostProfitableBrand1: '',
+                    maxSalesBrand: 0,
+
+                    mostProfitableSize: '',
+                    maxSalesSize: 0,
+
+                    empFiltersApplied: false,
+                    filtersAppliedProductName: false,
+                    sizeFiltersApplied: false,
+                    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    // Generate list of years dynamically including future years
+                    years: (() => {
+                        const currentYear = new Date().getFullYear();
+                        const pastYears = 5; // Adjust this as needed for past years
+                        const startYear = currentYear - pastYears;
+                        return Array.from({ length: pastYears + 1 }, (_, index) => startYear + index);
+                    })(),
+
+                    // Selected month and year for each chart
+                    selectedMonthBrand: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYearBrand: new Date().getFullYear(),
+                    selectedMonthEmp: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYearEmp: new Date().getFullYear(),
+                    selectedMonthProductName: new Date().toLocaleString('en-US', { month: 'long' }),
+                    selectedYearProductName: new Date().getFullYear(),
+                    selectedYearTotalSale: new Date().getFullYear(),
+                    sizeSelectedMonth: new Date().toLocaleString('en-US', { month: 'long' }),
+                    sizeSelectedYear: new Date().getFullYear(),
+
+                    //your data go here
+                    brandSales: [],
+                    employeeSale: [],
+                    sizeSale: [],
+                    productNameSale: [],
+                    sale4: [],
+                    totalSale: [],
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            },
+
+                        }
+                    },
+
+                    barOption: {
+                        indexAxis: 'y',
+                        // Elements options apply to all of the options unless overridden in a dataset
+                        // In this case, we are setting the border of each horizontal bar to be 2px wide
+                        elements: {
+                            bar: {
+                                borderWidth: 2,
+                            }
+                        },
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                            },
+                            title: {
+                                display: true,
+                                text: ''
+                            }
+                        },
+                        scales: {
+                            xAxis: {
+                                ticks: {
+                                    // Align labels to the left
+                                    align: 'left'
+                                }
+                            }
+                        }
+                    }
+                };
+            },
+            //methods
+            methods: {
+                callFormatPrice(price) {
+                    formattedPrice = formatPrice(price);
+                    return formattedPrice;
+                },
+
+                // Total sale for this year
+                async fetchTotalSaleData() {
+                    // Check if totalSaleChart already exists
+                    if (this.totalSaleChart) {
+                        // Destroy the existing chart
+                        this.totalSaleChart.destroy();
+                    }
+
+                    try {
+                        // Fetch data from the API
+                        const response = await axios.get(`/bossapi/GetTotalSaleDatas?year=${this.selectedYearTotalSale}`);
+                        const data = response.data;
+                        this.totalSale = data;
+                        console.log("Total sale data", data);
+
+                        // Parse and set data for totalSaleChart
+                        const labels = data.map(item => item.date); // Assuming the API response includes a 'date' field
+                        const values = data.map(item => item.totalSale);
+                        
+                        const totalSaleSet = {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Sale value',
+                                data: values,
+                                radius: 1.5,
+                                borderWidth: 3,
+                            }]
+                        };
+
+                        // Custom animation configuration
+                        const easing = Chart.helpers.easingEffects.easeInOutQuad;
+                        const totalDuration = 750;
+                        const duration = (ctx) => easing(ctx.index / data.length) * totalDuration / data.length;
+                        const delay = (ctx) => easing(ctx.index / data.length) * totalDuration;
+                        const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+                        const animation = {
+                            x: {
+                                type: 'number',
+                                easing: 'linear',
+                                duration: duration,
+                                from: NaN, // the point is initially skipped
+                                delay(ctx) {
+                                    if (ctx.type !== 'data' || ctx.xStarted) {
+                                        return 0;
+                                    }
+                                    ctx.xStarted = true;
+                                    return delay(ctx);
+                                }
+                            },
+                            y: {
+                                type: 'number',
+                                easing: 'linear',
+                                duration: duration,
+                                from: previousY,
+                                delay(ctx) {
+                                    if (ctx.type !== 'data' || ctx.yStarted) {
+                                        return 0;
+                                    }
+                                    ctx.yStarted = true;
+                                    return delay(ctx);
+                                }
+                            }
+                        };
+
+                        // Create new chart instance with custom animation
+                        this.totalSaleChart = new Chart('totalSaleChart', {
+                            type: 'line',
+                            data: totalSaleSet,
+                            options: {
+                                animation: animation,
+                                responsive: true,
+                                scales: {
+                                    x: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: '',
+                                            color: '#911',
+                                            font: {
+                                                family: 'Times',
+                                                size: 20,
+                                                weight: 'bold',
+                                                lineHeight: 1.2,
+                                            },
+                                            padding: { top: 20, left: 0, right: 0, bottom: 0 }
+                                        }
+                                    },
+                                    y: {
+                                        display: true,
+                                        title: {
+                                            display: true,
+                                            text: 'THB',
+                                            color: '#191',
+                                            font: {
+                                                family: 'Times',
+                                                size: 20,
+                                                style: 'normal',
+                                                lineHeight: 1.2
+                                            },
+                                            padding: { top: 30, left: 0, right: 0, bottom: 0 }
+                                        }
+                                    }
+                                }
+                            },
+                        });
+                    } catch (error) {
+                        console.error('Error fetching or processing data:', error);
+                    }
+                }
+                ,
+
+                // Sale Distribution by Product Name
+                async fetchProductNameChart() {
+                    // Check if productNameChart already exists
+                    if (this.productNameChart) {
+                        // Destroy the existing chart
+                        this.productNameChart.destroy();
+                    }
+
+                    try {
+                        // Fetch data for Sale by product name chart
+                        const res = await axios.get(`/bossapi/GetSaleByProductNameData?month=${this.selectedMonthProductName}&year=${this.selectedYearProductName}`);
+                        const data = res.data;
+                        console.log("data from Sale by Product name", data);
+
+                        // Ensure that data contains the expected properties
+                        if (data && data.sales && Array.isArray(data.sales)) {
+                            // Parse and set data for chart 3
+                            const sortedData = data.sales.sort((a, b) => b.sale - a.sale);
+
+                            const labels = sortedData.map(item => item.name);
+                            const salesValues = sortedData.map(item => item.sale);
+                            const qtyValues = sortedData.map(item => item.quantity); // Use "quantity" from API response
+
+                            // Define chart datasets
+                            const salesDataset = {
+                                label: 'Sales (฿)',
+                                data: salesValues,
+                                borderWidth: 1
+                            };
+
+                            const qtyDataset = {
+                                label: 'Quantity',
+                                data: qtyValues,
+                                borderWidth: 1
+                            };
+
+                            // Create new chart instance
+                            this.productNameChart = new Chart('productNameChart', {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [salesDataset, qtyDataset]
+                                },
+                                options: this.barOption
+                            });
+
+                            // Access most profitable product and max sales from the response
+                        } else {
+                            console.error('Data received from the API does not contain the expected properties.');
+                        }
+                    } catch (error) {
+                        console.error('Error fetching product name chart data:', error);
+                    }
+                }
+
+                ,
+                // Method to fetch data for chart 1 (Sale Distribution by Brand)
+                async fetchBrandChartData() {
+                    // Check if brandChart already exists
+                    if (this.brandChart) {
+                        // Destroy the existing chart
+                        this.brandChart.destroy();
+                    }
+
+                    // Fetch data for chart 1
+                    var res1 = await axios.get(`/bossapi/GetSaleByBrand?month=${this.selectedMonthBrand}&year=${this.selectedYearBrand}`);
+                    var data = res1.data;
+                    console.log("data from GetSaleByBrand", data);
+                    this.brandSales = data.sales;
+
+                    // Ensure that data contains the expected properties
+                    if (data && data.sales && Array.isArray(data.sales)) {
+                        // Parse and set data for chart 1
+                        const sortedData = data.sales.sort((a, b) => b.sale - a.sale);
+
+                        const labels = sortedData.map(item => item.name);
+                        const salesValues = sortedData.map(item => item.sale);
+                        const qtyValues = sortedData.map(item => item.quantity);
+
+
+                        const salesDataset = {
+                            label: 'Sales (฿)',
+                            data: salesValues,
+                            borderWidth: 1
+                        };
+
+
+                        const qtyDataset = {
+                            label: 'Quantity',
+                            data: qtyValues,
+                            borderWidth: 1
+                        };
+
+
+                        var set1 = {
+                            labels: labels,
+                            datasets: [salesDataset]
+                        };
+
+                        // Create new chart instance
+                        this.brandChart = new Chart('brandChart', {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [salesDataset, qtyDataset]
+                            },
+                            options: this.barOption
+                        });
+
+
+                        // Access most profitable brand and max sales from the response
+                        this.mostProfitableBrand1 = data.mostProfitableBrand;
+                        this.maxSalesBrand = data.maxSales;
+
+                    } else {
+                        console.error('Data received from the API does not contain the expected properties.');
+                    }
+                }
+
+                ,
+
+                // Shoe size
+                async fetchSizeChart() {
+                    // Check if productNameChart already exists
+                    if (this.sizeChart) {
+                        // Destroy the existing chart
+                        this.sizeChart.destroy();
+                    }
+
+                    // Fetch data for chart 3
+                    var res = await axios.get(`/bossapi/SizeReport?month=${this.sizeSelectedMonth}&year=${this.sizeSelectedYear}`);
+                    var data = res.data;
+                    console.log("data from size chart", data);
+                    this.sizeSale = data.sales;
+
+                    // Ensure that data contains the expected properties
+                    if (data && data.sales && Array.isArray(data.sales)) {
+                        // Parse and set data for chart 3
+                        const sortedData = data.sales.sort((a, b) => b.sale - a.sale);
+
+                        const labels = sortedData.map(item => item.size);
+                        const salesValues = sortedData.map(item => item.sale);
+                        const qtyValues = sortedData.map(item => item.itemQty);
+
+                        const salesDataset = {
+                            label: 'Sales (฿)',
+                            data: salesValues,
+                            borderWidth: 1
+                        };
+
+                        const qtyDataset = {
+                            label: 'Quantity',
+                            data: qtyValues,
+                            borderWidth: 1
+                        };
+
+                        // Create new chart instance
+                        this.sizeChart = new Chart('sizeChart', {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [salesDataset, qtyDataset]
+                            },
+                            options: this.barOption
+                        });
+
+       
+      
+
+                        this.mostProfitableSize = data.mostProfitableSize;
+                        this.maxSalesSize = data.maxSales;
+
+                    } else {
+                        console.error('Data received from the API does not contain the expected properties.');
+                    }
+                }
+                ,
+
+                // Employee Performance Chart
+                async fetchEmployeeChart() {
+                    if (this.employeeChart) {
+                        // Destroy the existing chart
+                        this.employeeChart.destroy();
+                    }
+
+                    // Fetch data for chart
+                    var res4 = await axios.get(`/bossapi/EmployeeReport?month=${this.selectedMonthEmp}&year=${this.selectedYearEmp}`);
+                    var data = res4.data;
+                    console.log("data from Employee Report", data);
+                    this.employeeSale = data;
+
+                    const sortedData = data.sort((a, b) => b.sale - a.sale);
+                    // Parse and set data for chart
+                    const labels = sortedData.map(item => item.name);
+                    const salesValues = sortedData.map(item => item.sale);
+                    const qtyValues = sortedData.map(item => item.quantity);
+
+                    console.log('ReportEmployee labels', labels);
+                    console.log('ReportEmployee sales values', salesValues);
+                    console.log('ReportEmployee quantity values', qtyValues);
+
+                    // Bar chart configuration
+                    var barData = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Sales (฿)',
+                                data: salesValues,
+                                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Quantity Sold',
+                                data: qtyValues,
+                                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    };
+
+                    // Create new chart instance
+                    this.employeeChart = new Chart('employeeChart', {
+                        type: 'bar', // Change to 'bar'
+                        data: barData,
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Employees'
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'THB (฿) / Units'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return `${context.dataset.label}: ${context.raw}`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    // Find the most purchasing customer
+                    data.forEach(item => {
+                        if (item.sale > this.maxEmployeeSale) {
+                            this.maxEmployeeSale = item.sale;
+                            this.mostSaleEmployee = item.name;
+                        }
+                    });
+
+                    console.log("Most Sale Employee:", this.mostSaleEmployee);
+                },
+
+
+                // Total sale for this year
+                async applyFiltersTotalSale() {
+                    try {
+                        await this.fetchTotalSaleData();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+                // Sale Distribution by Product Name
+                async applyFiltersProductName() {
+                    try {
+                        await this.fetchProductNameChart();
+                        this.filtersAppliedProductName = true;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+
+                // Method to apply filters and fetch data for chart 1 (Sale Distribution by Brand)
+                async applyFilterBrand() {
+                    try {
+                        await this.fetchBrandChartData();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+
+                // Shoe Size
+                async applySizeFilters() {
+                    try {
+                        await this.fetchSizeChart();
+                        this.sizeFiltersApplied = true;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+
+
+                // Employee Performance Chart
+                async applyFiltersEmployee() {
+                    try {
+                        await this.fetchEmployeeChart();
+                        this.empFiltersApplied = true;
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+
+                clearFilterTotalSale() {
+                    this.selectedYearTotalSale = ''; // Reset selected year to empty
+                },
+
+                clearFilterProductName() {
+                    this.selectedMonthProductName = ''; // Reset selected month to empty
+                    this.selectedYearProductName = ''; // Reset selected year to empty
+                },
+
+                clearFilterBrand() {
+                    this.selectedMonthBrand = ''; // Reset selected month to empty
+                    this.selectedYearBrand = ''; // Reset selected year to empty
+                },
+
+                clearSizeFilter() {
+                    this.sizeSelectedMonth = ''; // Reset selected year to empty
+                    this.sizeSelectedYear = ''; // Reset selected year to empty
+                },
+
+                clearFilterEmployee() {
+                    this.selectedMonthEmp = ''; // Reset selected month to empty
+                    this.selectedYearEmp = ''; // Reset selected year to empty
+                },
+
+
+                exportCsv(data, filename) {
+                    downloadCsv(data, filename);
+                } //ef
+                ,
+
+
+            }//emethod
+            ,
+            //computed
+            computed: {
+                sumTotal() {
+                    let sum = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.productNameSale.length; i++) {
+                        sum += this.productNameSale[i].sale; // add current element to sum
+                    }
+                    console.log("Sumsale", this.productNameSale);
+                    return formatPrice(sum);
+                },
+                sumTotalSale() {
+                    let sum = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.totalSale.length; i++) {
+                        sum += this.totalSale[i].totalSale; // add current element to sum
+                    }
+                    console.log("SumTotalSale", this.totalSale);
+                    return formatPrice(sum);
+                },
+                sumQtyProductName() {
+                    let sumqty = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.productNameSale.length; i++) {
+                        sumqty += this.productNameSale[i].itemQty; // add current element to sum
+                    }
+                    console.log("saleQty", this.productNameSale);
+                    return formatPrice(sumqty);
+                }
+            }
+            ,
+            //created
+            created() {
+
+            }
+            ,
+            //mounted
+            mounted() {
+                this.applyFiltersTotalSale();
+                this.applyFiltersProductName();
+                this.applyFilterBrand();
+                this.applySizeFilters();
+                this.applyFiltersEmployee();
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}

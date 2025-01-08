@@ -1,0 +1,1304 @@
+@{
+    ViewData["Title"] = "ເພີ່ມສິນຄ້າ";
+}
+<div id="app1">
+    <q-card class="my-card bg-grey-2 ">
+        <div class="text-h4 text-weight-bold text-white bg-cyan q-pa-lg">ເພີ່ມສິນຄ້າໃໝ່</div>
+        <div class="q-pa-md">
+            <div class="q-ma-sm">
+                <q-input ref="input1" v-model="barcodeScan" label="ບາໂຄ້ດສິນຄ້າ" @@change="item_change">
+                </q-input>
+                <div class="q-ma-sm">
+                    <q-input v-model="product.barcode" label="ບາໂຄ້ດທີ່ຖືກສະແກນ"></q-input>
+
+                </div>
+            </div>
+            <q-separator vertical class="q-my-md"></q-separator>
+            <div class="text-h6 q-pa-lg">ຂໍ້ມູນສິນຄ້າ</div>
+            <div class="row items-center no-wrap q-px-sm">
+                <q-select filled v-model="product.productNameId" use-input hide-selected fill-input input-debounce="0"
+                    :options="filteredProductNameOptions" @@filter="filterFn" emit-value map-options
+                    hint="ຄົ້ນຫາດ້ວຍຊື່ສິນຄ້າ" style="width: 600px; padding-bottom: 32px; margin-top: 20px;"
+                    dropdown-icon="search" lazy-rules :rules="[ val => !!val || 'Please select a product']">
+                    <template v-slot:no-option>
+                        <q-item>
+                            <q-item-section class="text-grey">
+                                ບໍ່ມີຜົນລັບ
+                            </q-item-section>
+                        </q-item>
+
+                    </template>
+                </q-select>
+                <q-btn class="q-ml-md q-mb-md" color="blue-6" icon="list" label="ເບິ່ງລາຍການຊື່ສິນຄ້າ" size="md"
+                    @@click="openAddProductName"></q-btn>
+            </div>
+
+            <!-- Product Image -->
+
+            <div class="q-ma-lg">
+                <!-- Flexbox container -->
+                <div class="row items-center justify-start">
+                    <!-- Button to trigger file input -->
+                    <q-btn color="primary" label="ເລືອກຮູບ" icon="photo_camera"  no-wrap rounded push @@click="triggerFileInput"></q-btn>
+
+                    <div class="q-mx-sm"></div>
+                    <!-- Upload button -->
+                    <q-btn color="green" label="ຢືນຢັນ" icon="cloud_upload" no-wrap rounded push @@click="uploadImage"
+                        :disable="!filePreview"></q-btn>
+                </div>
+                <!-- Hidden file input -->
+                <input type="file" accept="image/*" ref="fileInput" style="display: none;"
+                    @@change="handleFileChange" />
+
+                <!-- Display the selected image -->
+                <div v-if="filePreview" class="q-my-md">
+    <img 
+      :src="filePreview" 
+      alt="Selected Product" 
+      style="max-width: 250px; border: 2px solid #ccc; border-radius: 8px;" />
+  </div>
+
+
+            </div>
+
+
+            <q-dialog v-model="confirmAddProductName" persistent>
+                <q-card style="border-top-left-radius: 10px; ">
+                    <div class="text-h5 text-weight-bold text-white q-pa-lg"
+                        style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;">
+                        ລາຍການຊື່ສິນຄ້າ</div>
+                    <q-table class="q-ma-md " :rows="productNames" :columns="columns">
+                        <template v-slot:top-left>
+                            <div class="text-h6">ຄົ້ນຫາຊື່ສິນຄ້າ</div>
+                            <q-separator vertical class="q-my-sm"></q-separator>
+                            <div class="q-pl-sm">
+                                <q-input debounce="200" dense v-model="searchText" type="text" @@change="searchProduct">
+                                    <template v-slot:prepend>
+                                        <q-icon name="search"></q-icon>
+                                    </template>
+                                </q-input>
+
+
+
+                            </div>
+
+                        </template>
+                        <template v-slot:body="props">
+                            <q-tr :props="props">
+                                <q-td key="index" :props="props">{{ productNames.indexOf(props.row) + 1 }}</q-td>
+                                <q-td key="name" :props="props">
+                                    {{ props.row.name}}
+                                    <q-popup-edit v-model="props.row.name">
+                                        <q-input v-model="props.row.name" dense autofocus counter></q-input>
+                                        <div class="justify-end row">
+                                            <q-btn color="blue-grey-6" @@click="editProductName(props.row)" icon="edit"
+                                                label="edit" v-close-popup="cancelEnabled">
+                                            </q-btn>
+                                        </div>
+                                    </q-popup-edit>
+                                </q-td>
+
+                                </q-td>
+                                <q-td key="deletes" :props="props">
+                                    <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                                        @@click="openDeleteProductNameDialog(props.row.productNameId)"
+                                        icon="delete_forever" size="15px"></q-btn>
+                                    <q-dialog v-model="confirmDeleteProductName" persistent>
+                                        <q-card>
+                                            <q-card-section class="row items-center">
+                                                <q-avatar icon="inventory_2" color="grey-9"
+                                                    text-color="white"></q-avatar>
+                                                <span class="q-ml-sm">
+                                                    ເຈົ້າແນ່ໃຈວ່າຕ້ອງການລົບຊື່ສິນຄ້ານີ້ບໍ່?</span>
+                                            </q-card-section>
+                                            <q-card-actions align="center">
+                                                <q-btn class="q-ma-sm" color="red-6" @@click="deleteProductName"
+                                                    label="Yes" v-close-popup></q-btn>
+                                                <q-btn class="q-ma-sm" label="No" color="grey"
+                                                    @@click="closeDeleteProductNameDialog"></q-btn>
+                                            </q-card-actions>
+                                        </q-card>
+                                    </q-dialog>
+
+                                </q-td>
+
+
+
+                            </q-tr>
+                        </template>
+                    </q-table>
+                    <q-card class="q-pa-md">
+                        <div class="row q-col-gutter-md items-center">
+
+                            <div class="col">
+                                <q-input filled v-model="productName.name" label="ຊື່ສິນຄ້າ">
+                                </q-input>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="col-auto">
+                                <q-btn icon="add" color="green-6" @@click="addProductName" />
+                            </div>
+                        </div>
+                    </q-card>
+
+                    <q-card-actions align="right">
+                        <q-btn class="q-ma-md" label="ປິດ" color="grey" @@click="closeAddProductNameDialog"></q-btn>
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+
+
+
+
+            <q-separator vertical class="q-my-md"></q-separator>
+
+            <q-input class="q-px-sm" filled v-model="product.costPrice" label="ລາຄາຊື້" hint="ໂຕເລກເທົ່ານັ້ນ" lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+            <q-separator vertical class="q-my-md"></q-separator>
+
+            <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="ລາຄາຂາຍ" hint="ໂຕເລກເທົ່ານັ້ນ"
+                lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+            <q-separator vertical class="q-my-md"></q-separator>
+
+            <q-input class="q-px-sm" filled v-model="product.sku" label="SKU" lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
+
+
+            <q-separator vertical class="q-my-md"></q-separator>
+            <div class="row items-center no-wrap q-px-sm">
+                <q-select filled v-model="product.shoeSizeId" :options="shoeSizeOptions" label="ກະລຸນາເລືອກຂະໜາດເກີບ"
+                    lazy-rules :rules="[ val => !!val || 'Please select a shoe size']" style="width: 400px;" emit-value
+                    map-options></q-select>
+
+                <q-btn class="q-ml-md q-mb-md" color="blue-6" icon="list" label="ເບິ່ງລາຍການໄຊ້ເກີບ" size="md"
+                    @@click="openAddShoeSizeDialog"></q-btn>
+
+            </div>
+            <q-dialog v-model="confirmAddShoeSize" persistent>
+                <q-card style="border-top-left-radius: 10px; ">
+                    <div class="text-h5 text-weight-bold text-white q-pa-lg"
+                        style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;">
+                        Shoe Size Table</div>
+                    <q-table class="q-ma-md " :rows="shoeSizes" :columns="columnsShoeSize">
+                        <template v-slot:body="props">
+                            <q-tr :props="props">
+                                <q-td key="index" :props="props">{{ shoeSizes.indexOf(props.row) + 1 }}</q-td>
+                                <q-td key="sizeType" :props="props">
+                                    {{ props.row.sizeType}}
+                                    <q-popup-edit v-model="props.row.sizeType">
+                                        <q-input v-model="props.row.sizeType" dense autofocus counter></q-input>
+                                        <div class="justify-end row">
+                                            <q-btn color="blue-grey-6" @@click="editShoeSize(props.row)" icon="edit"
+                                                label="edit" v-close-popup="cancelEnabled">
+                                            </q-btn>
+                                        </div>
+                                    </q-popup-edit>
+                                </q-td>
+                                <q-td key="sizeNumber" :props="props">
+                                    {{ props.row.sizeNumber }}
+                                    <q-popup-edit v-model="props.row.sizeNumber">
+                                        <q-input v-model="props.row.sizeNumber" dense autofocus counter></q-input>
+                                        <div class="justify-end row">
+                                            <q-btn color="blue-grey-6" @@click="editShoeSize(props.row)" icon="edit"
+                                                label="edit" v-close-popup="cancelEnabled">
+                                            </q-btn>
+                                        </div>
+                                    </q-popup-edit>
+                                </q-td>
+                                <q-td key="deletes" :props="props">
+                                    <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                                        @@click="openDeleteShoeSizeDialog(props.row.shoeSizeId)" icon="delete_forever"
+                                        size="15px"></q-btn>
+                                    <q-dialog v-model="confirmDeleteShoeSize" persistent>
+                                        <q-card>
+                                            <q-card-section class="row items-center">
+                                                <q-avatar icon="inventory_2" color="grey-9"
+                                                    text-color="white"></q-avatar>
+                                                <span class="q-ml-sm">ເຈົ້າແນ່ໃຈວ່າຕ້ອງການລົບໄຊ້ນີ້ບໍ່?
+                                                </span>
+                                            </q-card-section>
+                                            <q-card-actions align="center">
+                                                <q-btn class="q-ma-sm" color="red-6" @@click="deleteShoeSize"
+                                                    label="Yes" v-close-popup></q-btn>
+                                                <q-btn class="q-ma-sm" label="No" color="grey"
+                                                    @@click="closeDeleteShoeSizeDialog"></q-btn>
+                                            </q-card-actions>
+                                        </q-card>
+                                    </q-dialog>
+
+                                </q-td>
+
+
+
+                            </q-tr>
+                        </template>
+                    </q-table>
+                    <q-card class="q-pa-md">
+                        <div class="row q-col-gutter-md items-center">
+                            <!-- Size Type Input -->
+                            <div class="col">
+                                <q-input filled v-model="shoeSize.sizeType" label="ປະເພດໄຊ້">
+                                </q-input>
+                            </div>
+
+                            <!-- Size Number Input -->
+                            <div class="col">
+                                <q-input filled v-model="shoeSize.sizeNumber" label="ໄຊ້ເກີບ">
+                                </q-input>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="col-auto">
+                                <q-btn icon="add" color="green-6" :disable="isAddShoeSizeButtonDisabled"
+                                    @@click="addShoeSize" />
+                            </div>
+                        </div>
+                    </q-card>
+
+                    <q-card-actions align="right">
+                        <q-btn class="q-ma-md" label="Close" color="grey" @@click="closeAddShoeSizeDialog"></q-btn>
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+
+
+
+            <q-separator vertical class="q-my-md"></q-separator>
+
+            <div class="row items-center no-wrap q-px-sm">
+                <q-select filled v-model="product.brandId" :options="brandOptions" label="ເລືອກແບຣນ" lazy-rules
+                    :rules="[ val => !!val || 'Please select a brand']" style="width: 400px;" emit-value
+                    map-options></q-select>
+                <q-btn class="q-ml-md q-mb-md" color="blue-6" icon="list" label="ເບິ່ງລາຍການແບຣນ" size="md"
+                    @@click="openAddBrandDialog"></q-btn>
+            </div>
+
+            <q-dialog v-model="confirmAddBrand" persistent>
+                <q-card style="border-top-left-radius: 10px; ">
+                    <div class="text-h5 text-weight-bold text-white q-pa-lg"
+                        style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;">
+                        Brand Table</div>
+                    <q-table class="q-ma-md " :rows="brands" :columns="columnsBrand">
+                        <template v-slot:body="props">
+                            <q-tr :props="props">
+                                <q-td key="index" :props="props">{{ brands.indexOf(props.row) + 1 }}</q-td>
+                                <q-td key="brandName" :props="props">
+                                    {{ props.row.brandName}}
+                                    <q-popup-edit v-model="props.row.brandName">
+                                        <q-input v-model="props.row.brandName" dense autofocus counter></q-input>
+                                        <div class="justify-end row">
+                                            <q-btn color="blue-grey-6" @@click="editBrandName(props.row)" icon="edit"
+                                                label="edit" v-close-popup="cancelEnabled">
+                                            </q-btn>
+                                        </div>
+                                    </q-popup-edit>
+                                </q-td>
+                                <q-td key="brandLogo" :props="props">
+                                    <q-img :src="props.row.brandLogoUrl" />
+                                </q-td>
+                                <q-td key="brandLogoUrl" :props="props">
+                                    {{ props.row.brandLogoUrl}}
+                                    <q-popup-edit v-model="props.row.brandLogoUrl">
+                                        <q-input v-model="props.row.brandLogoUrl" dense autofocus counter></q-input>
+                                        <div class="justify-end row">
+                                            <q-btn color="blue-grey-6" @@click="editBrandName(props.row)" icon="edit"
+                                                label="edit" v-close-popup="cancelEnabled">
+                                            </q-btn>
+                                        </div>
+                                    </q-popup-edit>
+                                </q-td>
+
+
+                                <q-td key="deletes" :props="props">
+                                    <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                                        @@click="openDeleteBrandDialog(props.row.brandId)" icon="delete_forever"
+                                        size="15px"></q-btn>
+                                    <q-dialog v-model="confirmDeleteBrand" persistent>
+                                        <q-card>
+                                            <q-card-section class="row items-center">
+                                                <q-avatar icon="inventory_2" color="grey-9"
+                                                    text-color="white"></q-avatar>
+                                                <span class="q-ml-sm">ເຈົ້າແນ່ໃຈວ່າຕ້ອງການລົບແບຣນນີ້ບໍ່?</span>
+                                            </q-card-section>
+                                            <q-card-actions align="center">
+                                                <q-btn class="q-ma-sm" color="red-6" @@click="deleteBrand" label="Yes"
+                                                    v-close-popup></q-btn>
+                                                <q-btn class="q-ma-sm" label="No" color="grey"
+                                                    @@click="closeDeleteBrandDialog"></q-btn>
+                                            </q-card-actions>
+                                        </q-card>
+                                    </q-dialog>
+
+                                </q-td>
+
+
+
+                            </q-tr>
+                        </template>
+                    </q-table>
+                    <q-card class="q-pa-md">
+                        <div class="row q-col-gutter-md items-center">
+
+                            <div class="col">
+                                <q-input filled v-model="brand.brandName" label="ຊື່ແບຣນ">
+                                </q-input>
+                            </div>
+
+                            <div class="col">
+                                <q-input filled v-model="brand.brandLogoUrl" label="ຮູບ URL ຂອງແບຣນ">
+                                </q-input>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="col-auto">
+                                <q-btn icon="add" color="green-6" :disable="isAddBrandButtonDisabled"
+                                    @@click="addBrand" />
+                            </div>
+                        </div>
+                    </q-card>
+
+                    <q-card-actions align="right">
+                        <q-btn class="q-ma-md" label="ປິດ" color="grey" @@click="closeAddBrandDialog"></q-btn>
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+
+            <q-separator vertical class="q-my-md"></q-separator>
+            <q-input class="q-px-sm" filled v-model="product.conditionDescription" label="ສະພາບເກີບ" filled autogrow>
+            </q-input>
+            <q-separator vertical class="q-my-md"></q-separator>
+            <q-input class="q-px-sm" filled v-model="product.boxDescription" label="ສະພາບກ່ອງ" filled
+                autogrow></q-input>
+
+            <q-separator vertical class="q-my-md"></q-separator>
+            <div class="justify-end row">
+                <q-btn icon="restart_alt" class="q-mx-lg" color="grey" @@click="onReset" size="lg"></q-btn>
+            </div>
+            <q-separator vertical class="q-my-md"></q-separator>
+            <q-card-actions align="left">
+                <q-btn label="ເພີ່ມສິນຄ້າ" icon="arrow_downward" type="submit" color="primary"
+                    class="text-h7 q-mx-sm q-my-lg" size="lg" @@click="confirm = true"></q-btn>
+                <q-dialog v-model="confirm" persistent>
+                    <q-card>
+                        <q-card-section class="row items-center">
+                            <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                            <span class="q-ml-sm">ເພີ່ມສິນຄ້ານີ້ບໍ່?</span>
+                        </q-card-section>
+
+                        <q-card-actions align="center">
+                            <q-btn class="q-ma-sm" color="grey-9" @@click="addProduct" label="Yes"
+                                v-close-popup></q-btn>
+                            <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                        </q-card-actions>
+                    </q-card>
+                </q-dialog>
+                <q-btn icon="arrow_back" label="ກັບຄືນ" color="grey-7" class="text-h7 text-white" size="lg"
+                    onclick='window.location="/inventory"'></q-btn>
+                <q-dialog v-model="completedDialog">
+                    <q-card class="bg-indigo-1">
+                        <q-card-section>
+
+                            <div class="text-h6">
+                                ເພີ່ມສິນຄ້າຮຽບຮ້ອຍ!
+                                <q-icon name="done">
+                                </q-icon>
+
+                            </div>
+                        </q-card-section>
+
+                        <q-card-section class="q-pt-none">
+                            ຂໍ້ມູນສິນຄ້າໃໝ່ໄດ້ຖືກເພີ່ມເຂົ້າແລ້ວ
+                        </q-card-section>
+                        <q-card-actions align="right">
+                            <q-btn flat label="Check" color="indigo" v-close-popup
+                                onclick='window.location="/inventory"'></q-btn>
+                            <q-btn flat label="Close" icon="close" color="grey" v-close-popup></q-btn>
+                        </q-card-actions>
+                    </q-card>
+                </q-dialog>
+            </q-card-actions>
+        </div>
+    </q-card>
+
+    <div class="bg-grey-9 q-pa-sm" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;"></div>
+</div>
+
+@section code {
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+                    columnsShoeSize: [
+                        {
+                            name: 'index',
+                            field: 'index',
+                            align: 'left',
+                            sortable: true,
+                            label: 'No'
+                        },
+                        {
+                            name: 'sizeType',
+                            label: 'ປະເພດໄຊ້',
+                            field: 'sizeType',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+                        {
+                            name: 'sizeNumber',
+                            label: 'ໄຊ້ເກີບ',
+                            field: 'sizeNumber',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+
+                        {
+                            name: 'deletes',
+                            label: 'ລຶບໄຊ້',
+                            field: 'deletes',
+                            align: 'center'
+                        },
+                    ],
+                    columnsBrand: [
+
+                        {
+                            name: 'index',
+                            field: 'index',
+                            align: 'left',
+                            sortable: true,
+                            label: 'No'
+                        },
+
+                        {
+                            name: 'brandName',
+                            label: 'ຊື່ແບຣນ',
+                            field: 'brandName',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+                        {
+                            name: 'brandLogo',
+                            label: 'ແບຣນໂລໂກ້',
+                            field: 'brandLogoUrl',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+                        {
+                            name: 'brandLogoUrl',
+                            label: 'ແບຣນໂລໂກ້ URL',
+                            field: 'brandLogoUrl',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+
+
+
+                        {
+                            name: 'deletes',
+                            label: 'ລົບແບຣນ',
+                            field: 'deletes',
+                            align: 'center'
+                        },
+                    ],
+                    columns: [
+
+                        {
+                            name: 'index',
+                            field: 'index',
+                            align: 'left',
+                            sortable: true,
+                            label: 'No'
+                        },
+
+                        {
+                            name: 'name',
+                            label: 'ຊື່ສິນຄ້າ',
+                            field: 'name',
+                            sortable: true,
+                            align: 'left',
+
+                        },
+                        {
+                            name: 'deletes',
+                            label: 'ລົບສິນຄ້າ',
+                            field: 'deletes',
+                            align: 'center'
+                        },
+                    ],
+
+                    searchText: "",
+                    productNameIdToDelete: null,
+                    brandIdToDelete: null,
+                    shoeSizeIdToDelete: null,
+                    originalProducts: [],
+                    productNames: [],
+                    shoeSizes: [],
+                    brands: [],
+                    productNameOptions: [],
+                    filteredProductNameOptions: [],
+                    brandOptions: [],
+                    shoeSizeOptions: [],
+                    barcodeScan: '',
+                    confirm: false,
+                    confirmAddProductName: false,
+                    confirmDeleteProductName: false,
+                    confirmAddShoeSize: false,
+                    confirmDeleteShoeSize: false,
+                    confirmAddBrand: false,
+                    confirmDeleteBrand: false,
+                    productName: {
+                        name: ""
+                    },
+                    shoeSize: {
+                        sizeType: "",
+                        sizeNumber: null
+                    },
+                    brand: {
+                        brandName: "",
+                        brandLogoUrl: ""
+                    },
+                    product: {
+                        barcode: "",
+                        productNameId: null,
+                        productImagePath: "",
+                        costPrice: null,
+                        sellingPrice: null,
+                        sku: "",
+                        amountSold: 0,
+                        productNameId: null,
+                        shoeSizeId: null,
+                        brandId: null,
+                        conditionDescription: "",
+                        boxDescription: "",
+                    },
+                    completedDialog: false,
+                    // Upload image variable
+                    selectedFile: null,
+                    filePreview: null,  // For displaying the image preview
+                    imageString: "null"
+                };
+            }
+            ,
+            //methods
+            methods: {
+                searchProduct() {
+                    if (this.searchText !== "") {
+                        this.productNames = this.originalProducts.filter(productName => {
+                            const searchTextLower = this.searchText.toLowerCase();
+
+                            return (
+                                productName.name.toLowerCase().includes(searchTextLower)
+                            );
+                        });
+
+                        console.log(this.searchText);
+                        console.log("Filtered Products:", this.productNames); // Log the filtered bills
+                    }
+                    else {
+                        console.log(this.productNames);
+                        this.productNames = [...this.originalProducts]
+
+                    }
+                },
+                async openAddProductName() {
+
+                    try {
+                        var response = await axios.get("/api/GetProductName");
+                        this.originalProducts = response.data;
+                        this.productNames = response.data.map(productName => ({ ...productName }));
+                        this.confirmAddProductName = true;
+                        console.log(this.productNames);
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                },
+                closeAddProductNameDialog() {
+                    this.confirmAddProductName = false;
+                    this.searchText = "";
+                    this.fetchProductNames();
+
+                },
+                openDeleteProductNameDialog(ProductNameId) {
+                    this.confirmDeleteProductName = true;
+                    this.productNameIdToDelete = ProductNameId;
+                },
+                closeDeleteProductNameDialog() {
+                    this.confirmDeleteProductName = false;
+                    this.productNameIdToDelete = null;
+
+                },
+                async deleteProductName() {
+                    try {
+                        const response = await axios.post(
+                            `/api/DeleteProductName?productNameIdToDelete=${this.productNameIdToDelete}`
+                        );
+
+                        // Remove the deleted shoe size from the list
+                        this.productNames = this.productNames.filter(
+                            (name) => name.productNameId !== this.productNameIdToDelete
+                        );
+                        this.originalProducts = this.originalProducts.filter(
+                            (name) => name.productNameId !== this.productNameIdToDelete
+                        );
+
+                        // Reset the state after successful deletion
+                        this.productNameIdToDelete = null;
+
+                        // Notify the user about the success
+                        this.$q.notify({
+                            type: 'positive',
+                            message: response.data.message || 'Product name deleted successfully!',
+                        });
+
+                        // Close the delete confirmation dialog
+                        this.confirmDeleteProductName = false;
+                    } catch (error) {
+                        // Notify the user about the error
+                        this.$q.notify({
+                            type: 'negative',
+                            message: error.response?.data || 'Error deleting the product name. Please try again.',
+                        });
+
+                        console.error("Error deleting product name:", error);
+                    }
+                }
+                ,
+                async editProductName(item) {
+                    try {
+                        const response = await axios.post("/api/EditProductName", item);
+                        console.log("Request data:", item);
+                        console.log("Response data:", response.data);
+                        if (response.status >= 200 && response.status < 300) {
+                            console.log("Request successful");
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Product Name Modified!'
+                            });
+                        } else {
+                            console.error("Unexpected response status:", response.status);
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Unexpected response status.'
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error during request:", error);
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error during request'
+                        });
+
+                        if (error.response?.data?.errors) {
+                            console.error("Validation errors:", error.response.data.errors);
+                        }
+                    }
+                },
+                async openAddShoeSizeDialog() {
+
+                    try {
+                        var response = await axios.get("/api/GetShoeSizes");
+                        this.shoeSizes = response.data;
+                        this.confirmAddShoeSize = true;
+                        console.log(this.shoeSizes);
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                },
+                closeAddShoeSizeDialog() {
+                    this.confirmAddShoeSize = false;
+                    this.fetchShoeSizeData();
+                    this.shoeSize.sizeType = "";
+                    this.shoeSize.sizeNumber = null;
+                },
+                openDeleteShoeSizeDialog(shoeSizeId) {
+                    this.confirmDeleteShoeSize = true;
+                    this.shoeSizeIdToDelete = shoeSizeId;
+                },
+                closeDeleteShoeSizeDialog() {
+                    this.confirmDeleteShoeSize = false;
+                    this.shoeSizeIdToDelete = null;
+
+
+                },
+                async deleteShoeSize() {
+                    try {
+                        const response = await axios.post(
+                            `/api/DeleteShoeSize?shoeSizeIdToDelete=${this.shoeSizeIdToDelete}`
+                        );
+
+                        // Remove the deleted shoe size from the list
+                        this.shoeSizes = this.shoeSizes.filter(
+                            (shoe) => shoe.shoeSizeId !== this.shoeSizeIdToDelete
+                        );
+
+                        // Reset the state after successful deletion
+                        this.shoeSizeIdToDelete = null;
+
+                        // Notify the user about the success
+                        this.$q.notify({
+                            type: 'positive',
+                            message: response.data.message || 'Shoe Size deleted successfully!',
+                        });
+
+                        // Close the delete confirmation dialog
+                        this.confirmDeleteShoeSize = false;
+                    } catch (error) {
+                        // Notify the user about the error
+                        this.$q.notify({
+                            type: 'negative',
+                            message: error.response?.data || 'Error deleting the shoe size. Please try again.',
+                        });
+
+                        console.error("Error deleting shoe size:", error);
+                    }
+                }
+                ,
+                async editShoeSize(item) {
+                    try {
+                        const response = await axios.post("/api/EditShoeSize", item);
+                        console.log("Request data:", item);
+                        console.log("Response data:", response.data);
+                        if (response.status >= 200 && response.status < 300) {
+                            console.log("Request successful");
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Shoe Size Modified!'
+                            });
+                        } else {
+                            console.error("Unexpected response status:", response.status);
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Unexpected response status.'
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error during request:", error);
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error during request'
+                        });
+
+                        if (error.response?.data?.errors) {
+                            console.error("Validation errors:", error.response.data.errors);
+                        }
+                    }
+                }
+                , //ef
+                async openAddBrandDialog() {
+
+                    try {
+                        var response = await axios.get("/api/GetBrands");
+                        this.brands = response.data;
+                        this.confirmAddBrand = true;
+                        console.log(this.brands);
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                },
+                closeAddBrandDialog() {
+                    this.confirmAddBrand = false;
+                    this.fetchBrandData();
+                    this.brand.brandName = "";
+                    this.brand.brandLogoUrl = "";
+                },
+                openDeleteBrandDialog(brandId) {
+                    this.confirmDeleteBrand = true;
+                    this.brandIdToDelete = brandId;
+                },
+                closeDeletebrandDialog() {
+                    this.confirmDeleteBrand = false;
+                    this.BrandIdToDelete = null;
+
+                },
+                async deleteBrand() {
+                    try {
+                        // Send the request to the API to delete the brand
+                        const response = await axios.post(
+                            `/api/DeleteBrand?brandIdToDelete=${this.brandIdToDelete}`
+                        );
+
+                        // Remove the deleted brand from the local brands array
+                        this.brands = this.brands.filter(brand => brand.brandId !== this.brandIdToDelete);
+
+                        // Reset the state after successful deletion
+                        this.brandIdToDelete = null;
+
+                        // Optional: Notify the user about the success
+                        this.$q.notify({
+                            type: 'positive',
+                            message: response.data.message || 'Brand deleted successfully!',
+                        });
+
+                        // Close the delete confirmation dialog
+                        this.confirmDeleteBrand = false;
+                    } catch (error) {
+                        // Notify the user about the error
+                        this.$q.notify({
+                            type: 'negative',
+                            message: error.response?.data || 'Error deleting the brand. Please try again.',
+                        });
+
+                        console.error("Error deleting brand:", error);
+                    }
+                }
+                ,
+                async editBrandName(item) {
+                    try {
+                        const response = await axios.post("/api/EditBrand", item);
+                        console.log("Request data:", item);
+                        console.log("Response data:", response.data);
+                        if (response.status >= 200 && response.status < 300) {
+                            console.log("Request successful");
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Brand Name Modified!'
+                            });
+                        } else {
+                            console.error("Unexpected response status:", response.status);
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Unexpected response status.'
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error during request:", error);
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error during request'
+                        });
+
+                        if (error.response?.data?.errors) {
+                            console.error("Validation errors:", error.response.data.errors);
+                        }
+                    }
+                }
+                , //ef
+
+                async item_change() {
+                    this.product.barcode = this.barcodeScan;
+                    //data is object notation
+                    try {
+                        var url = '/api/GetProductByBarcodeAdd?barcode=' + this.product.barcode;
+                        var res = await axios.get(url);
+                        this.barcodeScan = '';
+                        if (res.data) {
+                            this.$q.notify({
+                                type: 'warning',
+                                message: 'This barcode already in stock'
+                            })
+                            this.product.barcode = '';
+                        }
+                        else {
+                            this.$q.notify({
+                                type: 'positive',
+                                message: 'This barcode can be add'
+                            })
+                        }
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+                ,
+                async addProduct() {
+                    try {
+                        // Preprocess product fields
+                        if (!this.product.conditionDescription || this.product.conditionDescription.trim() === "") {
+                            this.product.conditionDescription = "-";
+                        }
+                        if (!this.product.boxDescription || this.product.boxDescription.trim() === "") {
+                            this.product.boxDescription = "-";
+                        }
+
+                        console.log("Product Object:", this.product);
+
+                        // Send the product data to the API
+                        const response = await axios.post("/api/AddProduct", this.product);
+
+                        console.log("Response:", response.data);
+
+                        // Handle the response or perform any necessary logic
+                        if (response.status === 200) {
+                            // Additional logic after successful product addition
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Product added successfully!'
+                            });
+
+                            // Clear form fields and reset data after successful addition
+                            this.onReset();
+
+                            // Show the completed dialog
+                            this.completedDialog = true;
+                        } else {
+                            // Log detailed error information
+                            console.error(response);
+
+                            // Handle the case where the API call was not successful
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Error adding product. Please check the console for details.'
+                            });
+                        }
+                    } catch (error) {
+                        // Log detailed error information
+                        console.error(error);
+
+                        // Hide loading indicator in case of an error
+                        this.$q.loading.hide();
+
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error adding product. Please check the console for details.'
+                        });
+                    }
+                },
+                async addProductName() {
+                    try {
+                        // Send the shoe size data to the API
+                        const response = await axios.post("/api/AddProductName", this.productName);
+
+                        console.log("Response:", response.data);
+
+                        if (response.status === 200) {
+                            // Add the new shoe size to the table
+                            this.productNames.push(response.data);
+                            this.originalProducts.push(response.data);
+                            // Clear the input fields
+                            this.productName = {
+                                name: ''
+                            };
+                            this.searchProduct();
+
+                            // Notify the user about the success
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Product name added successfully!',
+                            });
+                        } else {
+                            console.error(response);
+
+                            // Handle the case where the API call was not successful
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Error adding product name. Please check the console for details.',
+                            });
+                        }
+                    } catch (error) {
+                        console.error(error);
+
+                        // Notify the user about the error
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error adding product name. Please check the console for details.',
+                        });
+                    }
+                },
+                async addShoeSize() {
+                    try {
+                        // Send the shoe size data to the API
+                        const response = await axios.post("/api/AddShoeSize", this.shoeSize);
+
+                        console.log("Response:", response.data);
+
+                        if (response.status === 200) {
+                            // Add the new shoe size to the table
+                            this.shoeSizes.push(response.data);
+
+                            // Clear the input fields
+                            this.shoeSize = {
+                                sizeType: '',
+                                sizeNumber: '',
+                            };
+
+                            // Notify the user about the success
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Shoe size added successfully!',
+                            });
+                        } else {
+                            console.error(response);
+
+                            // Handle the case where the API call was not successful
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Error adding shoe size. Please check the console for details.',
+                            });
+                        }
+                    } catch (error) {
+                        console.error(error);
+
+                        // Notify the user about the error
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error adding shoe size. Please check the console for details.',
+                        });
+                    }
+                }
+                ,
+                async addBrand() {
+                    try {
+                        // Send the brand data to the API
+                        const response = await axios.post("/api/AddBrand", this.brand);
+
+                        console.log("Response:", response.data);
+
+                        if (response.status === 200) {
+                            // Add the new brand to the list of brands
+                            this.brands.push(response.data);
+
+                            // Clear the brand input field
+                            this.brand = {
+                                brandName: '',
+                                brandLogoUrl: ''
+                            };
+
+                            // Notify the user about the success
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Brand added successfully!',
+                            });
+                        } else {
+                            console.error(response);
+
+                            // Handle the case where the API call was not successful
+                            this.$q.notify({
+                                color: 'red-4',
+                                textColor: 'white',
+                                icon: 'error',
+                                message: 'Error adding brand. Please check the console for details.',
+                            });
+                        }
+                    } catch (error) {
+                        console.error(error);
+
+                        // Notify the user about the error
+                        this.$q.notify({
+                            color: 'red-4',
+                            textColor: 'white',
+                            icon: 'error',
+                            message: 'Error adding brand. Please check the console for details.',
+                        });
+                    }
+                }
+                ,
+                async fetchShoeSizeData() {
+                    try {
+                        const response = await axios.get("/api/GetShoeSizes"); // Replace "/api/shoeSizeData" with your actual endpoint
+                        this.shoeSizeOptions = response.data.map(size => ({
+                            value: size.shoeSizeId,
+                            label: `${size.sizeType} - ${size.sizeNumber}`
+                        }));
+                    } catch (error) {
+                        console.error("Error fetching shoe size data: ", error);
+                    }
+                },
+                async fetchBrandData() {
+                    try {
+                        const response = await axios.get("/api/GetBrands"); // Replace "/api/shoeSizeData" with your actual endpoint
+                        this.brandOptions = response.data.map(brand => ({
+                            value: brand.brandId,
+                            label: `${brand.brandName}`
+                        }));
+                    } catch (error) {
+                        console.error("Error fetching brand data: ", error);
+                    }
+                },
+                async fetchProductNames() {
+                    try {
+                        const response = await axios.get('/api/GetProductName');
+
+                        this.productNameOptions = response.data.map(productName => ({
+                            value: productName.productNameId,
+                            label: `${productName.name}`
+                        }));
+                        this.filteredProductNameOptions = [...this.productNameOptions]; // Initialize filtered options
+                        console.log("Product Name search able:", this.productNameOptions);
+                    } catch (error) {
+                        console.error('Error fetching product names:', error);
+                    }
+                },
+                async filterFn(val, update, abort) {
+
+
+                    update(() => {
+                        const needle = val.toLowerCase();
+                        this.filteredProductNameOptions = this.productNameOptions.filter(option => option.label && option.label.toLowerCase().includes(needle));
+                    });
+                },
+
+                onReset() {
+                    // Show an ongoing notification
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Resetting...'
+                    });
+
+                    // Simulate delay for 715 milliseconds
+                    setTimeout(() => {
+                        notif({
+                            type: 'positive',
+                            message: 'Reset complete',
+                            timeout: 315
+                        });
+
+                        // Reset the form fields and data
+                        this.product = {
+                            productNameId: null,
+                            costPrice: null,
+                            sellingPrice: null,
+                            sku: "",
+
+                            shoeSizeId: null,
+                            brandId: null,
+
+                            productImagePath: ""
+
+
+                        };
+
+                        // Clear the input field for image URL
+                        this.imageUrlToAdd = "";
+                    }, 715);
+                },
+
+                // Trigger file input click
+                triggerFileInput() {
+                    this.$refs.fileInput.click();
+                },
+
+                // Handle file selection
+                handleFileChange(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.selectedFile = file;
+                        this.filePreview = URL.createObjectURL(file);  // Create preview URL for image
+                    }
+                },
+
+                // Upload image to server using axios
+                async uploadImage() {
+                    if (!this.selectedFile) {
+                        alert('Please select an image to upload');
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append('file', this.selectedFile);
+
+                    try {
+                        // Using axios to send the image to the server
+                        const response = await axios.post('/bossapi/UploadProductImage', formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        });
+
+                        console.log("Response:", response); // Log the full response object
+                        console.log("Response Data:", response.data); // Log the actual response data
+
+                        this.product.productImagePath = response.data.imageUrl;
+                        console.log('Product Image path:', response.data.imageUrl);
+                        // Handling server response
+                        if (response.data.success) {
+                            alert('Image uploaded successfully');
+                        } else {
+                            alert('Failed to upload image');
+                            console.debug(response.data)
+
+                        }
+                    } catch (error) {
+                        console.error('Error uploading image:', error);
+                        alert('An error occurred while uploading the image');
+                    }
+                },
+
+
+
+            }//emethod
+            ,
+            //computed
+            computed: {
+                isAddBrandButtonDisabled() {
+                    // Check if brandName or brandLogoUrl is empty
+                    return !this.brand.brandName.trim() || !this.brand.brandLogoUrl.trim();
+                },
+                isAddShoeSizeButtonDisabled() {
+                    // Ensure both sizeType and sizeNumber are valid inputs
+                    return !this.shoeSize.sizeType.trim() || this.shoeSize.sizeNumber === null || this.shoeSize.sizeNumber === undefined || this.shoeSize.sizeNumber <= 0;
+                }
+
+
+            }
+            ,
+            //created
+            created() {
+
+
+
+            }//ecreated
+            ,
+            //mounted
+            mounted() {
+                this.fetchProductNames();
+                this.fetchBrandData();
+                this.fetchShoeSizeData();
+                this.$refs.input1.$el.focus()
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}

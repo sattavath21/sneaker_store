@@ -1,0 +1,743 @@
+@{
+    ViewData["Title"] = "ປະຫວັດການຂາຍ";
+}
+
+<div id="app1">
+
+
+    <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */;
+            ">
+        ໜ້າປະຫວັດການຂາຍ
+    </div>
+
+    <q-table title="Bills History" class="my-sticky-column-table" :rows="bills" :columns="billColumns" row-key="billId"
+        selection="multiple" v-model:selected="selected" :selected-rows-label="getSelectedString">
+
+        <template v-slot:top-left>
+            <div class="text-h6 q-pa-md"> Bills History <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
+                    color="grey" @@click="onReset"></q-btn>
+            </div>
+            <q-separator vertical class="q-my-sm"></q-separator>
+            <div class="q-pl-sm">
+                <q-input debounce="200" dense v-model="searchText" type="text" @@change="filterBills">
+                    <template v-slot:prepend>
+                        <q-icon name="search"></q-icon>
+                    </template>
+                </q-input>
+            </div>
+        </template>
+
+
+        <template #body="props">
+            <q-tr :props="props">
+
+                <q-td>
+                    <q-checkbox v-model="props.selected" dense size="sm"></q-checkbox>
+                </q-td>
+
+                <q-td key="orderDetails" :props="props">
+                    <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
+                        @@click="props.expand = !props.expand">
+                    </q-btn>
+                </q-td>
+
+                <q-td key="billIndex" :props="props">{{ bills.indexOf(props.row) + 1 }}</q-td>
+
+                <q-td key="orderDate" :props="props">
+                    {{ formatDate(props.row.orderDate) }}
+                </q-td>
+
+                <q-td key="total" class="total" :props="props">
+                    &#3647;{{ callFormatPrice(calculateTotal(props.row)) }}
+                </q-td>
+
+                <q-td key="depositMoney" class="deposit-money" :props="props">
+                    &#3647;{{ callFormatPrice(props.row.depositMoney) }}
+                    <q-popup-edit v-model="props.row.depositMoney">
+                        <q-input v-model="props.row.depositMoney" dense autofocus counter></q-input>
+                        <div class="justify-end row">
+                            <q-btn color="blue-grey-6"
+                                @@click="editDepositMoney(props.row.depositMoney, props.row.billId)" icon="edit"
+                                label="Edit" v-close-popup="cancelEnabled">
+                            </q-btn>
+                        </div>
+                    </q-popup-edit>
+                </q-td>
+                <q-td key="grandTotal" class="grand-total" :props="props">
+                    &#3647;{{ callFormatPrice(calculateGrandTotal(props.row).grandTotal) }}
+                </q-td>
+
+                 <q-td key="amountPay" class="grand-total" :props="props">
+                    &#3647;{{ callFormatPrice(props.row.amountPay) }}
+                    <q-popup-edit v-model="props.row.amountPay">
+                        <q-input v-model="props.row.amountPay" dense autofocus counter></q-input>
+                        <div class="justify-end row">
+                            <q-btn color="blue-grey-6"
+                                @@click="editAmountPay(props.row.amountPay, props.row.billId)" icon="edit"
+                                label="Edit" v-close-popup="cancelEnabled">
+                            </q-btn>
+                        </div>
+                    </q-popup-edit>
+                </q-td>
+
+                <q-td key="staffName" :props="props">
+                    {{ props.row.staff.staffFirstname }} {{ props.row.staff.staffLastname }}
+
+                </q-td>
+                <q-td key="actions" :props="props">
+                    <q-btn class="q-ma-sm q-px-lg q-py-sm" size="15px" icon="print" color="primary"
+                        @@click="printContent(props.row)"></q-btn>
+
+
+                    <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                        @@click="openDeleteBillDialog(props.row.billId)" icon="delete_forever" size="15px"></q-btn>
+
+
+                    <q-dialog v-model="deleteBillVisible" persistent>
+                        <q-card>
+                            <q-card-section class="row items-center">
+
+                                <q-avatar icon="history" color="grey-9" text-color="white" class="q-mr-sm"></q-avatar>
+                                <span class="q-ml-sm">Are you sure you want to delete this history?</span>
+                            </q-card-section>
+
+                            <q-card-actions align="center">
+
+                                <q-btn class="q-ma-sm" color="red-6" @@click="deleteBill" label="Yes"
+                                    v-close-popup></q-btn>
+                                <q-btn class="q-ma-sm" label="No" @@click="closeDeleteBillDialog" color="grey"
+                                    v-close-popup />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+
+                </q-td>
+
+
+
+
+            </q-tr>
+
+
+            @* Expanded section *@
+            <q-tr :props="props" class="dark-background" v-show="props.expand">
+                <q-td colspan="100%">
+                    <div class="custom-expandable-table-wrapper">
+                        <q-table title="Order Details" :rows="props.row.billItems" :columns="orderDetailColumns"
+                            row-key="billItemId" separator="none" style="padding: 12px;">
+                            <template #body="props">
+
+                                <!-- NEW props -->
+                                <q-tr :props="props">
+
+                                    <q-td key="barcode" :props="props">
+                                        {{ props.row.product.barcode }}
+                                    </q-td>
+
+                                    <q-td key="productImagePath" :props="props">
+                                        <q-img :src="props.row.product.productImagePath" style="cursor: pointer;"
+                                            @@click="toggleImageDialog(props.row)" />
+                                        <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
+                                            <div style="text-align: center;">
+                                                <img :src="props.row.product.productImagePath"
+                                                    style="max-width: 100%; max-height: 100%;" />
+                                            </div>
+                                        </q-dialog>
+                                    </q-td>
+
+                                    <q-td key="productName" :props="props">
+                                        {{ props.row.product.productName.name }}
+                                    </q-td>
+
+                                    <q-td key="shoeSizeNumber" :props="props">
+                                        {{ props.row.product.shoeSize.sizeType }} - {{
+                                        props.row.product.shoeSize.sizeNumber }}
+                                    </q-td>
+
+                                    <q-td key="brand" :props="props">
+                                        <div class="brand-info">
+                                            <img :src="props.row.product.brand.brandLogoUrl" class="brand-logo" />
+                                            <span class="brand-name">{{ props.row.product.brand.brandName }}</span>
+                                        </div>
+                                    </q-td>
+
+                                    <q-td key="sellingPrice" class="grand-total" :props="props">
+                                        &#3647;{{ callFormatPrice(props.row.product.sellingPrice) }}
+                                    </q-td>
+
+                                    <q-td key="sku" :props="props">
+                                        {{ props.row.product.sku }}
+                                    </q-td>
+
+                                    <q-td key="conditionDescription" :props="props">
+                                        {{ props.row.product.conditionDescription }}
+                                    </q-td>
+
+                                    <q-td key="boxDescription" :props="props">
+                                        {{ props.row.product.boxDescription }}
+                                    </q-td>
+
+                                </q-tr>
+                            </template>
+
+                        </q-table>
+
+                    </div>
+
+                </q-td>
+            </q-tr>
+        </template>
+    </q-table>
+
+</div>
+
+@section code {
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+
+                    deleteBillVisible: false,
+                    billIdToDelete: 0,
+                    selectedRows: new Map(),
+                    searchText: "",
+                    originalBills: [],
+                    bills: [],
+                    billColumns: [
+                        {
+                            name: 'orderDetails',
+                            label: 'Order details',
+                            align: 'center',
+                            sortable: false,
+                            field: 'orderDetails'
+                        },
+                        {
+                            name: 'billIndex',
+                            field: 'billIndex',
+                            align: 'center',
+                            sortable: true,
+                            label: 'No'
+                        },
+
+                        {
+                            name: 'orderDate',
+                            label: 'Ordered date',
+                            field: 'orderDate',
+
+                            align: 'left',
+                            sortable: true,
+                        },
+                        {
+
+                            name: 'total',
+                            label: 'Total',
+                            field: 'total',
+                            align: 'right',
+                            sortable: false,
+                        },
+                        {
+
+                            name: 'depositMoney',
+                            label: 'Deposit Money',
+                            field: 'depositMoney',
+                            align: 'right',
+                            sortable: false,
+                        },
+                        {
+                            name: 'grandTotal',
+                            label: 'Grand total',
+                            field: 'grandTotal',
+                            align: 'right',
+                            sortable: false,
+                        },
+                        {
+                            name: 'amountPay',
+                            label: 'Amount Pay',
+                            field: 'amountPay',
+                            align: 'right',
+                            sortable: false,
+                        },
+                        {
+                            name: 'staffName',
+                            label: 'Responsible staff',
+                            align: 'left',
+                            sortable: true,
+                            field: row => `${row.staff.staffFirstname} ${row.staff.staffLastname}`
+                        },
+                        {
+                            name: 'actions',
+                            label: 'Actions',
+                            field: 'actions',
+                            align: 'center'
+                        },
+
+                    ],
+
+                    orderDetailColumns: [
+                        {
+                            name: 'barcode',
+                            label: 'Product barcode',
+                            field: 'product.barcode',
+                            align: 'left',
+                            sortable: true
+                        },
+                        {
+                            name: 'productImagePath',
+                            label: 'Product Image',
+                            field: 'productImagePath',
+                            sortable: false,
+                            align: 'center',
+                        },
+                        {
+                            name: 'productName',
+                            label: 'Product name',
+                            field: 'product.productName',
+
+                            align: 'left',
+                            sortable: true
+                        },
+                        {
+                            name: 'shoeSizeNumber',
+                            label: 'Size',
+                            field: 'shoeSize.sizeNumber',
+                            align: 'center',
+                            sortable: true
+                        },
+                        {
+                            name: 'brand',
+                            label: 'Brand',
+                            field: 'brand.brandName',
+                            align: 'center',
+                            sortable: true
+                        },
+                        {
+                            name: 'sellingPrice',
+                            label: 'Price',
+                            field: 'product.sellingPrice',
+                            align: 'right',
+                            sortable: true
+                        },
+                        {
+                            name: 'sku',
+                            label: 'SKU',
+                            field: 'product.sku',
+                            align: 'left',
+                            sortable: true
+                        },
+                        {
+                            name: 'conditionDescription',
+                            label: 'Condition',
+                            field: 'product.conditionDescription',
+                            align: 'left',
+                            sortable: true
+                        },
+                        {
+                            name: 'boxDescription',
+                            label: 'Box Condition',
+                            field: 'product.boxDescription',
+                            align: 'left',
+                            sortable: true
+                        },
+                    ],
+                    selected: [],
+                    depositInput: null,
+                    showImageDialog: false
+
+                };
+            }
+            ,
+            //methods
+            methods: {
+
+                openDeleteBillDialog(billId) {
+                    this.deleteBillVisible = true;
+                    this.billIdToDelete = billId;
+
+                },
+                closeDeleteBillDialog() {
+                    this.deleteBillVisible = false;
+                    this.billIdToDelete = 0;
+                },
+                // Function to calculate subtotal
+                calculateTotal(item) {
+                    let total = 0;
+                    // Iterate through each bill item
+                    item.billItems.forEach(billItem => {
+                        // Calculate total price
+                        total += billItem.product.sellingPrice;
+                    });
+                    return total;
+                },
+
+                // Function to calculate grand total
+                calculateGrandTotal(item) {
+                    const total = this.calculateTotal(item);
+                    grandTotal = total - item.depositMoney;
+                    return {
+                        grandTotal: grandTotal,
+                    };
+                },
+
+                callFormatPrice(price) {
+                    formattedPrice = formatPrice(price);
+                    return formattedPrice;
+                },
+
+
+                filterBills() {
+                    let filteredBills = [...this.originalBills];
+
+                    if (this.searchText.trim() !== "") {
+                        const searchTerms = this.searchText.toLowerCase().split(" ");
+
+                        filteredBills = filteredBills.filter(bill => {
+                            // Extract relevant fields
+                            const barcode = bill.billItems.map(item => item.product.barcode.toLowerCase()).join(" ");
+
+                            const staffFullName = `${bill.staff.staffFirstname.toLowerCase()} ${bill.staff.staffLastname.toLowerCase()}`;
+                            const productNames = bill.billItems.map(item => item.product.productName.name.toLowerCase()).join(" ");
+                            const brands = bill.billItems.map(item => item.product.brand.brandName.toLowerCase()).join(" ");
+                            const shoeSizes = bill.billItems.map(item => item.product.shoeSize.sizeNumber.toString().toLowerCase()).join(" ");
+                            const sizesType = bill.billItems.map(item => item.product.shoeSize.sizeType.toLowerCase()).join(" ");
+                            const conditions = bill.billItems.map(item => (item.product.conditionDescription || "").toLowerCase()).join(" ");
+                            const boxConditions = bill.billItems.map(item => (item.product.boxDescription || "").toLowerCase()).join(" ");
+
+                            // Exact match: Search terms must be full words in the fields
+                            return searchTerms.every(term =>
+                                new RegExp(`\\b${term}\\b`, "i").test(staffFullName) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(barcode) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(productNames) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(brands) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(shoeSizes) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(sizesType) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(conditions) ||
+                                new RegExp(`\\b${term}\\b`, "i").test(boxConditions)
+                            );
+                        });
+                    }
+
+                    console.log("filteredBills data:", filteredBills);
+
+                    // Notify and update the filtered bills
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Loading...'
+                    });
+
+                    // Simulate delay
+                    setTimeout(() => {
+                        notif({
+                            type: 'positive',
+                            message: 'Filtered',
+                            timeout: 300
+                        });
+                    }, 600);
+
+                    this.bills = filteredBills;
+                },
+
+
+
+
+                async editDepositMoney(newDepositMoney, billId) {
+                    console.log("Start of ediTransEvi", newDepositMoney, billId);
+                    try {
+
+                        const response = await axios.post(`/bossapi/EditDepositMoney?billId=${billId}&newDepositMoney=${newDepositMoney}`);
+
+                        console.log("Response data:", response.data);
+
+                        if (response.status >= 200 && response.status < 300) {
+                            console.log("Request successful");
+
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'History Modified!'
+                            });
+                            window.location.reload();
+                        } else {
+                            console.error("Unexpected response status:", response.status);
+                        }
+                    } catch (error) {
+                        console.error("Error during request:", error);
+
+                        if (error.response?.data?.errors) {
+                            console.error("Validation errors:", error.response.data.errors);
+                        }
+                    }
+
+                }
+                ,
+
+                async editAmountPay(amountPay, billId) {
+                    try {
+
+                        const response = await axios.post(`/bossapi/EditAmountPay?billId=${billId}&amountPay=${amountPay}`);
+
+                        console.log("Response data:", response.data);
+
+                        if (response.status >= 200 && response.status < 300) {
+                            console.log("Request successful");
+
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Amount Pay Modified!'
+                            });
+                            window.location.reload();
+                        } else {
+                            console.error("Unexpected response status:", response.status);
+                        }
+                    } catch (error) {
+                        console.error("Error during request:", error);
+
+                        if (error.response?.data?.errors) {
+                            console.error("Validation errors:", error.response.data.errors);
+                        }
+                    }
+
+                }
+                ,
+
+                async deleteBill() {
+                    try {
+                        // Send the delete request
+
+                        const reponse = await axios.post(`/bossapi/DeleteBill?billIdToDelete=${this.billIdToDelete}`);
+
+                        // Use the correct property name in the filter callback
+
+                        this.bills = this.bills.filter(x => x.billId !== this.billIdToDelete);
+                        if (reponse.status === 200) {
+                            // Additional logic after successful product addition
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'Bill deleted successfully'
+                            });
+                            // Set a flag in local storage indicating successful delete
+                            localStorage.setItem('deleteSuccess', 'true');
+                            // Refresh the page
+                            window.location.reload();
+                        }
+
+                    } catch (error) {
+
+                        console.error('Error deleting bill:', error);
+
+                        // Notify the user about the error
+                        this.$q.notify({
+                            type: 'negative',
+                            color: 'red-8',
+
+                            message: 'Error deleting bill'
+                        });
+                    }
+                },
+
+                async onReset() {
+                    const notif = this.$q.notify({
+                        type: 'ongoing',
+                        message: 'Resetting...'
+                    });
+
+                    try {
+                        // Reset the deliveryRow arrasy to an empty array
+                        this.bills = [];
+                        // Call the API to get delivery services data again
+                        const billResponse = await axios.get("/bossapi/GetBills");
+                        this.bills = billResponse.data;
+
+                        this.searchText = ""
+                        // Notify the user that the reset was successful
+                        notif({
+                            type: 'positive',
+                            message: 'Reset successful',
+                            timeout: 300
+                        });
+                    } catch (error) {
+                        // Notify the user if an error occurs during the reset process
+                        notif({
+                            type: 'negative',
+                            message: 'Failed to reset. Please try again.',
+                            timeout: 300
+                        });
+                        console.error('Error resetting bills data:', error);
+                    }
+                },
+
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const formattedDate = date.toLocaleDateString("en-GB", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                    });
+                    return formattedDate;
+                },
+
+
+                printContent(item) {
+                    console.log(item);
+                    // Check if empty or not array
+                    if (!item || !item.billItems || !Array.isArray(item.billItems)) {
+                        console.error('Invalid item data');
+                        return;
+                    }
+
+                    const printWindow = window.open('', '_blank', 'width=600,height=600,chrome=0');
+                    const doc = printWindow.document;
+
+                    // Set up the document
+                    doc.head.innerHTML = `
+            <title>Bill</title>
+            <style nonce="undefined">
+                body {
+                    font-family: 'Noto Sans Lao', sans-serif; 
+                    margin: 20px;
+                }
+                .center { text-align: center; }
+                .left { text-align: left; }
+                .right { text-align: right; }
+                .bold { font-weight: bold; }
+                .line { border-top: 1px solid #000; margin: 10px 0; }
+                .bill-details, .items, .totals, .payment-method { margin: 10px 0; }
+                .padding { padding: 2px; }
+                .table { width: 100%; border-collapse: collapse; }
+                .table th, .table td { padding: 2px; }
+                .table th:nth-child(1), .table td:nth-child(1) { text-align: left; }
+                .table th:nth-child(2), .table td:nth-child(2),
+                .table th:nth-child(3), .table td:nth-child(3) { text-align: center; }
+                .table th:nth-child(4), .table td:nth-child(4) { text-align: right; }
+                .logo { width: 100px; margin-top: 20px; }
+                .flex { display: flex; justify-content: space-between; }
+            </style>
+        `;
+
+                    const body = doc.body;
+
+                    // Header and logo
+                    body.innerHTML = `
+            <div class="center">
+                <img src="/asset/image/billLogo.jpg" alt="Logo" class="logo" />
+                <div class="padding">ຮ້ານ Jame Sec Shoe</div>
+                <div>ສາຂາສະຫວັນນະເຂດ</div>
+                <div>ໃບເກັບເງິນ</div>
+            </div>
+            <div class="left bill-details">
+                <div class="padding">Bill No: ${item.billId || 'N/A'}</div>
+                <div class="padding">Date: ${this.formatDate(item.orderDate)}</div>
+                <div class="padding">Staff: ${item.staff.staffFirstname} ${item.staff.staffLastname}</div>
+            </div>
+            <div class="line"></div>
+            <div class="items">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Size</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${item.billItems.map(billItem => `
+                            <tr>
+                                <td>${billItem.product.productName.name}</td>
+                                <td>${billItem.product.shoeSize.sizeNumber}</td>
+                                <td>1</td>
+                                <td>${formatPrice(billItem.product.sellingPrice)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+     <div class="line"></div>
+<div class="totals flex">
+    <div class="left bold">Total items: ${item.billItems.length}</div>
+    <div class="right bold">${formatPrice(this.calculateTotal(item))}</div>
+</div>
+<div class="line"></div>
+<div class="totals flex">
+    <div class="left">ຄ່າມັດຈຳ:</div>
+    <div class="right">${item.depositMoney}</div>
+</div>
+<div class="totals flex">
+    <div class="left bold">ຈຳນວນເງິນທັງໝົດ: (THB)</div>
+    <div class="right bold">${formatPrice(this.calculateGrandTotal(item).grandTotal)}</div>
+</div>
+<div class="line"></div>
+<div class="payment-method">
+    <div>ຮຼບແບບການຊຳລະ:</div>
+    <div class="flex bold padding">
+        <span>Amout pay:</span>
+        <span class="right">${formatPrice(item.amountPay)}</span>
+    </div>
+    <div class="flex bold padding">
+        <span>Change:</span>
+        <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(item).grandTotal - item.amountPay))}</span>
+    </div>
+</div>
+<div class="line"></div>
+<div class="center">ຂໍຂອບໃຈທຸກທ່ານທີ່ມາອຸດໜູນ</div>
+        `;
+
+                    doc.close();
+                    printWindow.print();
+                    printWindow.onafterprint = () => printWindow.close();
+                },
+
+
+                getSelectedString() {
+                    // Check for the legnth of the selected
+                    // if nothing select return 0 ?
+                    // if not : return the length of the selected list, then decide to add s or not, based on if it single selectino or multiple selection
+                    // Note that: this is inside of the table (:selected-rows-label property) to shows dynamic labels 
+                    return this.selected.length === 0 ? '' : `${this.selected.length} record${this.selected.length > 1 ? 's' : ''} selected`;
+                },//ef
+
+                toggleImageDialog(product) {
+                    product.showImageDialog = !product.showImageDialog;
+                },
+
+            }
+            ,
+            //computed
+            computed: {
+
+            }
+            ,
+            //created
+            async created() {
+                try {
+                    var billResponse = await axios.get("/bossapi/GetBills");
+                    this.bills = billResponse.data;
+                    this.originalBills = billResponse.data;
+                    console.log(billResponse.data);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+
+            }//ecreated
+            ,
+            //mounted
+            mounted() {
+
+            }
+
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+
+}

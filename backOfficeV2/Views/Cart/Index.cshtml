@@ -1,0 +1,668 @@
+@{
+    ViewData["Title"] = "ກະຕ່າ";
+}
+<div id="app1">
+    <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */">
+        ສ້າງລາຍການສິນຄ້າ</div>
+    <q-form class=" q-pa-lg"
+        style="background-color: #f2f2f2; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+        <q-card-actions align="left" class="bg-grey-2 rounded-bottom"> <!-- Aligns content to the end (right side) -->
+            <div style="display: flex; flex-direction: column; width: 450px;">
+                <q-input v-model="depositMoney" label="ເງິນມັດຈຳ"></q-input>
+                <q-separator vertical class="q-my-sm"></q-separator>
+            </div>
+        </q-card-actions>
+        <q-input ref="input1" v-model="item.barcode" label="ບາໂຄ້ດສິນຄ້າ" @@change="item_change">
+        </q-input>
+        <div class="q-ma-sm">
+            <q-input v-model="item.barcode2" label="ບາໂຄ້ດທີ່ສະແກນແລ້ວ" readonly></q-input>
+
+        </div>
+
+
+
+        <q-separator vertical class="q-my-xl"></q-separator>
+        <q-table class="bg-grey-2" title="Order Cart" :rows="orderItems" :columns="columns">
+            <template v-slot:body="props">
+                <q-tr :props="props">
+                    <q-td key="actions" :props="props">
+                        <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+                            @@click="deleteProduct(props.row.productId)" icon="cancel" size="15px"></q-btn>
+                        <q-dialog v-model="confirm" persistent>
+                            <q-card>
+                                <q-card-section class="row items-center">
+                                    <q-avatar icon="inventory_2" color="grey-9" text-color="white"></q-avatar>
+                                    <span class="q-ml-sm">Are you sure you want to cancel this order?</span>
+                                </q-card-section>
+
+                                <q-card-actions align="center">
+                                    <q-btn class="q-ma-sm" color="red-6" @@click="deleteProduct(props.row)" label="Yes"
+                                        v-close-popup></q-btn>
+                                    <q-btn class="q-ma-sm" label="No" color="grey" v-close-popup />
+                                </q-card-actions>
+                            </q-card>
+                        </q-dialog>
+                    </q-td>
+                    <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
+
+                           <q-td key="productImagePath" :props="props">
+            <!-- Image thumbnail with a click event -->
+            <q-img :src="props.row.productImagePath" style="cursor: pointer; width: 120px; height: 120px;"
+                @@click="toggleImageDialog(props.row)" />
+
+            <!-- Dialog to show the full image -->
+            <q-dialog v-model="props.row.showImageDialog" auto-close>
+            
+                        <img :src="props.row.productImagePath"
+                            style="max-width: 100%; max-height: 85vh; object-fit: fill;" />
+              
+            </q-dialog>
+
+        </q-td>
+
+                  
+
+                    
+                    <q-td key="productName" :props="props">
+                        {{ props.row.productName.name }}
+                    </q-td>
+
+                    <q-td key="sellingPrice" :props="props" class="grand-total">
+                        ฿{{ formatPrice(props.row.sellingPrice) }}
+                    </q-td>
+                    <q-td key="sizeType" :props="props">
+                        {{ props.row.shoeSize.sizeType }}
+                    </q-td>
+                    <q-td key="sizeNumber" :props="props">
+                        {{ props.row.shoeSize.sizeNumber }}
+                    </q-td>
+                    <q-td key="brandName" :props="props">
+                        {{ props.row.brand.brandName }}
+                    </q-td>
+                    <q-td key="brandLogoUrl" :props="props">
+                        <q-img :src="props.row.brand.brandLogoUrl" />
+                    </q-td>
+                    <q-td key="conditionDescription" :props="props">
+                        {{ props.row.conditionDescription }}
+                    </q-td>
+
+                    <q-td key="boxDescription" :props="props">
+                        {{ props.row.boxDescription }}
+                    </q-td>
+
+                </q-tr>
+            </template>
+        </q-table>
+        <div class="bg-grey-9 q-pa-sm"></div>
+
+        <q-card-actions align="right">
+            <q-btn label="ດຳເນີນການຕໍ່" size="lg" icon="arrow_downward" color="primary" class="text-h7 q-mx-sm q-my-lg"
+                style="width: 240px; height: 80px;" @@click="confirm2 = true"></q-btn>
+
+            <!-- Dialog last confirm  -->
+            <q-dialog v-model="confirm2" persistent transition-show="scale" transition-hide="scale">
+                <q-card class="bg-red text-black" style="width: 800px; max-width: 100vw;">
+                    <q-card-section>
+                        <q-icon name="receipt_long" color="white" size="60px"></q-icon>
+                    </q-card-section>
+
+
+
+                    <q-card-section align="right" class="bg-white q-pt-none q-pa-sm">
+                        <h6 v-for="item in orderItems" :key="item.productName.name">
+                            {{ item.productName.name }} : ฿{{ formatPrice(item.sellingPrice) }}
+                        </h6>
+                        <q-separator horizontal class="q-my-sm"></q-separator>
+                        <h6>ຈຳນວນ: {{ totalQuantity }}</h6>
+                        <h6 class="total">ລວມ: ฿{{ formatPrice(sumTotal) }}</h6>
+                        <h6 class="deposit-money">ລົບເງິນມັດຈຳ: ฿{{ formatPrice(depositMoney) }}</h6>
+                        <h6 class="grand-total">ລວມທັງໝົດ: ฿{{ formatPrice(sumTotalDeductDeposit) }}</h6>
+                    </q-card-section>
+
+                    <q-card-section class="bg-white q-pt-none q-pa-sm">
+                        <q-input  filled
+      v-model.number="amountPay"
+      label="ລູກຄ້າຈ່າຍ"
+      type="number"
+    @@input="validateAmount"
+      >  
+
+        @* v-model="amountPay" *@
+
+                        </q-input>
+                    </q-card-section>
+
+
+                    <q-card-actions align="right" class="bg-white text-teal">
+                        <q-btn class="q-mb-lg q-mt-lg q-mr-sm" size="lg" icon="arrow_downward" color="teal"
+                            @@click="confirm3 = true" label="checkOut" :disabled="!canCheckOut" v-close-popup></q-btn>
+                        <q-btn class="q-mb-lg q-mt-lg q-mr-md" size="lg" icon="close" label="Cancel" color="grey"
+                            v-close-popup></q-btn>
+                    </q-card-actions>
+
+                </q-card>
+            </q-dialog>
+
+            <q-dialog v-model="confirm3" persistent>
+                <q-card style="width: 520px; max-width: 30vw;">
+                    <q-card-section align="center" class="bg-red" class="row items-center">
+                        <div align="left" class="q-pa-sm">
+                            <q-icon align="center" name="verified" color="white" size="60px"></q-icon>
+                        </div>
+
+                        <h4 class="text-bold text-h4 text-white">ດຳເນີນການ Checkout ບໍ່?</h4>
+                    </q-card-section>
+
+                    <q-card-actions align="center">
+                        <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="green-6"    
+                            @@click="checkOut" label="Yes" v-close-popup></q-btn>
+                        <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="print" label="ພິມບິນ" color="blue" @@click="printContent(orderItems)"
+                            v-close-popup ></q-btn>
+                        
+<q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey"
+                            v-close-popup ></q-btn>
+
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
+
+        </q-card-actions>
+    </q-form>
+</div>
+
+@section code {
+    <script>
+        var option = {
+            //data
+            data() {
+                return {
+
+                    responsibleStaffId: null,
+
+
+
+
+                    depositMoney: 0,
+                    amountPay: 0,
+
+                    showImageDialog: false, // Add showImageDialog variable
+                    item: {
+                        barcode: '',
+                        barcode2: ''
+                    },
+                    confirm: false,
+                    confirm2: false,
+                    confirm3: false,
+                    orderItems: []
+                    ,
+                    columns: [
+                        {
+                            name: 'actions',
+                            label: 'Actions',
+                            field: 'actions',
+                            align: 'center'
+                        },
+                        {
+                            name: 'index',
+                            field: 'index',
+                            align: 'left',
+                            sortable: true,
+                            label: 'No'
+                        },
+
+                        {
+                            name: 'productImagePath',
+                            label: 'ຮູບສິນຄ້າ',
+                            field: 'productImagePath',
+                            sortable: true,
+                            align: 'center',
+
+                        },
+                        {
+                            name: 'productName',
+                            label: 'ຊື່ສິນຄ້າ',
+                            field: 'productName.name',
+                            sortable: true,
+                            align: 'left',
+                        },
+
+                        {
+                            name: 'sellingPrice',
+                                label: 'ລາຄາຂາຍ',
+                            field: 'sellingPrice',
+                            sortable: true,
+                            align: 'right',
+
+                        },
+                        {
+                            name: 'sizeType',
+                            label: 'ປະເພດໄຊ້',
+                            sortable: true,
+                            align: 'center',
+                            field: 'shoeSize.sizeType',
+
+                        },
+                        {
+                            name: 'sizeNumber',
+                            label: 'ເບີເກີບ',
+                            sortable: true,
+                            align: 'center',
+                            field: 'shoeSize.sizeNumber',
+
+                        },
+                        {
+                            name: 'brandName',
+                            label: 'ຊື່ແບຣນ',
+                            sortable: true,
+                            align: 'center',
+                            field: 'brand.brandName',
+
+                        },
+                        {
+                            name: 'brandLogoUrl',
+                            label: 'ແບຣນໂລໂກ້',
+                            sortable: true,
+                            align: 'center',
+                            field: 'brand.brandLogoUrl',
+
+                        },
+                        {
+                            name: 'conditionDescription', // Name of the column
+                            label: 'ສະພາບເກີບ', // Label for the column
+                            field: 'conditionDescription', // Field to bind data to
+                            align: 'center',
+                            sortable: true,
+                        },
+                        {
+                            name: 'boxDescription', // Name of the column
+                            label: 'ສະພາບກ່ອງ', // Label for the column
+                            field: 'boxDescription', // Field to bind data to
+                            align: 'center',
+                            sortable: true,
+                        }
+
+
+                    ],
+                    currentStaff:null,
+                    userIdentityName: "@User.Identity.Name", // Razor syntax
+
+                };
+            }
+            ,
+            //methods
+            methods: {
+                formatPrice(price) {
+                    // Convert the price to a string
+                    let formattedPrice = price.toString();
+
+                    // Use regex to add commas for every three digits
+                    formattedPrice = formattedPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+                    return formattedPrice;
+                },
+
+
+                async deleteProduct(productId) {
+                    console.log(productId);
+
+                    // Find the index of the item with the matching productId
+                    const indexToRemove = this.orderItems.findIndex(item => item.productId === productId);
+
+                    // If the item is found, remove it from the orderItems array
+                    if (indexToRemove !== -1) {
+                        this.orderItems.splice(indexToRemove, 1);
+                        this.$q.notify({
+                            type: 'negative',
+                            color: "red-8",
+                            message: 'Order has been deleted'
+                        });
+                    } else {
+                        // Notify the user that the order was not found
+                        this.$q.notify({
+                            type: 'warning',
+                            message: 'Order not found'
+                        });
+                    }
+
+                    // Close the confirmation dialog
+                    this.confirm = false;
+                }
+
+
+
+                ,
+                async checkOut() {
+                    if (this.orderItems.length === 0) {
+                        this.$q.notify({
+                            type: 'negative',
+                            color: "yellow-8",
+                            message: 'No items in the cart'
+                        });
+                        return;
+                    } else {
+                        try {
+                            const userEmail = '@User.Identity.Name'; // Replace with the correct syntax to access the user's email
+                            const response = await axios.get(`/api/GetStaffId?userEmail=${userEmail.toString()}`);
+
+                            this.responsibleStaffId = response.data; // Assuming the API returns the staff ID
+                            console.log('Staff ID:', this.responsibleStaffId);
+
+                            // Proceed with your checkout logic using the staff ID
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+
+
+
+
+
+                        // Restructure order items
+                        var reBillItems = this.orderItems.map(item => {
+
+                            // Return the restructured item object
+                            return {
+                                productId: item.productId,
+                            };
+                        });
+                        console.log("reBillItems:", reBillItems);
+                        // Create sale object
+                        var bill = {
+                            orderDate: new Date(),
+                            depositMoney: this.depositMoney,
+                            amountPay: this.amountPay,
+                            staffId: this.responsibleStaffId,
+                            billItems: reBillItems
+                        };
+                        console.log("Bill:", bill);
+
+                        var url = "/api/AddSale";
+                        try {
+                            var res = await axios.post(url, bill);
+                            this.orderItems = [];
+                            this.depositMoney = 0;
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: 'ອໍເດີ້ສຳເລັດແລ້ວ'
+                            });
+                            console.log(res.data);
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    }
+                }
+                ,
+
+                toggleImageDialog(product) {
+                    product.showImageDialog = !product.showImageDialog;
+                },
+                async item_change() {
+                    this.item.barcode2 = this.item.barcode;
+
+                    try {
+                        console.log('Barcode sent to API:', this.item.barcode);
+                        var url = '/api/GetProductByBarcode?barcode=' + this.item.barcode;
+                        var res = await axios.get(url);
+                        if (res.data.result !== undefined) {
+                            console.log('%c Entire Result Object:', 'color: blue; font-weight: bold;', res.data.result);
+
+                            if (res.data.status != -1) {
+                                var index = this.orderItems.findIndex(item => item.productId === res.data.result.productId);
+
+                                if (index === -1) {
+                                    this.orderItems.push(res.data.result);
+                                    console.log(this.orderItems)
+                                }
+                                if (!Array.isArray(this.orderItems)) {
+                                    console.error('orderItems is not an array!');
+                                }
+                                console.log('Result object:', res.data.result);
+
+                                this.item.barcode = '';
+                                this.$refs.input1.$el.focus();
+                            } else {
+                                this.$q.notify({
+                                    type: 'warning',
+                                    message: 'ບໍ່ມີບາໂຄ້ດນີ້ໃນສາງ'
+                                });
+                            }
+                        } else {
+                            // Handle case when the result is undefined (product not found)
+                            this.$q.notify({
+                                type: 'warning',
+                                message: 'ບໍ່ມີບາໂຄ້ດນີ້ໃນສາງ'
+                            });
+                        }
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                ,
+                 validateAmount() {
+      if (this.amountPay < this.sumTotalDeductDeposit) {
+        this.$q.notify({
+          type: "negative",
+          message: `Amount Pay must be at least ฿${this.formatPrice(this.sumTotalDeductDeposit)}`,
+        });
+      }
+    },
+
+    printContent(items) {
+         var bill = {
+                            orderDate: new Date(),
+                            depositMoney: this.depositMoney,
+                            amountPay: this.amountPay,
+                            billItems: items
+        };
+
+        console.log("print contnet:", bill);
+  
+                    // Check if empty or not array
+                    if (!bill || !bill.billItems || !Array.isArray(bill.billItems)) {
+                        console.error('Invalid bill data');
+                        return;
+                    }
+
+                    const printWindow = window.open('', '_blank', 'width=600,height=600,chrome=0');
+                    const doc = printWindow.document;
+
+                    // Set up the document
+                    doc.head.innerHTML = `
+            <title>Bill</title>
+            <style nonce="undefined">
+                body {
+                    font-family: 'Noto Sans Lao', sans-serif; 
+                    margin: 20px;
+                }
+                .center { text-align: center; }
+                .left { text-align: left; }
+                .right { text-align: right; }
+                .bold { font-weight: bold; }
+                .line { border-top: 1px solid #000; margin: 10px 0; }
+                .bill-details, .items, .totals, .payment-method { margin: 10px 0; }
+                .padding { padding: 2px; }
+                .table { width: 100%; border-collapse: collapse; }
+                .table th, .table td { padding: 2px; }
+                .table th:nth-child(1), .table td:nth-child(1) { text-align: left; }
+                .table th:nth-child(2), .table td:nth-child(2),
+                .table th:nth-child(3), .table td:nth-child(3) { text-align: center; }
+                .table th:nth-child(4), .table td:nth-child(4) { text-align: right; }
+                .logo { width: 100px; margin-top: 20px; }
+                .flex { display: flex; justify-content: space-between; }
+            </style>
+        `;
+
+                    const body = doc.body;
+
+                    // Header and logo
+                    body.innerHTML = `
+            <div class="center">
+                <img src="/asset/image/billLogo.jpg" alt="Logo" class="logo" />
+                <div class="padding">ຮ້ານ Jame Sec Shoe</div>
+                <div>ສາຂາສະຫວັນນະເຂດ</div>
+                <div>ໃບເກັບເງິນ</div>
+            </div>
+            <div class="left bill-details">
+                <div class="padding">Bill No: ${bill.billId || 'N/A'}</div>
+                <div class="padding">Date: ${this.formatDate(bill.orderDate)}</div>
+                <div class="padding">Staff: ${this.currentStaff.staffFirstname} ${this.currentStaff.staffLastname}</div>
+            </div>
+            <div class="line"></div>
+            <div class="items">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Size</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${bill.billItems.map(billItem => `
+                            <tr>
+                                <td>${billItem.productName.name}</td>
+                                <td>${billItem.shoeSize.sizeNumber}</td>
+                                <td>1</td>
+                                <td>${formatPrice(billItem.sellingPrice)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+     <div class="line"></div>
+<div class="totals flex">
+    <div class="left bold">Total items: ${bill.billItems.length}</div>
+    <div class="right bold">${formatPrice(this.calculateTotal(bill))}</div>
+</div>
+<div class="line"></div>
+<div class="totals flex">
+    <div class="left">ຄ່າມັດຈຳ:</div>
+    <div class="right">${bill.depositMoney}</div>
+</div>
+<div class="totals flex">
+    <div class="left bold">ຈຳນວນເງິນທັງໝົດ: (THB)</div>
+    <div class="right bold">${formatPrice(this.calculateGrandTotal(bill).grandTotal)}</div>
+</div>
+<div class="line"></div>
+<div class="payment-method">
+    <div>ຮຼບແບບການຊຳລະ:</div>
+    <div class="flex bold padding">
+        <span>Amout pay:</span>
+        <span class="right">${formatPrice(bill.amountPay)}</span>
+    </div>
+    <div class="flex bold padding">
+        <span>Change:</span>
+        <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(bill).grandTotal - bill.amountPay))}</span>
+    </div>
+</div>
+<div class="line"></div>
+<div class="center">ຂໍຂອບໃຈທຸກທ່ານທີ່ມາອຸດໜູນ</div>
+        `;
+
+                    doc.close();
+                    printWindow.print();
+                    printWindow.onafterprint = () => printWindow.close();
+                },
+                
+                 formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const formattedDate = date.toLocaleDateString("en-GB", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                    });
+                    return formattedDate;
+                },
+
+                  calculateTotal(item) {
+                    let total = 0;
+                    console.log("calculateTotal debug:", item);
+                    // Iterate through each bill item
+                    item.billItems.forEach(billItem => {
+                        // Calculate total price
+                        total += billItem.sellingPrice;
+                    });
+                    return total;
+                },
+
+                // Function to calculate grand total
+                calculateGrandTotal(item) {
+                    const total = this.calculateTotal(item);
+                    grandTotal = total - this.depositMoney;
+                    return {
+                        grandTotal: grandTotal,
+                    };
+                },
+
+            }//emethod
+            ,
+            //computed
+            computed: {
+                totalQuantity() {
+                    return this.orderItems.length; // Each product has a qty of 1, so just count the items
+                },
+                sumTotal() {
+                    let sumTotal = 0; // initialize sum variable to 0
+
+                    for (let i = 0; i < this.orderItems.length; i++) {
+                        sumTotal += this.orderItems[i].sellingPrice; // add sellingPrice to sum
+                    }
+                    console.log("orderItems", this.orderItems);
+                    return sumTotal;
+                }
+                ,
+                sumTotalDeductDeposit() {
+                    // Deduct depositMoney from sumTotal
+                    const totalAfterDeposit = this.sumTotal - this.depositMoney;
+                    // Further calculations for sumTotalDeductDeposit if needed
+                    return totalAfterDeposit;
+                },
+                    canCheckOut() {
+      return this.amountPay > this.sumTotalDeductDeposit;
+    },
+
+   
+
+
+            }
+            ,
+            //created
+            async created() {
+
+try {
+      // Send `@User.Identity.Name` to the API
+      const response = await axios.get('/bossapi/GetStaffByEmail', {
+        params: { email: this.userIdentityName },
+      });
+
+      if (response.status === 200) {
+        this.currentStaff = response.data; // Store the staff instance
+        console.log("Staff data fetched:", this.currentStaff);
+      } else {
+        console.warn("No staff found for this email.");
+      }
+    } catch (error) {
+      console.error("Error fetching staff data:", error);
+    }
+
+
+
+            }//ecreated
+            ,
+            //mounted
+            mounted() {
+                this.$refs.input1.$el.focus();
+
+            }
+        };
+
+        const app = Vue.createApp(option);
+        app.use(Quasar)
+        app.mount('#app1')
+    </script>
+}
