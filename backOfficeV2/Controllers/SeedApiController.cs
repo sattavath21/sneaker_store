@@ -377,12 +377,9 @@ _db.Bill.AddRange(bills);
 
 
         _db.Staff.AddRange(staffList);
-
         _db.SaveChanges();
 
-    
-        var result = _db.Bill.ToList();
-        return Ok(result);
+        return Ok(staffList);
 
     }
 

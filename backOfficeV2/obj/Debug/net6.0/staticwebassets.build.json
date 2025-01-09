@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "t5T8+ErE0v1vtpBDYlz0h/oNk9qEQ9BmVtWJKOoqdKU=",
+  "Hash": "BG+/lw/lu47t+k+hup0j4NvjZoWXkzIQ1mBy8whQexk=",
   "Source": "backOfficeV2",
   "BasePath": "_content/backOfficeV2",
   "Mode": "Default",
@@ -2637,6 +2637,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\static-images\\login_bg.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeV2\\wwwroot\\static-images\\logo.jpg",
+      "SourceId": "backOfficeV2",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeV2\\wwwroot\\",
+      "BasePath": "_content/backOfficeV2",
+      "RelativePath": "static-images/logo.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\static-images\\logo.jpg"
     }
   ]
 }
