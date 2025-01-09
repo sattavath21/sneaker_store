@@ -70,7 +70,7 @@
                     </q-td>
 
                     <q-td key="sellingPrice" :props="props" class="grand-total">
-                        ฿{{ formatPrice(props.row.sellingPrice) }}
+                        {{ formatPrice(props.row.sellingPrice) }}₭
                     </q-td>
                     <q-td key="sizeType" :props="props">
                         {{ props.row.shoeSize.sizeType }}
@@ -112,13 +112,13 @@
 
                     <q-card-section align="right" class="bg-white q-pt-none q-pa-sm">
                         <h6 v-for="item in orderItems" :key="item.productName.name">
-                            {{ item.productName.name }} : ฿{{ formatPrice(item.sellingPrice) }}
+                            {{ item.productName.name }} : ₭{{ formatPrice(item.sellingPrice) }}
                         </h6>
                         <q-separator horizontal class="q-my-sm"></q-separator>
                         <h6>ຈຳນວນ: {{ totalQuantity }}</h6>
-                        <h6 class="total">ລວມ: ฿{{ formatPrice(sumTotal) }}</h6>
-                        <h6 class="deposit-money">ລົບເງິນມັດຈຳ: ฿{{ formatPrice(depositMoney) }}</h6>
-                        <h6 class="grand-total">ລວມທັງໝົດ: ฿{{ formatPrice(sumTotalDeductDeposit) }}</h6>
+                        <h6 class="total">ລວມ: ₭{{ formatPrice(sumTotal) }}</h6>
+                        <h6 class="deposit-money">ລົບເງິນມັດຈຳ: ₭{{ formatPrice(depositMoney) }}</h6>
+                        <h6 class="grand-total">ລວມທັງໝົດ: ₭{{ formatPrice(sumTotalDeductDeposit) }}</h6>
                     </q-card-section>
 
                     <q-card-section class="bg-white q-pt-none q-pa-sm">
@@ -446,7 +446,7 @@
       if (this.amountPay < this.sumTotalDeductDeposit) {
         this.$q.notify({
           type: "negative",
-          message: `Amount Pay must be at least ฿${this.formatPrice(this.sumTotalDeductDeposit)}`,
+          message: `Amount Pay must be at least ₭${this.formatPrice(this.sumTotalDeductDeposit)}`,
         });
       }
     },

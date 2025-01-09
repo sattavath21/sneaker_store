@@ -53,7 +53,7 @@
 
 
         <q-td key="costPrice" class="deposit-money" :props="props">
-            &#3647;{{ formatPrice(props.row.costPrice) }}
+            {{ formatPrice(props.row.costPrice) }}&#8365;
             <q-popup-edit v-model="props.row.costPrice">
                 <q-input v-model="props.row.costPrice" dense autofocus counter></q-input>
                 <div class="justify-end row">
@@ -67,7 +67,7 @@
 
 
         <q-td key="sellingPrice" class="grand-total" :props="props">
-            &#3647;{{ formatPrice(props.row.sellingPrice) }}
+           {{ formatPrice(props.row.sellingPrice) }}&#8365;
             <q-popup-edit v-model="props.row.sellingPrice">
                 <q-input v-model="props.row.sellingPrice" dense autofocus counter></q-input>
                 <div class="justify-end row">

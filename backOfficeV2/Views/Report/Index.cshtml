@@ -28,8 +28,8 @@
 
                 <q-card class="my-card q-ma-lg">
                     <q-card-section class="q-ma-sm text-center"> <!-- Center align text content -->
-                        <div class="text-h4 text-weight-bold q-pa-lg">ຍອດຂາຍຂອງປີນີ້: &#3647;{{
-                            sumTotalSale }}
+                        <div class="text-h4 text-weight-bold q-pa-lg">ຍອດຂາຍຂອງປີນີ້: {{
+                            sumTotalSale }}&#8365;
                         </div>
                         <div class="chart-container text-center"
                             style="position: relative; height: 70vh; width: 70vw; margin: 0 auto;">
@@ -108,7 +108,7 @@
                     </div>
                     <h5 class="text-bold" style="color: #717171;" v-if="brandSales && brandSales.length > 0">
                         ແບຣນທີ່ຂາຍໄດ້ຫຼາຍສຸດ: {{ mostProfitableBrand1 }}<br>
-                        ຂາຍໄດ້ເປັນເງິນ: &#3647;{{ callFormatPrice(maxSalesBrand) }}
+                        ຂາຍໄດ້ເປັນເງິນ: {{ callFormatPrice(maxSalesBrand) }}&#8365;
                     </h5>
 
 
@@ -148,7 +148,7 @@
                     </div>
                     <h5 class="text-bold" style="color: #717171;" v-if="sizeSale && sizeSale.length > 0">
                         ໄຊ້ທີ່ຂາຍໄດ້ດີສຸດ: {{ mostProfitableSize }}<br>
-                        ຂາຍໄດ້ເປັນເງິນ: &#3647;{{ callFormatPrice(maxSalesSize) }}
+                        ຂາຍໄດ້ເປັນເງິນ: {{ callFormatPrice(maxSalesSize) }}&#8365;
                         <br>
                     </h5>
 
@@ -192,7 +192,7 @@
                     <div v-if="empFiltersApplied" class="q-ma-sm text-center">
                         <h5 class="text-bold" style="color: #717171;" v-if="employeeSale && employeeSale.length > 0">
                             ພະນັກງານທີ່ຂາຍໄດ້ຫຼາຍສຸດ: {{ mostSaleEmployee }}<br>
-                            ຂາຍໄດ້ເປັນເງິນ: &#3647;{{ callFormatPrice(maxEmployeeSale) }}
+                            ຂາຍໄດ້ເປັນເງິນ: {{ callFormatPrice(maxEmployeeSale) }}&#8365;
                             <br>
                         </h5>
                     </div>
@@ -440,7 +440,7 @@
 
                             // Define chart datasets
                             const salesDataset = {
-                                label: 'Sales (฿)',
+                                label: 'Sales (₭)',
                                 data: salesValues,
                                 borderWidth: 1
                             };
@@ -496,7 +496,7 @@
 
 
                         const salesDataset = {
-                            label: 'Sales (฿)',
+                            label: 'Sales (₭)',
                             data: salesValues,
                             borderWidth: 1
                         };
@@ -560,7 +560,7 @@
                         const qtyValues = sortedData.map(item => item.itemQty);
 
                         const salesDataset = {
-                            label: 'Sales (฿)',
+                            label: 'Sales (₭)',
                             data: salesValues,
                             borderWidth: 1
                         };
@@ -621,7 +621,7 @@
                         labels: labels,
                         datasets: [
                             {
-                                label: 'Sales (฿)',
+                                label: 'Sales (₭)',
                                 data: salesValues,
                                 backgroundColor: 'rgba(75, 192, 192, 0.6)',
                                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -654,7 +654,7 @@
                                     beginAtZero: true,
                                     title: {
                                         display: true,
-                                        text: 'THB (฿) / Units'
+                                        text: 'THB (₭) / Units'
                                     }
                                 }
                             },

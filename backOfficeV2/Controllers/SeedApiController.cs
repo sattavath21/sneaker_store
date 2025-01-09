@@ -22,7 +22,6 @@ public class SeedApiController : ControllerBase
     {
         Console.WriteLine("Start Seeding.... ");
 
-
         /// Brands
 
         List<Brand> brands = new List<Brand>
@@ -249,6 +248,143 @@ _db.Bill.AddRange(bills);
     }
 
 
+
+    [HttpPost]
+    public IActionResult SeedDataSmall()
+    {
+        Console.WriteLine("Start Seeding.... ");
+
+        /// Brands
+
+        List<Brand> brands = new List<Brand>
+        {
+            new Brand {BrandId=1, BrandName = "Nike", BrandLogoUrl = "https://logos-world.net/wp-content/uploads/2020/04/Nike-Logo.png" },
+            new Brand {BrandId=2,BrandName = "Adidas", BrandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png" },
+            new Brand {BrandId=3, BrandName = "Puma", BrandLogoUrl = "https://loodibee.com/wp-content/uploads/Puma-Logo-Symbol.png" },
+            new Brand {BrandId=4, BrandName = "Reebok", BrandLogoUrl = "https://www.pngall.com/wp-content/uploads/8/Reebok-Logo-Transparent.png" },
+            new Brand {BrandId=5, BrandName = "Under Armour", BrandLogoUrl = "https://cdn.freebiesupply.com/logos/large/2x/under-armour-logo-png-transparent.png" },
+            new Brand {BrandId=6, BrandName = "New Balance", BrandLogoUrl = "https://cdn.freebiesupply.com/logos/large/2x/new-balance-2-logo-black-and-white.png" },
+            new Brand {BrandId=7, BrandName = "ASICS", BrandLogoUrl = "https://cdn.freebiesupply.com/logos/large/2x/asics-6-logo-png-transparent.png" },
+            new Brand {BrandId=8, BrandName = "Converse", BrandLogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Converse_logo.svg/1200px-Converse_logo.svg.png" },
+            new Brand {BrandId=9, BrandName = "Fila", BrandLogoUrl = "https://i.pinimg.com/originals/13/26/22/132622ce5b69fa301c6b07cf2dc25dfe.png" },
+            new Brand {BrandId=10,  BrandName = "Vans", BrandLogoUrl = "https://cdn.freebiesupply.com/logos/large/2x/vans-3-logo-png-transparent.png" }
+        };
+
+        _db.Brand.AddRange(brands);
+
+        /// Shoe Size
+
+
+        List<ShoeSize> shoeSizes = new List<ShoeSize>();
+
+        for (int i = 35; i <= 47; i++)
+        {
+            shoeSizes.Add(new ShoeSize
+            {
+                ShoeSizeId = i - 34,
+                SizeType = "EU",
+                SizeNumber = i
+            });
+        }
+
+        _db.ShoeSize.AddRange(shoeSizes);
+
+        // Product Name
+        List<ProductName> productNames = new List<ProductName>
+        {
+            new ProductName {ProductNameId=1, Name = "Jordan 4 Retro Thunder (2023)" },
+            new ProductName {ProductNameId=2,Name = "Nike Air Force 1 '07 White" },
+            new ProductName {ProductNameId=3,Name = "Adidas Yeezy Boost 350 V2" },
+            new ProductName {ProductNameId=4,Name = "Puma RS-X Reinvention" },
+            new ProductName {ProductNameId=5,Name = "Converse Chuck Taylor All Star" },
+            new ProductName {ProductNameId=6,Name = "New Balance 550 White/Green" },
+            new ProductName {ProductNameId=7,Name = "Reebok Classic Leather Legacy" },
+            new ProductName {ProductNameId=8,Name = "Vans Old Skool Black/White" },
+            new ProductName {ProductNameId=9,Name = "ASICS Gel-Kayano 14" },
+            new ProductName {ProductNameId=10, Name = "Salomon XT-6 Advanced" }
+        };
+
+        // Use a for loop to add 30 more
+        for (int i = 11; i <= 41; i++)
+        {
+            productNames.Add(new ProductName
+            {
+                ProductNameId = i,
+                Name = $"Sneaker Model {i} (2023)"
+            });
+        }
+        _db.ProductName.AddRange(productNames);
+
+
+        // Permission
+
+        Permission ownerPermission = new Permission
+        {
+            PermissionId = 1,
+            PermissionName = "Manager"
+        };
+
+        Permission viceOwnerPermission = new Permission
+        {
+            PermissionId = 2,
+            PermissionName = "Admin"
+        };
+
+        Permission staffPermission = new Permission
+        {
+            PermissionId = 3,
+            PermissionName = "User"
+        };
+
+        _db.Permission.AddRange(ownerPermission, viceOwnerPermission, staffPermission);
+
+
+
+        // Staff 
+        List<Staff> staffList = new List<Staff>
+{
+    new Staff
+    {
+        StaffFirstname = "JY",
+        StaffLastname = "Yodsaphon",
+        StaffBirthday = new DateTime(1995, 7, 20), // Example birthday
+        Email = "jy@hotmail.com",
+        Password = "password123", // Example password
+        StaffPhoneNumber = "555-1111",
+        Permission = ownerPermission,  // Assign the Permission object directly
+    },
+    new Staff
+    {
+        StaffFirstname = "Ta",
+        StaffLastname = "Xayyadeth",
+        StaffBirthday = new DateTime(1998, 3, 15), // Example birthday
+        Email = "ta@hotmail.com",
+        Password = "password456", // Example password
+        StaffPhoneNumber = "555-2222",
+        Permission = viceOwnerPermission, // Assign the Permission object directly
+    },
+    new Staff
+    {
+        StaffFirstname = "Rmuay",
+        StaffLastname = "Arisara",
+        StaffBirthday = new DateTime(2000, 11, 5), // Example birthday
+        Email = "muay@hotmail.com",
+        Password = "password789", // Example password
+        StaffPhoneNumber = "555-3333",
+        Permission = staffPermission, // Assign the Permission object directly
+    }
+};
+
+
+        _db.Staff.AddRange(staffList);
+
+        _db.SaveChanges();
+
+    
+        var result = _db.Bill.ToList();
+        return Ok(result);
+
+    }
 
     #endregion
 

@@ -50,11 +50,11 @@
                 </q-td>
 
                 <q-td key="total" class="total" :props="props">
-                    &#3647;{{ callFormatPrice(calculateTotal(props.row)) }}
+                   {{ callFormatPrice(calculateTotal(props.row)) }}&#8365;
                 </q-td>
 
                 <q-td key="depositMoney" class="deposit-money" :props="props">
-                    &#3647;{{ callFormatPrice(props.row.depositMoney) }}
+                    {{ callFormatPrice(props.row.depositMoney) }}&#8365;
                     <q-popup-edit v-model="props.row.depositMoney">
                         <q-input v-model="props.row.depositMoney" dense autofocus counter></q-input>
                         <div class="justify-end row">
@@ -66,11 +66,11 @@
                     </q-popup-edit>
                 </q-td>
                 <q-td key="grandTotal" class="grand-total" :props="props">
-                    &#3647;{{ callFormatPrice(calculateGrandTotal(props.row).grandTotal) }}
+                    {{ callFormatPrice(calculateGrandTotal(props.row).grandTotal) }}&#8365;
                 </q-td>
 
                  <q-td key="amountPay" class="grand-total" :props="props">
-                    &#3647;{{ callFormatPrice(props.row.amountPay) }}
+                    {{ callFormatPrice(props.row.amountPay) }}&#8365;
                     <q-popup-edit v-model="props.row.amountPay">
                         <q-input v-model="props.row.amountPay" dense autofocus counter></q-input>
                         <div class="justify-end row">
@@ -164,7 +164,7 @@
                                     </q-td>
 
                                     <q-td key="sellingPrice" class="grand-total" :props="props">
-                                        &#3647;{{ callFormatPrice(props.row.product.sellingPrice) }}
+                                        {{ callFormatPrice(props.row.product.sellingPrice) }}&#8365;
                                     </q-td>
 
                                     <q-td key="sku" :props="props">
