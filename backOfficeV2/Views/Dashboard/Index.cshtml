@@ -81,7 +81,7 @@
                     </template>
                 </q-table>
                 <!-- GridView dialog for all products size -->
-                <q-dialog v-model="isDialogOpen" auto-close>
+                <q-dialog v-model="isDialogOpen" persistent>
                     <q-card class="q-pa-md" style="width: 80%;">
                         <q-card-section>
                             <div class="text-h6">ສິນຄ້າໃນສາງ ໄຊ້ {{ selectedRow.shoeSize }}</div>
@@ -110,12 +110,12 @@
                                             <div class="text-h6 text-weight-medium">{{ product.productName.name }}</div>
                                         </div>
                                         <div class="q-mb-sm">
-                                            <span class="text-caption text-grey">Barcode:</span>
+                                            <span class="text-caption text-grey">ບາໂຄດ:</span>
                                             <div class="text-body1">{{ product.barcode }}</div>
                                         </div>
 
                                         <div class="q-mb-sm">
-                                            <span class="text-caption text-grey">Selling Price:</span>
+                                            <span class="text-caption text-grey">ລາຄາຂາຍ:</span>
                                             <div class="text-body1 text-green">{{ product.sellingPrice }} ບາດ</div>
                                         </div>
                                         <div class="q-mb-sm">
@@ -123,7 +123,7 @@
                                             <div class="text-body1">{{ product.sku }}</div>
                                         </div>
                                         <div class="q-mb-sm flex items-center">
-                                            <span class="text-caption text-grey">Brand:</span>
+                                            <span class="text-caption text-grey">ແບຣນ:</span>
                                             <q-img :src="product.brand.brandLogoUrl" class="q-ml-sm"
                                                 style="width: 54px; height: 54px;"
                                                     :ratio="1"
@@ -136,19 +136,22 @@
                                                 </template>
                                             </q-img>
                                         </div>
-                                        <div class="q-mb-sm">
-                                            <span class="text-caption text-grey">Condition:</span>
+                                        @* <div class="q-mb-sm">
+                                            <span class="text-caption text-grey">ສະພາບເກີບ:</span>
                                             <div class="text-body1">{{ product.conditionDescription || 'N/A' }}</div>
                                         </div>
                                         <div class="q-mb-sm">
-                                            <span class="text-caption text-grey">Box Condition:</span>
+                                            <span class="text-caption text-grey">ສະພາບກ່ອງ:</span>
                                             <div class="text-body1">{{ product.boxDescription || 'N/A' }}</div>
-                                        </div>
+                                        </div> *@
                                     </q-card-section>
                                 </q-card>
                             </div>
                         </div>
 
+        <q-card-actions align="center">
+          <q-btn label="ປິດ" color="primary" @@click="isDialogOpen = false" />
+        </q-card-actions>
 
                     </q-card>
                 </q-dialog>

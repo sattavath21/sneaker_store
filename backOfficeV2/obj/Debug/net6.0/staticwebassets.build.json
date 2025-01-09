@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "jA1f1x26bD8df9AIuktec0iWJ0y1rmK4Mq5b8YEHkY0=",
+  "Hash": "t5T8+ErE0v1vtpBDYlz0h/oNk9qEQ9BmVtWJKOoqdKU=",
   "Source": "backOfficeV2",
   "BasePath": "_content/backOfficeV2",
   "Mode": "Default",
@@ -1288,6 +1288,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\chainsaw-man-mappa@2000x1270.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeV2\\wwwroot\\images\\drip_by_seri0uslyh_defo1a6-fullview.png",
+      "SourceId": "backOfficeV2",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeV2\\wwwroot\\",
+      "BasePath": "_content/backOfficeV2",
+      "RelativePath": "images/drip_by_seri0uslyh_defo1a6-fullview.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\drip_by_seri0uslyh_defo1a6-fullview.png"
     },
     {
       "Identity": "C:\\Users\\Sattavath\\Documents\\sneaker_store_project\\backOfficeV2\\wwwroot\\images\\dualmonitor1.jpg",

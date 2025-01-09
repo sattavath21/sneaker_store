@@ -16,7 +16,7 @@
         selection="multiple" v-model:selected="selected" :selected-rows-label="getSelectedString">
 
         <template v-slot:top-left>
-            <div class="text-h6 q-pa-md"> Bills History <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
+            <div class="text-h6 q-pa-md"> ປະຫວັດການຂາຍ <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
                     color="grey" @@click="onReset"></q-btn>
             </div>
             <q-separator vertical class="q-my-sm"></q-separator>
@@ -209,14 +209,14 @@
                     billColumns: [
                         {
                             name: 'orderDetails',
-                            label: 'Order details',
+                            label: 'ລາຍລະອຽດບິນ',
                             align: 'center',
                             sortable: false,
                             field: 'orderDetails'
                         },
                         {
                             name: 'billIndex',
-                            field: 'billIndex',
+                            field: 'ບິນເລກທີ',
                             align: 'center',
                             sortable: true,
                             label: 'No'
@@ -224,7 +224,7 @@
 
                         {
                             name: 'orderDate',
-                            label: 'Ordered date',
+                            label: 'ມື້ສ້າງບິນ',
                             field: 'orderDate',
 
                             align: 'left',
@@ -233,7 +233,7 @@
                         {
 
                             name: 'total',
-                            label: 'Total',
+                            label: 'ລວມ',
                             field: 'total',
                             align: 'right',
                             sortable: false,
@@ -241,35 +241,35 @@
                         {
 
                             name: 'depositMoney',
-                            label: 'Deposit Money',
+                            label: 'ເງິນມັດຈຳ',
                             field: 'depositMoney',
                             align: 'right',
                             sortable: false,
                         },
                         {
                             name: 'grandTotal',
-                            label: 'Grand total',
+                            label: 'ລວມທັງໝົດ',
                             field: 'grandTotal',
                             align: 'right',
                             sortable: false,
                         },
                         {
                             name: 'amountPay',
-                            label: 'Amount Pay',
+                            label: 'ລູກຄ້າຈ່າຍ',
                             field: 'amountPay',
                             align: 'right',
                             sortable: false,
                         },
                         {
                             name: 'staffName',
-                            label: 'Responsible staff',
+                            label: 'ພະນັກງານທີ່ຮັບຜິດຊອບ',
                             align: 'left',
                             sortable: true,
                             field: row => `${row.staff.staffFirstname} ${row.staff.staffLastname}`
                         },
                         {
                             name: 'actions',
-                            label: 'Actions',
+                            label: 'ພິມບິນ / ລຶບຂໍ້ມູນ',
                             field: 'actions',
                             align: 'center'
                         },
@@ -279,21 +279,21 @@
                     orderDetailColumns: [
                         {
                             name: 'barcode',
-                            label: 'Product barcode',
+                            label: 'ບາໂຄດສິນຄ້າ',
                             field: 'product.barcode',
                             align: 'left',
                             sortable: true
                         },
                         {
                             name: 'productImagePath',
-                            label: 'Product Image',
+                            label: 'ຮູບສິນຄ້າ',
                             field: 'productImagePath',
                             sortable: false,
                             align: 'center',
                         },
                         {
                             name: 'productName',
-                            label: 'Product name',
+                            label: 'ຊື່ສິນຄ້າ',
                             field: 'product.productName',
 
                             align: 'left',
@@ -301,21 +301,21 @@
                         },
                         {
                             name: 'shoeSizeNumber',
-                            label: 'Size',
+                            label: 'ໄຊ້',
                             field: 'shoeSize.sizeNumber',
                             align: 'center',
                             sortable: true
                         },
                         {
                             name: 'brand',
-                            label: 'Brand',
+                            label: 'ແບຣນ',
                             field: 'brand.brandName',
                             align: 'center',
                             sortable: true
                         },
                         {
                             name: 'sellingPrice',
-                            label: 'Price',
+                            label: 'ລາຄາຂາຍ',
                             field: 'product.sellingPrice',
                             align: 'right',
                             sortable: true
@@ -329,14 +329,14 @@
                         },
                         {
                             name: 'conditionDescription',
-                            label: 'Condition',
+                            label: 'ສະພາບເກີບ',
                             field: 'product.conditionDescription',
                             align: 'left',
                             sortable: true
                         },
                         {
                             name: 'boxDescription',
-                            label: 'Box Condition',
+                            label: 'ສະພາບກ່ອງ',
                             field: 'product.boxDescription',
                             align: 'left',
                             sortable: true
