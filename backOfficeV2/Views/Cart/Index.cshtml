@@ -47,24 +47,24 @@
                     </q-td>
                     <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
 
-                           <q-td key="productImagePath" :props="props">
-            <!-- Image thumbnail with a click event -->
-            <q-img :src="props.row.productImagePath" style="cursor: pointer; width: 120px; height: 120px;"
-                @@click="toggleImageDialog(props.row)" />
+                    <q-td key="productImagePath" :props="props">
+                        <!-- Image thumbnail with a click event -->
+                        <q-img :src="props.row.productImagePath" style="cursor: pointer; width: 120px; height: 120px;"
+                            @@click="toggleImageDialog(props.row)" />
 
-            <!-- Dialog to show the full image -->
-            <q-dialog v-model="props.row.showImageDialog" auto-close>
-            
-                        <img :src="props.row.productImagePath"
-                            style="max-width: 100%; max-height: 85vh; object-fit: fill;" />
-              
-            </q-dialog>
+                        <!-- Dialog to show the full image -->
+                        <q-dialog v-model="props.row.showImageDialog" auto-close>
 
-        </q-td>
+                            <img :src="props.row.productImagePath"
+                                style="max-width: 100%; max-height: 85vh; object-fit: fill;" />
 
-                  
+                        </q-dialog>
 
-                    
+                    </q-td>
+
+
+
+
                     <q-td key="productName" :props="props">
                         {{ props.row.productName.name }}
                     </q-td>
@@ -110,28 +110,43 @@
 
 
 
-                    <q-card-section align="right" class="bg-white q-pt-none q-pa-sm">
-                        <h6 v-for="item in orderItems" :key="item.productName.name">
-                            {{ item.productName.name }} : ₭{{ formatPrice(item.sellingPrice) }}
-                        </h6>
+                    <q-card-section align="right" class="bg-white q-pt-none q-pa-lg">
+                        <div v-for="item in orderItems" :key="item.productName.name"
+                            class="flex align-center justify-between">
+                            <h6 class="q-pa-none">{{ item.productName.name }}</h6>
+                            <h6>{{ formatPrice(item.sellingPrice) }}₭</h6>
+                        </div>
                         <q-separator horizontal class="q-my-sm"></q-separator>
-                        <h6>ຈຳນວນ: {{ totalQuantity }}</h6>
-                        <h6 class="total">ລວມ: ₭{{ formatPrice(sumTotal) }}</h6>
-                        <h6 class="deposit-money">ລົບເງິນມັດຈຳ: ₭{{ formatPrice(depositMoney) }}</h6>
-                        <h6 class="grand-total">ລວມທັງໝົດ: ₭{{ formatPrice(sumTotalDeductDeposit) }}</h6>
+
+                        <div class="flex align-center justify-between">
+                            <h6>ຈຳນວນທັງໝົດ:</h6>
+                            <h6>{{ totalQuantity }}</h6>
+                        </div>
+                        <div class="flex align-center justify-between">
+                            <h6>ລວມ:</h6>
+                            <h6 class="total">{{ formatPrice(sumTotal) }}₭</h6>
+                        </div>
+                        <div class="flex align-center justify-between">
+                            <h6>ລົບເງິນມັດຈຳ:</h6>
+                            <h6 class="deposit-money">{{ formatPrice(depositMoney) }}₭</h6>
+                        </div>
+                        <div class="flex align-center justify-between">
+                            <h6>ລວມທັງໝົດ:</h6>
+                            <h6 class="grand-total">{{ formatPrice(sumTotalDeductDeposit) }}₭</h6>
+                        </div>
                     </q-card-section>
 
-                    <q-card-section class="bg-white q-pt-none q-pa-sm">
-                        <q-input  filled
-      v-model.number="amountPay"
-      label="ລູກຄ້າຈ່າຍ"
-      type="number"
-    @@input="validateAmount"
-      >  
-
-        @* v-model="amountPay" *@
-
-                        </q-input>
+                    <q-card-section class="bg-white q-pt-none q-pa-xl">
+                        <q-input
+                        filled 
+                        v-model.number="amountPay" 
+                        label="ລູກຄ້າຈ່າຍ" 
+                        mask="###,###,###,###"
+                        unmasked-value
+                        reverse-fill-mask
+                        suffix="₭"
+                        @@input="validateAmount"
+                        ></q-input>
                     </q-card-section>
 
 
@@ -156,13 +171,13 @@
                     </q-card-section>
 
                     <q-card-actions align="center">
-                        <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="green-6"    
+                        <q-btn class="q-mt-lg q-mb-lg q-pa-xl q-ma-md" icon="done" size="lg" color="green-6"
                             @@click="checkOut" label="Yes" v-close-popup></q-btn>
-                        <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="print" label="ພິມບິນ" color="blue" @@click="printContent(orderItems)"
-                            v-close-popup ></q-btn>
-                        
-<q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey"
-                            v-close-popup ></q-btn>
+                        <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="print" label="ພິມບິນ"
+                            color="blue" @@click="printContent(orderItems)" v-close-popup></q-btn>
+
+                        <q-btn class="q-mt-lg  q-mb-lg q-pa-xl q-ma-md" size="lg" icon="cancel" label="No" color="grey"
+                            v-close-popup></q-btn>
 
                     </q-card-actions>
                 </q-card>
@@ -230,7 +245,7 @@
 
                         {
                             name: 'sellingPrice',
-                                label: 'ລາຄາຂາຍ',
+                            label: 'ລາຄາຂາຍ',
                             field: 'sellingPrice',
                             sortable: true,
                             align: 'right',
@@ -285,7 +300,7 @@
 
 
                     ],
-                    currentStaff:null,
+                    currentStaff: null,
                     userIdentityName: "@User.Identity.Name", // Razor syntax
 
                 };
@@ -442,25 +457,25 @@
                     }
                 }
                 ,
-                 validateAmount() {
-      if (this.amountPay < this.sumTotalDeductDeposit) {
-        this.$q.notify({
-          type: "negative",
-          message: `Amount Pay must be at least ₭${this.formatPrice(this.sumTotalDeductDeposit)}`,
-        });
-      }
-    },
+                validateAmount() {
+                    if (this.amountPay < this.sumTotalDeductDeposit) {
+                        this.$q.notify({
+                            type: "negative",
+                            message: `Amount Pay must be at least ₭${this.formatPrice(this.sumTotalDeductDeposit)}`,
+                        });
+                    }
+                },
 
-    printContent(items) {
-         var bill = {
-                            orderDate: new Date(),
-                            depositMoney: this.depositMoney,
-                            amountPay: this.amountPay,
-                            billItems: items
-        };
+                printContent(items) {
+                    var bill = {
+                        orderDate: new Date(),
+                        depositMoney: this.depositMoney,
+                        amountPay: this.amountPay,
+                        billItems: items
+                    };
 
-        console.log("print contnet:", bill);
-  
+                    console.log("print contnet:", bill);
+
                     // Check if empty or not array
                     if (!bill || !bill.billItems || !Array.isArray(bill.billItems)) {
                         console.error('Invalid bill data');
@@ -472,104 +487,104 @@
 
                     // Set up the document
                     doc.head.innerHTML = `
-            <title>Bill</title>
-            <style nonce="undefined">
-                body {
-                    font-family: 'Noto Sans Lao', sans-serif; 
-                    margin: 20px;
-                }
-                .center { text-align: center; }
-                .left { text-align: left; }
-                .right { text-align: right; }
-                .bold { font-weight: bold; }
-                .line { border-top: 1px solid #000; margin: 10px 0; }
-                .bill-details, .items, .totals, .payment-method { margin: 10px 0; }
-                .padding { padding: 2px; }
-                .table { width: 100%; border-collapse: collapse; }
-                .table th, .table td { padding: 2px; }
-                .table th:nth-child(1), .table td:nth-child(1) { text-align: left; }
-                .table th:nth-child(2), .table td:nth-child(2),
-                .table th:nth-child(3), .table td:nth-child(3) { text-align: center; }
-                .table th:nth-child(4), .table td:nth-child(4) { text-align: right; }
-                .logo { width: 100px; margin-top: 20px; }
-                .flex { display: flex; justify-content: space-between; }
-            </style>
-        `;
+                <title>Bill</title>
+                <style nonce="undefined">
+                    body {
+                        font-family: 'Noto Sans Lao', sans-serif; 
+                        margin: 20px;
+                    }
+                    .center { text-align: center; }
+                    .left { text-align: left; }
+                    .right { text-align: right; }
+                    .bold { font-weight: bold; }
+                    .line { border-top: 1px solid #000; margin: 10px 0; }
+                    .bill-details, .items, .totals, .payment-method { margin: 10px 0; }
+                    .padding { padding: 2px; }
+                    .table { width: 100%; border-collapse: collapse; }
+                    .table th, .table td { padding: 2px; }
+                    .table th:nth-child(1), .table td:nth-child(1) { text-align: left; }
+                    .table th:nth-child(2), .table td:nth-child(2),
+                    .table th:nth-child(3), .table td:nth-child(3) { text-align: center; }
+                    .table th:nth-child(4), .table td:nth-child(4) { text-align: right; }
+                    .logo { width: 100px; margin-top: 20px; }
+                    .flex { display: flex; justify-content: space-between; }
+                </style>
+            `;
 
                     const body = doc.body;
 
                     // Header and logo
                     body.innerHTML = `
-            <div class="center">
-                <img src="/asset/image/billLogo.jpg" alt="Logo" class="logo" />
-                <div class="padding">ຮ້ານ Jame Sec Shoe</div>
-                <div>ສາຂາສະຫວັນນະເຂດ</div>
-                <div>ໃບເກັບເງິນ</div>
-            </div>
-            <div class="left bill-details">
-                <div class="padding">Bill No: ${bill.billId || 'N/A'}</div>
-                <div class="padding">Date: ${this.formatDate(bill.orderDate)}</div>
-                <div class="padding">Staff: ${this.currentStaff.staffFirstname} ${this.currentStaff.staffLastname}</div>
-            </div>
-            <div class="line"></div>
-            <div class="items">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Size</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${bill.billItems.map(billItem => `
+                <div class="center">
+                    <img src="/asset/image/billLogo.jpg" alt="Logo" class="logo" />
+                    <div class="padding">ຮ້ານ 3L Sport ເກີບມື 2 ຂອງແທ້ ລາຄາຖຶກ</div>
+                    <div>ສາຂາສະຫວັນນະເຂດ</div>
+                    <div>ໃບເກັບເງິນ</div>
+                </div>
+                <div class="left bill-details">
+                    <div class="padding">ໝາຍເລກບິນ: ${bill.billId || 'N/A'}</div>
+                    <div class="padding">ວັນທີ່: ${this.formatDate(bill.orderDate)}</div>
+                    <div class="padding">ພະນັກງານຂາຍ: ${this.currentStaff.staffFirstname} ${this.currentStaff.staffLastname}</div>
+                </div>
+                <div class="line"></div>
+                <div class="items">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>${billItem.productName.name}</td>
-                                <td>${billItem.shoeSize.sizeNumber}</td>
-                                <td>1</td>
-                                <td>${formatPrice(billItem.sellingPrice)}</td>
+                                <th>ຊື່ສິນຄ້າ</th>
+                                <th>ຂະໜາດ</th>
+                                <th>ຈຳນວນ</th>
+                                <th>ລາຄາ</th>
                             </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-     <div class="line"></div>
-<div class="totals flex">
-    <div class="left bold">Total items: ${bill.billItems.length}</div>
-    <div class="right bold">${formatPrice(this.calculateTotal(bill))}</div>
-</div>
-<div class="line"></div>
-<div class="totals flex">
-    <div class="left">ຄ່າມັດຈຳ:</div>
-    <div class="right">${bill.depositMoney}</div>
-</div>
-<div class="totals flex">
-    <div class="left bold">ຈຳນວນເງິນທັງໝົດ: (THB)</div>
-    <div class="right bold">${formatPrice(this.calculateGrandTotal(bill).grandTotal)}</div>
-</div>
-<div class="line"></div>
-<div class="payment-method">
-    <div>ຮຼບແບບການຊຳລະ:</div>
-    <div class="flex bold padding">
-        <span>Amout pay:</span>
-        <span class="right">${formatPrice(bill.amountPay)}</span>
+                        </thead>
+                        <tbody>
+                            ${bill.billItems.map(billItem => `
+                                <tr>
+                                    <td>${billItem.productName.name}</td>
+                                    <td>${billItem.shoeSize.sizeNumber}</td>
+                                    <td>1</td>
+                                    <td>${formatPrice(billItem.sellingPrice)}&#8365;</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+         <div class="line"></div>
+    <div class="totals flex">
+        <div class="left bold">ຈຳນວນສິນຄ້າທັງໝົດ: ${bill.billItems.length}</div>
+        <div class="right bold">${formatPrice(this.calculateTotal(bill))}&#8365;</div>
     </div>
-    <div class="flex bold padding">
-        <span>Change:</span>
-        <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(bill).grandTotal - bill.amountPay))}</span>
+    <div class="line"></div>
+    <div class="totals flex">
+        <div class="left">ຄ່າມັດຈຳ:</div>
+        <div class="right">${bill.depositMoney}&#8365;</div>
     </div>
-</div>
-<div class="line"></div>
-<div class="center">ຂໍຂອບໃຈທຸກທ່ານທີ່ມາອຸດໜູນ</div>
-        `;
+    <div class="totals flex">
+        <div class="left bold">ຈຳນວນເງິນທັງໝົດ:</div>
+        <div class="right bold">${formatPrice(this.calculateGrandTotal(bill).grandTotal)}&#8365;</div>
+    </div>
+    <div class="line"></div>
+    <div class="payment-method">
+        <div>ຮຼບແບບການຊຳລະ:</div>
+        <div class="flex bold padding">
+            <span>ລູກຄ້າຈ່າຍ:</span>
+            <span class="right">${formatPrice(bill.amountPay)}&#8365;</span>
+        </div>
+        <div class="flex bold padding">
+            <span>ເງິນທອນ:</span>
+            <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(bill).grandTotal - bill.amountPay))}&#8365;</span>
+        </div>
+    </div>
+    <div class="line"></div>
+    <div class="center">ຂໍຂອບໃຈທຸກທ່ານທີ່ມາອຸດໜູນ</div>
+            `;
 
                     doc.close();
                     printWindow.print();
                     printWindow.onafterprint = () => printWindow.close();
                 },
-                
-                 formatDate(dateString) {
+
+                formatDate(dateString) {
                     const date = new Date(dateString);
                     const formattedDate = date.toLocaleDateString("en-GB", {
                         year: "numeric",
@@ -579,7 +594,7 @@
                     return formattedDate;
                 },
 
-                  calculateTotal(item) {
+                calculateTotal(item) {
                     let total = 0;
                     console.log("calculateTotal debug:", item);
                     // Iterate through each bill item
@@ -622,11 +637,11 @@
                     // Further calculations for sumTotalDeductDeposit if needed
                     return totalAfterDeposit;
                 },
-                    canCheckOut() {
-      return this.amountPay > this.sumTotalDeductDeposit;
-    },
+                canCheckOut() {
+                    return this.amountPay >= this.sumTotalDeductDeposit;
+                },
 
-   
+
 
 
             }
@@ -634,21 +649,21 @@
             //created
             async created() {
 
-try {
-      // Send `@User.Identity.Name` to the API
-      const response = await axios.get('/bossapi/GetStaffByEmail', {
-        params: { email: this.userIdentityName },
-      });
+                try {
+                    // Send `@User.Identity.Name` to the API
+                    const response = await axios.get('/bossapi/GetStaffByEmail', {
+                        params: { email: this.userIdentityName },
+                    });
 
-      if (response.status === 200) {
-        this.currentStaff = response.data; // Store the staff instance
-        console.log("Staff data fetched:", this.currentStaff);
-      } else {
-        console.warn("No staff found for this email.");
-      }
-    } catch (error) {
-      console.error("Error fetching staff data:", error);
-    }
+                    if (response.status === 200) {
+                        this.currentStaff = response.data; // Store the staff instance
+                        console.log("Staff data fetched:", this.currentStaff);
+                    } else {
+                        console.warn("No staff found for this email.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching staff data:", error);
+                }
 
 
 

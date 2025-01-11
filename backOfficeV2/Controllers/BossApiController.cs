@@ -228,8 +228,6 @@ public IActionResult GetUserData()
   [HttpPost]
   public async Task<IActionResult> RegisterStaff(Staff s)
   {
-    Console.WriteLine("Begin of RegisterStaff");
-
     try
     {
       // Create a new AppUser instance and assign values
@@ -253,9 +251,6 @@ public IActionResult GetUserData()
         );
       }
 
-      // Create new login account
-      Console.WriteLine("Creating login account");
-
       await _userManager.CreateAsync(newUser, s.Password);
       newUser = await _userManager.FindByEmailAsync(newUser.Email);
 
@@ -263,22 +258,17 @@ public IActionResult GetUserData()
 
       if (s.PermissionId == 1)
       {
-        await _userManager.AddToRoleAsync(newUser, "admin");
+        await _userManager.AddToRoleAsync(newUser, "manager");
       }
       else if (s.PermissionId == 2)
       {
-        await _userManager.AddToRoleAsync(newUser, "manager");
+        await _userManager.AddToRoleAsync(newUser, "admin");
       }
       else if (s.PermissionId == 3)
       {
         await _userManager.AddToRoleAsync(newUser, "user");
 
       }
-
-      // if(!await _userManager.IsInRoleAsync(newUser, "user")){
-      //     await _userManager.AddToRoleAsync(newUser, "user");
-      // }
-      Console.WriteLine("Before .Add");
 
       _db.Staff.Add(s);
       await _db.SaveChangesAsync();
@@ -288,9 +278,7 @@ public IActionResult GetUserData()
         code = 0,
         message = "User registered successfully",
         staff = s
-      });            // var user = _userManager.FirstOrDefault(x => x.firstName = s.StaffFirstname &&  x.lastName ==s.StaffLastname);
-
-
+      });         
 
 
 

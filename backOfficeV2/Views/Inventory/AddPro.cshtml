@@ -153,11 +153,21 @@
 
             <q-separator vertical class="q-my-md"></q-separator>
 
-            <q-input class="q-px-sm" filled v-model="product.costPrice" label="ລາຄາຊື້" hint="ໂຕເລກເທົ່ານັ້ນ" lazy-rules
+            <q-input 
+                                mask="###,###,###,###"
+                        unmasked-value
+                        reverse-fill-mask
+                        suffix="₭"
+            class="q-px-sm" filled v-model="product.costPrice" label="ລາຄາຊື້" hint="ໂຕເລກເທົ່ານັ້ນ" lazy-rules
                 :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
             <q-separator vertical class="q-my-md"></q-separator>
 
-            <q-input class="q-px-sm" filled v-model="product.sellingPrice" label="ລາຄາຂາຍ" hint="ໂຕເລກເທົ່ານັ້ນ"
+            <q-input 
+                                mask="###,###,###,###"
+                        unmasked-value
+                        reverse-fill-mask
+                        suffix="₭"
+            class="q-px-sm" filled v-model="product.sellingPrice" label="ລາຄາຂາຍ" hint="ໂຕເລກເທົ່ານັ້ນ"
                 lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']"></q-input>
             <q-separator vertical class="q-my-md"></q-separator>
 

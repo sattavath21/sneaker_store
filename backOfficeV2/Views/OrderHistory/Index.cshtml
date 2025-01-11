@@ -627,24 +627,24 @@
                     body.innerHTML = `
             <div class="center">
                 <img src="/asset/image/billLogo.jpg" alt="Logo" class="logo" />
-                <div class="padding">ຮ້ານ Jame Sec Shoe</div>
+                <div class="padding">ຮ້ານ 3L Sport ເກີບມື 2 ຂອງແທ້ ລາຄາຖຶກ</div>
                 <div>ສາຂາສະຫວັນນະເຂດ</div>
                 <div>ໃບເກັບເງິນ</div>
             </div>
             <div class="left bill-details">
-                <div class="padding">Bill No: ${item.billId || 'N/A'}</div>
-                <div class="padding">Date: ${this.formatDate(item.orderDate)}</div>
-                <div class="padding">Staff: ${item.staff.staffFirstname} ${item.staff.staffLastname}</div>
+                <div class="padding">ໝາຍເລກບິນ: ${item.billId || 'N/A'}</div>
+                <div class="padding">ວັນທີ່: ${this.formatDate(item.orderDate)}</div>
+                <div class="padding">ພະນັກງານຂາຍ: ${item.staff.staffFirstname} ${item.staff.staffLastname}</div>
             </div>
             <div class="line"></div>
             <div class="items">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Product Name</th>
-                            <th>Size</th>
-                            <th>Qty</th>
-                            <th>Price</th>
+                            <th>ຊື່ສິນຄ້າ</th>
+                            <th>ຂະໜາດ</th>
+                            <th>ຈຳນວນ</th>
+                            <th>ລາຄາ</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -653,7 +653,7 @@
                                 <td>${billItem.product.productName.name}</td>
                                 <td>${billItem.product.shoeSize.sizeNumber}</td>
                                 <td>1</td>
-                                <td>${formatPrice(billItem.product.sellingPrice)}</td>
+                                <td>${formatPrice(billItem.product.sellingPrice)}&#8365;</td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -661,28 +661,28 @@
             </div>
      <div class="line"></div>
 <div class="totals flex">
-    <div class="left bold">Total items: ${item.billItems.length}</div>
-    <div class="right bold">${formatPrice(this.calculateTotal(item))}</div>
+    <div class="left bold">ຈຳນວນສິນຄ້າທັງໝົດ: ${item.billItems.length}</div>
+    <div class="right bold">${formatPrice(this.calculateTotal(item))}&#8365;</div>
 </div>
 <div class="line"></div>
 <div class="totals flex">
     <div class="left">ຄ່າມັດຈຳ:</div>
-    <div class="right">${item.depositMoney}</div>
+    <div class="right">${item.depositMoney}&#8365;</div>
 </div>
 <div class="totals flex">
-    <div class="left bold">ຈຳນວນເງິນທັງໝົດ: (THB)</div>
-    <div class="right bold">${formatPrice(this.calculateGrandTotal(item).grandTotal)}</div>
+    <div class="left bold">ຈຳນວນເງິນທັງໝົດ:</div>
+    <div class="right bold">${formatPrice(this.calculateGrandTotal(item).grandTotal)}&#8365;</div>
 </div>
 <div class="line"></div>
 <div class="payment-method">
     <div>ຮຼບແບບການຊຳລະ:</div>
     <div class="flex bold padding">
-        <span>Amout pay:</span>
-        <span class="right">${formatPrice(item.amountPay)}</span>
+        <span>ລູກຄ້າຈ່າຍ:</span>
+        <span class="right">${formatPrice(item.amountPay)}&#8365;</span>
     </div>
     <div class="flex bold padding">
-        <span>Change:</span>
-        <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(item).grandTotal - item.amountPay))}</span>
+        <span>ເງິນທອນ:</span>
+        <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(item).grandTotal - item.amountPay))}&#8365;</span>
     </div>
 </div>
 <div class="line"></div>
