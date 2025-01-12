@@ -135,8 +135,10 @@
                             <h6 class="grand-total">{{ formatPrice(sumTotalDeductDeposit) }}₭</h6>
                         </div>
                     </q-card-section>
+                
 
                     <q-card-section class="bg-white q-pt-none q-pa-xl">
+                        <q-checkbox left-label v-model="isTransfer" label="ໂອນຈ່າຍ"></q-checkbox>
                         <q-input
                         filled 
                         v-model.number="amountPay" 
@@ -146,13 +148,14 @@
                         reverse-fill-mask
                         suffix="₭"
                         @@input="validateAmount"
+                        :disable="isTransfer"
                         ></q-input>
                     </q-card-section>
 
 
                     <q-card-actions align="right" class="bg-white text-teal">
                         <q-btn class="q-mb-lg q-mt-lg q-mr-sm" size="lg" icon="arrow_downward" color="teal"
-                            @@click="confirm3 = true" label="checkOut" :disabled="!canCheckOut" v-close-popup></q-btn>
+                            @@click="confirm3 = true" label="checkout" :disabled="!canCheckOut" v-close-popup></q-btn>
                         <q-btn class="q-mb-lg q-mt-lg q-mr-md" size="lg" icon="close" label="Cancel" color="grey"
                             v-close-popup></q-btn>
                     </q-card-actions>
@@ -302,6 +305,7 @@
                     ],
                     currentStaff: null,
                     userIdentityName: "@User.Identity.Name", // Razor syntax
+                    isTransfer: false
 
                 };
             }
@@ -388,7 +392,8 @@
                             depositMoney: this.depositMoney,
                             amountPay: this.amountPay,
                             staffId: this.responsibleStaffId,
-                            billItems: reBillItems
+                            billItems: reBillItems,
+                            isTransfer: this.isTransfer
                         };
                         console.log("Bill:", bill);
 
@@ -471,15 +476,27 @@
                         orderDate: new Date(),
                         depositMoney: this.depositMoney,
                         amountPay: this.amountPay,
-                        billItems: items
+                        isTransfer: this.isTransfer,
+                        billItems: items,
                     };
 
                     console.log("print contnet:", bill);
+
+                    
 
                     // Check if empty or not array
                     if (!bill || !bill.billItems || !Array.isArray(bill.billItems)) {
                         console.error('Invalid bill data');
                         return;
+                    }
+
+                    var paymentMethod= "";
+
+                    if (bill.isTransfer){
+                        paymentMethod ="ໂອນຈ່າຍ"
+                        bill.amountPay = this.calculateGrandTotal(bill).grandTotal;
+                    } else{
+                        paymentMethod ="ເງິນສົດ"
                     }
 
                     const printWindow = window.open('', '_blank', 'width=600,height=600,chrome=0');
@@ -565,7 +582,10 @@
     </div>
     <div class="line"></div>
     <div class="payment-method">
-        <div>ຮຼບແບບການຊຳລະ:</div>
+        <div class="totals flex">
+            <div>ວິ​ທີ​ການ​ຊໍາ​ລະ​ເງິນ​:</div>
+        <div class="right"> ${paymentMethod}</div>
+        </div>
         <div class="flex bold padding">
             <span>ລູກຄ້າຈ່າຍ:</span>
             <span class="right">${formatPrice(bill.amountPay)}&#8365;</span>
@@ -638,7 +658,8 @@
                     return totalAfterDeposit;
                 },
                 canCheckOut() {
-                    return this.amountPay >= this.sumTotalDeductDeposit;
+
+                    return (this.amountPay >= this.sumTotalDeductDeposit) || this.isTransfer;
                 },
 
 

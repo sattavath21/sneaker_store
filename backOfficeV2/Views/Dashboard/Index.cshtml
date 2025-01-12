@@ -116,7 +116,7 @@
 
                                         <div class="q-mb-sm">
                                             <span class="text-caption text-grey">ລາຄາຂາຍ:</span>
-                                            <div class="text-body1 text-green">{{ product.sellingPrice }} ບາດ</div>
+                                            <div class="text-body1 text-green">{{ callFormatPrice(product.sellingPrice) }}₭</div>
                                         </div>
                                         <div class="q-mb-sm">
                                             <span class="text-caption text-grey">SKU:</span>
@@ -346,6 +346,11 @@
                         console.error("Error fetching products by size: ", error.response?.data || error.message);
                     }
 
+                },
+
+                callFormatPrice(price) {
+                    formattedPrice = formatPrice(price);
+                    return formattedPrice;
                 },
 
 

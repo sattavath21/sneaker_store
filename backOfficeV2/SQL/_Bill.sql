@@ -82,6 +82,7 @@ create table `Bill` (
  BillId int(11) not null,
  OrderDate datetime not null,
  DepositMoney int(11) not null,
+ IsTransfer int(11) not null,
  AmountPay int(11) not null,
  StaffId int(11) not null,
  primary key (BillId),

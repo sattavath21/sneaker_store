@@ -69,6 +69,18 @@
                     {{ callFormatPrice(calculateGrandTotal(props.row).grandTotal) }}&#8365;
                 </q-td>
 
+<q-td key="isTransfer" :props="props">
+    <q-chip
+        :color="props.row.isTransfer ? 'light-green' : 'amber'"
+        :icon="props.row.isTransfer ? 'credit_card' : 'money'"
+        text-color="white"
+        dense
+        class="q-pa-md"
+    >
+        {{ getPaymentMethod(props.row.isTransfer) }}
+    </q-chip>
+</q-td>
+
                  <q-td key="amountPay" class="grand-total" :props="props">
                     {{ callFormatPrice(props.row.amountPay) }}&#8365;
                     <q-popup-edit v-model="props.row.amountPay">
@@ -236,7 +248,7 @@
                             label: 'ລວມ',
                             field: 'total',
                             align: 'right',
-                            sortable: false,
+                            sortable: true,
                         },
                         {
 
@@ -244,21 +256,28 @@
                             label: 'ເງິນມັດຈຳ',
                             field: 'depositMoney',
                             align: 'right',
-                            sortable: false,
+                            sortable: true,
                         },
                         {
                             name: 'grandTotal',
                             label: 'ລວມທັງໝົດ',
                             field: 'grandTotal',
                             align: 'right',
-                            sortable: false,
+                            sortable: true,
+                        },
+                        {
+                            name: 'isTransfer',
+                            label: 'ວິທີການຊຳລະເງິນ',
+                            field: 'isTransfer',
+                            align: 'center',
+                            sortable: true,
                         },
                         {
                             name: 'amountPay',
                             label: 'ລູກຄ້າຈ່າຍ',
                             field: 'amountPay',
                             align: 'right',
-                            sortable: false,
+                            sortable: true,
                         },
                         {
                             name: 'staffName',
@@ -344,7 +363,8 @@
                     ],
                     selected: [],
                     depositInput: null,
-                    showImageDialog: false
+                    showImageDialog: false,
+                    paymentMethod: "",
 
                 };
             }
@@ -592,6 +612,15 @@
                         return;
                     }
 
+                    var paymentMethod= "";
+
+                    if (item.isTransfer){
+                        paymentMethod ="ໂອນຈ່າຍ"
+                        item.amountPay = this.calculateGrandTotal(item).grandTotal;
+                    } else{
+                        paymentMethod ="ເງິນສົດ"
+                    }
+
                     const printWindow = window.open('', '_blank', 'width=600,height=600,chrome=0');
                     const doc = printWindow.document;
 
@@ -674,8 +703,10 @@
     <div class="right bold">${formatPrice(this.calculateGrandTotal(item).grandTotal)}&#8365;</div>
 </div>
 <div class="line"></div>
-<div class="payment-method">
-    <div>ຮຼບແບບການຊຳລະ:</div>
+    <div class="totals flex">
+            <div>ວິ​ທີ​ການ​ຊໍາ​ລະ​ເງິນ​:</div>
+        <div class="right"> ${paymentMethod}</div>
+        </div>
     <div class="flex bold padding">
         <span>ລູກຄ້າຈ່າຍ:</span>
         <span class="right">${formatPrice(item.amountPay)}&#8365;</span>
@@ -684,7 +715,6 @@
         <span>ເງິນທອນ:</span>
         <span class="right">${formatPrice(Math.abs(this.calculateGrandTotal(item).grandTotal - item.amountPay))}&#8365;</span>
     </div>
-</div>
 <div class="line"></div>
 <div class="center">ຂໍຂອບໃຈທຸກທ່ານທີ່ມາອຸດໜູນ</div>
         `;
@@ -705,6 +735,14 @@
 
                 toggleImageDialog(product) {
                     product.showImageDialog = !product.showImageDialog;
+                },
+
+                getPaymentMethod(isTransfer){
+                    if (isTransfer){
+                        return "ໂອນຈ່າຍ";
+                    } else{
+                        return "ເງິນສົດ";
+                    }
                 },
 
             }
