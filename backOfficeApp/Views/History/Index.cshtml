@@ -13,11 +13,16 @@
     ໜ້າປະຫວັດການຂາຍ
   </div>
   <q-table 
-  title="Bills History" 
+  title="Bills History"
   class="my-sticky-column-table"
   :rows="bills" 
   :columns="billColumns" 
-  row-key="billId">
+  row-key="billId"
+  selection="multiple"
+  v-model:selected="selected"
+  :selected-rows-label="getSelectedString"
+      >
+      
     <template v-slot:top-left>
       <div class="text-h6 q-pa-md"> Bills History <q-btn icon="restart_alt" round class="q-mx-lg" size="md" color="grey"
      
@@ -40,8 +45,14 @@
       </div>
     </template>
 
+
     <template #body="props">
       <q-tr :props="props">
+
+      <q-td>
+        <q-checkbox v-model="props.selected" dense size="sm"></q-checkbox>
+      </q-td>
+
         <q-td key="orderDetails" :props="props">
           <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
             @@click="props.expand = !props.expand">
@@ -52,7 +63,7 @@
 
         <q-td key="customerName" :props="props">
           {{ props.row.customer.customerFirstname }} {{ props.row.customer.customerLastname }}
-
+    
         </q-td>
 
         <q-td key="orderDate" :props="props">
@@ -137,14 +148,14 @@
  
 
 
-        <q-td key="deliveryCompanyName" :props="props">
+        @* <q-td key="deliveryCompanyName" :props="props">
           {{ props.row.deliveryService.deliveryCompanyName }}
         </q-td>
 
         <q-td key="branchName" :props="props">
           {{ props.row.branch.branchName }}
 
-        </q-td>
+        </q-td> *@
 
         <q-td key="staffName" :props="props">
           {{ props.row.staff.staffFirstname }} {{ props.row.staff.staffLastname }}
@@ -239,28 +250,13 @@
 
           </div>
         
-          @* Dialog when add branch *@
-          <q-dialog v-model="branchDialogVisible" persistent>
-            <q-card>
-              <q-card-section class="row items-center">
-                <span class="q-ml-sm">Enter branch name:</span>
-              </q-card-section>
-              <q-card-section>
-                <q-input filled v-model="newBranch.branchName" label="Branch Name" lazy-rules
-                  :rules="[ val => val && val.length > 0 || 'Please enter branch name']">
-                </q-input>
-              </q-card-section>
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="primary" @@click="addBranch(props.row.deliveryServiceId)"
-                  label="Add"></q-btn>
-                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeBranchDialog"></q-btn>
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
         </q-td>
       </q-tr>
     </template>
   </q-table>
+
+      <q-btn @@click="exportData" class="q-ma-lg">Export to Excel</q-btn>
+
 </div>
 
 @section code {
@@ -269,6 +265,7 @@
       //data
       data() {
         return {
+
           deleteBillVisible: false,
           billIdToDelete: 0,
           selectedRows: new Map(),
@@ -379,7 +376,7 @@
               align: 'center',
               sortable: true,
             },
-            {
+            @* {
               name: 'deliveryCompanyName',
               label: 'Delivery company name',
               field: 'deliveryService.deliveryCompanyName',
@@ -395,7 +392,7 @@
 
               align: 'left',
               sortable: true,
-            },
+            }, *@
 
             {
               name: 'staffName',
@@ -423,7 +420,6 @@
               name: 'barcode',
               label: 'Product barcode',
               field: 'product.barcode',
-
               align: 'left',
               sortable: true
             },
@@ -471,12 +467,15 @@
               align: 'right',
               sortable: true
             }
-          ]
+          ],
+          selected: [],
+          depositInput:null,
         };
       }
       ,
       //methods
       methods: {
+        
                 openDeleteBillDialog(billId) {
           this.deleteBillVisible = true;
           this.billIdToDelete = billId;
@@ -864,326 +863,230 @@ calculateGrandTotal(item) {
     });
     return formattedDate;
   },
-        printContent(item) {
-          const todayDate = new Date();
 
-        const formattedTodayDate = `${todayDate.getDate().toString().padStart(2, '0')}/${(todayDate.getMonth() + 1).toString().padStart(2, '0')}/${todayDate.getFullYear()}`;
-
-          // Function to format date to DD/MM/YYYY
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-    const formattedOrderDate = formatDate(item.orderDate);
-
-
-          // Mock data list
-
-          let dataList = [
-          @*  *@
-          ];
-
-
-
-  // Iterate through each bill item
-item.billItems.forEach(billItem => {
-    // Calculate total price
-
-    const subTotal = (billItem.itemQty * billItem.product.sellingPrice);
-    // Push new data object to dataList array
-    dataList.push({
-        qty: billItem.itemQty, // Quantity from billItem.itemQty
-        productName: billItem.product.productName, // Product name from billItem.product.productName
-        size: billItem.shoeSize.sizeNumber, // Size from billItem.shoeSize.sizeNumber
-
-        pricePerUnit: billItem.product.sellingPrice.toLocaleString(),
-        price: subTotal.toLocaleString(), // Price from billItem.product.sellingPrice with commas
-    });
-
-});
-
-
-  const total = this.calculateTotal(item);
-console.log('Subtotal:', total);
-
-
-const result = this.calculateGrandTotal(item);
-
-const grandTotal = result.grandTotal;
-console.log('Grand Total:', grandTotal);
-
-  const discountBaht = result.discountBaht;
-
+               printContent(item) {
           const printWindow = window.open('', '_blank', 'width=600,height=600,chrome=0');
+          const doc = printWindow.document;
 
-          printWindow.document.write(`
+          // Helper function to create and append elements
+          const createElement = (tag, className, innerHTML) => {
+            const element = doc.createElement(tag);
+            if (className) element.className = className;
+            if (innerHTML) element.innerHTML = innerHTML;
+            return element;
+          };
 
-    <html>
-    <head>
-        <title>99ᵗʰ Century Sneaker Store</title>
-        <style>
-          /* Add CSS styles for printing if needed */
-          body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-          }
-          .bold-text {
-        font-weight: bold;
-          margin: 0;
-      padding: 0;
-        margin-top: 0; /* Add this line to remove the space on top */
+          // Helper function to format date
+          const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+          };
 
-      }
-          @@page {
-                        margin: 1in; /* Set paper margin */
-                        size: A5; /* Set paper size */
-                    }
-          .header {
-            font-size: 26px;
-            margin-top: 25px;
-            margin-bottom: 25px;
-          }
-          .content{
-                white-space: nowrap; /* Prevents wrapping to a new line */
-    margin-bottom: 25px;
+          // Set up the document
+          doc.head.innerHTML = `
+            <title>99ᵗʰ Century Sneaker Store</title>
+            <style>
+              ${this.getStyles()}
+            </style>
+          `;
 
-          }
-          .box34content{
-            margin-top: 15px;
-                          white-space: nowrap; /* Prevents wrapping to a new line */
-              padding: 0 30px; /* Add padding of 20px to the left and right */
+          const body = doc.body;
 
-          }
-                * {
-      font-family: 'Noto Sans Lao', sans-serif; /* Change the font-family to Noto Sans */
-      font-style: normal;
-      font-weight: 400;
-    }
-          .box1{
-             display: inline-block;
-        width: 50%; /* Each box takes up 50% of the container width */
-        vertical-align: top; /* Align box1 to the top */
-            font-size: 18px;
+          // Watermark
+          const watermarkContainer = createElement('div', 'watermark-container');
+          watermarkContainer.innerHTML = '<img class="watermark" src="/asset/image/99th_croped.png" alt="Watermark">';
+          body.appendChild(watermarkContainer);
 
-          }
-          .box2 {
-        display: inline-block;
-        width: 50%; /* Each box takes up 50% of the container width */
-                  font-size: 18px;
+          // Header
+          const header = createElement('div', 'header');
+          header.innerHTML = `
+            <p style="white-space: nowrap;">
+              <span class="bold-text">ໃບຮັບຈອງສິນຄ້າ (Receipt)</span> ${formatDate(new Date())}
+            </p>
+          `;
+          body.appendChild(header);
 
-    }
-        .box3{
-             display: inline-block;
-        width: 50%; /* Each box takes up 50% of the container width */
-        vertical-align: top; /* Align box1 to the top */
-            font-size: 12px;
-            margin-top: 30px;
-              background-color: #f2f2f2; /* Grey background color */
-                padding-bottom: 8px; /* Add padding at the bottom */
-             border-radius: 10px; /* Rounded corners */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Shadow effect without blur */
-
-          }
-  .box4 {
-           display: inline-block;
-        width: 50%; /* Each box takes up 50% of the container width */
-        vertical-align: top; /* Align box1 to the top */
-            font-size: 12px;
-          padding-left: 15px; /* Adjust the value as needed */
-
-  }
-
-          /* Container for watermark */
-          .watermark-container {
-          position: absolute;
-          top: 0; /* Adjust as needed */
-          left: 0; /* Adjust as needed */
-          width: 100%; /* Take up the full width of the container */
-          height: 100%; /* Take up the full height of the container */
-          z-index: 1; /* Ensure the watermark is above other content */
-        }
-
-          /* Watermark styling */
-          .watermark {
-        position: absolute;
-        top: 40%; /* Center vertically */
-        left: 50%; /* Center horizontally */
-        transform: translate(-50%, -50%); /* Center the watermark */
-
-        width: 45%; /* Reduce width to half */
-        height: auto; /* Automatically adjust height */
-        pointer-events: none; /* Ensure the watermark doesn't interfere with click events */
-        opacity: 0.35; /* Adjust opacity as needed */
-        z-index: -1; /* Place the watermark behind other content */
-          }
-           /* Table styles */
-           .table-container {
-    padding: 0 30px; /* Add padding of 20px to the left and right */
-    margin: 0 auto; /* Center the table horizontally */
-  }
-       table {
-    border-collapse: collapse;
-    width: 100%; /* Ensure the table takes up the entire width of the container */
-              font-size: 16px;
-
-  }
-        th {
-          padding: 10px;
-          border: none; /* Remove borders */
-        }
-        td {
-          padding: 10px;
-          border: none; /* Remove borders */
-          text-align: center; /* Horizontal alignment */
-
-        }
-        .td-align-left {
-    text-align: left;
-  }
-
-
-  .td-align-right {
-    text-align: right;
-  }
-        /* Adjust column widths */
-        th:nth-child(1), td:nth-child(1) {
-          width: 5%; /* Small width for 1st column */
-        }
-        th:nth-child(2), td:nth-child(2) {
-
-          width: 40%; /* Widest width for 2nd column */
-        }
-        th:nth-child(3), td:nth-child(3) {
-          width: 15%; /* Moderate width for 3rd column */
-        }
-        th:nth-child(4), td:nth-child(4) {
-          width: 15%; /* Wide width for 4th column */
-        }
-        th:nth-child(5), td:nth-child(5) {
-          width: 25%; /* Wide width for 4th column */
-        }
-         tr:nth-child(odd) {
-        background-color: #f2f2f2; /* Change the background color as needed */
-      }
-      .row {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #ddd; /* Optional: add borders between rows */
-  }
-
-  .cell {
-    padding: 10px;
-  }
-        </style>
-      </head>
-
-    <body>
-        <!-- Watermark container -->
-        <div class="watermark-container">
-      <!-- Watermark image -->
-
-      <img class="watermark" src="/asset/image/99th_croped.png" alt="Watermark">
-    </div>
-            <!-- Header -->
-            <div class="header">
-  <p style="white-space: nowrap;">
-    <span class="bold-text">ໃບຮັບຈອງສິນຄ້າ (Receipt)</span> ${formattedTodayDate}
-  </p>          </div>
-
-            <!-- Content -->
-            <div class="content">
-
-              <div class="box1">
-                <p>ຮ້ານຄ້າຜູ້ບໍລິການ<br><div class="bold-text">99<sup>th</sup> Century</div></p>
-              </div>
-              <div class="box2">
-                <p>ລາຍລະອຽດລູກຄ້າ<div class="bold-text">${item.customer.customerFirstname} ${item.customer.customerLastname}</div>ວັນທີ່ຈອງສິນຄ້າ ${formattedOrderDate}</p>
-              </div>
-
+          // Content
+          const content = createElement('div', 'content');
+          content.innerHTML = `
+            <div class="box1">
+              <p>ຮ້ານຄ້າຜູ້ບໍລິການ<br><div class="bold-text">99<sup>th</sup> Century</div></p>
             </div>
-
-  <div class="table-container">
-    <table id="data-table" style="border-collapse: collapse; border: none;">
-    <tr style="background-color: #fff6c4;">
-      <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ຈຳນວນ</th>
-      <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຍການສິນຄ້າ</th>
-      <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ໄຊສ໌</th>
-
-      <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຄາ (ບາດ)</th>
-      <th style="padding: 10px; font-weight: bold;">ເປັນເງິນ</th>
-    </tr>
-
-
-  </table>
-  </div>
-            <div class="box34content">
-  <div class="box3">
-                <p><span style="color: red;">ໝາຍເຫດ</span><br>ທາງຮ້ານເຮົານຳເຂົ້າສິນຄ້າອອກຊັອບໂດຍຕົງ<br>ເເລະມີຮັບປະກັນສິນຄ້າຂອງເເທ້ 100% <br>ຫາກພົບຂອງປອມທາງຮ້ານຮັບຜິດຊອບ<br>ຄວາມເສຍຫາຍຄືນເເກ່ລູກຄ້າ 2 ເທົ່າ</p>
-              </div>
-              <div class="box4">
-    <div class="row">
-      <div class="cell">ທັງໝົດ</div>
-
-      <div class="cell" style="font-weight: bold;">${total.toLocaleString()}</div>
-    </div>
-    <div class="row">
-      <div class="cell">ສ່ວນລົດ</div>
-      <div class="cell" style="font-weight: bold;">${discountBaht.toLocaleString()}</div>
-    </div>
-    <div class="row">
-      <div class="cell">ມັດຈຳ</div>
-
-      <div class="cell" style="font-weight: bold;">${item.depositMoney.toLocaleString()}</div>
-    </div>
-    <div class="row">
-      <div class="cell">ຄ່າຈັດສົ່ງ</div>
-      <div class="cell" style="font-weight: bold;">FREE</div>
-    </div>
-    <div class="row" style="background-color: #f2f2f2;">
-      <div class="cell" style="font-weight: bold;">ຍອດທີ່ເຫຼືອ</div>
-      <div class="cell" style="font-weight: bold;">${grandTotal.toLocaleString()}</div>
-    </div>
-  </div>
-              </div>
-
-
+            <div class="box2">
+              <p>ລາຍລະອຽດລູກຄ້າ<div class="bold-text">${item.customer.customerFirstname} ${item.customer.customerLastname}</div>ວັນທີ່ຈອງສິນຄ້າ ${formatDate(item.orderDate)}</p>
             </div>
+          `;
+          body.appendChild(content);
 
+          // Table
+          const tableContainer = createElement('div', 'table-container');
+          const table = createElement('table');
+          table.id = 'data-table';
+          table.innerHTML = `
+            <tr style="background-color: #fff6c4;">
+              <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ຈຳນວນ</th>
+              <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຍການສິນຄ້າ</th>
+              <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ໄຊສ໌</th>
+              <th style="padding: 10px; border-right: 0.35px solid grey; font-weight: bold;">ລາຄາ (ບາດ)</th>
+              <th style="padding: 10px; font-weight: bold;">ເປັນເງິນ</th>
+            </tr>
+          `;
+          tableContainer.appendChild(table);
+          body.appendChild(tableContainer);
 
-               <div class="selected-value">
-        </div>
-
-
-    </body>
-    </html
-          `);
-
-
-          printWindow.document.close();
-          // After closing the document, select the table element
-          const table = printWindow.document.getElementById('data-table');
-          // Append rows to the table
+          // Populate table
+          const dataList = this.generateDataList(item);
           dataList.forEach(item => {
-            const row = printWindow.document.createElement('tr');
+            const row = createElement('tr');
             row.innerHTML = `
               <td style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.qty}</td>
               <td class="td-align-left" style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.productName}</td>
               <td style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.size}</td>
               <td class="td-align-right" style="padding: 10px; border-right: 0.35px solid grey; font-size:14px;">${item.pricePerUnit}</td>
               <td class="td-align-right" style="padding: 10px; font-size:14px;">${item.price}</td>
-
-          `;
+            `;
             table.appendChild(row);
           });
 
+          // Footer content
+          const footerContent = createElement('div', 'box34content');
+          footerContent.innerHTML = `
+            <div class="box3">
+              <p><span style="color: red;">ໝາຍເຫດ</span><br>ທາງຮ້ານເຮົານຳເຂົ້າສິນຄ້າອອກຊັອບໂດຍຕົງ<br>ເເລະມີຮັບປະກັນສິນຄ້າຂອງເເທ້ 100% <br>ຫາກພົບຂອງປອມທາງຮ້ານຮັບຜິດຊອບ<br>ຄວາມເສຍຫາຍຄືນເເກ່ລູກຄ້າ 2 ເທົ່າ</p>
+            </div>
+            ${this.generateTotalsHTML(item)}
+          `;
+          body.appendChild(footerContent);
 
-
+          doc.close();
           printWindow.print();
-        }
+        },
+
+        getStyles() {
+          return `
+            body { font-family: 'Noto Sans Lao', sans-serif; text-align: center; }
+            .bold-text { font-weight: bold; margin: 0; padding: 0; }
+            @@page { margin: 1in; size: A5; }
+            .header { font-size: 26px; margin-top: 25px; margin-bottom: 25px; }
+            .content { white-space: nowrap; margin-bottom: 25px; }
+            .box34content { margin-top: 15px; white-space: nowrap; padding: 0 30px; }
+            .box1, .box2 { display: inline-block; width: 50%; vertical-align: top; font-size: 18px; }
+            .box3 { display: inline-block; width: 50%; vertical-align: top; font-size: 12px; margin-top: 30px; background-color: #f2f2f2; padding-bottom: 8px; border-radius: 10px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); }
+            .box4 { display: inline-block; width: 50%; vertical-align: top; font-size: 12px; padding-left: 15px; }
+            .watermark-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+            .watermark { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 45%; height: auto; pointer-events: none; opacity: 0.35; z-index: -1; }
+            .table-container { padding: 0 30px; margin: 0 auto; }
+            table { border-collapse: collapse; width: 100%; font-size: 16px; }
+            th, td { padding: 10px; border: none; }
+            .td-align-left { text-align: left; }
+            .td-align-right { text-align: right; }
+            tr:nth-child(odd) { background-color: #f2f2f2; }
+            .row { display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; }
+            .cell { padding: 10px; }
+          `;
+        },
+
+        generateDataList(item) {
+          return item.billItems.map(billItem => {
+            const subTotal = (billItem.itemQty * billItem.product.sellingPrice);
+            return {
+              qty: billItem.itemQty,
+              productName: billItem.product.productName,
+              size: billItem.shoeSize.sizeNumber,
+              pricePerUnit: billItem.product.sellingPrice.toLocaleString(),
+              price: subTotal.toLocaleString(),
+            };
+          });
+        },
+
+        generateTotalsHTML(item) {
+          const total = this.calculateTotal(item);
+          const { grandTotal, discountBaht } = this.calculateGrandTotal(item);
+
+          return `
+            <div class="box4">
+              <div class="row">
+                <div class="cell">ທັງໝົດ</div>
+                <div class="cell" style="font-weight: bold;">${total.toLocaleString()}</div>
+              </div>
+              <div class="row">
+                <div class="cell">ສ່ວນລົດ</div>
+                <div class="cell" style="font-weight: bold;">${discountBaht.toLocaleString()}</div>
+              </div>
+              <div class="row">
+                <div class="cell">ມັດຈຳ</div>
+                <div class="cell" style="font-weight: bold;">${item.depositMoney.toLocaleString()}</div>
+              </div>
+              <div class="row">
+                <div class="cell">ຄ່າຈັດສົ່ງ</div>
+                <div class="cell" style="font-weight: bold;">FREE</div>
+              </div>
+              <div class="row" style="background-color: #f2f2f2;">
+                <div class="cell" style="font-weight: bold;">ຍອດທີ່ເຫຼືອ</div>
+                <div class="cell" style="font-weight: bold;">${grandTotal.toLocaleString()}</div>
+              </div>
+            </div>
+          `;
+        },
+        getSelectedString() {
+             // Check for the legnth of the selected
+             // if nothing select return 0 ?
+             // if not : return the length of the selected list, then decide to add s or not, based on if it single selectino or multiple selection
+             // Note that: this is inside of the table (:selected-rows-label property) to shows dynamic labels 
+      return this.selected.length === 0 ? '' : `${this.selected.length} record${this.selected.length > 1 ? 's' : ''} selected`;
+    },//ef
+    updateSelected() {
+      this.test = !this.test;
+    },//ef
+
+    exportData() {
+      var filename='reports.xlsx';
+      // Create an array to store data
+      var data = [];
+
+      // Iterate through each selected item
+      this.selected.forEach(item => {
+        // Create an object for each item
+        var rowData = {};
+
+        // Manually specify column names and map them to specific values from the selected item
+        rowData["ຜູ້ຝາກ"] = item.staff.staffFirstname + " " + item.staff.staffLastname;
+        rowData["ຜູ້ຮັບ"] = item.customer.customerFirstname +" " + item.customer.customerLastname;
+        rowData["ເບີໂທລູກຄ້າ"] = item.customer.customerPhoneNumber;
+        rowData["ຂົນສົ່ງ"] = item.deliveryService.deliveryCompanyName;
+        rowData["ສາຂາ"] = item.province.provinceName + " " + item.city.cityName + " " + item.village.villageName;
+    
+        rowData["ຄ່າຝາກ"] = "ຕົ້ນທາງ";
+        
+        rowData["COD"] = "hello";
+    
+        var productNames = [];
+        var sizes = [];
+    
+         item.billItems.forEach((billItem, index) => {
+          productNames.push(billItem.product.productName);
+          sizes.push(billItem.shoeSize.sizeNumber)
+        }); 
+
+        var allProductNames = productNames.join(" - ");
+        var allsizes = sizes.join(" - ");
+
+        rowData["ສິນຄ້າ"] = allProductNames;
+        rowData["SIZE"] = allsizes; 
+         
+         
+        data.push(rowData);
+      });
+
+      // Now data contains the selected data mapped to specified columns
+      console.log(data);
+
+      var ws = XLSX.utils.json_to_sheet(data);
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "People");
+      XLSX.writeFile(wb,filename);
+     },//ef
+
 
       }
       ,

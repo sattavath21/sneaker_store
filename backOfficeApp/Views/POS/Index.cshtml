@@ -60,6 +60,7 @@
             </q-dialog>
           </q-td>
           <q-td key="index" :props="props">{{ orderItems.indexOf(props.row) + 1 }}</q-td>
+
           <q-td key="productImageUrl" :props="props">
             <q-img :src="props.row.productImageUrl" style="cursor: pointer;" @@click="toggleImageDialog(props.row)" />
             <q-dialog v-model="props.row.showImageDialog" persistent auto-close>
@@ -68,6 +69,7 @@
               </div>
             </q-dialog>
           </q-td>
+
           <q-td key="productName" :props="props">
             {{ props.row.productName }}
           </q-td>
@@ -249,7 +251,6 @@
               field: 'productImageUrl',
               sortable: true,
               align: 'center',
-
             },
             {
               name: 'productName',

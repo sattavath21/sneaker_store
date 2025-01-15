@@ -51,11 +51,9 @@ public class MyApiController : ControllerBase
     [HttpPost]
     public IActionResult AddDeliveryService(DeliveryService newDeliveryService)
     {
-
         _db.DeliveryService.Add(newDeliveryService);
         _db.SaveChanges();
         return Ok(newDeliveryService);
-
     }
 
     [HttpPost]
@@ -67,6 +65,53 @@ public class MyApiController : ControllerBase
         return Ok(updatedBill);
     }//ef
 
+
+
+[HttpPost]
+    public IActionResult AddNewCity(City newCity)
+    {   
+        _db.City.Add(newCity);
+        _db.SaveChanges();
+        return Ok(newCity);
+
+    }//ef
+
+    [HttpPost]
+    public IActionResult AddNewVillage(Village newVillage)
+    {   
+        _db.Village.Add(newVillage);
+        _db.SaveChanges();
+        return Ok(newVillage);
+
+    }//ef
+
+[HttpPost]
+public IActionResult AddNewBranchLocation(int deliveryServiceId, int provinceId, int cityId, int villageId)
+{
+    try
+    {
+        // Create a new BranchLocation object
+        var newBranchLocation = new BranchLocation
+        {
+            DeliveryServiceId = deliveryServiceId,
+            ProvinceId = provinceId,
+            CityId = cityId,
+            VillageId = villageId
+            // You can add other properties if needed
+        };
+
+        // Add the new BranchLocation to the database
+        _db.BranchLocation.Add(newBranchLocation);
+        _db.SaveChanges();
+
+        return Ok("New branch location added successfully.");
+    }
+    catch (Exception ex)
+    {
+        // Handle any exceptions that may occur
+        return StatusCode(500, $"An error occurred while adding the new branch location: {ex.Message}");
+    }
+}
 
     [HttpPost]
     public IActionResult EditCustomerTransfer(string newTransfer, int billId)
@@ -183,14 +228,24 @@ public class MyApiController : ControllerBase
             return StatusCode(500, "Internal Server Error");
         }
     }//ef
-    [HttpPost]
-    public IActionResult EditDelivery(DeliveryService e)
+[HttpPost]
+public IActionResult EditDelivery(DeliveryService e)
+{
+    // Retrieve the existing DeliveryService entity from the database
+    var existingDeliveryService = _db.DeliveryService.Find(e.DeliveryServiceId);
+    if (existingDeliveryService == null)
     {
-        //update product
-        _db.DeliveryService.Update(e);
-        _db.SaveChanges();
-        return Ok(e);
-    }//ef
+        return NotFound();
+    }
+
+    // Update only the properties that should be modified
+    existingDeliveryService.DeliveryCompanyName = e.DeliveryCompanyName;
+
+    // Save changes to the database
+    _db.SaveChanges();
+
+    return Ok(existingDeliveryService);
+}
 
     // Cascade delete delete delievery service with all of the branch
     [HttpPost]
@@ -227,36 +282,126 @@ public class MyApiController : ControllerBase
             return StatusCode(500, "Internal Server Error");
         }
     }
+    [HttpGet]
+    public IActionResult GetAssociateProvinces(int deliveryServiceId)
+    {
+    var provinces = _db.BranchLocation.Where(bl => bl.DeliveryServiceId == deliveryServiceId)
+    .Select(bl => bl.Province)
+    .ToList();
+        return Ok(provinces);
+    }
+        [HttpGet]
+    public IActionResult GetAssociateBranchLocation(int deliveryServiceId)
+    {
+    var branchLocations = _db.BranchLocation
+        .Include(bl => bl.Province)
+        .Include(bl => bl.City)
+        .Include(bl => bl.Village)
+        .Where(bl => bl.DeliveryServiceId == deliveryServiceId)
+        .ToList();
+        return Ok(branchLocations);
+    }
 
-    // [HttpPost]
-    // public IActionResult AddBranch(Branch newBranch, int deliveryServiceId)
-    // {
-    //     try
-    //     {
-    //         // Add the new branch to the Branch table
-    //         _db.Branch.Add(newBranch);
-    //         _db.SaveChanges();
+[HttpGet]
+public IActionResult GetAssociateCities(int deliveryServiceId, int provinceId)
+{
+        var cities = _db.BranchLocation
+                    .Where(bl => bl.DeliveryServiceId == deliveryServiceId && bl.ProvinceId == provinceId)
+                    .Select(bl => bl.City)
+                    .ToList();
+    return Ok(cities);
+}
+[HttpGet]
+public IActionResult GetRelateCities(int provinceId)
+{
+        var cities = _db.City
+                    .Where(c => c.ProvinceId == provinceId)
+                    .ToList();
+    return Ok(cities);
+}
+[HttpGet]
+public IActionResult GetRelateVillages(int cityId)
+{
+        var villages = _db.Village
+                    .Where(v => v.CityId == cityId)
+                    .ToList();
+    return Ok(villages);
+}
+[HttpGet]
+public IActionResult GetAllCities()
+{
+            var cities = _db.City.ToList();
+        return Ok(cities);
+}
+[HttpGet]
+public IActionResult GetAllProvinces()
+{
+            var provinces = _db.Province.ToList();
+        return Ok(provinces);
+}
 
-    //         // Create a new DeliveryBranch object and associate it with the new branch and delivery service
-    //         var deliveryBranch = new DeliveryBranch
-    //         {
-    //             BranchId = newBranch.BranchId,
-    //             DeliveryServiceId = deliveryServiceId
-    //         };
+[HttpGet]
+public IActionResult GetAssociateVillages(int deliveryServiceId, int cityId)
+{
+    var villages = _db.BranchLocation
+                    .Where(bl => bl.DeliveryServiceId == deliveryServiceId && bl.CityId == cityId)
+                    .Select(bl => bl.Village)
+                    .ToList();
+    return Ok(villages);
+}
 
-    //         // Add the new delivery branch to the DeliveryBranch table
-    //         _db.DeliveryBranch.Add(deliveryBranch);
-    //         _db.SaveChanges();
 
-    //         return Ok(newBranch);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         // Log the exception for debugging purposes
-    //         Console.Error.WriteLine(ex);
-    //         return StatusCode(500, "Internal Server Error");
-    //     }
-    // }
+
+[HttpPost]
+public IActionResult AddBranchLocation([FromBody] BranchLocation requestBranchLocation)
+{
+    // Check if the province already exists
+    var province = _db.Province.FirstOrDefault(p => p.ProvinceName == requestBranchLocation.Province.ProvinceName);
+    if (province == null)
+    {
+        // If not, create a new province
+        province = new Province { ProvinceName = requestBranchLocation.Province.ProvinceName };
+        _db.Province.Add(province);
+        _db.SaveChanges();
+    }
+
+    // Check if the city already exists
+    var city = _db.City.FirstOrDefault(c => c.CityName == requestBranchLocation.City.CityName && c.ProvinceId == province.ProvinceId);
+    if (city == null)
+    {
+        // If not, create a new city
+        city = new City { CityName = requestBranchLocation.City.CityName, ProvinceId = province.ProvinceId };
+        _db.City.Add(city);
+        _db.SaveChanges();
+    }
+
+    // Check if the village already exists
+    var village = _db.Village.FirstOrDefault(v => v.VillageName == requestBranchLocation.Village.VillageName && v.CityId == city.CityId);
+    if (village == null)
+    {
+        // If not, create a new village
+        village = new Village { VillageName = requestBranchLocation.Village.VillageName, CityId = city.CityId };
+        _db.Village.Add(village);
+        _db.SaveChanges();
+    }
+
+    // Create a new BranchLocation for the new village
+    var newBranchLocation = new BranchLocation
+    {
+        ProvinceId = province.ProvinceId,
+        CityId = city.CityId,
+        VillageId = village.VillageId,
+        DeliveryServiceId = requestBranchLocation.DeliveryServiceId
+    };
+
+    // Add the new BranchLocation to the database context and save changes
+    _db.BranchLocation.Add(newBranchLocation);
+    _db.SaveChanges();
+
+    return Ok(newBranchLocation);
+}
+
+    
     // [HttpPost]
     // public IActionResult EditBranch(Branch b)
     // {
@@ -265,6 +410,7 @@ public class MyApiController : ControllerBase
     //     _db.SaveChanges();
     //     return Ok(b);
     // }//ef
+
     // [HttpPost]
     // public IActionResult DeleteDeliveryBranch(int deliveryBranchId)
     // {
@@ -296,6 +442,7 @@ public class MyApiController : ControllerBase
     //     }
     // }
 
+    
 
     [HttpGet]
     public IActionResult GetBills()
@@ -727,6 +874,34 @@ public class MyApiController : ControllerBase
             return StatusCode(500, "Internal Server Error");
         }
     }
+[HttpDelete]
+public IActionResult DeleteBranchLocation(int branchLocationId)
+{
+    try
+    {
+        // Find the branch location by its ID
+        var branchLocation = _db.BranchLocation.FirstOrDefault(bl => bl.BranchLocationId == branchLocationId);
+        
+        // Check if the branch location exists
+        if (branchLocation == null)
+        {
+            // Return a 404 Not Found response if the branch location doesn't exist
+            return NotFound();
+        }
+
+        // Remove the branch location from the database
+        _db.BranchLocation.Remove(branchLocation);
+        _db.SaveChanges();
+
+        // Return a 200 OK response indicating successful deletion
+        return Ok();
+    }
+    catch (Exception ex)
+    {
+        // Handle any exceptions and return a 500 Internal Server Error response
+        return StatusCode(500, $"An error occurred while deleting the branch location: {ex.Message}");
+    }
+}
 [HttpGet]
 public IActionResult GetUserData()
 {

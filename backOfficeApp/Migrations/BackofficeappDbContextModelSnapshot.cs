@@ -302,6 +302,9 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("CityName")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("CityNameEn")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("ProvinceId")
                         .HasColumnType("int");
 
@@ -662,6 +665,9 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("ProvinceName")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ProvinceNameEn")
+                        .HasColumnType("longtext");
+
                     b.HasKey("ProvinceId");
 
                     b.ToTable("Province");
@@ -742,6 +748,9 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("VillageName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("VillageNameEn")
                         .HasColumnType("longtext");
 
                     b.HasKey("VillageId");

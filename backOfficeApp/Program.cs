@@ -93,6 +93,7 @@ builder.Services.AddCors(options =>
 
 //pdf service 
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -150,24 +151,3 @@ using (var serviceScope = app.Services.CreateScope())
 #endregion
 
 app.Run();
-
-#region seed user data
-using (var serviceScope = app.Services.CreateScope())
-{
-
-    var provider = serviceScope.ServiceProvider;
-    var _db = provider.GetRequiredService<BackofficeappDbContext>();
-    try
-    {
-        _db.Database.Migrate();
-        var _userManager = provider.GetRequiredService<UserManager<AppUser>>();
-        var _roleManager = provider.GetRequiredService<RoleManager<AppRole>>();
-        await SeedUserAccount.go(_userManager, _roleManager);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("seeding error {0}", ex.Message);
-
-    }
-}
-#endregion

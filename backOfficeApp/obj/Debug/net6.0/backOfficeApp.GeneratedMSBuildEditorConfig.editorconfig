@@ -18,8 +18,12 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Delivery/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcSW5kZXguY3NodG1s
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Delivery/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcaW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Delivery/Indexfake.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGVsaXZlcnlcSW5kZXhmYWtlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Sattavath/Documents/sneaker_store_project/backOfficeApp/Views/Discount/AddDis.cshtml]

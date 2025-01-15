@@ -1,6 +1,7 @@
 @{
     ViewData["Title"] = "ສະຕ໋ອກສິນຄ້າ";
 }
+
 <div id="app1">
 
   <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
@@ -12,8 +13,9 @@
     :visible-columns="visibleColumns">
 
     <template v-slot:top-left>
-      <div class="text-h6 q-pa-md">Product Details <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
+      <div class="text-h6 q-pa-md">ສິນຄ້າທີ່ມີໃນສາງ <q-btn icon="restart_alt" round class="q-mx-lg" size="md"
           color="grey" @@click="onResetSearch"></q-btn></div>
+
       <q-separator vertical class="q-my-sm"></q-separator>
       <div class="q-pl-sm">
         <q-input debounce="200" dense v-model="searchText" type="text" @@change="searchProduct">
@@ -32,6 +34,7 @@
         <q-td key="details" :props="props">
           <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue-12" @@click="showDetails(props.row)"
             icon="format_list_numbered" size="15px"></q-btn>
+
           <q-dialog v-model="showProductDetails" persistent :max-width="400">
             <div style="width: 100%; max-width: 400px;">
               <!-- Content of your dialog -->
@@ -368,6 +371,7 @@
                       <q-btn color="blue-grey-6" @@click="editCollection(props.row.collection)" icon="edit" label="edit"
                         v-close-popup="cancelEnabled">
                       </q-btn>
+                      
                     </div>
                   </q-popup-edit>
 
@@ -573,7 +577,6 @@
               field: 'sku',
               sortable: true,
               align: 'left',
-
             },
             {
               name: 'colorway',
@@ -581,7 +584,6 @@
               field: 'colorway',
               sortable: true,
               align: 'left',
-
             },
             {
               name: 'releasedate',
@@ -740,6 +742,7 @@
             this.showDetails(this.selectedProduct); // Call showDetails again to update dialog data
           });
         },
+        
         async updateInventoryQty(product, newValue) {
           try {
             // Find the productWithSize object corresponding to the selected size number
@@ -783,6 +786,7 @@
           this.selectedInventoryQty = null;
           this.showProductDetails = true;
         }, //ef
+
         toggleImageDialog(product) {
           product.showImageDialog = !product.showImageDialog;
         }, //ef

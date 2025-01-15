@@ -1,0 +1,799 @@
+@{
+  ViewData["Title"] = "ບໍລິສັດຂົນສົ່ງ";
+}
+
+<div id="app1">
+  <div class="text-h5 text-weight-bold text-white q-pa-lg" style="background-color: #ff3333; color: rgb(230, 229, 229); text-color: white;
+            border-top-left-radius: 10px; /* Adjust the radius as needed */
+            border-top-right-radius: 10px; /* Adjust the radius as needed */;
+            ">
+    ໜ້າຈັດການບໍລິສັດຂົນສົ່ງ
+  </div>
+
+  <q-table title="Delivery Services" :rows="deliveryRows" :columns="deliveryColumns" row-key="deliveryServiceId">
+    <template #body="props">
+      <q-tr :props="props">
+        <q-td key="details" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue-12" @@click="showDetails(props.row)"
+            icon="format_list_numbered" size="15px"></q-btn>
+
+          <q-dialog v-model="showServiceDetails" persistent>
+            <q-card style="min-width: 1000px">
+
+              <q-card-section>
+                <h5>{{ selectedService.deliveryCompanyName }} Branches</h5>
+              </q-card-section>
+
+              <q-card-section class="q-pt-none" style="display: flex; flex-wrap: wrap;">
+                <div style="flex: 1; margin-right: 20px;">
+
+                  <label for="provinceSelect">Select Province:</label>
+                  <q-select id="provinceSelect" v-model="selectedProvince" :options="associateProvinces"
+                    @@update:model-value="fetchAssociateCities"></q-select>
+                </div>
+              </q-card-section>
+
+              <q-card-section>
+                <q-table title="Associate Cities" class="my-sticky-column-table" :rows="associateCities"
+                  :columns="cityColumn" row-key="cityId">
+                  <template #body="props">
+                    <q-tr :props="props">
+                      <q-td key="expandCity" :props="props">
+                        <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
+                          @@click="props.expandCity = !props.expandCity" </q-td>
+                          <q-td key="cityIndex" :props="props">{{ associateCities.indexOf(props.row) + 1 }}</q-td>
+
+                          <q-td key="cityName" :props="props">
+                            {{ props.row.cityName }}
+                          </q-td>
+                          <q-td key="cityNameEn" :props="props">
+                            {{ props.row.cityNameEn }}
+                          </q-td>
+
+                          <q-td key="cityNameEn" :props="props">
+                            {{ props.row.cityNameEn }}
+                          </q-td>
+
+                          <q-td key="cityAction" :props="props">
+                            <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="open(props.row.cityId)"
+                              icon="delete_forever" size="15px"></q-btn>
+                            <q-dialog v-model="deleteCityVisible" persistent>
+                              <q-card>
+                                <q-card-section class="row items-center">
+                                  <q-avatar icon="list" color="grey-9" text-color="white"></q-avatar>
+                                  <span class="q-ml-sm">Are you sure you want to delete this history?</span>
+                                </q-card-section>
+
+                                <q-card-actions align="center">
+                                  <q-btn class="q-ma-sm" color="red-6" @@click="deleteBill" label="Yes"
+                                    v-close-popup></q-btn>
+                                  <q-btn class="q-ma-sm" label="No" @@click="closeDeleteBillDialog" color="grey"
+                                    v-close-popup />
+                                </q-card-actions>
+
+                              </q-card>
+                            </q-dialog>
+                          </q-td>
+                  </template>
+                </q-table>
+              </q-card-section>
+
+              <q-card-section class="row justify-end">
+                <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
+                  :label="'Add new address'" size="md" @@click="addNewAddress()">
+                </q-btn>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm text-h6" color="grey" @@click="closeDetails()" label="Close"
+                  style="height: 30px; width: 120px;"></q-btn>
+              </q-card-actions>
+
+            </q-card>
+          </q-dialog>
+          
+        </q-td>
+
+        <q-td key="deliveryIndex" :props="props">{{ deliveryRows.indexOf(props.row) + 1 }}</q-td>
+
+        <q-td key="deliveryCompanyName" :props="props">
+          {{ props.row.deliveryCompanyName }}
+          <q-popup-edit v-model="props.row.deliveryCompanyName">
+            <q-input v-model="props.row.deliveryCompanyName" dense autofocus counter></q-input>
+            <div class="justify-end row">
+              <q-btn color="blue-grey-6" @@click="editDelivery(props.row)" icon="edit" label="edit"
+                v-close-popup="cancelEnabled">
+              </q-btn>
+            </div>
+          </q-popup-edit>
+        </q-td>
+
+        <q-td key="deliveryActions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+            @@click="openDeleteDeliveryDialog(props.row.deliveryServiceId)" icon="delete_forever" size="15px"></q-btn>
+          <q-dialog v-model="deleteDeliveryDialogVisible">
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="local_shipping" color="orange" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this delivery service?</span>
+              </q-card-section>
+
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteDeliveryService" label="Yes" v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteDeliveryDialog" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
+        </q-td>
+
+      </q-tr>
+    </template>
+
+  </q-table>
+
+  <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
+    label="Add new delivery service" size="md" @@click="openAddDeliveryDialog">
+  </q-btn>
+
+  @* Dialog when add Delivery *@
+  <q-dialog v-model="deliveryDialogVisible">
+    <q-card>
+      <q-card-section class="row items-center">
+        <span class="q-ml-sm">Enter Delivery Company Name:</span>
+      </q-card-section>
+
+      <q-card-section>
+        <q-input filled v-model="newDeliveryCompanyName.deliveryCompanyName" label="Delivery Company Name" lazy-rules
+          :rules="[ val => val && val.length > 0 || 'Please enter company name']">
+        </q-input>
+      </q-card-section>
+
+      <q-card-actions align="center">
+        <q-btn class="q-ma-sm" color="primary" @@click="addDelivery" label="Add"></q-btn>
+        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeAddDeliveryDialog"></q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  @* Add new city *@
+  <q-card style="margin-top: 102px;">
+    <q-card-section>
+      <label style="font-size: large; font-weight: bold;" for="addCitySection"> Add new city </label>
+    </q-card-section>
+    <q-card-section>
+      <div id="addCitySection" class="row">
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCity">City Name:</label>
+          <q-input id="newCity" v-model="newCity.cityName" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCityEn">City Name in English:</label>
+          <q-input id="newCityEn" v-model="newCity.cityNameEn" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCitySelect">Select Province:</label>
+          <q-select emit-value map-options id="newCitySelect" v-model="newCity.provinceId"
+            :options="allProvinces"></q-select>
+        </div>
+        <div style="flex: 1; margin-right: 20px;">
+          <q-btn stack class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
+            label="ADD CITY" size="md" @@click="addNewCity">
+          </q-btn>
+
+        </div>
+      </div>
+    </q-card-section>
+  </q-card>
+
+  @* Add new village *@
+  <q-card style="margin-top: 12px;">
+    <q-card-section>
+      <label style="font-size: large; font-weight: bold;"> Add new village </label>
+    </q-card-section>
+    <q-card-section>
+      <div class="row">
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newVillage">Village Name:</label>
+          <q-input id="newVillage" v-model="newVillage.villageName" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newVillageEn">Village Name in English:</label>
+          <q-input id="newVillageEn" v-model="newVillage.villageNameEn" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCitySelect">Select City:</label>
+          <q-select emit-value map-options id="newCitySelect" v-model="newVillage.cityId"
+            :options="allCities"></q-select>
+        </div>
+        <div style="flex: 1; margin-right: 20px;">
+          <q-btn stack class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
+            label="ADD VILLAGE" size="md" @@click="addNewVillage">
+          </q-btn>
+
+        </div>
+      </div>
+    </q-card-section>
+  </q-card>
+
+
+
+
+</div>
+@section code {
+  <script>
+    var option = {
+      //data
+      data() {
+        return {
+          newDeliveryServiceId: 0,
+          deliveryDialogVisible: false,
+          newDeliveryCompanyName: {
+            deliveryCompanyName: ""
+          },
+          newCity: {
+            provinceId: null,
+            cityName: "",
+            cityNameEn: ""
+          },
+          newVillage: {
+            cityId: null,
+            villageName: "",
+            villageNameEn: ""
+          },
+          deliveryRows: [],
+          deliveryColumns: [
+            {
+              name: 'details',
+              label: 'Delivery details',
+              field: 'details',
+              align: 'center'
+            },
+            {
+              name: 'deliveryIndex',
+              field: 'deliveryIndex',
+              align: 'center',
+              sortable: true,
+              label: 'Delivery No'
+            },
+            {
+              name: 'deliveryCompanyName',
+              label: 'Delivery name',
+              field: 'deliveryCompanyName',
+              align: 'left',
+              sortable: true,
+            },
+            {
+              name: 'deliveryActions',
+              label: 'Actions',
+              field: 'deliveryActions',
+              align: 'center'
+            },
+          ],
+          cityColumn: [
+            {
+              name: 'expandCity',
+              field: 'expandCity',
+              align: 'center',
+              sortable: true,
+              label: 'Expand'
+
+            },
+            {
+              name: 'cityIndex',
+              field: 'cityIndex',
+              align: 'center',
+              sortable: true,
+              label: 'City No'
+
+            },
+            {
+              name: 'cityName',
+              label: 'City Name',
+              field: 'cityName',
+              align: 'left',
+              sortable: true,
+            },
+            {
+              name: 'cityNameEn',
+              label: 'City Name (English)',
+              field: 'cityNameEn',
+              align: 'left',
+              sortable: true,
+            },
+            {
+              name: 'cityAction',
+              label: 'Actions',
+              field: 'cityAction',
+              align: 'center'
+            }
+          ],
+          showServiceDetails: false,
+          selectedService: null,
+          
+          associateProvinces: [],
+          allProvinces: [],
+          allCities: [],
+
+          selectedProvince: null,
+          associateCities: [],
+          associateVillages: [],
+          selectedVillage: null,
+          disableCity: true,
+          disableVillage: true,
+
+          deleteDeliveryDialogVisible: false,
+          deleteBranchDialogVisible: false,
+          deliveryServiceIdToDelete: 0,
+          deliveryBranchIdToDelete: 0,
+
+          newCityProvince: null
+        };
+      }
+      ,
+      //methods
+      methods: {
+        openAddDeliveryDialog() {
+          this.deliveryDialogVisible = true;
+        },
+        closeAddDeliveryDialog() {
+          this.deliveryDialogVisible = false;
+        },
+
+        openDeleteDeliveryDialog(deliveryServiceId) {
+          this.deleteDeliveryDialogVisible = true;
+          this.deliveryServiceIdToDelete = deliveryServiceId;
+        },
+
+        closeDeleteDeliveryDialog() {
+          this.deliveryDialogVisible = false;
+          this.deliveryBranchIdToDelete = 0;
+        },
+
+        openDeleteBranchDialog(deliveryBranchId) {
+          this.deleteBranchDialogVisible = true;
+          this.deliveryBranchIdToDelete = deliveryBranchId; // Store the deliveryServiceId for later use
+        },
+        closeDeleteBranchDialog() {
+          this.deleteBranchDialogVisible = false;
+        },
+
+        async addNewCity() {
+          try {
+            console.log("New city String:", this.newCity);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddNewCity", this.newCity);
+
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful service addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New City added successfully!'
+              });
+              this.onReset();
+
+            } else {
+              // Log detailed error information
+              console.error(response);
+
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding City. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
+
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
+
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding City. Please check the console for details.'
+            });
+          }
+        },
+        async addNewVillage() {
+          try {
+            console.log("New village String:", this.newVillage);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddNewVillage", this.newVillage);
+
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful service addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Village added successfully!'
+              });
+              this.onReset();
+
+            } else {
+              // Log detailed error information
+              console.error(response);
+
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Village. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
+
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
+
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Village. Please check the console for details.'
+            });
+          }
+        },
+
+        async addDelivery() {
+          try {
+            console.log("DeliveryService String:", this.newDeliveryCompanyName);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddDeliveryService", this.newDeliveryCompanyName);
+
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful service addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Delivery Service added successfully!'
+              });
+              this.closeAddDeliveryDialog();
+              this.onReset();
+
+            } else {
+              // Log detailed error information
+              console.error(response);
+
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Delivery. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
+
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
+
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Delivery. Please check the console for details.'
+            });
+          }
+        },
+
+        async editDelivery(item) {
+          try {
+            const response = await axios.post("myapi/EditDelivery", item);
+            console.log("Request data:", item);
+            console.log("Response data:", response.data);
+
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Delivery Modified!'
+              });
+            } else {
+              console.error("Unexpected response status:", response.status);
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
+            }
+          } catch (error) {
+            console.error("Error during request:", error);
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error during request'
+            });
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
+            }
+          }
+        },
+
+        async deleteDeliveryService() {
+          try {
+            const response = await axios.post(`/myapi/DeleteDeliveryService?deliveryServiceIdToDelete=${this.deliveryServiceIdToDelete}`);
+
+            this.deliveryServiceIdToDelete = 0;
+            window.location.reload();
+            console.log("Delete response:", response.data);
+
+            // Handle successful deletion
+          } catch (error) {
+            console.error("Error deleting delivery service:", error);
+            // Handle error
+          }
+        },
+
+        async deleteBranch() {
+          try {
+            // Send the delete request
+            const reponse = await axios.post(`/myapi/DeleteDeliveryBranch?deliveryBranchId=${this.deliveryBranchIdToDelete}`);
+            this.deliveryBranchIdToDelete = 0;
+            window.location.reload();
+            console.log("Delete response:", response.data);
+
+
+            // Set a flag in local storage indicating successful delete
+            localStorage.setItem('deleteSuccess', 'true');
+
+            // Refresh the page
+            window.location.reload();
+          } catch (error) {
+            console.error('Error deleting delivery branch:', error);
+
+            // Notify the user about the error
+            this.$q.notify({
+              type: 'negative',
+              color: 'red-8',
+              message: 'Error deleting delivery branch'
+            });
+          }
+        },
+
+        async addNewAddress() {
+          try {
+            console.log("Branch String:", this.newVillage);
+
+            // Make the API call
+            const response = await axios.post(`/myapi/AddBranch`, this.newBranchLocation);
+
+            console.log("The response is:", response.data);
+
+
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful service addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Village added successfully!'
+              });
+  // this.onReset();
+             // window.location.reload();
+
+                  } else {
+              // Log detailed error information
+              console.error(response);
+
+              // Handle the case where the API call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Village. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
+
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
+
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Village. Please check the console for details.'
+            });
+          }
+        },
+
+        showDetails(service) {
+          this.selectedService = service;
+          console.log("The object passed is:", this.selectedService);
+          this.fetchAssociateProvince(service.deliveryServiceId);
+          // Reset selected size and inventory quantity when showing details
+          this.selectedProvince = null;
+          this.selectedVillage = null;
+          this.showServiceDetails = true;
+        }, //ef
+
+        closeDetails() {
+          this.selectedService = null;
+          this.selectedProvince = null;
+          this.showServiceDetails = false;
+        },
+
+        async onReset() {
+          const notif = this.$q.notify({
+            type: 'ongoing',
+            message: 'Resetting...'
+          });
+
+          try {
+            // Reset the deliveryRows array to an empty array
+            this.deliveryRows = [];
+
+            // Call the API to get delivery services data again
+            const deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
+            this.deliveryRows = deliveryReponse.data;
+
+            // Notify the user that the reset was successful
+            notif({
+              type: 'positive',
+              message: 'Reset successful',
+              timeout: 300
+            });
+          } catch (error) {
+            // Notify the user if an error occurs during the reset process
+            notif({
+              type: 'negative',
+              message: 'Failed to reset. Please try again.',
+              timeout: 300
+            });
+            console.error('Error resetting deliveries data:', error);
+          }
+        },
+
+        refreshDialog() {
+          this.showServiceDetails = false;
+          this.$nextTick(() => {
+            this.showServiceDetails = true;
+            this.showDetails(this.selectedService); // Call showServiceDetails again to update dialog data
+          });
+        },
+
+        async fetchAllProvinces() {
+          try {
+            const response = await axios.get("/myapi/GetAllProvinces");
+            console.log("Response:", response);
+
+            // Map delivery services to the format required by q-select
+            this.allProvinces = response.data.map(province => ({
+              label: province.provinceName,
+              value: province.provinceId
+            }));
+
+            console.log("Province:", this.allProvinces);
+          } catch (error) {
+            console.error("Error fetching allProvinces:", error);
+          }
+        },
+        
+        async fetchAllCities() {
+          try {
+            const response = await axios.get("/myapi/GetAllCities");
+            console.log("All cities Response:", response);
+
+            // Map delivery services to the format required by q-select
+            this.allCities = response.data.map(city => ({
+              label: city.cityName,
+              value: city.cityId
+            }));
+
+            console.log("Cities:", this.allCities);
+          } catch (error) {
+            console.error("Error fetching allCities:", error);
+          }
+        },
+
+        async fetchAssociateProvince(deliveryServiceId) {
+          try {
+            const response = await axios.get(`/myapi/GetAssociateProvinces?deliveryServiceId=${deliveryServiceId}`);
+
+            // Map delivery services to the format required by q-select
+            this.associateProvinces = response.data.map(province => ({
+              label: province.provinceName,
+              value: province.provinceId
+            }));
+
+            console.log("Province:", this.associateProvinces);
+          } catch (error) {
+            console.error("Error fetching associateProvinces:", error);
+          }
+        },
+
+        async fetchAssociateCities() {
+          try {
+            const selectedProvinceId = this.selectedProvince.value;
+            const response = await axios.get(`/myapi/GetAssociateCities?deliveryServiceId=${this.selectedService.deliveryServiceId}&provinceId=${selectedProvinceId}`);
+
+            // Map branches to the format required
+            this.associateCities = response.data.map(city => ({
+              label: city.cityName,
+              value: city.cityId
+            }));
+
+            console.log("City:", this.associateCities);
+          } catch (error) {
+            console.error("Error fetching city:", error);
+          }
+        },
+
+    @* async fetchAssociateVillages(deliveryServiceId) {
+    try {
+
+    const response = await axios.get(`/myapi/GetAssociateVillages`);
+
+    // Map branches to the format required
+    this.associateVillages = response.data.map(village => ({
+    label: village.villageName,
+    value: village.villageId
+    }));
+
+    this.selectedVillage = null;
+    this.disableVillage = false;
+    console.log("Village:", this.associateVillages);
+
+    } catch (error) {
+    console.error("Error fetching village:", error);
+    }
+    }, *@
+          },
+
+    //computed
+    computed: {
+      branchIndex() {
+        return (index) => index + 1;
+      }
+    }
+    ,
+
+          //created
+          async created() {
+      this.fetchAllProvinces();
+      this.fetchAllCities();
+      try {
+        var deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
+        this.deliveryRows = deliveryReponse.data;
+        console.log(deliveryReponse.data);
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }//ecreated
+          ,
+    //mounted
+    mounted() {
+
+    }
+        };
+
+    const app = Vue.createApp(option);
+    app.use(Quasar)
+    app.mount('#app1')
+  </script>
+
+}

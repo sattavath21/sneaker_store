@@ -75,7 +75,8 @@ public class SeedApiController : ControllerBase
             Province province = new Province
             {
                 ProvinceId = i,
-                ProvinceName = $"Province {i}",
+                ProvinceName = $"ແຂວງທີ {i}",
+                ProvinceNameEn = $"Province {i}"
             };
             provinces.Add(province);
         }
@@ -87,7 +88,8 @@ public class SeedApiController : ControllerBase
             City city = new City
             {
                 CityId = i,
-                CityName = $"City {i}"
+                CityName = $"ເມືອງທີ {i}",
+                CityNameEn = $"City {i}"
             };
             cities.Add(city);
         }
@@ -98,7 +100,8 @@ public class SeedApiController : ControllerBase
             Village village = new Village
             {
                 VillageId = i,
-                VillageName = $"Village {i}"
+                VillageName = $"ບ້ານທີ {i}",
+                VillageNameEn = $"Village {i}"
             };
             villages.Add(village);
         }
@@ -202,18 +205,16 @@ public class SeedApiController : ControllerBase
             return randomProvinces;
         }
 
-        List<Province> randomProvinces = GetRandomProvinces(provinces, random.Next(1, provinces.Count));
 
-
-        foreach (var deliveryService in new[] { anousithDeliveryService, mixayDeliveryService, halDeliveryService })
+        // Iterate over all provinces
+        foreach (var province in provinces)
         {
-            // Get a random subset of provinces
+            // Get a list of cities that belong to the current province
+            var provinceCities = cities.Where(c => c.ProvinceId == province.ProvinceId).ToList();
 
-            foreach (var province in randomProvinces)
+            // Get a random city from the list of provinceCities for each delivery service
+            foreach (var deliveryService in new[] { anousithDeliveryService, mixayDeliveryService, halDeliveryService })
             {
-                // Get a list of cities that belong to the current province
-                var provinceCities = cities.Where(c => c.ProvinceId == province.ProvinceId).ToList();
-
                 // Get a random city from the list of provinceCities
                 var randomCity = provinceCities[random.Next(provinceCities.Count)];
 
@@ -232,7 +233,6 @@ public class SeedApiController : ControllerBase
                 deliveryService.BranchLocations.Add(branchLocation);
             }
         }
-
         _db.DeliveryService.AddRange(anousithDeliveryService, mixayDeliveryService, halDeliveryService, blankService);
 
 
@@ -416,6 +416,8 @@ public class SeedApiController : ControllerBase
             };
             customers.Add(customer);
         }
+        
+        List<Province> randomProvinces = GetRandomProvinces(provinces, random.Next(1, provinces.Count));
 
         foreach (var customer in customers)
         {

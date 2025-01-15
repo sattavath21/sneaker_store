@@ -14,7 +14,7 @@ public class ReportController : Controller
         _db =db;
     }
     [HttpGet]
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "manager")]
     public IActionResult Index()
     {
         return View();

@@ -21,56 +21,62 @@
             "Method_Name": "In-store Pickup"
         }
     },
-
     "Delivery_Service": {
         "Delivery_Company_Name": "Anousith Express",
         "Branch_Locations": [
             {
                 "Province": {
-                    "Province_Name": "Savannakhet"
+                    "Province_Name": "ສະຫວັນນະເຂດ",
+                    "Province_Name_En": "Savannakhet"
                 },
                 "City": {
-                    "City_Name": "Kaiysone Phomvihane",
+                    "City_Name": "ໄກສອນພົມສິຫານ",
+                    "City_Name_En": "Kaiysone Phomvihane",
                     "Province": {
-                        "Province_Name": "Savannakhet"
+                        "Province_Name": "ສະຫວັນນະເຂດ",
+                        "Province_Name_En": "Savannakhet"
                     }
                 },
                 "Village": {
                     "Village_Name": "asdasd",
+                    "Village_Name_En": "asdads",
                     "City": {
-                        "City_Name": "Kaiysone Phomvihane",
+                        "City_Name": "ໄກສອນພົມສິຫານ",
+                        "City_Name_En": "Kaiysone Phomvihane",
                         "Province": {
-                            "Province_Name": "Savannakhet"
+                            "Province_Name": "ສະຫວັນນະເຂດ",
+                            "Province_Name_En": "Savannakhet"
                         }
                     }
                 }
             }
         ]
     },
-
     "Province": {
-        "Province_Name": "Savannakhet"
+        "Province_Name": "ສະຫວັນນະເຂດ",
+        "Province_Name_En": "Savannakhet"
     },
-
     "City": {
-        "City_Name": "Kaiysone Phomvihane",
+        "City_Name": "ໄກສອນພົມສິຫານ",
+        "City_Name_En": "Kaiysone Phomvihane",
         "Province": {
-            "Province_Name": "Savannakhet"
+            "Province_Name": "ສະຫວັນນະເຂດ",
+            "Province_Name_En": "Savannakhet"
         }
     },
-
     "Village": {
         "Village_Name": "asdasd",
+        "Village_Name_En": "asdads",
         "City": {
-            "City_Name": "Kaiysone Phomvihane",
+            "City_Name": "ໄກສອນພົມສິຫານ",
+            "City_Name_En": "Kaiysone Phomvihane",
             "Province": {
-                "Province_Name": "Savannakhet"
+                "Province_Name": "ສະຫວັນນະເຂດ",
+                "Province_Name_En": "Savannakhet"
             }
         }
     },
-
     "Additional_Address_Info": "ສາຂາ ໂພນຕ້ອງສະຫວາດ(ຈັນທະບູລີ)",
-
     "Staff": {
         "Staff_Firstname": "andy",
         "Staff_Lastname": "asdasdo",
@@ -93,20 +99,26 @@
         "Locations": [
             {
                 "Province": {
-                    "Province_Name": "Savannakhet"
+                    "Province_Name": "ສະຫວັນນະເຂດ",
+                    "Province_Name_En": "Savannakhet"
                 },
                 "City": {
-                    "City_Name": "Kaiysone Phomvihane",
+                    "City_Name": "ໄກສອນພົມສິຫານ",
+                    "City_Name_En": "Kaiysone Phomvihane",
                     "Province": {
-                        "Province_Name": "Savannakhet"
+                        "Province_Name": "ສະຫວັນນະເຂດ",
+                        "Province_Name_En": "Savannakhet"
                     }
                 },
                 "Village": {
                     "Village_Name": "asdasd",
+                    "Village_Name_En": "asdads",
                     "City": {
-                        "City_Name": "Kaiysone Phomvihane",
+                        "City_Name": "ໄກສອນພົມສິຫານ",
+                        "City_Name_En": "Kaiysone Phomvihane",
                         "Province": {
-                            "Province_Name": "Savannakhet"
+                            "Province_Name": "ສະຫວັນນະເຂດ",
+                            "Province_Name_En": "Savannakhet"
                         }
                     }
                 }

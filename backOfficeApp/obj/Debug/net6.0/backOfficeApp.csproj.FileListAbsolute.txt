@@ -124,6 +124,8 @@ C:\Users\USER\Documents\sneaker_store\backOfficeApp\obj\Debug\net6.0\backOfficeA
 C:\Users\USER\Documents\sneaker_store\backOfficeApp\obj\Debug\net6.0\ref\backOfficeApp.dll
 C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\appsettings.json
+C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\package-lock.json
+C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\package.json
 C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\backOfficeApp.staticwebassets.runtime.json
 C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\backOfficeApp.exe
 C:\Users\Sattavath\Documents\sneaker_store_project\backOfficeApp\bin\Debug\net6.0\backOfficeApp.deps.json

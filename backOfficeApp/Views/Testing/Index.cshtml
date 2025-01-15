@@ -1,3 +1,7 @@
+@{
+    ViewData["Title"] = "TESTING";
+}
+
 <div id="app1">
 
  
@@ -19,9 +23,63 @@
 
   <q-btn class="q-ma-sm q-px-lg q-py-sm" size="15px" icon="print" color="primary" @@click="printContent"></q-btn>
 
-
+@* 
 <q-input v-model="props.row.qty" dense type="number" @@keyup.enter="updateQty(props.row)"
-  input-style="width: 50px; text-align: right;" ></q-input>   
+  input-style="width: 50px; text-align: right;" ></q-input>    *@
+
+  <div class="q-pa-md">
+    Shrodigers cat is dead? {{test}}
+<q-table
+title="Brands" 
+:rows="brandRows" 
+:columns="brandColumns" 
+row-key="brandId" 
+separator="none" 
+  row-key="name"
+  :selected-rows-label="getSelectedString"
+  selection="multiple"
+  v-model:selected="selected"
+>
+<template #body="props">
+      <q-tr :props="props">
+
+    <q-td>
+        <q-checkbox v-model="props.selected" dense size="sm"></q-checkbox>
+      </q-td>
+
+        <q-td key="brandId" :props="props">
+          {{ props.row.brandId }}
+        </q-td>
+
+<q-td key="brandLogo" :props="props">
+  <q-img :src="props.row.brandLogoUrl" style="cursor: pointer; width: 100%; height: 100%; object-fit: contain;"></q-img>
+</q-td>
+
+        <q-td key="brandName" :props="props">
+          {{ props.row.brandName }}
+        </q-td>
+
+        <q-td key="brandLogoUrl" :props="props">
+          {{ props.row.brandLogoUrl }}
+        </q-td>
+
+        <q-td key="brandActions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteBrandDialog(props.row.brandId)"
+            icon="delete_forever" size="15px"></q-btn>
+        </q-td>
+      </q-tr>
+    </template>
+</q-table>
+
+  
+      <div class="q-mt-md">
+        Selected: {{ JSON.stringify(selected) }}
+      </div>
+           <div class="q-mt-md">
+        Selected: {{ selected }}
+      </div>
+    </div>
+
 
 </div>
 
@@ -34,12 +92,64 @@
       //data
       data() {
         return {
-          selection: null
+          selection: null,
+          test: false,
+      selected: [],
+              brandRows: [],
+          brandColumns: [
+
+            {
+              name: 'brandId',
+              field: 'brandId',
+              align: 'center',
+              sortable: true,
+              label: 'ID'
+            },
+            {
+              name: 'brandLogo',
+              label: 'Brand logo',
+              field: 'brandLogoUrl',
+              sortable: true,
+              align: 'center',
+            },
+            {
+              name: 'brandName',
+              label: 'Brand name',
+              field: 'brandName',
+              align: 'center',
+              sortable: true,
+            },
+            {
+              name: 'brandLogoUrl',
+              label: 'Brand url',
+              field: 'brandLogoUrl',
+              align: 'left'
+            },
+            {
+              name: 'brandActions',
+              label: 'Actions',
+              field: 'brandActions',
+              align: 'center'
+            },
+
+          ],
+
+
         };
       }
       ,
       //methods
       methods: {
+getSelectedString() {
+             // Check for the legnth of the selected
+             // if nothing select return 0 ?
+             // if not : return the length of the selected list, then decide to add s or not, based on if it single selectino or multiple selection
+             // Note that: this is inside of the table (:selected-rows-label property) to shows dynamic labels 
+      return this.selected.length === 0 ? '' : `${this.selected.length} record${this.selected.length > 1 ? 's' : ''} selected`;
+    },
+    updateSelected() {
+      this.test = !this.test;
+    },
         printContent() {
           const selectedValue = this.selection; // Replace 'selectedValue' with the actual variable name containing the selection
           const depositMoney = "2,000.00";
@@ -319,7 +429,16 @@
       ,
       //created
       async created() {
+        
+        try {
+          var brand = await axios.get("/myapi/GetBrands");
+          this.brandRows = brand.data;
+          console.log(brand.data);
 
+        }
+        catch (error) {
+          console.log(error);
+        }
       }//ecreated
       ,
       //mounted

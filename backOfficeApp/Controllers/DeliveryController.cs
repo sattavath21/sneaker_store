@@ -22,10 +22,6 @@ public class DeliveryController : Controller
         return View();
     }
 
-    public IActionResult AddDelivery()
-    {
-        return View();
-    }
     #endregion
 
 }//ec

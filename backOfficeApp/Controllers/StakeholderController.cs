@@ -26,6 +26,7 @@ public class StakeholderController : Controller
     {
         return View();
     }
+    
  [HttpGet]
     [Authorize(Roles = "admin, manager")]
     public IActionResult AddStaf()

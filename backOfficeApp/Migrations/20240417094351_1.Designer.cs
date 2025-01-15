@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backOfficeApp.Migrations
 {
     [DbContext(typeof(BackofficeappDbContext))]
-    [Migration("20240408065900_1")]
+    [Migration("20240417094351_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -302,6 +302,9 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CityName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CityNameEn")
                         .HasColumnType("longtext");
 
                     b.Property<int>("ProvinceId")
@@ -664,6 +667,9 @@ namespace backOfficeApp.Migrations
                     b.Property<string>("ProvinceName")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ProvinceNameEn")
+                        .HasColumnType("longtext");
+
                     b.HasKey("ProvinceId");
 
                     b.ToTable("Province");
@@ -744,6 +750,9 @@ namespace backOfficeApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("VillageName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("VillageNameEn")
                         .HasColumnType("longtext");
 
                     b.HasKey("VillageId");

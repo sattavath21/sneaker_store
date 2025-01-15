@@ -193,6 +193,8 @@
                       <hr>
                 }
                 <a href="/security/logout"><i class="fa fa-sign-out" aria-hidden="true"></i> Log Out</a>
+                <a id="testing" href="/testing"><i class="fa-brands fa-dev"></i>TESTING</a>
+
             </div>
 
             <div id="main" style="margin-top: 50px; padding: 18px 12px;">
@@ -210,6 +212,7 @@
 
         <!-- chart js -->
         @* <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> *@
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.1/xlsx.full.min.js"></script> 
 
                 <script>
 function toggleNav() {
@@ -246,18 +249,18 @@ function toggleNav() {
         }
 
 
-    function checkSideNavState() {
+    @* function checkSideNavState() {
     console.log("Checking side nav state...");
     var sideNav = document.getElementById("mySidenav");
     if (sideNav.style.width !== "0px" && sideNav.style.width !== "") { // Check if side nav is open
         sideNav.style.width = "0";
         document.getElementById("main").style.marginLeft= "0";
     }
-    }
+    } *@
 
     // Call the function when the document is loaded
     document.addEventListener("DOMContentLoaded", function() {
-    checkSideNavState();
+    @* checkSideNavState(); *@
     });
     </script>
 

@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "ບໍລິສັດຂົນສົ່ງ";
+  ViewData["Title"] = "ບໍລິສັດຂົນສົ່ງ";
 }
 
 <div id="app1">
@@ -10,21 +10,17 @@
     ໜ້າຈັດການບໍລິສັດຂົນສົ່ງ
   </div>
 
-  <q-table title="Delivery Services" :rows="deliveryRows" :columns="deliveryColumns" row-key="deliveryServiceId"
-    >
-
+  <q-table title="Delivery Services" :rows="deliveryRows" :columns="deliveryColumns" row-key="deliveryServiceId">
     <template #body="props">
       <q-tr :props="props">
-
-        <q-td key="expand" :props="props">
-          <q-btn color="black" flat dense round :icon="props.expand ? 'arrow_drop_down' : 'arrow_right'"
-            @@click="props.expand = !props.expand">
-          </q-btn>
+        @* Detail column *@
+        <q-td key="details" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="blue-12" @@click="showDetails(props.row)"
+            icon="format_list_numbered" size="15px"></q-btn>
         </q-td>
-
+        @* Index column *@
         <q-td key="deliveryIndex" :props="props">{{ deliveryRows.indexOf(props.row) + 1 }}</q-td>
-
-
+        @* Company Name column *@
         <q-td key="deliveryCompanyName" :props="props">
           {{ props.row.deliveryCompanyName }}
           <q-popup-edit v-model="props.row.deliveryCompanyName">
@@ -36,11 +32,11 @@
             </div>
           </q-popup-edit>
         </q-td>
-
-         <q-td key="deliveryActions" :props="props">
-          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteDeliveryDialog(props.row.deliveryServiceId)" icon="delete_forever"
-            size="15px"></q-btn>
-          <q-dialog v-model="deleteDeliveryDialogVisible">
+        @* Actions column *@
+        <q-td key="deliveryActions" :props="props">
+          <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6"
+            @@click="openDeleteDeliveryDialog(props.row.deliveryServiceId)" icon="delete_forever" size="15px"></q-btn>
+          <q-dialog v-model="deleteDeliveryVisible">
             <q-card>
               <q-card-section class="row items-center">
                 <q-avatar icon="local_shipping" color="orange" text-color="white"></q-avatar>
@@ -48,159 +44,243 @@
               </q-card-section>
 
               <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="red-6" @@click="deleteDeliveryService" label="Yes"
-                  v-close-popup></q-btn>
-                <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteDeliveryDialog" />
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteDeliveryService" label="Yes" v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" @@click="deleteDeliveryVisible = false" />
               </q-card-actions>
             </q-card>
           </q-dialog>
         </q-td>
-
       </q-tr>
-
-      @* Expanded section *@
-      <q-tr :props="props" v-show="props.expand">
-        <q-td colspan="100%">
-          <q-table :title="props.row.deliveryCompanyName + ' Branches'" :rows="props.row.deliveryBranches" :columns="branchesColumns" row-key="deliveryBranchId"
-            separator="none">
-            <!-- Define columns for phone numbers -->
-            <!-- Dont forget template -->
-            <!-- props become the phoneNumbers -->
-            <template #body="props">
-
-              <!-- NEW props -->
-              <q-tr :props="props">
-                
-<q-td key="branchIndex" :props="props">{{ props.rowIndex + 1 }}</q-td>
-
-      
-                <q-td key="branchName" :props="props">
-                  {{ props.row.branch.branchName }}
-                  <q-popup-edit v-model="props.row.branch.branchName">
-                    <q-input v-model="props.row.branch.branchName" dense autofocus counter></q-input>
-                    <div class="justify-end row">
-                      <q-btn color="blue-grey-6" @@click="editBranch(props.row.branch)" icon="edit" label="edit"
-                        v-close-popup="cancelEnabled">
-                      </q-btn>
-                    </div>
-                  </q-popup-edit>
-
-                </q-td>
-
-<q-td key="branchActions" :props="props">
-                  <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="openDeleteBranchDialog(props.row.deliveryBranchId)" icon="delete_forever"
-                    size="15px"></q-btn>
-                  <q-dialog v-model="deleteBranchDialogVisible" >
-                    <q-card>
-                      <q-card-section class="row items-center">
-                        <q-avatar icon="person_remove" color="orange" text-color="white"></q-avatar>
-                        <span class="q-ml-sm">Are you sure you want to delete this branch?</span>
-                      </q-card-section>
-
-                      <q-card-actions align="center">
-                        <q-btn class="q-ma-sm" color="red-6" @@click="deleteBranch" label="Yes"
-                          v-close-popup></q-btn>
-                        <q-btn class="q-ma-sm" label="No" color="grey" @@click="closeDeleteBranchDialog" ></q-btn>
-                      </q-card-actions>
-                    </q-card>
-                  </q-dialog>
-                </q-td>
-
-              </q-tr>
-            </template>
-
-          </q-table>
-
-          <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
-  :label="'Add new ' + props.row.deliveryCompanyName + ' branch'" size="md" @@click="openAddBranchDialog(props.row.deliveryServiceId)">
-</q-btn>
-
-          @* Dialog when add branch *@
-          <q-dialog v-model="branchDialogVisible" >
-            <q-card>
-              <q-card-section class="row items-center">
-                <span class="q-ml-sm">Enter branch name:</span>
-              </q-card-section>
-
-              <q-card-section>
-                <q-input filled v-model="newBranch.branchName" label="Branch Name" lazy-rules
-                  :rules="[ val => val && val.length > 0 || 'Please enter branch name']">
-                </q-input>
-              </q-card-section>
-
-
-              <q-card-actions align="center">
-                <q-btn class="q-ma-sm" color="primary" @@click="addBranch(props.row)"
-                  label="Add"></q-btn>
-                <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeAddBranchDialog"></q-btn>
-              </q-card-actions>
-            </q-card>
-          </q-dialog>
-
-        </q-td>
-      </q-tr>
-
-
-
     </template>
-
   </q-table>
 
   <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_box"
-    label="Add new delivery service" size="md" @@click="openAddDeliveryDialog">
+    label="Add new delivery service" size="md" @@click="addDeliveryVisible = true">
   </q-btn>
 
+
+
+  @* Add new city into geographical data*@
+  <q-card style="margin-top: 102px;">
+    <q-card-section>
+      <label style="font-size: large; font-weight: bold;" for="addCitySection"> Add new city </label>
+    </q-card-section>
+    <q-card-section>
+      <div id="addCitySection" class="row">
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCity">City Name:</label>
+          <q-input id="newCity" v-model="newCity.cityName" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCityEn">City Name in English:</label>
+          <q-input id="newCityEn" v-model="newCity.cityNameEn" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCitySelect">Select Province:</label>
+          <q-select emit-value map-options id="newCitySelect" v-model="newCity.provinceId"
+            :options="allProvinces"></q-select>
+        </div>
+      <div style="flex: 1; display: flex; align-items: flex-end;">
+          <q-btn stack class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="green" icon="add_location_alt"
+            label="ADD CITY" size="md" @@click="addNewCity">
+          </q-btn>
+
+        </div>
+      </div>
+    </q-card-section>
+  </q-card>
+
+   @* Add new village *@
+  <q-card style="margin-top: 12px;">
+    <q-card-section>
+      <label style="font-size: large; font-weight: bold;"> Add new village </label>
+    </q-card-section>
+    <q-card-section>
+      <div class="row">
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newVillage">Village Name:</label>
+          <q-input id="newVillage" v-model="newVillage.villageName" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newVillageEn">Village Name in English:</label>
+          <q-input id="newVillageEn" v-model="newVillage.villageNameEn" type="text"></q-input>
+        </div>
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="newCitySelect">Select City:</label>
+          <q-select emit-value map-options id="newCitySelect" v-model="newVillage.cityId"
+            :options="allCities"></q-select>
+        </div>
+      <div style="flex: 1; display: flex; align-items: flex-end;">
+          <q-btn stack class="q-my-md q-py-md" color="green" icon="add_location_alt"
+            label="ADD VILLAGE" size="md" @@click="addNewVillage">
+          </q-btn>
+        </div>
+      </div>
+    </q-card-section>
+  </q-card>
+
+  @* Dialog for delivery details *@
+  <q-dialog v-model="showServiceDetails" persistent>
+    <q-card style="min-width: 1000px">
+
+              <q-bar dark class="bg-red text-white">
+          <q-space></q-space>
+
+          <q-btn dense flat icon="close" @@click="closeDetails()">
+            <q-tooltip>Close</q-tooltip>
+          </q-btn>
+
+        </q-bar>
+        
+      <q-card-section>
+        <div style="font-size: x-large;"> Filter Options: </div>
+      </q-card-section>
+      <q-card-section class="q-pt-none" style="display: flex; flex-wrap: wrap; ">
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="filterProvince">Filter Province:</label>
+          <q-select emit-value map-options id="filterProvince" v-model="selectBranchProvince"
+            :options="associateProvinces" @@update:model-value="filterBranchLocations"></q-select>
+        </div>
+
+        <div style="flex: 3; margin-right: 20px;">
+          <label for="filterCity">Filter City:</label>
+          <q-select emit-value map-options id="filterCity" v-model="selectBranchCity" :options="associateCities"
+            @@update:model-value="filterBranchLocationCity" :disable="disableFilterCity"></q-select>
+        </div>
+
+        <div style="flex: 3;">
+          <label for="filterVillage">Filter Village:</label>
+          <q-select emit-value map-options id="filterVillage" v-model="selectBranchVillage" :options="associateVillages"
+            @@update:model-value="filterBranchLocationVillage" :disable="disableFilterVillage"></q-select>
+        </div>
+
+<div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+          <q-btn stack color="red" icon="clear" label="CLEAR" @@click="onClearFilter" />
+        </div>
+
+      </q-card-section>
+
+
+      <q-card-section>
+        <q-table :title="selectService.deliveryCompanyName + ' Branches'" class="my-sticky-column-table"
+          :rows="branchLocationRows" :columns="branchLocationColumn" row-key="branchLocationId">
+          <template #body="props">
+            <q-tr :props="props">
+
+              <q-td key="locationIndex" :props="props">
+                {{ branchLocationRows.indexOf(props.row) + 1 }}
+              </q-td>
+              <q-td key="province" :props="props">
+                {{ props.row.province.provinceName }}
+              </q-td>
+              <q-td key="city" :props="props">
+                {{ props.row.city.cityName }}
+              </q-td>
+              <q-td key="village" :props="props">
+                {{ props.row.village.villageName }}
+              </q-td>
+              <q-td key="actions" :props="props">
+                <q-btn class="q-ma-sm q-px-lg q-py-sm" color="red-6" @@click="showDeleteBranchDialog(props.row.branchLocationId)"
+                  icon="delete_forever" size="15px">
+                </q-btn>
+              </q-td>
+
+            </q-tr>
+          </template>
+        </q-table>
+      </q-card-section>
+
+      <!-- Add new address section -->
+      <q-card-section class="row items-center">
+        <hr style="width: 100%; margin-top: 10px;"> <!-- Horizontal divider -->
+        <h5> Add new branch address </h5>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none" style="display: flex; flex-wrap: wrap;">
+
+        <div style="flex: 1; margin-right: 20px;">
+          <label for="newBranchProvince">Province Name:</label>
+          <q-select emit-value map-options id="newBranchProvince" v-model="newBranchProvince"
+            :options="allProvinces" @@update:model-value="fetchRelateCities"></q-select>
+
+        </div>
+
+        <div style="flex: 1; margin-right: 20px;">
+
+          <label for="newBranchCity">Select City:</label>
+          <q-select emit-value map-options id="newBranchCity" v-model="newBranchCity" :options="relateCities"
+            @@update:model-value="fetchRelateVillages" :disable="disableNewBranchCity"></q-select>
+
+
+        </div>
+
+        <div style="flex: 1;">
+          <label for="newBranchVillage">Select Village:</label>
+          <q-select emit-value map-options id="newBranchVillage" v-model="newBranchVillage" :options="relateVillages"
+            :disable="disableNewBranchVillage"></q-select>
+        </div>
+      </q-card-section>
+
+      <q-card-section class="row justify-end">
+        <q-btn class="q-my-md q-py-md float-right" style="margin-bottom: 20px;" color="yellow-8" icon="add_box"
+          :label="'Add new address'" size="md" @@click="addNewAddress">
+        </q-btn>
+      </q-card-section>
+
+    </q-card>
+  </q-dialog>
+
   @* Dialog when add Delivery *@
-  <q-dialog v-model="deliveryDialogVisible" >
+  <q-dialog v-model="addDeliveryVisible">
     <q-card>
       <q-card-section class="row items-center">
         <span class="q-ml-sm">Enter Delivery Company Name:</span>
       </q-card-section>
 
       <q-card-section>
-        <q-input filled v-model="newDeliveryCompanyName.deliveryCompanyName" label="Delivery Company Name" lazy-rules
+        <q-input filled v-model="newDeliveryService.deliveryCompanyName" label="Delivery Company Name" lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please enter company name']">
         </q-input>
       </q-card-section>
 
       <q-card-actions align="center">
         <q-btn class="q-ma-sm" color="primary" @@click="addDelivery" label="Add"></q-btn>
-        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="closeAddDeliveryDialog"></q-btn>
+        <q-btn class="q-ma-sm" label="Cancel" color="grey" @@click="addDeliveryVisible = false"></q-btn>
       </q-card-actions>
     </q-card>
   </q-dialog>
 
+  @* Dialog when delete branch location *@
+            <q-dialog v-model="deleteBranchVisible">
+            <q-card>
+              <q-card-section class="row items-center">
+                <q-avatar icon="location_off" color="orange" text-color="white"></q-avatar>
+                <span class="q-ml-sm">Are you sure you want to delete this location?</span>
+              </q-card-section>
 
-
-
+              <q-card-actions align="center">
+                <q-btn class="q-ma-sm" color="red-6" @@click="deleteBranchLocation" label="Yes" v-close-popup></q-btn>
+                <q-btn class="q-ma-sm" label="No" color="grey" @@click="deleteBranchVisible = false" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
 </div>
 
 @section code {
   <script>
     var option = {
-      //data
+
       data() {
         return {
-          newBranchDeliveryServiceId:0,
-          deliveryDialogVisible: false,
-          branchDialogVisible: false,
-          newDeliveryCompanyName: {
-            deliveryCompanyName: ""
-          },
-          newBranch: {
-            branchName: ""
-          },
+          // Variables for the delivery table
           deliveryRows: [],
           deliveryColumns: [
             {
-              name: 'expand',
-              label: 'Expand',
-              field: 'expand',
+              name: 'details',
+              label: 'Delivery details',
+              field: 'details',
               align: 'center'
-
             },
-          
-
             {
               name: 'deliveryIndex',
               field: 'deliveryIndex',
@@ -215,101 +295,222 @@
               align: 'left',
               sortable: true,
             },
-
-              {
+            {
               name: 'deliveryActions',
               label: 'Actions',
               field: 'deliveryActions',
               align: 'center'
             },
-
           ],
-
-          branchesColumns: [
+          // Variables for deleting a deliveryRow
+          deleteDeliveryVisible: false,
+          deliveryIdToDelete: 0,
+          // Variables for adding a deliveryRow
+          addDeliveryVisible: false,
+          newDeliveryService: {
+            deliveryCompanyName: ""
+          },
+          // Variables for delivery detail
+          showServiceDetails: false,
+          selectService: null,
+          associateProvinces: [],
+          associateCities: [],
+          associateVillages:[],
+          originalBranchLocations: [], // Store the original list of branch locations
+          branchLocationRows: [],
+          branchLocationColumn: [
             {
-              name: 'branchIndex',
-              field: 'branchIndex',
+              name: 'locationIndex',
+              label: 'Branch No',
+              field: 'locationIndex',
               align: 'center',
-              sortable: true,
-              label: 'Branch No'
+              sortable: true
             },
             {
-              name: 'branchName',
-              label: 'Branch name',
-              field: 'branch.branchName',
+              name: 'province',
+              label: 'Province',
+              field: 'province.provinceName',
               align: 'left',
               sortable: true,
             },
-               {
-              name: 'branchActions',
+            {
+              name: 'city',
+              label: 'City',
+              field: 'city.cityName',
+              align: 'left'
+            },
+            {
+              name: 'village',
+              label: 'Village',
+              field: 'village.villageName',
+              align: 'left'
+            },
+            {
+              name: 'actions',
               label: 'Actions',
-              field: 'branchActions',
+              field: 'actions',
               align: 'center'
             }
-
           ],
-
-
-          deleteDeliveryDialogVisible: false,
-          deleteBranchDialogVisible: false,
-          deliveryServiceIdToDelete:0,
-          deliveryBranchIdToDelete: 0
-
+          // Variables for add new address
+          selectBranchProvince: null,
+          selectBranchCity: null,
+          selectBranchVillage: null,
+          relateCities: [],
+          relateVillages: [],
+          disableFilterCity: true,
+          disableFilterVillage: true,
+          // Variables for delete branch
+          deleteBranchVisible: false,
+          branchIdToDelete: null,
+          // Variable for add new city to geographic
+          newCity: {
+            provinceId: null,
+            cityName: "",
+            cityNameEn: ""
+          },
+          newVillage: {
+            cityId: null,
+            villageName: "",
+            villageNameEn: ""
+          },
+          allCities: [],
+          allProvinces:[],
+          // Variables for add new address to BranchLocation
+          newBranchProvince: null,
+          newBranchCity:null,
+          newBranchVillage:null,
+          disableNewBranchCity: true,
+          disableNewBranchVillage: true,
         };
       }
       ,
-      //methods
+
       methods: {
-        openAddDeliveryDialog() {
-          this.deliveryDialogVisible = true;
-        },
-        closeAddDeliveryDialog() {
-          this.deliveryDialogVisible = false;
-        },
+                async fetchAllCities() {
+          try {
+            const response = await axios.get("/myapi/GetAllCities");
+            console.log("All cities Response:", response);
 
-      openAddBranchDialog(deliveryServiceId) {
-        this.branchDialogVisible = true;
-        this.newBranchDeliveryServiceId = deliveryServiceId; // Store the deliveryServiceId for later use
-      },
-        closeAddBranchDialog() {
-          this.branchDialogVisible = false;
-        },
+            // Map delivery services to the format required by q-select
+            this.allCities = response.data.map(city => ({
+              label: city.cityName,
+              value: city.cityId
+            }));
 
-        openDeleteDeliveryDialog(deliveryServiceId){
-          this.deleteDeliveryDialogVisible = true;
-          this.deliveryServiceIdToDelete = deliveryServiceId;
-          
-        },
-    closeDeleteDeliveryDialog() {
-          this.deliveryDialogVisible = false;
-          this.deliveryBranchIdToDelete = 0;
-        },
+            console.log("Cities:", this.allCities);
+          } catch (error) {
+            console.error("Error fetching allCities:", error);
+          }
+        },//ef
+        async fetchDeliveries() {
+          try {
+            var deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
+            this.deliveryRows = deliveryReponse.data;
+            console.log("Deliveries Reponse:", deliveryReponse.data);
+          }
+          catch (error) {
+            console.log("Error fetching Deliveries Reponse:", error);
+          }
+        },//ef
+                async fetchAllProvinces() {
+          try {
+            const response = await axios.get("/myapi/GetAllProvinces");
+            console.log("Response:", response);
 
-      openDeleteBranchDialog(deliveryBranchId) {
-        this.deleteBranchDialogVisible = true;
-        this.deliveryBranchIdToDelete = deliveryBranchId; // Store the deliveryServiceId for later use
-      },
-        closeDeleteBranchDialog() {
-          this.deleteBranchDialogVisible = false;
-        },
+            // Map delivery services to the format required by q-select
+            this.allProvinces = response.data.map(province => ({
+              label: province.provinceName,
+              value: province.provinceId
+            }));
 
+            console.log("Province:", this.allProvinces);
+          } catch (error) {
+            console.error("Error fetching allProvinces:", error);
+          }
+        },//ef
+        showDetails(service) {
+          this.selectService = service;
+          console.log("The object passed is:", this.selectService);
+          // Reset detail dialog
+          this.fetchBranchLocation();
+          this.selectBranchProvince = null;
+          this.showServiceDetails = true;
+        }, //ef
+        closeDetails() {
+          this.selectService = null;
+          this.showServiceDetails = false;
+        },
+        async editDelivery(item) {
+          try {
+            console.log("Request data:", item);
+            const response = await axios.post("myapi/EditDelivery", item);
+            console.log("Request data:", item);
+            console.log("Response data:", response.data);
+
+            if (response.status >= 200 && response.status < 300) {
+              console.log("Request successful");
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'Delivery Modified!'
+              });
+            } else {
+              console.error("Unexpected response status:", response.status);
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Reponse status not 200, please refresh.'
+              });
+            }
+          } catch (error) {
+            console.error("Error during request:", error);
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error during request'
+            });
+            if (error.response?.data?.errors) {
+              console.error("Validation errors:", error.response.data.errors);
+            }
+          }
+        },//ef
+        openDeleteDeliveryDialog(deliveryServiceId) {
+          this.deleteDeliveryVisible = true;
+          this.deliveryIdToDelete = deliveryServiceId;
+        },//ef
+        async deleteDeliveryService() {
+          try {
+            const response = await axios.post(`/myapi/DeleteDeliveryService?deliveryServiceIdToDelete=${this.deliveryIdToDelete}`);
+            window.location.reload();
+            console.log("Delete delivery response:", response.data);
+
+            // Handle successful deletion
+          } catch (error) {
+            console.error("Error deleting delivery service:", error);
+            // Handle error
+          }
+        },//ef
         async addDelivery() {
           try {
-            console.log("DeliveryService String:", this.newDeliveryCompanyName);
+            console.log("DeliveryService String:", this.newDeliveryService);
             // Make the myapi call
-            var response = await axios.post("/myapi/AddDeliveryService", this.newDeliveryCompanyName);
+            var response = await axios.post("/myapi/AddDeliveryService", this.newDeliveryService);
 
             // Handle the response or perform any necessary logic
             if (response.status === 200) {
-              // Additional logic after successful product addition
+              // Additional logic after successful service addition
               this.$q.notify({
                 color: 'green-4',
                 textColor: 'white',
                 icon: 'cloud_done',
                 message: 'New Delivery Service added successfully!'
               });
-            this.closeAddDeliveryDialog();
-            this.onReset();
+              this.addDeliveryVisible = false;
+              this.onReset();
 
             } else {
               // Log detailed error information
@@ -337,241 +538,319 @@
               message: 'Error adding Delivery. Please check the console for details.'
             });
           }
-        }
-
-        ,
-
-        async editDelivery(item) {
-          try {
-            const response = await axios.post("myapi/EditDelivery", item);
-            console.log("Request data:", item);
-            console.log("Response data:", response.data);
-
-            if (response.status >= 200 && response.status < 300) {
-              console.log("Request successful");
-              this.$q.notify({
-                color: 'green-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Delivery Modified!'
-              });
-            } else {
-              console.error("Unexpected response status:", response.status);
-              this.$q.notify({
-                color: 'red-4',
-                textColor: 'white',
-                icon: 'error',
-                message: 'Reponse status not 200, please refresh.'
-              });
-            }
-          } catch (error) {
-            console.error("Error during request:", error);
-            this.$q.notify({
-                color: 'red-4',
-                textColor: 'white',
-                icon: 'error',
-                message: 'Error during request'
-              });
-            if (error.response?.data?.errors) {
-              console.error("Validation errors:", error.response.data.errors);
-            }
-          }
-        }
-        ,
-
+        },//ef
         
-        async deleteDeliveryService() {
-    try {
-        const response = await axios.post(`/myapi/DeleteDeliveryService?deliveryServiceIdToDelete=${this.deliveryServiceIdToDelete}`);
-          
-        this.deliveryServiceIdToDelete = 0;
-        window.location.reload();
-        console.log("Delete response:", response.data);
+        async onReset() {
+          const notif = this.$q.notify({
+            type: 'ongoing',
+            message: 'Resetting...'
+          });
 
-        // Handle successful deletion
-    } catch (error) {
-        console.error("Error deleting delivery service:", error);
-        // Handle error
-    }
-},
-        
-
-        
-        async editBranch(item) {
           try {
-            const response = await axios.post("myapi/EditBranch", item);
-            console.log("Request data:", item);
-            console.log("Response data:", response.data);
+            // Reset the deliveryRows array to an empty array
+            this.deliveryRows = [];
 
-            if (response.status >= 200 && response.status < 300) {
-              console.log("Request successful");
-              this.$q.notify({
-                color: 'green-4',
-                textColor: 'white',
-                icon: 'cloud_done',
-                message: 'Branch Modified!'
-              });
-            } else {
-              console.error("Unexpected response status:", response.status);
-              this.$q.notify({
-                color: 'red-4',
-                textColor: 'white',
-                icon: 'error',
-                message: 'Reponse status not 200, please refresh.'
-              });
-            }
-          } catch (error) {
-            console.error("Error during request:", error);
-            this.$q.notify({
-                color: 'red-4',
-                textColor: 'white',
-                icon: 'error',
-                message: 'Error during request'
-              });
-            if (error.response?.data?.errors) {
-              console.error("Validation errors:", error.response.data.errors);
-            }
-          }
-        }
-        ,
-
-        async deleteBranch() {
-          try {
-            // Send the delete request
-            const reponse = await axios.post(`/myapi/DeleteDeliveryBranch?deliveryBranchId=${this.deliveryBranchIdToDelete}`);
-            this.deliveryBranchIdToDelete = 0;
+            // Call the API to get delivery services data again
+            const deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
+            this.deliveryRows = deliveryReponse.data;
             window.location.reload();
-            console.log("Delete response:", response.data);
-
-
-            // Set a flag in local storage indicating successful delete
-            localStorage.setItem('deleteSuccess', 'true');
-
-            // Refresh the page
-            window.location.reload();
-          } catch (error) {
-            console.error('Error deleting delivery branch:', error);
-
-            // Notify the user about the error
-            this.$q.notify({
-              type: 'negative',
-              color: 'red-8',
-              message: 'Error deleting delivery branch'
+            // Notify the user that the reset was successful
+            notif({
+              type: 'positive',
+              message: 'Reset successful',
+              timeout: 300
             });
+          } catch (error) {
+            // Notify the user if an error occurs during the reset process
+            notif({
+              type: 'negative',
+              message: 'Failed to reset. Please try again.',
+              timeout: 300
+            });
+            console.error('Error resetting deliveries data:', error);
+          }
+        },//ef
+        
+        async fetchBranchLocation() {
+          try {
+            console.log("Selected delivery:", this.selectService);
+
+            const response = await axios.get(`/myapi/GetAssociateBranchLocation?deliveryServiceId=${this.selectService.deliveryServiceId}`);
+
+            this.originalBranchLocations = response.data; // Store the original data
+            this.branchLocationRows = response.data; // Use for current display
+
+            // Extract unique provinces from branch location rows
+            const uniqueProvinces = Array.from(new Set(this.branchLocationRows.map(location => location.province.provinceId))).map(provinceId => {
+              const province = this.branchLocationRows.find(location => location.province.provinceId === provinceId).province;
+              return { label: province.provinceName, value: province.provinceId };
+            });
+
+            // Assign unique provinces to associateProvinces
+            this.associateProvinces = uniqueProvinces;
+
+
+            console.log("Reponse data:", this.branchLocationRows);
+          } catch (error) {
+            console.error("Error fetching branch Location:", error);
+          }
+        },//ef
+        async fetchRelateCities() {
+
+          try {
+            console.log("newBranchProvince:", this.newBranchProvince);
+
+            const response = await axios.get(`/myapi/GetRelateCities?provinceId=${this.newBranchProvince}`);
+
+            // Map branches to the format required
+            this.relateCities = response.data.map(city => ({
+              label: city.cityName,
+              value: city.cityId
+            }));
+
+            this.newBranchCity = null;
+            this.disableNewBranchCity = false;
+            this.newBranchVillage = null;
+            console.log("City:", this.relateCities);
+          } catch (error) {
+            console.error("Error fetching city:", error);
+          }
+        },//ef
+        async fetchRelateVillages() {
+          try {
+            console.log("newBranchCity:", this.newBranchCity);
+            const response = await axios.get(`/myapi/GetRelateVillages?cityId=${this.newBranchCity}`);
+
+            // Map branches to the format required
+            this.relateVillages = response.data.map(village => ({
+              label: village.villageName,
+              value: village.villageId
+            }));
+
+            this.newBranchVillage = null;
+            this.disableNewBranchVillage = false;
+            console.log("Village:", this.relateVillages);
+
+          } catch (error) {
+            console.error("Error fetching village:", error);
+          }
+        },//ef
+        async addNewAddress() {
+               try {
+            const response = await axios.post(`/myapi/AddNewBranchLocation?deliveryServiceId=${this.selectService.deliveryServiceId}&provinceId=${this.newBranchProvince}&cityId=${this.newBranchCity}&villageId=${this.newBranchVillage}`);
+            this.newBranchProvince = null;
+            this.newBranchCity = null;
+            this.newBranchVillage = null;
+            window.location.reload();
+            console.log("Village:", this.relateVillages);
+
+          } catch (error) {
+            console.error("Error fetching village:", error);
+          }
+        },//ef
+
+        filterBranchLocations() {
+          if (this.selectBranchProvince) {
+            this.disableFilterCity = false;
+            // Reset
+            this.selectBranchCity = null;
+            this.selectBranchVillage = null;
+            this.disableFilterVillage = true;
+            // Filter branch locations based on selected province from the original list
+            const filteredLocations = this.originalBranchLocations.filter(location => {
+              return location.provinceId === this.selectBranchProvince;
+            });
+            // Update branchLocationRows with filtered locations
+            this.branchLocationRows = filteredLocations;
+
+            // Extract unique cities from filtered locations
+            const uniqueCities = [...new Set(filteredLocations.map(location => location.city))];
+            
+            // Map unique cities to the format required by q-select
+            this.associateCities = uniqueCities.map(city => ({
+              label: city.cityName, // Assuming cityName is the property that stores the city name
+              value: city.cityId // Assuming cityId is the property that stores the city ID
+            }));
           }
         },
+        filterBranchLocationCity() {
+          if (this.selectBranchCity) {
+            this.disableFilterVillage = false;
+            // Reset
+            this.selectBranchVillage = null;
+            // Filter branch locations based on selected city
+            const filteredLocations = this.branchLocationRows.filter(location => {
+              return location.cityId === this.selectBranchCity;
+            });
+            // Update branchLocationRows with filtered locations
+            this.branchLocationRows = filteredLocations;
 
-       async addBranch() {
-  try {
-    console.log("Branch String:", this.newBranch);
-   
-    // Make the API call
-    var response = await axios.post(`/myapi/AddBranch?deliveryServiceId=${this.newBranchDeliveryServiceId}`, this.newBranch);
+            // Extract unique villages from filtered locations
+            const uniqueVillages = [...new Set(filteredLocations.map(location => location.village))];
 
-    // Handle the response or perform any necessary logic
-    if (response.status === 200) {
-      // Additional logic after successful product addition
-      this.$q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'cloud_done',
-        message: 'New Branch added successfully!'
-      });
-       this.closeAddBranchDialog();
-        this.onReset();
-    } else {
-      // Log detailed error information
-      console.error(response);
+            // Map unique villages to the format required by q-select
+            this.associateVillages = uniqueVillages.map(village => ({
+              label: village.villageName, // Assuming villageName is the property that stores the village name
+              value: village.villageId // Assuming villageId is the property that stores the village ID
+            }));
+          }
+        },//ef
+        filterBranchLocationVillage() {
+          if (this.selectBranchVillage) {
+            // Filter branch locations based on selected village
+            const filteredLocations = this.branchLocationRows.filter(location => {
+              return location.villageId === this.selectBranchVillage;
+            });
+            // Update branchLocationRows with filtered locations
+            this.branchLocationRows = filteredLocations;
+          }
+        },//ef
+        onClearFilter(){
+          this.branchLocationRows = this.originalBranchLocations;
+          this.selectBranchProvince = null;
+          this.selectBranchCity = null;
+          this.selectBranchVillage = null;
+          this.disableFilterVillage = true;
 
-      // Handle the case where the API call was not successful
-      this.$q.notify({
-        color: 'red-4',
-        textColor: 'white',
-        icon: 'error',
-        message: 'Error adding Branch. Please check the console for details.'
-      });
-    }
-  } catch (error) {
-    // Log detailed error information
-    console.error(error);
+        },//ef
 
-    // Hide loading indicator in case of an error
-    this.$q.loading.hide();
+        async deleteBranchLocation() {
+          try {
+            // Send DELETE request to the API endpoint with the branchLocationId
+            const response = await axios.delete(`/myapi/DeleteBranchLocation?branchLocationId=${this.branchIdToDelete}`);
 
-    this.$q.notify({
-      color: 'red-4',
-      textColor: 'white',
-      icon: 'error',
-      message: 'Error adding Branch. Please check the console for details.'
-    });
-  }
-},
+            // Check if the request was successful
+            if (response.status === 200) {
+              // Handle success, maybe update UI or show a notification
+              console.log("Branch location deleted successfully");
+              // Optionally, you can also fetch the updated branch locations after deletion
+              this.fetchBranchLocation();
+              this.deleteBranchVisible = false;
+            } else {
+              // Handle errors or show a notification
+              console.error("Failed to delete branch location");
+            }
+          } catch (error) {
+            // Handle errors or show a notification
+            console.error("Error deleting branch location:", error);
+          }
+        },//ef
+        showDeleteBranchDialog(branchLocationId){
+          this.branchIdToDelete = branchLocationId;
+          this.deleteBranchVisible = true;
+        },//ef
+        async addNewCity() {
+          try {
+            console.log("New city String:", this.newCity);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddNewCity", this.newCity);
 
-async onReset() {
-  const notif = this.$q.notify({
-    type: 'ongoing',
-    message: 'Resetting...'
-  });
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful service addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New City added successfully!'
+              });
+              this.onReset();
 
-  try {
-    // Reset the deliveryRows array to an empty array
-    this.deliveryRows = [];
+            } else {
+              // Log detailed error information
+              console.error(response);
 
-    // Call the API to get delivery services data again
-    const deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
-    this.deliveryRows = deliveryReponse.data;
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding City. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
 
-    // Notify the user that the reset was successful
-    notif({
-      type: 'positive',
-      message: 'Reset successful',
-      timeout: 300
-    });
-  } catch (error) {
-    // Notify the user if an error occurs during the reset process
-    notif({
-      type: 'negative',
-      message: 'Failed to reset. Please try again.',
-      timeout: 300
-    });
-    console.error('Error resetting deliveries data:', error);
-  }
-}
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
 
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding City. Please check the console for details.'
+            });
+          }
+        },//ef
+        async addNewVillage() {
+          try {
+            console.log("New village String:", this.newVillage);
+            // Make the myapi call
+            var response = await axios.post("/myapi/AddNewVillage", this.newVillage);
 
+            // Handle the response or perform any necessary logic
+            if (response.status === 200) {
+              // Additional logic after successful service addition
+              this.$q.notify({
+                color: 'green-4',
+                textColor: 'white',
+                icon: 'cloud_done',
+                message: 'New Village added successfully!'
+              });
+              this.onReset();
 
+            } else {
+              // Log detailed error information
+              console.error(response);
 
+              // Handle the case where the myapi call was not successful
+              this.$q.notify({
+                color: 'red-4',
+                textColor: 'white',
+                icon: 'error',
+                message: 'Error adding Village. Please check the console for details.'
+              });
+            }
+          } catch (error) {
+            // Log detailed error information
+            console.error(error);
 
+            // Hide loading indicator in case of an error
+            this.$q.loading.hide();
 
-      }
+            this.$q.notify({
+              color: 'red-4',
+              textColor: 'white',
+              icon: 'error',
+              message: 'Error adding Village. Please check the console for details.'
+            });
+          }
+        },//ef
+      }//emethod
       ,
-      //computed
+
+
       computed: {
- branchIndex() {
-    return (index) => index + 1;
-  }
-      }
+        branchIndex() {
+          return (index) => index + 1;
+        },
+      }//ecomputed
       ,
 
-      //created
-      async created() {
 
-        try {
-          var deliveryReponse = await axios.get("/myapi/GetDeliveryServices");
-          this.deliveryRows = deliveryReponse.data;
-          console.log(deliveryReponse.data);
-        }
-        catch (error) {
-          console.log(error);
-        }
+      async created() {
+        this.fetchDeliveries();
+        this.fetchAllCities();
+        this.fetchAllProvinces();
 
       }//ecreated
       ,
-      //mounted
+
+
       mounted() {
 
-      }
-
+      }//emounted
     };
 
     const app = Vue.createApp(option);

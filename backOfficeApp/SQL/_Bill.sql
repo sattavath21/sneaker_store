@@ -39,6 +39,7 @@ create table `Discount` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -46,6 +47,7 @@ create table `Province` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -53,6 +55,7 @@ create table `Province` (
 create table `City` (
  CityId int(11) not null,
  CityName varchar(255)  default null,
+ CityNameEn varchar(255)  default null,
  ProvinceId int(11) not null,
  primary key (CityId),
  KEY IX_City_ProvinceId (ProvinceId),
@@ -63,6 +66,7 @@ create table `City` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -70,6 +74,7 @@ create table `Province` (
 create table `City` (
  CityId int(11) not null,
  CityName varchar(255)  default null,
+ CityNameEn varchar(255)  default null,
  ProvinceId int(11) not null,
  primary key (CityId),
  KEY IX_City_ProvinceId (ProvinceId),
@@ -80,6 +85,7 @@ create table `City` (
 create table `Village` (
  VillageId int(11) not null,
  VillageName varchar(255)  default null,
+ VillageNameEn varchar(255)  default null,
  CityId int(11) not null,
  primary key (VillageId),
  KEY IX_Village_CityId (CityId),
@@ -115,6 +121,7 @@ create table `DeliveryService` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -122,6 +129,7 @@ create table `Province` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -129,6 +137,7 @@ create table `Province` (
 create table `City` (
  CityId int(11) not null,
  CityName varchar(255)  default null,
+ CityNameEn varchar(255)  default null,
  ProvinceId int(11) not null,
  primary key (CityId),
  KEY IX_City_ProvinceId (ProvinceId),
@@ -139,6 +148,7 @@ create table `City` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -146,6 +156,7 @@ create table `Province` (
 create table `City` (
  CityId int(11) not null,
  CityName varchar(255)  default null,
+ CityNameEn varchar(255)  default null,
  ProvinceId int(11) not null,
  primary key (CityId),
  KEY IX_City_ProvinceId (ProvinceId),
@@ -156,6 +167,7 @@ create table `City` (
 create table `Village` (
  VillageId int(11) not null,
  VillageName varchar(255)  default null,
+ VillageNameEn varchar(255)  default null,
  CityId int(11) not null,
  primary key (VillageId),
  KEY IX_Village_CityId (CityId),
@@ -188,6 +200,7 @@ create table `Staff` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -195,6 +208,7 @@ create table `Province` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -202,6 +216,7 @@ create table `Province` (
 create table `City` (
  CityId int(11) not null,
  CityName varchar(255)  default null,
+ CityNameEn varchar(255)  default null,
  ProvinceId int(11) not null,
  primary key (CityId),
  KEY IX_City_ProvinceId (ProvinceId),
@@ -212,6 +227,7 @@ create table `City` (
 create table `Province` (
  ProvinceId int(11) not null,
  ProvinceName varchar(255)  default null,
+ ProvinceNameEn varchar(255)  default null,
  primary key (ProvinceId)    
 ) engine=InnoDB default charset=utf8mb4;
 
@@ -219,6 +235,7 @@ create table `Province` (
 create table `City` (
  CityId int(11) not null,
  CityName varchar(255)  default null,
+ CityNameEn varchar(255)  default null,
  ProvinceId int(11) not null,
  primary key (CityId),
  KEY IX_City_ProvinceId (ProvinceId),
@@ -229,6 +246,7 @@ create table `City` (
 create table `Village` (
  VillageId int(11) not null,
  VillageName varchar(255)  default null,
+ VillageNameEn varchar(255)  default null,
  CityId int(11) not null,
  primary key (VillageId),
  KEY IX_Village_CityId (CityId),
